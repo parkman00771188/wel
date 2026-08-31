@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Earthquake Guide — World Earthquake Labs</title>
+<link rel="icon" type="image/png" href="resource/img/logo_new.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-nav="platform" data-cta="dashboard">
+
+<div id="site-header"></div>
+
+<!-- ============ Guide menu ============ -->
+<div class="gd-navwrap">
+  <nav class="container gd-nav" id="gdNav">
+    <a href="#overview" data-gd="overview" class="active"><i data-icon="grid" data-size="18"></i> Overview</a>
+    <a href="#basics" data-gd="basics"><i data-icon="book" data-size="18"></i> Basics</a>
+    <a href="#plates" data-gd="plates"><i data-icon="globe" data-size="18"></i> Plate Tectonics</a>
+    <a href="#magnitude" data-gd="magnitude"><i data-icon="activity" data-size="18"></i> Magnitude &amp; Intensity</a>
+    <a href="#terms" data-gd="terms"><i data-icon="doc" data-size="18"></i> Key Terms</a>
+    <a href="#faq" data-gd="faq"><i data-icon="help" data-size="18"></i> FAQ</a>
+    <a href="#safety" data-gd="safety"><i data-icon="shield" data-size="18"></i> Safety Guide</a>
+  </nav>
+</div>
+
+<main class="container page-pad-bottom">
+
+  <!-- ================= OVERVIEW ================= -->
+  <section class="gd-sec active" id="gd-overview">
+    <div class="page-head" style="padding-top:28px">
+      <div>
+        <h1>Earthquake Guide</h1>
+        <p class="sub">Earthquakes strike without warning — pick a topic above, or start with the safety guide.</p>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-primary" href="#safety">See the Safety Guide</a>
+      </div>
+    </div>
+
+    <h2 class="section-title" style="margin-top:6px">Browse the guide</h2>
+    <div class="resources-grid landing gd-shortcuts">
+      <a class="resource-tile" href="#basics">
+        <div class="ic"><i data-icon="book" data-size="20"></i></div>
+        <div class="t">Basics</div>
+        <div class="d">What an earthquake is, and how P and S waves travel.</div>
+      </a>
+      <a class="resource-tile" href="#plates">
+        <div class="ic"><i data-icon="globe" data-size="20"></i></div>
+        <div class="t">Plate Tectonics</div>
+        <div class="d">Why earthquakes happen where they do — the three boundary types.</div>
+      </a>
+      <a class="resource-tile" href="#magnitude">
+        <div class="ic"><i data-icon="activity" data-size="20"></i></div>
+        <div class="t">Magnitude &amp; Intensity</div>
+        <div class="d">An earthquake's "size" vs its "impact" — and the M 2–8 scale.</div>
+      </a>
+      <a class="resource-tile" href="#terms">
+        <div class="ic"><i data-icon="doc" data-size="20"></i></div>
+        <div class="t">Key Terms</div>
+        <div class="d">Epicenter, aftershock, liquefaction — the vocabulary, briefly.</div>
+      </a>
+      <a class="resource-tile" href="#faq">
+        <div class="ic"><i data-icon="help" data-size="20"></i></div>
+        <div class="t">FAQ</div>
+        <div class="d">Can quakes be predicted? How do alerts work? Quick answers.</div>
+      </a>
+      <a class="resource-tile" href="#safety">
+        <div class="ic"><i data-icon="shield" data-size="20"></i></div>
+        <div class="t">Safety Guide</div>
+        <div class="d">What to do before, during, and after — plus your emergency kit.</div>
+      </a>
+    </div>
+
+    <div class="stat-strip" style="margin-top:34px">
+      <div><div class="v">~500,000</div><div class="k">earthquakes detected worldwide every year</div></div>
+      <div><div class="v">90%</div><div class="k">of them occur along the Pacific Ring of Fire</div></div>
+      <div><div class="v">×32</div><div class="k">more energy released per +1 magnitude step</div></div>
+      <div><div class="v">&lt; 90 s</div><div class="k">from origin to a published epicenter here</div></div>
+    </div>
+  </section>
+
+  <!-- ================= BASICS ================= -->
+  <section class="gd-sec" id="gd-basics">
+    <div class="gd-grid two">
+      <div class="card gd-card">
+        <h2 class="gd-title">What is an earthquake?</h2>
+        <div class="rich-text">
+          <p>An earthquake is the sudden slip of rock along a <b>fault</b> — a fracture in the Earth's
+            crust where stress has been building for years to centuries. When the stress exceeds the
+            strength of the rock, it releases in seconds as <b>seismic waves</b> that radiate outward
+            and shake the ground.</p>
+          <p>The rupture starts at the <b>hypocenter</b> (focus) at depth; the point on the surface
+            directly above it is the <b>epicenter</b> — the location shown on our live map.</p>
+          <p>Our network locates an event by comparing wave arrival times across many stations —
+            with enough stations, an epicenter can be published in under 90 seconds.</p>
+        </div>
+        <div class="gd-note">Depth matters too: <b>shallow</b> quakes (&lt; 70 km) cause the strongest
+          local shaking, while <b>deep</b> ones (down to ~700 km) are felt widely but do less damage.</div>
+      </div>
+
+      <div class="card gd-card">
+        <h2 class="gd-title">P&nbsp;waves &amp; S&nbsp;waves</h2>
+        <p class="gd-desc"><b>P&nbsp;waves arrive first</b>, S&nbsp;waves follow with the stronger
+          shaking — the gap between them is what makes early warning possible.</p>
+
+        <div class="gd-wave">
+          <div class="gd-wave-info">
+            <div class="w-name p">P wave <span>(Primary)</span></div>
+            <div class="w-desc">Compressional push–pull wave. The fastest — travels through solids,
+              liquids, and gases.</div>
+          </div>
+          <svg viewBox="0 0 240 56" aria-hidden="true">
+            <g stroke="#0e9a8d" stroke-width="2.6" stroke-linecap="round">
+              <path d="M8 10v36M15 10v36M22 10v36M29 10v36"/>
+              <path d="M46 14v28M60 14v28"/>
+              <path d="M78 10v36M85 10v36M92 10v36M99 10v36"/>
+              <path d="M116 14v28M130 14v28"/>
+              <path d="M148 10v36M155 10v36M162 10v36M169 10v36"/>
+              <path d="M186 14v28M200 14v28"/>
+            </g>
+            <path d="M214 28h18M226 20l8 8-8 8" stroke="#0e9a8d" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="gd-wave">
+          <div class="gd-wave-info">
+            <div class="w-name s">S wave <span>(Secondary)</span></div>
+            <div class="w-desc">Shear wave, slower than P but shakes harder. Travels through solids only.</div>
+          </div>
+          <svg viewBox="0 0 240 56" aria-hidden="true">
+            <g fill="none" stroke="#1a6ef5" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.1 5.5">
+              <path d="M6 22 Q22 2 38 22 T70 22 T102 22 T134 22 T166 22 T198 22"/>
+              <path d="M6 30 Q22 10 38 30 T70 30 T102 30 T134 30 T166 30 T198 30"/>
+              <path d="M6 38 Q22 18 38 38 T70 38 T102 38 T134 38 T166 38 T198 38"/>
+            </g>
+            <path d="M212 28h18M224 20l8 8-8 8" stroke="#1a6ef5" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <div class="kb-facts one-col" style="margin-top:14px">
+          <div class="kb-fact"><div class="v">6–8 km/s</div><div class="k">speed of P waves through the crust — the first signal our stations record</div></div>
+          <div class="kb-fact"><div class="v">3–4 km/s</div><div class="k">speed of S waves — slower, but they carry most of the damaging shaking</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PLATES ================= -->
+  <section class="gd-sec" id="gd-plates">
+    <div class="card gd-card">
+      <h2 class="gd-title">Where earthquakes happen</h2>
+      <div class="gd-cols">
+        <div>
+          <div class="rich-text">
+            <p>The Earth's outer shell is broken into a dozen large <b>tectonic plates</b> that move a
+              few centimeters per year — about as fast as fingernails grow. Nearly all earthquakes occur
+              on the boundaries where plates meet, which is why events on the live map trace such clear
+              lines.</p>
+          </div>
+          <svg class="gd-plates" viewBox="0 0 560 240" role="img" aria-label="Three types of plate boundaries">
+            <g font-family="Inter,sans-serif" font-size="13" font-weight="600" fill="#16294e" text-anchor="middle">
+              <text x="100" y="22">Convergent</text><text x="290" y="22">Divergent</text><text x="470" y="22">Transform</text>
+            </g>
+            <g font-family="Inter,sans-serif" font-size="11" fill="#7b8698" text-anchor="middle">
+              <text x="100" y="38">plates collide</text><text x="290" y="38">plates pull apart</text><text x="470" y="38">plates slide past</text>
+            </g>
+            <rect x="10" y="150" width="540" height="70" rx="8" fill="#fbe3cf"/>
+            <path d="M20 118 L95 118 L150 175 L150 220 L20 220 Z" fill="#e3ecf8" stroke="#9fb4d4" stroke-width="1.2"/>
+            <path d="M95 118 L180 118 L180 150 L128 150 Z" fill="#cfdff5" stroke="#9fb4d4" stroke-width="1.2"/>
+            <path d="M60 118 Q80 96 100 112 Q118 96 138 118 Z" fill="#b9cfec"/>
+            <path d="M45 106 h34" stroke="#1a6ef5" stroke-width="2.4" marker-end="url(#gar)"/>
+            <path d="M172 106 h-34" stroke="#1a6ef5" stroke-width="2.4" marker-end="url(#gar)"/>
+            <path d="M215 130 L275 130 L275 220 L215 220 Z" fill="#e3ecf8" stroke="#9fb4d4" stroke-width="1.2"/>
+            <path d="M305 130 L365 130 L365 220 L305 220 Z" fill="#e3ecf8" stroke="#9fb4d4" stroke-width="1.2"/>
+            <path d="M275 220 L305 220 L305 168 Q290 150 275 168 Z" fill="#f4a83a"/>
+            <path d="M290 205 V172 M283 182 L290 172 L297 182" stroke="#e8622d" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <path d="M262 118 h-34" stroke="#1a6ef5" stroke-width="2.4" marker-end="url(#gar)"/>
+            <path d="M318 118 h34" stroke="#1a6ef5" stroke-width="2.4" marker-end="url(#gar)"/>
+            <path d="M400 130 L470 130 L470 220 L400 220 Z" fill="#e3ecf8" stroke="#9fb4d4" stroke-width="1.2"/>
+            <path d="M474 130 L544 130 L544 220 L474 220 Z" fill="#cfdff5" stroke="#9fb4d4" stroke-width="1.2"/>
+            <path d="M472 132 V218" stroke="#e8432d" stroke-width="2" stroke-dasharray="5 4"/>
+            <path d="M412 118 h44" stroke="#1a6ef5" stroke-width="2.4" marker-end="url(#gar)"/>
+            <path d="M532 232 h-44" stroke="#1a6ef5" stroke-width="2.4" marker-end="url(#gar)"/>
+            <defs>
+              <marker id="gar" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+                <path d="M0 0 L7 3.5 L0 7 Z" fill="#1a6ef5"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+        <div>
+          <ul class="ticks" style="margin-top:4px">
+            <li><i data-icon="check" data-size="17"></i><span><b>Convergent (subduction)</b> — plates collide and one dives beneath the other. Produces the planet's biggest quakes and tsunamis (Japan, Chile, Sumatra).</span></li>
+            <li><i data-icon="check" data-size="17"></i><span><b>Divergent (ridges)</b> — plates pull apart at mid-ocean ridges. Frequent but mostly moderate, shallow events (Mid-Atlantic Ridge).</span></li>
+            <li><i data-icon="check" data-size="17"></i><span><b>Transform (strike-slip)</b> — plates slide past each other. Shallow quakes that can be very damaging near cities (San Andreas, North Anatolian).</span></li>
+          </ul>
+          <div class="gd-note" style="margin-top:18px">The <b>Pacific Ring of Fire</b> — the chain of
+            subduction zones circling the Pacific — hosts about <b>90% of the world's earthquakes</b>,
+            including most of the largest in recorded history. Spot it on the
+            <a class="link" href="map.html">live map</a>.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MAGNITUDE ================= -->
+  <section class="gd-sec" id="gd-magnitude">
+    <div class="gd-grid split-62">
+      <div class="card gd-card">
+        <h2 class="gd-title">Magnitude vs Intensity <span class="gd-sub">an earthquake's "size" and its "impact" are different things</span></h2>
+        <div class="gd-compare">
+          <div class="cmp-box cmp-mag">
+            <div class="cmp-head">Magnitude <span>(M, one value per quake)</span></div>
+            <div class="cmp-icon">🔴</div>
+            <ul>
+              <li><i data-icon="check" data-size="15"></i> The energy released at the source</li>
+              <li><i data-icon="check" data-size="15"></i> Same value worldwide, measured by seismometers</li>
+              <li><i data-icon="check" data-size="15"></i> +1 magnitude ≈ <b>32× more energy</b></li>
+            </ul>
+          </div>
+          <div class="cmp-vs">VS</div>
+          <div class="cmp-box cmp-int">
+            <div class="cmp-head green">Intensity <span>(felt at a place)</span></div>
+            <div class="cmp-icon">🏢</div>
+            <ul>
+              <li><i data-icon="check" data-size="15"></i> How strongly people and buildings feel it</li>
+              <li><i data-icon="check" data-size="15"></i> Different at every location</li>
+              <li><i data-icon="check" data-size="15"></i> Fades with distance and depth</li>
+            </ul>
+          </div>
+        </div>
+        <div class="gd-example">Example: the same <b>M 6.0</b> earthquake can shake at intensity <b>VII</b>
+          near the epicenter, yet only <b>II–III</b> a few hundred kilometers away.</div>
+        <p class="gd-desc" style="margin:18px 0 0">We report <b>moment magnitude (Mw)</b>, today's standard
+          scale. It is <b>logarithmic</b>: each whole step means about 10× larger ground motion and ~32×
+          more energy — so an M&nbsp;7 releases roughly 1,000× the energy of an M&nbsp;5.</p>
+      </div>
+
+      <div class="card gd-card">
+        <h2 class="gd-title">The magnitude scale</h2>
+        <p class="card-sub" style="margin-bottom:12px">Typical effects and how often each class occurs worldwide.</p>
+        <table class="eq-table gd-table">
+          <thead><tr><th>Class</th><th>M</th><th>Typical effects</th><th class="right">Per year</th></tr></thead>
+          <tbody>
+            <tr><td class="mag">Minor</td><td>2–3.9</td><td>Often felt, rarely causes damage</td><td class="right">&gt; 100,000</td></tr>
+            <tr><td class="mag">Light</td><td>4–4.9</td><td>Noticeable shaking, minor damage</td><td class="right">~ 13,000</td></tr>
+            <tr><td class="mag">Moderate</td><td>5–5.9</td><td>Damage to weak structures</td><td class="right">~ 1,300</td></tr>
+            <tr><td class="mag">Strong</td><td>6–6.9</td><td>Destructive near the epicenter</td><td class="right">~ 130</td></tr>
+            <tr><td class="mag">Major</td><td>7–7.9</td><td>Serious damage over wide areas</td><td class="right">~ 15</td></tr>
+            <tr><td class="mag big">Great</td><td>8+</td><td>Catastrophic; can trigger tsunamis</td><td class="right">~ 1</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TERMS ================= -->
+  <section class="gd-sec" id="gd-terms">
+    <div class="card gd-card">
+      <h2 class="gd-title">Key Terms</h2>
+      <p class="card-sub" style="margin-bottom:10px">The vocabulary you'll meet on this platform and in the news.</p>
+      <div class="gd-terms cols2">
+        <div class="term"><span class="t-ic" style="background:#eef4ff;color:#1a6ef5"><i data-icon="target" data-size="16"></i></span>
+          <div><b>Epicenter</b><span>the point on the surface directly above the rupture</span></div></div>
+        <div class="term"><span class="t-ic" style="background:#fdecea;color:#c62828"><i data-icon="layers" data-size="16"></i></span>
+          <div><b>Hypocenter (focus)</b><span>the point at depth where the quake actually starts</span></div></div>
+        <div class="term"><span class="t-ic" style="background:#fff3e0;color:#e65100"><i data-icon="activity" data-size="16"></i></span>
+          <div><b>Aftershock</b><span>smaller quakes that follow the mainshock, sometimes for months</span></div></div>
+        <div class="term"><span class="t-ic" style="background:#fff3e0;color:#e65100"><i data-icon="up" data-size="16"></i></span>
+          <div><b>Foreshock</b><span>a quake that precedes a larger one — only clear in hindsight</span></div></div>
+        <div class="term"><span class="t-ic" style="background:#e9f7f0;color:#1d9e6e"><i data-icon="chartline" data-size="16"></i></span>
+          <div><b>Moment magnitude (Mw)</b><span>today's standard scale for an earthquake's size</span></div></div>
+        <div class="term"><span class="t-ic" style="background:#f3e8ff;color:#7c3aed"><i data-icon="bars" data-size="16"></i></span>
+          <div><b>Intensity (MMI)</b><span>shaking and damage at a location, graded I–XII</span></div></div>
+        <div class="term"><span class="t-ic" style="background:#eef4ff;color:#1a6ef5"><i data-icon="antenna" data-size="16"></i></span>
+          <div><b>Seismograph</b><span>the instrument that records ground motion — we stream 2,800+</span></div></div>
+        <div class="term"><span class="t-ic" style="background:#eef4ff;color:#1a6ef5"><i data-icon="globe" data-size="16"></i></span>
+          <div><b>Fault</b><span>a fracture in the crust where blocks of rock move past each other</span></div></div>
+        <div class="term"><span class="t-ic" style="background:#e9f7f0;color:#1d9e6e"><i data-icon="database" data-size="16"></i></span>
+          <div><b>Liquefaction</b><span>water-saturated soil behaving like a liquid during strong shaking</span></div></div>
+        <div class="term"><span class="t-ic" style="background:#fdecea;color:#c62828"><i data-icon="radio" data-size="16"></i></span>
+          <div><b>Tsunami</b><span>ocean waves generated when a large undersea quake moves the seafloor</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section class="gd-sec" id="gd-faq">
+    <div class="card gd-card">
+      <h2 class="gd-title">Frequently Asked Questions</h2>
+      <div class="gd-faq">
+        <details open>
+          <summary>Why do earthquakes happen? <i data-icon="chevdown" data-size="16"></i></summary>
+          <p>Tectonic plates constantly push against each other, storing stress in the rock along faults.
+            When the stress exceeds the rock's strength, the fault slips suddenly — releasing the stored
+            energy as seismic waves. That slip is the earthquake.</p>
+        </details>
+        <details>
+          <summary>Can earthquakes be predicted? <i data-icon="chevdown" data-size="16"></i></summary>
+          <p>No — no method reliably predicts the exact time, place, and size of a future quake. What
+            science <b>can</b> do is forecast probabilities (like aftershock forecasts) and issue early
+            warnings seconds before strong shaking arrives, using the fast P&nbsp;wave.</p>
+        </details>
+        <details>
+          <summary>How do earthquake alerts work? <i data-icon="chevdown" data-size="16"></i></summary>
+          <p>Stations near the epicenter detect the first P&nbsp;waves, estimate location and magnitude
+            within seconds, and broadcast a warning that races ahead of the slower, damaging S&nbsp;waves —
+            giving seconds to tens of seconds of notice.</p>
+        </details>
+        <details>
+          <summary>How long do aftershocks last? <i data-icon="chevdown" data-size="16"></i></summary>
+          <p>Days to months — occasionally years after a very large mainshock. They become less frequent
+            with time, but a large aftershock can still damage buildings weakened by the mainshock, so
+            stay cautious around damaged structures.</p>
+        </details>
+        <details>
+          <summary>Do many small quakes prevent a big one? <i data-icon="chevdown" data-size="16"></i></summary>
+          <p>Unfortunately not. Magnitude is logarithmic: it takes about <b>32,000 M&nbsp;3 events</b> to
+            release the energy of a single M&nbsp;6. Small quakes barely relieve the stress that drives
+            large ones.</p>
+        </details>
+        <details>
+          <summary>Does earthquake-resistant design really work? <i data-icon="chevdown" data-size="16"></i></summary>
+          <p>Yes — it is the single most effective way to save lives. Modern seismic codes let buildings
+            flex and dissipate energy instead of collapsing, which is why similar quakes cause vastly
+            different damage in different countries.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SAFETY ================= -->
+  <section class="gd-sec" id="gd-safety">
+    <div class="gd-safety">
+      <div class="gd-safety-head" style="margin-top:6px">
+        <div class="shield">🛡️</div>
+        <h2>Small habits now build big safety later.</h2>
+        <p>Earthquakes are hard to predict — but easy to prepare for. Know what to do in each situation
+          and keep your emergency kit ready.</p>
+      </div>
+
+      <div class="gd-scenarios">
+        <div class="card sc-card">
+          <div class="sc-visual" style="background:linear-gradient(135deg,#eef4ff,#e3f0ff)">🏠</div>
+          <div class="sc-title">If you're indoors</div>
+          <div class="sc-sub">when the shaking starts</div>
+          <div class="sc-steps">
+            <div class="sc-step"><span>1</span>Drop</div>
+            <div class="sc-arrow">›</div>
+            <div class="sc-step"><span>2</span>Cover</div>
+            <div class="sc-arrow">›</div>
+            <div class="sc-step"><span>3</span>Hold on</div>
+          </div>
+          <p class="sc-note">Get under a sturdy table, protect your head, and hold on until the shaking
+            stops. Stay away from windows.</p>
+        </div>
+
+        <div class="card sc-card">
+          <div class="sc-visual" style="background:linear-gradient(135deg,#e9f7f0,#ddf2e6)">🏙️</div>
+          <div class="sc-title">If you're outdoors</div>
+          <div class="sc-sub">away from buildings and wires</div>
+          <div class="sc-steps">
+            <div class="sc-step"><span>1</span>Watch above</div>
+            <div class="sc-arrow">›</div>
+            <div class="sc-step"><span>2</span>Open ground</div>
+            <div class="sc-arrow">›</div>
+            <div class="sc-step"><span>3</span>Stay put</div>
+          </div>
+          <p class="sc-note">Move away from façades, glass, and power lines to open space — falling
+            debris causes most street injuries.</p>
+        </div>
+
+        <div class="card sc-card">
+          <div class="sc-visual" style="background:linear-gradient(135deg,#fff5e9,#ffefdb)">🚗</div>
+          <div class="sc-title">If you're driving</div>
+          <div class="sc-sub">pull over safely, stay inside</div>
+          <div class="sc-steps">
+            <div class="sc-step"><span>1</span>Slow down</div>
+            <div class="sc-arrow">›</div>
+            <div class="sc-step"><span>2</span>Hazards on</div>
+            <div class="sc-arrow">›</div>
+            <div class="sc-step"><span>3</span>Wait inside</div>
+          </div>
+          <p class="sc-note">Stop clear of bridges, overpasses, and tunnels. Stay in the car until the
+            shaking ends, then drive carefully.</p>
+        </div>
+
+        <div class="card sc-card">
+          <div class="sc-visual" style="background:linear-gradient(135deg,#f3ecff,#ece2ff)">🛗</div>
+          <div class="sc-title">If you're in an elevator</div>
+          <div class="sc-sub">get out at the first chance</div>
+          <div class="sc-steps">
+            <div class="sc-step"><span>1</span>All buttons</div>
+            <div class="sc-arrow">›</div>
+            <div class="sc-step"><span>2</span>First stop</div>
+            <div class="sc-arrow">›</div>
+            <div class="sc-step"><span>3</span>Take stairs</div>
+          </div>
+          <p class="sc-note">Press every floor button, exit at the first floor that opens, and use the
+            stairs — never an elevator — to evacuate.</p>
+        </div>
+      </div>
+
+      <div class="gd-grid split-62" style="margin-top:22px">
+        <div class="card gd-card">
+          <div class="card-head" style="margin-bottom:4px">
+            <div>
+              <h2 class="gd-title" style="margin:0">Emergency Kit Checklist</h2>
+              <p class="card-sub">Prepare it together with your family — check what you already have.</p>
+            </div>
+            <span class="kit-progress" id="kitProgress">0 / 12 done</span>
+          </div>
+          <div class="kit-list" id="kitList">
+            <label><input type="checkbox"><span class="kt">Water — 3 L per person per day, 3+ days</span><span class="kit-tag must">ESSENTIAL</span></label>
+            <label><input type="checkbox"><span class="kt">Non-perishable food for 3+ days</span><span class="kit-tag must">ESSENTIAL</span></label>
+            <label><input type="checkbox"><span class="kt">First-aid kit &amp; personal medications</span><span class="kit-tag must">ESSENTIAL</span></label>
+            <label><input type="checkbox"><span class="kt">Flashlight &amp; spare batteries</span><span class="kit-tag must">ESSENTIAL</span></label>
+            <label><input type="checkbox"><span class="kt">Portable radio</span><span class="kit-tag rec">RECOMMENDED</span></label>
+            <label><input type="checkbox"><span class="kt">Power bank for phones</span><span class="kit-tag rec">RECOMMENDED</span></label>
+            <label><input type="checkbox"><span class="kt">Dust masks &amp; sanitation supplies</span><span class="kit-tag rec">RECOMMENDED</span></label>
+            <label><input type="checkbox"><span class="kt">Blanket or warm clothing</span><span class="kit-tag rec">RECOMMENDED</span></label>
+            <label><input type="checkbox"><span class="kt">Whistle to signal for help</span><span class="kit-tag rec">RECOMMENDED</span></label>
+            <label><input type="checkbox"><span class="kt">Copies of ID documents &amp; some cash</span><span class="kit-tag rec">RECOMMENDED</span></label>
+            <label><input type="checkbox"><span class="kt">Sturdy shoes &amp; work gloves</span><span class="kit-tag rec">RECOMMENDED</span></label>
+            <label><input type="checkbox"><span class="kt">Family contact card &amp; meeting point</span><span class="kit-tag rec">RECOMMENDED</span></label>
+          </div>
+        </div>
+
+        <div class="card gd-card">
+          <h2 class="gd-title">Is your home ready?</h2>
+          <p class="card-sub" style="margin-bottom:16px">Three things to check this week.</p>
+          <div class="ready-steps">
+            <div class="rs"><span class="rs-n">1</span>
+              <div><b>Know your building.</b> Find out when it was built — seismic codes improved sharply
+                after major quakes. Older buildings may benefit from a professional assessment.</div></div>
+            <div class="rs"><span class="rs-n">2</span>
+              <div><b>Secure what can fall.</b> Anchor bookshelves and cabinets to walls, strap the water
+                heater, and move heavy objects to low shelves — most injuries come from falling items.</div></div>
+            <div class="rs"><span class="rs-n">3</span>
+              <div><b>Know your shut-offs.</b> Learn where and how to turn off gas, electricity, and
+                water. After strong shaking, check for leaks before using any flame.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gd-remember">
+        <div class="rm-label">Remember!</div>
+        <div class="rm-item"><span>🧎</span><div><b>Drop, Cover, Hold On</b><span>keep the safe position until the shaking stops</span></div></div>
+        <div class="rm-item"><span>👨‍👩‍👧</span><div><b>Agree on a family plan</b><span>an out-of-area contact and a meeting point</span></div></div>
+        <div class="rm-item"><span>📋</span><div><b>Review your kit twice a year</b><span>check expiry dates, batteries, and storage spots</span></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="js/common.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/learn.js"></script>
+</body>
+</html>

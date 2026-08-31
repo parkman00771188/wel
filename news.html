@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>News &amp; Updates — World Earthquake Labs</title>
+<link rel="icon" type="image/png" href="resource/img/logo_new.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-nav="platform" data-cta="dashboard">
+
+<div id="site-header"></div>
+
+<main class="container page-pad-bottom">
+  <div class="page-head">
+    <div>
+      <h1>News &amp; Updates</h1>
+      <p class="sub">Event reports, advisories, and platform announcements.</p>
+    </div>
+    <div class="page-actions">
+      <div class="range-chips" id="newsFilter">
+        <button data-cat="all" class="active">All</button>
+        <button data-cat="event">Events &amp; Advisories</button>
+        <button data-cat="network">Network</button>
+        <button data-cat="data">Data</button>
+        <button data-cat="research">Research</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card news-page">
+    <div id="newsFeed"></div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="js/common.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/data.js"></script>
+<script src="js/news.js"></script>
+</body>
+</html>

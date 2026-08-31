@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Earthquake Map — World Earthquake Labs</title>
+<link rel="icon" type="image/png" href="resource/img/logo_new.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-nav="platform" data-cta="dashboard">
+
+<div id="site-header"></div>
+
+<main class="container page-pad-bottom map-main">
+  <div class="page-head map-head">
+    <div>
+      <h1>Live Earthquake Map</h1>
+      <p class="sub">Real-time global seismic activity.</p>
+    </div>
+    <div class="page-actions">
+      <label class="select-chip"><span class="lbl">Region</span>
+        <select id="mapRegion">
+          <option value="global" selected>Global</option>
+          <option value="japan">Japan</option>
+        </select>
+      </label>
+      <div class="range-chips" id="dimToggle">
+        <button data-dim="2d" class="active">2D</button>
+        <button data-dim="3d">3D</button>
+      </div>
+      <div class="drop-wrap">
+        <button class="btn-chip" id="filtersBtn">
+          <i data-icon="filter" data-size="17"></i> Filters <span class="badge" id="filterBadge" hidden>1</span>
+        </button>
+        <div class="drop-panel lg" id="filtersPanel">
+
+          <div id="filters2d">
+            <h4>Minimum magnitude</h4>
+            <input type="range" id="minMag" min="2" max="7" step="0.1" value="2">
+            <div class="row"><span>M <b id="minMagVal">2.0</b>+</span><span id="filterCount"></span></div>
+            <h4 style="margin-top:16px">Depth</h4>
+            <label class="check"><input type="checkbox" class="depthChk" value="shallow" checked> Shallow (&lt; 70 km)</label>
+            <label class="check"><input type="checkbox" class="depthChk" value="mid" checked> Intermediate (70–300 km)</label>
+            <label class="check"><input type="checkbox" class="depthChk" value="deep" checked> Deep (&gt; 300 km)</label>
+          </div>
+
+          <div id="filters3d" class="x3dscope" hidden>
+            <h4>Display mode</h4>
+            <div class="chip-row">
+              <button class="pchip" data-x3d="#seg-mode [data-v='accumulate']">Accumulate</button>
+              <button class="pchip" data-x3d="#seg-mode [data-v='window']">Moving window</button>
+            </div>
+            <label class="prow" id="p3dWindowRow" hidden><span>Window length</span>
+              <input type="range" min="0" max="10" step="1" value="6" data-x3d-range="#in-window">
+              <output data-x3d-out="#out-window">1 y</output></label>
+
+            <h4>Period</h4>
+            <div class="prow dates">
+              <span>Start</span><input type="date" data-x3d-date="#in-date-a">
+              <span>End</span><input type="date" data-x3d-date="#in-date-b">
+            </div>
+            <div class="chip-row">
+              <button class="pchip" data-x3d="#span-presets [data-span='all']">All</button>
+              <button class="pchip" data-x3d="#span-presets [data-span='10y']">10 y</button>
+              <button class="pchip" data-x3d="#span-presets [data-span='1y']">1 y</button>
+              <button class="pchip" data-x3d="#span-presets [data-span='30d']">30 d</button>
+              <button class="pchip" data-x3d="#span-presets [data-span='7d']">7 d</button>
+            </div>
+
+            <h4>Magnitude</h4>
+            <div class="prow"><span>Range M</span><span class="grow"></span>
+              <output data-x3d-out="#out-mag" style="min-width:70px">1.5 – 9.1</output></div>
+            <div class="dualwrap" data-dual="mag">
+              <div class="dual-fill"></div>
+              <input type="range" min="1.5" max="9.1" step="0.1" value="1.5" data-x3d-range="#in-mag-lo">
+              <input type="range" min="1.5" max="9.1" step="0.1" value="9.1" data-x3d-range="#in-mag-hi">
+            </div>
+            <div class="chip-row bands">
+              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-1" checked>M1</label>
+              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-2" checked>M2</label>
+              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-3" checked>M3</label>
+              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-4" checked>M4</label>
+              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-5" checked>M5</label>
+              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-6" checked>M6</label>
+              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-7" checked>M7</label>
+              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-8" checked>M8</label>
+              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-9" checked>M9</label>
+              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-10" checked>M10</label>
+            </div>
+            <p class="phint">Turning a band off removes it (e.g. M3 = M3.0–3.9) from the globe, list, and stats.</p>
+
+            <h4>Depth</h4>
+            <div class="prow"><span>Range km</span><span class="grow"></span>
+              <output data-x3d-out="#out-depth" style="min-width:70px">0 – 700</output></div>
+            <div class="dualwrap" data-dual="depth">
+              <div class="dual-fill"></div>
+              <input type="range" min="0" max="700" step="5" value="0" data-x3d-range="#in-depth-lo">
+              <input type="range" min="0" max="700" step="5" value="700" data-x3d-range="#in-depth-hi">
+            </div>
+            <div class="chip-row">
+              <button class="pchip" data-x3d="#depth-presets [data-lo='0'][data-hi='700']">All</button>
+              <button class="pchip" data-x3d="#depth-presets [data-lo='0'][data-hi='70']">Shallow</button>
+              <button class="pchip" data-x3d="#depth-presets [data-lo='70'][data-hi='300']">Intermediate</button>
+              <button class="pchip" data-x3d="#depth-presets [data-lo='300'][data-hi='700']">Deep</button>
+            </div>
+
+            <h4>Visual</h4>
+            <label class="prow"><span>Depth exaggeration</span>
+              <input type="range" min="0.5" max="8" step="0.1" value="1.6" data-x3d-range="#in-exag">
+              <output data-x3d-out="#out-exag">1.6×</output></label>
+            <label class="prow"><span>Dot size</span>
+              <input type="range" min="0.01" max="3" step="0.01" value="0.31" data-x3d-range="#in-size">
+              <output data-x3d-out="#out-size">0.31×</output></label>
+            <label class="prow"><span>Master scale</span>
+              <input type="range" min="0.01" max="2" step="0.01" value="0.7" data-x3d-range="#in-msize-all">
+              <output data-x3d-out="#out-msize-all">0.70×</output></label>
+            <details class="p3d-details">
+              <summary>Per-magnitude dot size</summary>
+              <label class="prow"><span>M1</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-1"><output data-x3d-out="#out-msize-1"></output></label>
+              <label class="prow"><span>M2</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-2"><output data-x3d-out="#out-msize-2"></output></label>
+              <label class="prow"><span>M3</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-3"><output data-x3d-out="#out-msize-3"></output></label>
+              <label class="prow"><span>M4</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-4"><output data-x3d-out="#out-msize-4"></output></label>
+              <label class="prow"><span>M5</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-5"><output data-x3d-out="#out-msize-5"></output></label>
+              <label class="prow"><span>M6</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-6"><output data-x3d-out="#out-msize-6"></output></label>
+              <label class="prow"><span>M7</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-7"><output data-x3d-out="#out-msize-7"></output></label>
+              <label class="prow"><span>M8</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-8"><output data-x3d-out="#out-msize-8"></output></label>
+              <label class="prow"><span>M9</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-9"><output data-x3d-out="#out-msize-9"></output></label>
+              <label class="prow"><span>M10</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-10"><output data-x3d-out="#out-msize-10"></output></label>
+              <button class="pchip" data-x3d="#btn-msize-reset" style="margin-top:6px">Reset to defaults</button>
+            </details>
+            <label class="prow"><span>Sharpness</span>
+              <input type="range" min="0" max="100" step="5" value="50" data-x3d-range="#in-sharp">
+              <output data-x3d-out="#out-sharp">50%</output></label>
+            <label class="prow"><span>Opacity</span>
+              <input type="range" min="10" max="100" step="2" value="92" data-x3d-range="#in-opacity">
+              <output data-x3d-out="#out-opacity">92%</output></label>
+
+            <h4>Color by</h4>
+            <div class="chip-row">
+              <button class="pchip" data-x3d="#seg-color [data-v='0']">Depth</button>
+              <button class="pchip" data-x3d="#seg-color [data-v='1']">Magnitude</button>
+              <button class="pchip" data-x3d="#seg-color [data-v='2']">Time</button>
+              <button class="pchip" data-x3d="#seg-color [data-v='3']">Density</button>
+            </div>
+            <label class="check"><input type="checkbox" data-x3d-check="#ck-additive" checked> Additive glow</label>
+            <label class="check"><input type="checkbox" data-x3d-check="#ck-spin"> Auto-rotate</label>
+
+            <div class="jp3d">
+              <h4>Camera</h4>
+              <div class="chip-row">
+                <button class="pchip" data-x3d="#view-presets [data-v='iso']">Isometric</button>
+                <button class="pchip" data-x3d="#view-presets [data-v='top']">Top (map)</button>
+                <button class="pchip" data-x3d="#view-presets [data-v='south']">S→N section</button>
+                <button class="pchip" data-x3d="#view-presets [data-v='east']">E→W section</button>
+                <button class="pchip" data-x3d="#view-presets [data-v='trench']">Japan Trench</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="map-layout">
+  <!-- ============ Map ============ -->
+  <div class="map-shell" id="mapShell">
+    <div id="map"></div>
+    <div class="map-horizon"></div>
+
+    <div class="map-timebar">
+      <div class="range-chips" id="rangeChips">
+        <button data-range="live" class="active">Live</button>
+        <button data-range="24h">24h</button>
+        <button data-range="7d">7d</button>
+        <button data-range="30d">30d</button>
+      </div>
+      <button class="play-btn" id="playBtn" aria-label="Play timeline"></button>
+      <div class="time-readout" id="timeReadout">—</div>
+      <button class="now-btn active" id="nowBtn">Now</button>
+    </div>
+
+    <div class="zoom-ctl">
+      <button id="zoomIn" aria-label="Zoom in"><i data-icon="plus" data-size="18"></i></button>
+      <button id="zoomOut" aria-label="Zoom out"><i data-icon="minus" data-size="18"></i></button>
+    </div>
+
+    <!-- on-map legend (2D; the 4D engine draws its own in 3D) -->
+    <div class="map-legend" id="mapLegend">
+      <div class="ml-title">Magnitude</div>
+      <div class="legend-item"><span class="legend-dot" style="width:6px;height:6px;background:#ffd54f"></span>M 2 – 2.9</div>
+      <div class="legend-item"><span class="legend-dot" style="width:9px;height:9px;background:#ffb300"></span>M 3 – 3.9</div>
+      <div class="legend-item"><span class="legend-dot" style="width:11px;height:11px;background:#fb8c00"></span>M 4 – 4.9</div>
+      <div class="legend-item"><span class="legend-dot" style="width:14px;height:14px;background:#f4511e"></span>M 5 – 5.9</div>
+      <div class="legend-item"><span class="legend-dot" style="width:18px;height:18px;background:#e53935"></span>M 6+</div>
+      <div class="ml-title" style="margin-top:10px">Map layers</div>
+      <div class="legend-item"><span class="legend-line"></span>Plate boundaries</div>
+    </div>
+
+    <!-- in-map layer settings (2D basemaps / 3D map layers) -->
+    <button class="map-layers-btn" id="layersBtn" aria-label="Map layers"><i data-icon="layers" data-size="19"></i></button>
+    <div class="map-layers-panel" id="layersPanel" hidden>
+
+      <div id="layers2d">
+        <h4>Basemap</h4>
+        <div class="chip-row">
+          <button class="pchip on" data-base="sat">Satellite</button>
+          <button class="pchip" data-base="gray">Light Gray</button>
+          <button class="pchip" data-base="topo">Topographic</button>
+          <button class="pchip" data-base="ocean">Ocean</button>
+          <button class="pchip" data-base="osm">Streets</button>
+        </div>
+        <h4>Overlays</h4>
+        <label class="check"><input type="checkbox" id="ck2dPlates" checked> Plate boundaries</label>
+        <label class="check"><input type="checkbox" id="ck2dTint" checked> Night tint</label>
+      </div>
+
+      <div id="layers3d" class="x3dscope" hidden>
+        <h4>Map style</h4>
+        <div class="chip-row">
+          <button class="pchip" data-x3d="#seg-mapstyle [data-v='off']">None</button>
+          <button class="pchip" data-x3d="#seg-mapstyle [data-v='fill']">Fill</button>
+          <button class="pchip" data-x3d="#seg-mapstyle [data-v='sat']">Satellite</button>
+        </div>
+        <label class="prow"><span>Map opacity</span>
+          <input type="range" min="0" max="100" step="5" value="50" data-x3d-range="#in-land">
+          <output data-x3d-out="#out-land">50%</output></label>
+        <h4>Layers</h4>
+        <label class="check"><input type="checkbox" data-x3d-check="#ck-ocean" checked> Ocean floor</label>
+        <label class="check"><input type="checkbox" data-x3d-check="#ck-coast" checked> Coastlines</label>
+        <label class="check jp3d"><input type="checkbox" data-x3d-check="#ck-admin" checked> Admin boundaries</label>
+        <label class="check"><input type="checkbox" data-x3d-check="#ck-plates"> Plate boundaries</label>
+        <label class="check"><input type="checkbox" data-x3d-check="#ck-faults"> Active faults</label>
+        <label class="check"><input type="checkbox" data-x3d-check="#ck-volcano"> Volcanoes</label>
+        <label class="check jp3d"><input type="checkbox" data-x3d-check="#ck-box" checked> Depth box &amp; grid</label>
+        <label class="prow"><span>Plate line width</span>
+          <input type="range" min="0.5" max="4" step="0.25" value="1" data-x3d-range="#in-lw-plates">
+          <output data-x3d-out="#out-lw-plates">1</output></label>
+        <label class="prow"><span>Fault line width</span>
+          <input type="range" min="0.5" max="4" step="0.25" value="1" data-x3d-range="#in-lw-faults">
+          <output data-x3d-out="#out-lw-faults">1</output></label>
+        <label class="prow jp3d"><span>Admin line width</span>
+          <input type="range" min="0.5" max="4" step="0.25" value="1" data-x3d-range="#in-lw-admin">
+          <output data-x3d-out="#out-lw-admin">1</output></label>
+        <label class="prow"><span>Volcano size</span>
+          <input type="range" min="0.5" max="2.5" step="0.25" value="1" data-x3d-range="#in-vsize">
+          <output data-x3d-out="#out-vsize">1</output></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Recent table ============ -->
+  <aside class="map-side">
+    <h2 class="section-title">Recent Earthquakes</h2>
+    <div class="eq-table-wrap">
+      <table class="eq-table">
+        <thead>
+          <tr>
+            <th style="width:110px">Magnitude</th>
+            <th>Location</th>
+            <th style="width:200px">Time (UTC)</th>
+            <th class="right" style="width:90px">Depth</th>
+          </tr>
+        </thead>
+        <tbody id="eqTableBody"></tbody>
+      </table>
+    </div>
+    <div class="view-all-row">
+      <button class="btn btn-outline" id="viewAllBtn">View All Earthquakes</button>
+    </div>
+  </aside>
+  </div><!-- /.map-layout -->
+
+</main>
+
+<div id="site-footer"></div>
+
+<!-- event detail modal -->
+<div class="modal-back" id="detailBack">
+  <div class="modal" id="detailModal"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/i18n.js"></script>
+<script>window.EQ_ALL_BANDS = true; // the live map shows the full M2+ catalog</script>
+<script src="js/data.js"></script>
+<script src="js/map.js"></script>
+</body>
+</html>

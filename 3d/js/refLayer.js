@@ -1,0 +1,340 @@
+/**
+ * Static reference geometry: coastlines and plate boundaries on the y=0 surface,
+ * a lat/lon graticule, and the depth cage that gives the cloud a sense of scale.
+ *
+ * Every polyline collection is flattened into a single LineSegments buffer so the
+ * whole basemap costs a handful of draw calls regardless of strip count.
+ */
+
+import * as THREE from 'three';
+import { LineMaterial } from '../vendor/lines/LineMaterial.js';
+import { LineSegments2 } from '../vendor/lines/LineSegments2.js';
+import { LineSegmentsGeometry } from '../vendor/lines/LineSegmentsGeometry.js';
+import { graticuleStep, ticks } from './projection.js';
+
+/** Flat [lon,lat,...] strips -> one LineSegments at height y. */
+function stripsToSegments(strips, proj, y, material) {
+  let segs = 0;
+  for (const s of strips) segs += s.length / 2 - 1;
+  if (segs <= 0) return null;
+
+  const pos = new Float32Array(segs * 6);
+  let k = 0;
+  for (const s of strips) {
+    for (let i = 0; i + 3 < s.length; i += 2) {
+      pos[k++] = proj.x(s[i]);     pos[k++] = y; pos[k++] = proj.z(s[i + 1]);
+      pos[k++] = proj.x(s[i + 2]); pos[k++] = y; pos[k++] = proj.z(s[i + 3]);
+    }
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  return new THREE.LineSegments(geo, material);
+}
+
+/**
+ * Same flattening, but as width-adjustable "fat" lines. WebGL ignores
+ * LineBasicMaterial.linewidth on every desktop platform, so any layer with a
+ * user-facing thickness slider has to go through LineSegments2 instead.
+ */
+function stripsToFat(strips, proj, y, color, opacity, width) {
+  let segs = 0;
+  for (const s of strips) segs += s.length / 2 - 1;
+  if (segs <= 0) return null;
+
+  const pos = new Float32Array(segs * 6);
+  let k = 0;
+  for (const s of strips) {
+    for (let i = 0; i + 3 < s.length; i += 2) {
+      pos[k++] = proj.x(s[i]);     pos[k++] = y; pos[k++] = proj.z(s[i + 1]);
+      pos[k++] = proj.x(s[i + 2]); pos[k++] = y; pos[k++] = proj.z(s[i + 3]);
+    }
+  }
+  const geo = new LineSegmentsGeometry();
+  geo.setPositions(pos);
+  const mat = new LineMaterial({
+    color, transparent: true, opacity, depthWrite: false,
+    linewidth: width, worldUnits: false,
+  });
+  return new LineSegments2(geo, mat);
+}
+
+function segmentsFromPoints(points, material) {
+  const pos = new Float32Array(points.length * 3);
+  points.forEach((p, i) => { pos[i * 3] = p.x; pos[i * 3 + 1] = p.y; pos[i * 3 + 2] = p.z; });
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  return new THREE.LineSegments(geo, material);
+}
+
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+
+/** Geologic-map volcano symbol: an outlined red triangle. */
+function volcanoTexture() {
+  const c = document.createElement('canvas');
+  c.width = c.height = 96;
+  const g = c.getContext('2d');
+  g.lineJoin = 'round';
+  g.beginPath();
+  g.moveTo(48, 14); g.lineTo(86, 82); g.lineTo(10, 82); g.closePath();
+  g.fillStyle = 'rgba(255, 45, 70, 0.30)';
+  g.fill();
+  g.strokeStyle = '#ff2d46';
+  g.lineWidth = 9;
+  g.stroke();
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+/** [lon,lat,name] rows -> screen-size triangle points. */
+function volcanoPoints(rows, toPos, size) {
+  if (!rows.length) return null;
+  const pos = new Float32Array(rows.length * 3);
+  rows.forEach((r, i) => {
+    const p = toPos(r[0], r[1]);
+    pos[i * 3] = p[0]; pos[i * 3 + 1] = p[1]; pos[i * 3 + 2] = p[2];
+  });
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const mat = new THREE.PointsMaterial({
+    map: volcanoTexture(), color: 0xffffff, size, sizeAttenuation: false,
+    transparent: true, alphaTest: 0.15, depthWrite: false,
+  });
+  const pts = new THREE.Points(geo, mat);
+  pts.visible = false;
+  return pts;
+}
+
+export class RefLayer {
+  constructor(basemap, proj, meta, onTextureReady) {
+    this.proj = proj;
+    this.group = new THREE.Group();
+
+    const mat = (color, opacity) => new THREE.LineBasicMaterial({
+      color, transparent: true, opacity, depthWrite: false,
+    });
+
+    // ── filled land (map layer) ──────────────────────────────
+    this.buildLand(meta, onTextureReady);
+
+    // ── administrative boundaries ────────────────────────────
+    // Under the coastline in the stacking order and much dimmer: context, not
+    // content. Prefecture/province lines are what make it read as a map.
+    this.admin = stripsToFat(basemap.admin ?? [], proj, 0.004, 0x7d93ad, 0.3, 1);
+    if (this.admin) this.group.add(this.admin);
+    this.borders = stripsToSegments(basemap.borders ?? [], proj, 0.006, mat(0xa8b6c8, 0.42));
+    if (this.borders) this.group.add(this.borders);
+
+    // ── coastline ────────────────────────────────────────────
+    this.coast = stripsToSegments(basemap.coast ?? [], proj, 0.008, mat(0x9fc4e8, 0.7));
+    if (this.coast) this.group.add(this.coast);
+
+    // ── plate boundaries ─────────────────────────────────────
+    // Lifted a hair above the surface so it never z-fights the coastline.
+    this.plates = stripsToFat(basemap.plates ?? [], proj, 0.014, 0xff8a3d, 0.85, 1);
+    if (this.plates) this.group.add(this.plates);
+
+    // ── active faults (GEM) ──────────────────────────────────
+    this.faults = stripsToFat(basemap.faults ?? [], proj, 0.011, 0xe0566e, 0.65, 1);
+    if (this.faults) { this.faults.visible = false; this.group.add(this.faults); }
+
+    // ── Holocene volcanoes (Smithsonian GVP) ─────────────────
+    this.volcanoRows = basemap.volcanoes ?? [];
+    this.volcanoBase = 24;
+    this.volcanoes = volcanoPoints(this.volcanoRows,
+      (lon, lat) => [proj.x(lon), 0.02, proj.z(lat)], this.volcanoBase);
+    if (this.volcanoes) this.group.add(this.volcanoes);
+
+    // ── graticule + depth cage ───────────────────────────────
+    this.cage = new THREE.Group();
+    this.cage.add(...this.buildCage(mat));
+    this.group.add(this.cage);
+  }
+
+  /**
+   * The land fill, as one textured quad on the surface.
+   *
+   * `land.png` is a grayscale land/water mask used as an alphaMap, so the fill
+   * colour and its opacity are both plain material properties -- which is what
+   * lets a single slider drive it. Depth interaction is switched off entirely
+   * and the quad is drawn first (renderOrder -10): otherwise, seen from above,
+   * a surface plane would hide every earthquake beneath it.
+   */
+  buildLand(meta, onReady) {
+    const p = this.proj;
+    this.repaint = onReady;
+    const geo = new THREE.PlaneGeometry(p.width, p.height);
+    geo.rotateX(-Math.PI / 2);             // lie flat: plane +y -> scene -z (north)
+
+    this.landMaterial = new THREE.MeshBasicMaterial({
+      color: 0x2f4a63,
+      transparent: true,
+      opacity: 0.5,
+      depthWrite: false,
+      depthTest: false,
+      side: THREE.DoubleSide,
+    });
+
+    this.land = new THREE.Mesh(geo, this.landMaterial);
+    this.land.position.set((p.xMin + p.xMax) / 2, 0, (p.zMin + p.zMax) / 2);
+    this.land.renderOrder = -10;
+    this.land.frustumCulled = false;
+    this.land.visible = false;             // shown once a style + texture exist
+    this.group.add(this.land);
+    this.mapStyle = 'sat';
+
+    if (!meta?.land?.path) {
+      this.landAvailable = false;
+      return;
+    }
+
+    new THREE.TextureLoader().load(
+      `data/${meta.land.path}`,
+      (tex) => {
+        tex.colorSpace = THREE.NoColorSpace;   // a mask, not colour
+        tex.minFilter = THREE.LinearMipmapLinearFilter;
+        tex.magFilter = THREE.LinearFilter;
+        tex.generateMipmaps = true;
+        tex.anisotropy = this.maxAnisotropy ?? 4;
+        this.maskTex = tex;
+        this.landAvailable = true;
+        this.applyMapStyle();
+        onReady?.();
+      },
+      undefined,
+      (err) => {
+        console.warn('land.png failed to load:', err);
+        this.landAvailable = false;
+        onReady?.();
+      },
+    );
+  }
+
+  /**
+   * 'off' | 'fill' (flat colour through the land/water mask) | 'sat'
+   * (Blue Marble imagery, ocean included). One quad, one material -- the
+   * style just swaps which texture drives it.
+   */
+  setMapStyle(style) {
+    this.mapStyle = style;
+    if (style === 'sat' && !this.satTex && !this.satLoading) {
+      this.satLoading = true;
+      new THREE.TextureLoader().load(
+        'data/earth-japan.jpg',
+        (tex) => {
+          tex.colorSpace = THREE.SRGBColorSpace;
+          tex.anisotropy = this.maxAnisotropy ?? 4;
+          this.satTex = tex;
+          this.applyMapStyle();
+          this.repaint?.();
+        },
+        undefined,
+        (err) => console.warn('earth-japan.jpg failed to load:', err),
+      );
+    }
+    this.applyMapStyle();
+  }
+
+  /** Satellite mode only: ocean on = full imagery; off = clipped to land. */
+  setOceanVisible(on) {
+    this.oceanOn = on;
+    this.applyMapStyle();
+  }
+
+  applyMapStyle() {
+    const m = this.landMaterial;
+    if (this.mapStyle === 'sat' && this.satTex) {
+      m.map = this.satTex;
+      m.alphaMap = (this.oceanOn ?? true) ? null : (this.maskTex ?? null);
+      m.color.set(0xffffff);
+      this.land.visible = true;
+    } else if (this.mapStyle === 'fill') {
+      m.map = null;
+      m.alphaMap = this.maskTex ?? null;
+      m.color.set(0x2f4a63);
+      this.land.visible = !!this.landAvailable;
+    } else {
+      this.land.visible = false;
+    }
+    m.needsUpdate = true;
+  }
+
+  buildCage(mat) {
+    const p = this.proj;
+    const { xMin, xMax, zMin, zMax } = p;
+    const yBot = p.y(p.depthMax);
+    const r = p.region;
+
+    const strong = [];   // outline: surface + floor + verticals
+    const faint = [];    // graticule + intermediate depth layers
+
+    // Surface outline and floor outline.
+    for (const y of [0, yBot]) {
+      const c = [V(xMin, y, zMin), V(xMax, y, zMin), V(xMax, y, zMax), V(xMin, y, zMax)];
+      for (let i = 0; i < 4; i++) strong.push(c[i], c[(i + 1) % 4]);
+    }
+    // Vertical corner edges.
+    for (const [x, z] of [[xMin, zMin], [xMax, zMin], [xMax, zMax], [xMin, zMax]]) {
+      strong.push(V(x, 0, z), V(x, yBot, z));
+    }
+
+    // Intermediate depth layers every 100 km -- the "stacked slabs" that make
+    // the dip of the subducting slab readable.
+    this.depthLevels = ticks(100, p.depthMax - 1, 100);
+    for (const d of this.depthLevels) {
+      const y = p.y(d);
+      const c = [V(xMin, y, zMin), V(xMax, y, zMin), V(xMax, y, zMax), V(xMin, y, zMax)];
+      for (let i = 0; i < 4; i++) faint.push(c[i], c[(i + 1) % 4]);
+    }
+
+    // Surface graticule.
+    this.lonStep = graticuleStep(r.maxlongitude - r.minlongitude);
+    this.latStep = graticuleStep(r.maxlatitude - r.minlatitude);
+    this.lonTicks = ticks(r.minlongitude, r.maxlongitude, this.lonStep);
+    this.latTicks = ticks(r.minlatitude, r.maxlatitude, this.latStep);
+
+    for (const lon of this.lonTicks) {
+      const x = p.x(lon);
+      faint.push(V(x, 0, zMin), V(x, 0, zMax));
+    }
+    for (const lat of this.latTicks) {
+      const z = p.z(lat);
+      faint.push(V(xMin, 0, z), V(xMax, 0, z));
+    }
+
+    this.strongLines = segmentsFromPoints(strong, mat(0x8fb0d6, 0.3));
+    this.faintLines = segmentsFromPoints(faint, mat(0x7794b8, 0.1));
+    return [this.strongLines, this.faintLines];
+  }
+
+  setCoastVisible(on) { if (this.coast) this.coast.visible = on; }
+  setPlatesVisible(on) { if (this.plates) this.plates.visible = on; }
+  setFaultsVisible(on) { if (this.faults) this.faults.visible = on; }
+  setVolcanoesVisible(on) { if (this.volcanoes) this.volcanoes.visible = on; }
+  setVolcanoSize(mult) {
+    if (this.volcanoes) this.volcanoes.material.size = this.volcanoBase * mult;
+  }
+
+  /** kind: 'plates' | 'faults' | 'admin'; width in CSS pixels. */
+  setLineWidth(kind, width) {
+    const obj = this[kind];
+    if (obj) obj.material.linewidth = width;
+  }
+
+  /** Fat-line materials need the viewport size to convert px to clip space. */
+  setResolution(w, h) {
+    for (const obj of [this.admin, this.plates, this.faults]) {
+      obj?.material.resolution.set(w, h);
+    }
+  }
+  setCageVisible(on) { this.cage.visible = on; }
+
+  setAdminVisible(on) {
+    if (this.admin) this.admin.visible = on;
+    if (this.borders) this.borders.visible = on;
+  }
+
+  setLandOpacity(v) {
+    if (this.landMaterial) this.landMaterial.opacity = v;
+  }
+}

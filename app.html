@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Platform Console — World Earthquake Labs</title>
+<link rel="icon" type="image/png" href="resource/img/logo_new.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="app-body">
+
+  <!-- ============ Sidebar ============ -->
+  <aside class="app-side">
+    <a class="brand" href="index.html" title="World Earthquake Labs website">
+      <img src="resource/img/logo_new.png" alt="World Earthquake Labs">
+    </a>
+
+    <nav class="app-nav" id="appNav">
+      <a href="#overview" data-view="overview"><i data-icon="grid" data-size="19"></i><span>Overview</span></a>
+      <a href="#map" data-view="map"><i data-icon="target" data-size="19"></i><span>Live Map</span></a>
+      <a href="#learn" data-view="learn"><i data-icon="book" data-size="19"></i><span>Earthquake Guide</span></a>
+      <a href="#insights" data-view="insights"><i data-icon="chartline" data-size="19"></i><span>Seismic Insights</span></a>
+      <a href="#research" data-view="research"><i data-icon="folder" data-size="19"></i><span>Research Hub</span></a>
+      <a href="#news" data-view="news"><i data-icon="radio" data-size="19"></i><span>News &amp; Updates</span></a>
+    </nav>
+
+    <div class="spacer"></div>
+
+    <!-- ── Google AdSense slot ──────────────────────────────────────────
+         AdSense 승인 후:
+         1) 아래 placeholder(div.ad-placeholder)를 지우고
+         2) 이 자리에 AdSense 코드를 붙여넣으세요. 예:
+
+         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+                 crossorigin="anonymous"></script>
+         <ins class="adsbygoogle"
+              style="display:block"
+              data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+              data-ad-slot="0000000000"
+              data-ad-format="auto"
+              data-full-width-responsive="true"></ins>
+         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    ──────────────────────────────────────────────────────────────────── -->
+    <div class="ad-slot" id="adSlot">
+      <div class="ad-placeholder">
+        <span class="ad-tag">AD</span>
+        <span class="ad-note">Google AdSense</span>
+        <span class="ad-size">300 × 250</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ Top bar ============ -->
+  <header class="app-top">
+    <h1 id="appTitle">Dashboard Overview</h1>
+    <span class="app-live"><span class="dot"></span>LIVE</span>
+    <span class="app-clock" id="appClock">—</span>
+    <label class="app-lang" title="Language">
+      <i data-icon="globe" data-size="15"></i>
+      <select id="langSelect">
+        <option value="en">English</option>
+        <option value="ja">日本語</option>
+        <option value="ko">한국어</option>
+      </select>
+    </label>
+  </header>
+
+  <!-- ============ Views ============ -->
+  <main class="app-main">
+    <iframe class="app-frame" id="frame-overview" title="Dashboard Overview"></iframe>
+    <iframe class="app-frame" id="frame-map" title="Live Earthquake Map"></iframe>
+    <iframe class="app-frame" id="frame-learn" title="Earthquake Guide"></iframe>
+    <iframe class="app-frame" id="frame-insights" title="Seismic Insights"></iframe>
+    <iframe class="app-frame" id="frame-research" title="Research Hub"></iframe>
+    <iframe class="app-frame" id="frame-news" title="News &amp; Updates"></iframe>
+  </main>
+
+<script src="js/common.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
