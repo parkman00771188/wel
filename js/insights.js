@@ -11,6 +11,8 @@
   var BLUE = "#2563eb";
   var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   var PERIOD_LBL = { 1: "24h", 7: "7d", 30: "30d", 90: "90d", 365: "1y", 1095: "3y", 1826: "5y", 3652: "10y" };
+  var ALL_DAYS = Math.ceil((Date.now() - Date.parse("1900-01-01T00:00:00Z")) / 86400e3);
+  function periodLbl() { return PERIOD_LBL[state.days] || "All"; }
   var state = { days: 30, region: "Global" };
   var charts = {};
 
@@ -25,7 +27,8 @@
   function baseEvents() {
     if (state.days <= 120) return EQ.inWindow(state.days * EQ.D);
     if (longCache.key !== state.days) {
-      longCache = { key: state.days, list: EQ.buildWindow(state.days, 4) };
+      var floor = state.days > 7300 ? 5 : 4; // full catalog stays tractable at M5+
+      longCache = { key: state.days, list: EQ.buildWindow(state.days, floor) };
     }
     return longCache.list;
   }
@@ -54,7 +57,7 @@
     };
   }
 
-  function labelEvery(n) { return n > 40 ? 12 : n > 14 ? 3 : 1; }
+  function labelEvery(n) { return n > 240 ? 120 : n > 40 ? 12 : n > 14 ? 3 : 1; }
 
   function logTicks(value) {
     var l = Math.log10(value);
@@ -218,7 +221,7 @@
   function renderHot() {
     var evs = baseEvents();
     var rows = EQ.hotspots(evs, 5);
-    document.getElementById("hotRangeLbl").textContent = "(" + PERIOD_LBL[state.days] + ")";
+    document.getElementById("hotRangeLbl").textContent = "(" + periodLbl() + ")";
     document.getElementById("hotList").innerHTML = rows.map(function (r, i) {
       return '<div class="hot-row"><div class="hot-rank">' + (i + 1) + "</div>" +
         '<div class="hot-name">' + r.name + '</div><div class="hot-count">' + r.count.toLocaleString() + "</div></div>";
@@ -258,31 +261,13 @@
   /* ---------- controls ---------- */
 
   document.getElementById("rangeSelect").addEventListener("change", function () {
-    state.days = +this.value;
+    state.days = this.value === "all" ? ALL_DAYS : +this.value;
     renderAll();
   });
 
   document.getElementById("regionSelect").addEventListener("change", function () {
     state.region = this.value;
     renderAll();
-  });
-
-  // header "Download" button / in-page "Export CSV" chip → CSV of current selection
-  document.addEventListener("click", function (ev) {
-    var btn = ev.target.closest("#ctaDownload, #csvBtn");
-    if (!btn) return;
-    ev.preventDefault();
-    var rows = [["time_utc", "magnitude", "latitude", "longitude", "depth_km", "location", "region"]];
-    windowEvents().forEach(function (e) {
-      rows.push([new Date(e.t).toISOString(), e.m, e.lat, e.lng, e.depth, '"' + e.loc + '"', '"' + e.group + '"']);
-    });
-    var blob = new Blob([rows.map(function (r) { return r.join(","); }).join("\n")], { type: "text/csv" });
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "wel_catalog_" + PERIOD_LBL[state.days] + "_" + state.region.toLowerCase().replace(/\s+/g, "_") + ".csv";
-    a.click();
-    URL.revokeObjectURL(a.href);
-    WEL.toast("Catalog exported — " + (rows.length - 1).toLocaleString() + " events (CSV)");
   });
 
   function renderAll() {

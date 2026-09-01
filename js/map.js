@@ -8,8 +8,9 @@
     live: true,                          // rolling last-24h with live refreshes
     startMs: Date.now() - 24 * 3600e3,   // selected window [startMs, endMs]
     endMs: Date.now(),
-    minMag: 2,
-    depths: { shallow: true, mid: true, deep: true },
+    magLo: 1, magHi: 9.5,                // shared filters (2D map, table, 4D globe)
+    bands: { 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true, 8: true, 9: true, 10: true },
+    depthLo: 0, depthHi: 700,
     playing: false,
     cursor: null,
     selectedId: null,
@@ -17,6 +18,8 @@
   };
 
   function spanDays() { return (state.endMs - state.startMs) / EQ.D; }
+
+  var lastTableRows = []; // what the table currently shows (for row clicks)
 
   /* ---------------- map ---------------- */
 
@@ -53,11 +56,13 @@
     sync3dView();
   });
 
-  function inRegion(e) {
+  function inRegionRaw(lat, lng) {
     var v = REGION_VIEWS[state.mapRegion];
     if (!v || !v.bbox) return true;
-    return e.lat >= v.bbox[0] && e.lat <= v.bbox[2] && e.lng >= v.bbox[1] && e.lng <= v.bbox[3];
+    return lat >= v.bbox[0] && lat <= v.bbox[2] && lng >= v.bbox[1] && lng <= v.bbox[3];
   }
+
+  function inRegion(e) { return inRegionRaw(e.lat, e.lng); }
 
   /* 2D/3D toggle — 3D loads the Earthquake 4D engine (Three.js, full 1900–present catalog) */
 
@@ -77,9 +82,10 @@
     frame3d.addEventListener("load", function () {
       style3dFrame();
       sync3dView();
-      // dates once the app has bound its inputs (it boots asynchronously)
-      setTimeout(sync3dDates, 2500);
-      setTimeout(sync3dDates, 8000);
+      // dates + shared filters once the app has bound its inputs (async boot)
+      var pushAll = function () { sync3dDates(); push3dShared(); };
+      setTimeout(pushAll, 2500);
+      setTimeout(pushAll, 8000);
     });
   }
 
@@ -167,8 +173,7 @@
 
   function syncFilterSections() {
     var is3d = document.getElementById("mapShell").classList.contains("mode-3d");
-    document.getElementById("filters2d").hidden = is3d;
-    document.getElementById("filters3d").hidden = !is3d;
+    document.getElementById("filters3dOnly").hidden = !is3d; // shared filters always show
     if (is3d) refresh3dFilters();
   }
 
@@ -368,9 +373,16 @@
   /* ---------------- filtering ---------------- */
 
   function depthOk(d) {
-    if (d < 70) return state.depths.shallow;
-    if (d < 300) return state.depths.mid;
-    return state.depths.deep;
+    return d >= state.depthLo && d <= state.depthHi;
+  }
+
+  function bandOk(m) {
+    var b = Math.min(10, Math.max(1, Math.floor(m)));
+    return state.bands[b];
+  }
+
+  function magOk(m) {
+    return m >= state.magLo && m <= state.magHi && bandOk(m);
   }
 
   /* recent windows use the always-loaded events cache (full M2+ detail);
@@ -393,7 +405,7 @@
 
   function windowList() {
     if (cacheCovers()) return EQ.events;
-    var floor = Math.max(autoFloor(), state.minMag);
+    var floor = Math.max(autoFloor(), state.magLo);
     var key = Math.round(state.startMs / 6e4) + ":" + Math.round(state.endMs / 6e4) + ":" + floor;
     if (longCache.key !== key) {
       longCache = { key: key, list: EQ.buildRange(state.startMs, state.endMs, floor) };
@@ -403,7 +415,7 @@
 
   function filtered() {
     return windowList().filter(function (e) {
-      return e.t >= state.startMs && e.t <= state.endMs && e.m >= state.minMag && depthOk(e.depth);
+      return e.t >= state.startMs && e.t <= state.endMs && magOk(e.m) && depthOk(e.depth);
     });
   }
 
@@ -527,24 +539,20 @@
   /* ---------------- table ---------------- */
 
   function renderTable() {
-    var floor = Math.max(4.3, state.minMag);
-    var pool = filtered().filter(inRegion);
-    var rows;
-    if (spanDays() > 120) {
-      rows = pool; // newest first — the long-window floor already keeps it significant
-    } else {
-      rows = pool.filter(function (e) { return e.m >= floor; });
-      var need = window.WEL && WEL.embed ? 14 : 5;
-      if (rows.length < need) rows = pool;
-      if (rows.length < need) {
-        // quiet region/window: widen beyond the selected range so the list is never empty
-        rows = EQ.events.filter(function (e) {
-          return e.m >= state.minMag && depthOk(e.depth) && inRegion(e);
-        });
-      }
-    }
     var baseCount = window.WEL && WEL.embed ? 14 : 5;
-    rows = rows.slice(0, state.expandedTable ? (baseCount === 5 ? 25 : 40) : baseCount);
+    var want = state.expandedTable ? (baseCount === 5 ? 25 : 40) : baseCount;
+    var rows;
+    if (cacheCovers()) {
+      // recent window: the events cache already carries full M2+ detail
+      rows = filtered().filter(inRegion).slice(0, want);
+    } else {
+      // long window: scan the raw catalog backwards so the newest events that
+      // match the CURRENT filters top the list (no magnitude re-sorting)
+      rows = EQ.latestInRange(state.startMs, state.endMs, want, function (m, lat, lon, depth) {
+        return magOk(m) && depthOk(depth) && inRegionRaw(lat, lon);
+      });
+    }
+    lastTableRows = rows;
     document.getElementById("eqTableBody").innerHTML = rows.map(function (e) {
       var timeStr = window.WEL && WEL.embed ? EQ.fmtList(e.t) : EQ.fmtShort(e.t);
       return "<tr data-id=\"" + e.id + "\" style=\"cursor:pointer\">" +
@@ -556,7 +564,7 @@
     Array.prototype.forEach.call(document.querySelectorAll("#eqTableBody tr"), function (tr) {
       tr.addEventListener("click", function () {
         var byId = function (x) { return x.id === tr.dataset.id; };
-        var e = windowList().find(byId) || EQ.events.find(byId);
+        var e = lastTableRows.find(byId) || EQ.events.find(byId);
         if (!e) return;
         if (document.getElementById("mapShell").classList.contains("mode-3d")) {
           focus3d(e);   // swing the 4D globe to the event and open its card
@@ -759,33 +767,89 @@
     document.querySelectorAll(".drop-panel.open").forEach(function (p) { p.classList.remove("open"); });
   });
 
-  /* ---------------- filters ---------------- */
+  /* ---------- shared filters (drive 2D, the table, and the 4D globe) ---------- */
+
+  var fMagLo = document.getElementById("fMagLo"), fMagHi = document.getElementById("fMagHi");
+  var fDepthLo = document.getElementById("fDepthLo"), fDepthHi = document.getElementById("fDepthHi");
 
   function updateFilterBadge() {
     var active = 0;
-    if (state.minMag > 2) active++;
-    if (!state.depths.shallow || !state.depths.mid || !state.depths.deep) active++;
+    if (state.magLo > 1 || state.magHi < 9.5) active++;
+    var bandsOff = Object.keys(state.bands).some(function (k) { return !state.bands[k]; });
+    if (bandsOff) active++;
+    if (state.depthLo > 0 || state.depthHi < 700) active++;
     var badge = document.getElementById("filterBadge");
     badge.hidden = active === 0;
     badge.textContent = active;
   }
 
-  document.getElementById("minMag").addEventListener("input", function () {
-    state.minMag = parseFloat(this.value);
-    document.getElementById("minMagVal").textContent = state.minMag.toFixed(1);
+  function readSharedInputs() {
+    var lo = +fMagLo.value, hi = +fMagHi.value;
+    state.magLo = Math.min(lo, hi);
+    state.magHi = Math.max(lo, hi);
+    var dlo = +fDepthLo.value, dhi = +fDepthHi.value;
+    state.depthLo = Math.min(dlo, dhi);
+    state.depthHi = Math.max(dlo, dhi);
+    document.getElementById("fMagOut").textContent = state.magLo.toFixed(1) + " – " + state.magHi.toFixed(1);
+    document.getElementById("fDepthOut").textContent = state.depthLo + " – " + state.depthHi;
+    paintDual(document.getElementById("fMagWrap"));
+    paintDual(document.getElementById("fDepthWrap"));
+  }
+
+  function applyShared() {
+    longCache.key = null; // the magnitude floor feeds the long-window cache key
     renderQuakes();
     renderTable();
     updateFilterBadge();
-  });
+    push3dShared();
+  }
 
-  Array.prototype.forEach.call(document.querySelectorAll(".depthChk"), function (chk) {
-    chk.addEventListener("change", function () {
-      state.depths[chk.value] = chk.checked;
-      renderQuakes();
-      renderTable();
-      updateFilterBadge();
+  /* mirror the shared filters into the 4D app (magnitude range, bands, depth) */
+  function push3dShared() {
+    x3(function (doc, w) {
+      var set = function (id, v) {
+        var t = doc.getElementById(id);
+        if (t) { t.value = v; t.dispatchEvent(new w.Event("input", { bubbles: true })); }
+      };
+      set("in-mag-lo", state.magLo);
+      set("in-mag-hi", state.magHi);
+      set("in-depth-lo", state.depthLo);
+      set("in-depth-hi", state.depthHi);
+      for (var b = 1; b <= 10; b++) {
+        var ck = doc.getElementById("ck-band-" + b);
+        if (ck && ck.checked !== state.bands[b]) {
+          ck.checked = state.bands[b];
+          ck.dispatchEvent(new w.Event("change", { bubbles: true }));
+        }
+      }
+    });
+  }
+
+  [fMagLo, fMagHi, fDepthLo, fDepthHi].forEach(function (el) {
+    el.addEventListener("input", function () {
+      readSharedInputs();
+      applyShared();
     });
   });
+
+  document.getElementById("fBands").addEventListener("change", function (ev) {
+    var ck = ev.target.closest("[data-band]");
+    if (!ck) return;
+    state.bands[+ck.dataset.band] = ck.checked;
+    applyShared();
+  });
+
+  document.getElementById("fDepthPresets").addEventListener("click", function (ev) {
+    var b = ev.target.closest("[data-lo]");
+    if (!b) return;
+    this.querySelectorAll(".pchip").forEach(function (x) { x.classList.toggle("on", x === b); });
+    fDepthLo.value = b.dataset.lo;
+    fDepthHi.value = b.dataset.hi;
+    readSharedInputs();
+    applyShared();
+  });
+
+  readSharedInputs();
 
   /* ---------------- live updates ---------------- */
 

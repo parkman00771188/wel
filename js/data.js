@@ -282,7 +282,8 @@
     inWindow: inWindow, byRegion: byRegion, magBuckets: magBuckets,
     dailyCounts: dailyCounts, movingAvg: movingAvg, depthBins: depthBins,
     energySeries: energySeries, hotspots: hotspots, onLive: onLive,
-    rangeStats: rangeStats, buildWindow: buildWindow, buildRange: buildRange
+    rangeStats: rangeStats, buildWindow: buildWindow, buildRange: buildRange,
+    latestInRange: latestInRange
   };
   window.EQ = EQ;
 
@@ -352,6 +353,35 @@
 
   function buildWindow(days, minMag) {
     return buildRange(Date.now() - days * D, Date.now(), minMag);
+  }
+
+  /* Newest events in [startMs, endMs] that pass `test(mag, lat, lon, depth)`,
+     up to `limit`, scanning the time-sorted bands backwards — so an event
+     table can honor the user's exact filters over any span, cheaply. */
+  function latestInRange(startMs, endMs, limit, test) {
+    if (!RAW) return [];
+    var startSec = (startMs - RAW.epochMs) / 1000;
+    var endSec = (endMs - RAW.epochMs) / 1000;
+    var cand = [];
+    RAW.bands.forEach(function (b) {
+      var i = lowerBound(b.t, endSec + 1) - 1;
+      var got = 0;
+      for (; i >= 0 && got < limit; i--) {
+        var ts = b.t[i];
+        if (ts > endSec) continue;
+        if (ts < startSec) break;
+        var mag = b.mag[i];
+        if (mag > 9.55) continue;
+        if (test && !test(mag, b.lat[i], b.lon[i], b.depth[i])) continue;
+        cand.push({ b: b, i: i, ts: ts });
+        got++;
+      }
+    });
+    cand.sort(function (a, c) { return c.ts - a.ts; });
+    var idc = 1;
+    return cand.slice(0, limit).map(function (c) {
+      return makeEvent(c.b, c.i, RAW.epochMs, "L" + idc++);
+    });
   }
 
   function lowerBound(arr, val) {

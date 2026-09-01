@@ -57,17 +57,50 @@
         </button>
         <div class="drop-panel lg" id="filtersPanel">
 
-          <div id="filters2d">
-            <h4>Minimum magnitude</h4>
-            <input type="range" id="minMag" min="2" max="7" step="0.1" value="2">
-            <div class="row"><span>M <b id="minMagVal">2.0</b>+</span><span id="filterCount"></span></div>
-            <h4 style="margin-top:16px">Depth</h4>
-            <label class="check"><input type="checkbox" class="depthChk" value="shallow" checked> Shallow (&lt; 70 km)</label>
-            <label class="check"><input type="checkbox" class="depthChk" value="mid" checked> Intermediate (70–300 km)</label>
-            <label class="check"><input type="checkbox" class="depthChk" value="deep" checked> Deep (&gt; 300 km)</label>
+          <!-- shared filters: drive the 2D map, the event table, and the 4D globe -->
+          <div id="filtersShared">
+            <h4>Magnitude</h4>
+            <div class="prow"><span>Range M</span><span class="grow"></span>
+              <output id="fMagOut" style="min-width:70px">1.0 – 9.5</output></div>
+            <div class="dualwrap" id="fMagWrap">
+              <div class="dual-fill"></div>
+              <input type="range" id="fMagLo" min="1" max="9.5" step="0.1" value="1">
+              <input type="range" id="fMagHi" min="1" max="9.5" step="0.1" value="9.5">
+            </div>
+            <div class="chip-row bands" id="fBands">
+              <label class="bchip"><input type="checkbox" data-band="1" checked>M1</label>
+              <label class="bchip"><input type="checkbox" data-band="2" checked>M2</label>
+              <label class="bchip"><input type="checkbox" data-band="3" checked>M3</label>
+              <label class="bchip"><input type="checkbox" data-band="4" checked>M4</label>
+              <label class="bchip"><input type="checkbox" data-band="5" checked>M5</label>
+              <label class="bchip"><input type="checkbox" data-band="6" checked>M6</label>
+              <label class="bchip"><input type="checkbox" data-band="7" checked>M7</label>
+              <label class="bchip"><input type="checkbox" data-band="8" checked>M8</label>
+              <label class="bchip"><input type="checkbox" data-band="9" checked>M9</label>
+              <label class="bchip"><input type="checkbox" data-band="10" checked>M10</label>
+            </div>
+            <p class="phint">Turning a band off removes it (e.g. M3 = M3.0–3.9) from the map, the list, and the globe.</p>
+
+            <h4>Depth</h4>
+            <div class="prow"><span>Range km</span><span class="grow"></span>
+              <output id="fDepthOut" style="min-width:70px">0 – 700</output></div>
+            <div class="dualwrap" id="fDepthWrap">
+              <div class="dual-fill"></div>
+              <input type="range" id="fDepthLo" min="0" max="700" step="5" value="0">
+              <input type="range" id="fDepthHi" min="0" max="700" step="5" value="700">
+            </div>
+            <div class="chip-row" id="fDepthPresets">
+              <button class="pchip on" data-lo="0" data-hi="700">All</button>
+              <button class="pchip" data-lo="0" data-hi="70">Shallow</button>
+              <button class="pchip" data-lo="70" data-hi="300">Intermediate</button>
+              <button class="pchip" data-lo="300" data-hi="700">Deep</button>
+            </div>
+
+            <div class="row" style="margin-top:12px"><span>Events shown</span><span id="filterCount"></span></div>
           </div>
 
-          <div id="filters3d" class="x3dscope" hidden>
+          <!-- 3D-only display settings (the shared filters above apply there too) -->
+          <div id="filters3dOnly" class="x3dscope" hidden>
             <h4>Display mode</h4>
             <div class="chip-row">
               <button class="pchip" data-x3d="#seg-mode [data-v='accumulate']">Accumulate</button>
@@ -76,43 +109,6 @@
             <label class="prow" id="p3dWindowRow" hidden><span>Window length</span>
               <input type="range" min="0" max="10" step="1" value="6" data-x3d-range="#in-window">
               <output data-x3d-out="#out-window">1 y</output></label>
-
-            <h4>Magnitude</h4>
-            <div class="prow"><span>Range M</span><span class="grow"></span>
-              <output data-x3d-out="#out-mag" style="min-width:70px">1.5 – 9.1</output></div>
-            <div class="dualwrap" data-dual="mag">
-              <div class="dual-fill"></div>
-              <input type="range" min="1.5" max="9.1" step="0.1" value="1.5" data-x3d-range="#in-mag-lo">
-              <input type="range" min="1.5" max="9.1" step="0.1" value="9.1" data-x3d-range="#in-mag-hi">
-            </div>
-            <div class="chip-row bands">
-              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-1" checked>M1</label>
-              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-2" checked>M2</label>
-              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-3" checked>M3</label>
-              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-4" checked>M4</label>
-              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-5" checked>M5</label>
-              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-6" checked>M6</label>
-              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-7" checked>M7</label>
-              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-8" checked>M8</label>
-              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-9" checked>M9</label>
-              <label class="bchip"><input type="checkbox" data-x3d-check="#ck-band-10" checked>M10</label>
-            </div>
-            <p class="phint">Turning a band off removes it (e.g. M3 = M3.0–3.9) from the globe, list, and stats.</p>
-
-            <h4>Depth</h4>
-            <div class="prow"><span>Range km</span><span class="grow"></span>
-              <output data-x3d-out="#out-depth" style="min-width:70px">0 – 700</output></div>
-            <div class="dualwrap" data-dual="depth">
-              <div class="dual-fill"></div>
-              <input type="range" min="0" max="700" step="5" value="0" data-x3d-range="#in-depth-lo">
-              <input type="range" min="0" max="700" step="5" value="700" data-x3d-range="#in-depth-hi">
-            </div>
-            <div class="chip-row">
-              <button class="pchip" data-x3d="#depth-presets [data-lo='0'][data-hi='700']">All</button>
-              <button class="pchip" data-x3d="#depth-presets [data-lo='0'][data-hi='70']">Shallow</button>
-              <button class="pchip" data-x3d="#depth-presets [data-lo='70'][data-hi='300']">Intermediate</button>
-              <button class="pchip" data-x3d="#depth-presets [data-lo='300'][data-hi='700']">Deep</button>
-            </div>
 
             <h4>Visual</h4>
             <label class="prow"><span>Depth exaggeration</span>
@@ -154,17 +150,6 @@
             </div>
             <label class="check"><input type="checkbox" data-x3d-check="#ck-additive" checked> Additive glow</label>
             <label class="check"><input type="checkbox" data-x3d-check="#ck-spin"> Auto-rotate</label>
-
-            <div class="jp3d">
-              <h4>Camera</h4>
-              <div class="chip-row">
-                <button class="pchip" data-x3d="#view-presets [data-v='iso']">Isometric</button>
-                <button class="pchip" data-x3d="#view-presets [data-v='top']">Top (map)</button>
-                <button class="pchip" data-x3d="#view-presets [data-v='south']">S→N section</button>
-                <button class="pchip" data-x3d="#view-presets [data-v='east']">E→W section</button>
-                <button class="pchip" data-x3d="#view-presets [data-v='trench']">Japan Trench</button>
-              </div>
-            </div>
           </div>
         </div>
       </div>

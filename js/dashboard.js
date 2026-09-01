@@ -9,6 +9,8 @@
   Chart.defaults.color = "#7b8698";
 
   var PERIOD_LBL = { 1: "24h", 7: "7d", 30: "30d", 90: "90d", 365: "1y", 1095: "3y", 1826: "5y", 3652: "10y" };
+  var ALL_DAYS = Math.ceil((Date.now() - Date.parse("1900-01-01T00:00:00Z")) / 86400e3);
+  function periodLbl() { return PERIOD_LBL[state.days] || "All"; }
 
   var state = { region: "All Regions", tz: "utc", days: 7 };
 
@@ -62,7 +64,7 @@
   }
 
   function renderStats(s) {
-    var lbl = PERIOD_LBL[state.days];
+    var lbl = periodLbl();
     var suffix = state.days === 1 ? "vs yesterday" : "vs previous period";
     var largest = s.top5[0] || null;
 
@@ -116,7 +118,7 @@
       labels = dc.labels.map(function (l, i4) { return i4 % every === 0 ? l : ""; });
       counts = dc.counts;
     } else {
-      var everyM = s.labels.length > 40 ? 12 : (s.labels.length > 14 ? 3 : 1);
+      var everyM = s.labels.length > 240 ? 120 : s.labels.length > 40 ? 12 : (s.labels.length > 14 ? 3 : 1);
       labels = s.labels.map(function (l, i5) { return i5 % everyM === 0 ? l : ""; });
       counts = s.series;
     }
@@ -125,7 +127,7 @@
 
   function renderHist(s) {
     var d = histData(s);
-    document.getElementById("histRangeLbl").textContent = PERIOD_LBL[state.days];
+    document.getElementById("histRangeLbl").textContent = periodLbl();
     if (histChart) histChart.destroy();
     histChart = new Chart(document.getElementById("histChart"), {
       type: "bar",
@@ -181,7 +183,7 @@
     var data = labels.map(function (k) { return b[k]; });
     var total = Math.max(1, data.reduce(function (a, x) { return a + x; }, 0));
 
-    document.getElementById("donutRangeLbl").textContent = "(" + PERIOD_LBL[state.days] + ")";
+    document.getElementById("donutRangeLbl").textContent = "(" + periodLbl() + ")";
 
     if (donutChart) donutChart.destroy();
     donutChart = new Chart(document.getElementById("donutChart"), {
@@ -258,7 +260,7 @@
   /* ---------------- controls ---------------- */
 
   document.getElementById("periodSelect").addEventListener("change", function () {
-    state.days = +this.value;
+    state.days = this.value === "all" ? ALL_DAYS : +this.value;
     var regionSel = document.getElementById("regionSelect");
     var isLong = state.days > 120;
     regionSel.disabled = isLong; // long windows aggregate the whole catalog
@@ -296,8 +298,8 @@
   setTimeout(function () { mini.invalidateSize(); }, 250);
 
   // deep-link: #p365 opens the dashboard on that period
-  var pm = (location.hash || "").match(/^#p(\d+)$/);
-  if (pm && PERIOD_LBL[+pm[1]]) {
+  var pm = (location.hash || "").match(/^#p(\d+|all)$/);
+  if (pm && (pm[1] === "all" || PERIOD_LBL[+pm[1]])) {
     var sel = document.getElementById("periodSelect");
     sel.value = pm[1];
     sel.dispatchEvent(new Event("change"));
