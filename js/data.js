@@ -141,11 +141,15 @@
 
   /* ---------- palettes / sizing ---------- */
   function magColor(m) {
+    if (m >= 9) return "#4a148c";
+    if (m >= 8) return "#8e24aa";
+    if (m >= 7) return "#c62828";
     if (m >= 6) return "#e53935";
     if (m >= 5) return "#f4511e";
     if (m >= 4) return "#fb8c00";
     if (m >= 3) return "#ffb300";
-    return "#ffd54f";
+    if (m >= 2) return "#ffd54f";
+    return "#ffe082";
   }
   function miniColor(m) {
     if (m >= 6) return "#e8432d";
@@ -283,7 +287,7 @@
     dailyCounts: dailyCounts, movingAvg: movingAvg, depthBins: depthBins,
     energySeries: energySeries, hotspots: hotspots, onLive: onLive,
     rangeStats: rangeStats, buildWindow: buildWindow, buildRange: buildRange,
-    latestInRange: latestInRange
+    latestInRange: latestInRange, forEachInRange: forEachInRange, regionFor: nameFor
   };
   window.EQ = EQ;
 
@@ -353,6 +357,25 @@
 
   function buildWindow(days, minMag) {
     return buildRange(Date.now() - days * D, Date.now(), minMag);
+  }
+
+  /* Stream every event in [startMs, endMs] to `cb(mag, lat, lon, depth, tMs)`
+     straight off the typed arrays — no objects, so half a million dots can be
+     painted onto a canvas without materializing anything. */
+  function forEachInRange(startMs, endMs, cb) {
+    if (!RAW) return;
+    var s = (startMs - RAW.epochMs) / 1000;
+    var e = (endMs - RAW.epochMs) / 1000;
+    RAW.bands.forEach(function (b) {
+      var i = lowerBound(b.t, s);
+      for (; i < b.n; i++) {
+        var ts = b.t[i];
+        if (ts > e) break;
+        var mag = b.mag[i];
+        if (mag > 9.55) continue;
+        cb(mag, b.lat[i], b.lon[i], b.depth[i], RAW.epochMs + ts * 1000);
+      }
+    });
   }
 
   /* Newest events in [startMs, endMs] that pass `test(mag, lat, lon, depth)`,

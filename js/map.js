@@ -385,43 +385,126 @@
     return m >= state.magLo && m <= state.magHi && bandOk(m);
   }
 
-  /* recent windows use the always-loaded events cache (full M2+ detail);
-     older/longer windows materialize from the raw catalog with a floor */
-  var longCache = { key: null, list: [] };
-
-  function autoFloor() {
-    var d = spanDays();
-    if (d > 7300) return 6;    // full catalog: only strong events stay drawable
-    if (d > 1826) return 5;    // 5y–10y
-    if (d > 365) return 4.5;   // 3y
-    if (d > 120) return 4;     // 1y
-    return 2;
-  }
-
   function cacheCovers() {
     // the recent cache holds the last ~120 days
     return state.startMs >= Date.now() - 118 * EQ.D;
   }
 
-  function windowList() {
-    if (cacheCovers()) return EQ.events;
-    var floor = Math.max(autoFloor(), state.magLo);
-    var key = Math.round(state.startMs / 6e4) + ":" + Math.round(state.endMs / 6e4) + ":" + floor;
-    if (longCache.key !== key) {
-      longCache = { key: key, list: EQ.buildRange(state.startMs, state.endMs, floor) };
-    }
-    return longCache.list;
-  }
-
+  /* recent windows only — long windows are painted straight off the raw
+     catalog by the fast canvas layer, with no per-event objects at all */
   function filtered() {
-    return windowList().filter(function (e) {
+    if (!cacheCovers()) return [];
+    return EQ.events.filter(function (e) {
       return e.t >= state.startMs && e.t <= state.endMs && magOk(e.m) && depthOk(e.depth);
     });
   }
 
   /* ---------------- rendering ---------------- */
 
+  /* ---- fast canvas layer: paints any span (up to the full catalog) ---- */
+
+  var fastCanvas = null, fastActive = false, fastCount = 0;
+
+  function ensureFastCanvas() {
+    if (fastCanvas) return;
+    fastCanvas = L.DomUtil.create("canvas", "fast-quakes");
+    fastCanvas.style.pointerEvents = "none";
+    map.getPane("overlayPane").appendChild(fastCanvas);
+    map.on("moveend zoomend resize", function () { if (fastActive) drawFast(); });
+  }
+
+  function passesShared(mag, depth, tMs) {
+    return magOk(mag) && depthOk(depth) && (state.cursor == null || tMs <= state.cursor);
+  }
+
+  function drawFast() {
+    ensureFastCanvas();
+    var size = map.getSize();
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    fastCanvas.width = size.x * dpr;
+    fastCanvas.height = size.y * dpr;
+    fastCanvas.style.width = size.x + "px";
+    fastCanvas.style.height = size.y + "px";
+    L.DomUtil.setPosition(fastCanvas, map.containerPointToLayerPoint([0, 0]));
+
+    var ctx = fastCanvas.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, size.x, size.y);
+
+    var b = map.getBounds();
+    var west = b.getWest(), east = b.getEast();
+    var count = 0;
+
+    EQ.forEachInRange(state.startMs, state.endMs, function (mag, lat, lon, depth, tMs) {
+      if (!passesShared(mag, depth, tMs)) return;
+      count++;
+      for (var k = -360; k <= 360; k += 360) {
+        var lng = lon + k;
+        if (lng < west - 3 || lng > east + 3) continue;
+        var p = map.latLngToContainerPoint([lat, lng]);
+        var r = Math.max(1.6, EQ.magRadius(mag) * 0.8);
+        ctx.globalAlpha = 0.72;
+        ctx.fillStyle = EQ.magColor(mag);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r, 0, 6.2832);
+        ctx.fill();
+        if (mag >= 6) { // halo for the big ones
+          ctx.globalAlpha = 0.14;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, r + 8, 0, 6.2832);
+          ctx.fill();
+        }
+      }
+    });
+
+    ctx.globalAlpha = 1;
+    fastCount = count;
+    var fc = document.getElementById("filterCount");
+    if (fc) fc.textContent = count.toLocaleString() + " events";
+  }
+
+  function setFast(on) {
+    fastActive = on;
+    if (fastCanvas) fastCanvas.style.display = on ? "" : "none";
+  }
+
+  // click → nearest drawn event within 10 px (long windows only)
+  map.on("click", function (ev) {
+    if (!fastActive) return;
+    var pt = ev.containerPoint;
+    var best = null, bestD = 100; // 10px squared
+    EQ.forEachInRange(state.startMs, state.endMs, function (mag, lat, lon, depth, tMs) {
+      if (!passesShared(mag, depth, tMs)) return;
+      for (var k = -360; k <= 360; k += 360) {
+        var p = map.latLngToContainerPoint([lat, lon + k]);
+        var dx = p.x - pt.x, dy = p.y - pt.y;
+        var d = dx * dx + dy * dy;
+        if (d < bestD) { bestD = d; best = { m: mag, lat: lat, lng: lon, depth: depth, t: tMs }; }
+      }
+    });
+    if (!best) return;
+    var who = EQ.regionFor(best.lat, best.lng);
+    select({
+      id: "hit", m: Math.round(best.m * 10) / 10,
+      lat: Math.round(best.lat * 1000) / 1000, lng: Math.round(best.lng * 1000) / 1000,
+      depth: Math.max(0, Math.round(best.depth)), t: best.t,
+      loc: who.loc, group: who.group, rof: who.rof, status: "Reviewed"
+    }, false);
+  });
+
+  var lastFastDraw = 0;
+
   function renderQuakes() {
+    if (!cacheCovers()) {
+      quakeLayer.clearLayers();
+      setFast(true);
+      // playback repaints every frame — throttle full-catalog redraws
+      if (state.playing && Date.now() - lastFastDraw < 150) return;
+      lastFastDraw = Date.now();
+      drawFast();
+      return;
+    }
+    setFast(false);
     quakeLayer.clearLayers();
     var list = filtered();
     if (state.cursor != null) { // playing or scrubbed
@@ -449,7 +532,7 @@
       quakeLayer.addLayer(dot);
     }
     var fc = document.getElementById("filterCount");
-    if (fc) fc.textContent = list.length + " events";
+    if (fc) fc.textContent = list.length.toLocaleString() + " events";
   }
 
   function setPulse(e) {
@@ -797,7 +880,6 @@
   }
 
   function applyShared() {
-    longCache.key = null; // the magnitude floor feeds the long-window cache key
     renderQuakes();
     renderTable();
     updateFilterBadge();
@@ -857,7 +939,6 @@
     if (!state.live || state.playing || state.cursor != null) return;
     state.endMs = Date.now();
     state.startMs = state.endMs - 24 * EQ.H;
-    longCache.key = null; // catalog was refreshed in place
     renderQuakes();
     renderTable();
     if (!state.selectedId) setPulse(e);
