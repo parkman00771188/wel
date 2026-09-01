@@ -1,6 +1,9 @@
 # World Earthquake Labs
 
-실시간 지진 데이터 플랫폼 데모 웹사이트 (정적 HTML/CSS/JS).
+**https://worldearthquakelabs.com**
+
+실시간 지진 데이터 플랫폼 (정적 HTML/CSS/JS). 1900년부터의 지진 297만 건을
+3D 지구본으로 돌려 보고, 최근 14일치는 30분마다 USGS 에서 새로 받아옵니다.
 
 ## 페이지 구성
 
