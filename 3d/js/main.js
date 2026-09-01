@@ -311,14 +311,15 @@ class App {
 
     this.feed.setSelected(i);
 
-    // Ring the epicentre and open its card, but leave the camera alone.
-    // Reading down a list is not a request to be flown somewhere: the view you
-    // had framed is the one you want to compare the next row against, and on
-    // the globe a swing to the far side hides everything you were looking at.
-    // Clicking a point on the map still glides -- there you asked for that one.
+    // Ring the epicentre, open its card, and glide over to it. What made this
+    // unpleasant before was not the travel but the zoom that came with it: the
+    // camera closed in, so the next row you picked was read at a scale you had
+    // not chosen. It now keeps your distance and only turns -- you watch the
+    // globe roll, which is what tells you where on Earth you just went.
+    // Clicking the point itself still pulls in, because there you asked to.
     if (onGlobe) {
       const ev = layer.events;
-      this.globe.markAt(ev.lon[i], ev.lat[i], ev.depth[i]);
+      this.globe.focusOn(ev.lon[i], ev.lat[i], ev.depth[i], { keepDistance: true });
       this.showCard(i);
       this.dirty = true;
       return;
@@ -326,6 +327,7 @@ class App {
 
     this.marker.show(i, this.quakes.positions);
     this.showCard(i);
+    this.flyTo(this.worldPos(i), 1100, { keepDistance: true });
     this.dirty = true;
   }
 
@@ -984,10 +986,10 @@ class App {
    * so the move reads as travel rather than a cut. Never zooms out: if you are
    * already closer than the default framing, the distance is left alone.
    */
-  flyTo(target, ms = 1100) {   // matches the globe's glide
+  flyTo(target, ms = 1100, { keepDistance = false } = {}) {   // matches the globe's glide
     const span = Math.max(this.proj.width, this.proj.height);
     const dir = this.camera.position.clone().sub(this.controls.target);
-    const dist = Math.min(dir.length(), span * 0.6);
+    const dist = keepDistance ? dir.length() : Math.min(dir.length(), span * 0.6);
     dir.normalize().multiplyScalar(Math.max(dist, 0.6));
 
     this.fly = {

@@ -657,9 +657,14 @@ export class GlobeView {
    * closes to a fixed working distance so a picked event always lands at a
    * legible zoom instead of wherever the last gesture left it.
    */
-  focusOn(lon, lat, depth = 0, { animate = true } = {}) {
+  focusOn(lon, lat, depth = 0, { animate = true, keepDistance = false } = {}) {
     const dir = this.markAt(lon, lat, depth);
-    const d = Math.min(this.camera.position.length(), R * 2.1);
+    // Rolling the globe to an epicentre is one request; closing in on it is
+    // another. A row in the rolling list only asks for the first, so it keeps
+    // whatever zoom you had set -- clicking the point itself still pulls in.
+    const d = keepDistance
+      ? this.camera.position.length()
+      : Math.min(this.camera.position.length(), R * 2.1);
     const to = dir.clone().multiplyScalar(d);
     this.controls.target.set(0, 0, 0);
 
