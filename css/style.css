@@ -824,6 +824,11 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 .map-layers-panel .check { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--body); padding: 4px 0; cursor: pointer; }
 .map-layers-panel input[type="checkbox"] { accent-color: var(--blue-600); width: 15px; height: 15px; }
 
+/* A proxy control the 3D app has locked -- additive glow under the light
+   palette. Say so visually instead of letting a dead box look clickable. */
+.drop-panel label.check:has(input:disabled),
+.map-layers-panel label.check:has(input:disabled) { opacity: .45; cursor: not-allowed; }
+
 /* one-track dual-handle slider */
 
 .dualwrap {

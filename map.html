@@ -280,6 +280,10 @@
         <label class="prow"><span>Map opacity</span>
           <input type="range" min="0" max="100" step="5" value="50" data-x3d-range="#in-land">
           <output data-x3d-out="#out-land">50%</output></label>
+        <!-- Scene palette, not an overlay: it repaints the backdrop and every
+             reference line, and it switches additive glow off (that blend only
+             brightens, so over a pale backdrop the points wash out to white). -->
+        <label class="check"><input type="checkbox" data-x3d-check="#ck-light"> Light background</label>
         <h4>Layers</h4>
         <label class="check"><input type="checkbox" data-x3d-check="#ck-ocean" checked> Ocean floor</label>
         <label class="check"><input type="checkbox" data-x3d-check="#ck-coast" checked> Coastlines</label>

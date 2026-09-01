@@ -416,6 +416,8 @@
           var t = doc.querySelector(c.dataset.x3dCheck);
           if (t) { t.checked = c.checked; t.dispatchEvent(new w.Event("change", { bubbles: true })); }
         });
+        // One box can change another's availability, so re-read the app.
+        setTimeout(refresh3dFilters, 150);
         return;
       }
       if (ev.target.closest("[data-x3d-range]")) setTimeout(refresh3dFilters, 120);
@@ -430,7 +432,12 @@
       });
       eachScoped("[data-x3d-check]", function (c) {
         var t = doc.querySelector(c.dataset.x3dCheck);
-        if (t) c.checked = t.checked;
+        if (!t) return;
+        c.checked = t.checked;
+        // The app locks some boxes depending on other settings -- additive glow
+        // goes dead under the light palette. A proxy that stayed clickable
+        // would look broken, so carry the disabled state across too.
+        c.disabled = t.disabled;
       });
       eachScoped("[data-x3d-range]", function (r) {
         var t = doc.querySelector(r.dataset.x3dRange);

@@ -74,6 +74,21 @@ body.theme-light #labels span {
 body.theme-light #labels span.depth { color: #3f6a95; }
 body.theme-light #labels span.strong { color: #22364f; }
 
+/* The header is the only chrome painted straight onto the canvas -- every
+   other panel carries its own dark glass, which still reads fine over a pale
+   scene. So it is the one place the light palette has to reach, halo included:
+   a glow tuned to burn against near-black does nothing against near-white.
+   The two accent figures darken as well; cyan and amber picked for a black
+   backdrop turn to pastel here. */
+body.theme-light #head h1 { color: #16294e; text-shadow: 0 1px 12px #e9eff6, 0 0 4px #e9eff6; }
+body.theme-light #head h1 .v4d { color: #0b7c93; }
+body.theme-light #head .sub,
+body.theme-light .readout dt,
+body.theme-light .head-actions button { color: #5a6f8a; }
+body.theme-light .readout dd { color: #1c2c47; }
+body.theme-light #stat-visible { color: #0b7c93; }
+body.theme-light #stat-max { color: #c2560a; }
+
 /* Additive glow is unavailable over a light backdrop; say so rather than
    leaving a live-looking switch. */
 .checks label.is-off { opacity: .45; }
