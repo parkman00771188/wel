@@ -32,7 +32,24 @@ PAGES = [
     ("3d/index.html", "/3d/index.html"),
 ]
 
-ROBOTS = f"""# World Earthquake Labs
+NL = chr(10)
+
+# Crawlers that scrape pages to train models, as distinct from the ones that
+# index for search or answer a question and link back. Search and agent bots
+# stay welcome: being findable is the point. robots.txt is a request, not a
+# control -- the enforcing block is configured at the edge.
+TRAINING_BOTS = [
+    "GPTBot",              # OpenAI, training
+    "Google-Extended",     # Gemini training; does NOT affect Google Search
+    "CCBot",               # Common Crawl
+    "ClaudeBot",
+    "anthropic-ai",
+    "Applebot-Extended",   # Apple training opt-out; plain Applebot still indexes
+    "meta-externalagent",
+    "Bytespider",
+]
+
+ROBOTS = (f"""# World Earthquake Labs
 User-agent: *
 Allow: /
 
@@ -40,8 +57,9 @@ Allow: /
 # (This pattern also covers the .part files they are split into.)
 Disallow: /3d/data/*.bin
 
-Sitemap: {SITE}/sitemap.xml
 """
+    + "".join(f"User-agent: {bot}" + NL + "Disallow: /" + NL + NL for bot in TRAINING_BOTS)
+    + f"Sitemap: {SITE}/sitemap.xml" + NL)
 
 
 def last_commit(path: str) -> str:
