@@ -489,11 +489,25 @@
     host.hidden = false;
 
     if (!modalMap) {
+      // A real map, not a picture of one: the opening frame answers "where on
+      // Earth", and anyone who wants the street the fault runs down can zoom
+      // in. Capped at 10 because that is where these tiles stop, and at 1
+      // because below that the world repeats sideways in a 420px box.
       modalMap = L.map(host, {
-        zoomControl: false, attributionControl: false, scrollWheelZoom: false,
-        doubleClickZoom: false, boxZoom: false, keyboard: false, zoomSnap: 0.1
+        zoomControl: true, attributionControl: true,
+        scrollWheelZoom: true, doubleClickZoom: true, boxZoom: true,
+        keyboard: true, zoomSnap: 0.25, minZoom: 1, maxZoom: 10,
+        worldCopyJump: true
       });
+      modalMap.zoomControl.setPosition("topright");
       L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+        maxZoom: 10, attribution: "Esri"
+      }).addTo(modalMap);
+      // The grey canvas carries no place names, so a pulled-back view was a
+      // blank field with an island in it. The reference tiles add country and
+      // ocean labels, which is the half of "where did this happen" that
+      // coordinates cannot give you.
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}", {
         maxZoom: 10
       }).addTo(modalMap);
       modalMarks = L.layerGroup().addTo(modalMap);
@@ -512,7 +526,10 @@
       opacity: 0.45, fill: false
     }).addTo(modalMarks);
 
-    modalMap.setView([e.lat, e.lng], e.m >= 6 ? 4 : 5, { animate: false });
+    // Pulled back far enough to place the event on a continent -- at the old
+    // 4/5 a mid-ocean epicentre filled the frame with empty water and told you
+    // nothing. Not the whole globe either: that shrinks the halo to a speck.
+    modalMap.setView([e.lat, e.lng], 2, { animate: false });
     // The container had no size while the modal was hidden.
     requestAnimationFrame(function () { modalMap.invalidateSize(); });
   }

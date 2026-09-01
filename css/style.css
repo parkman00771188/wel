@@ -1801,7 +1801,9 @@ a.news-row:hover .nt { color: var(--blue-600); }
 .insight-modal-grid dd { margin: 4px 0 0; color: var(--navy-800); font-size: 13px; font-weight: 600; }
 
 .insight-modal-map {
-  height: 190px;
+  /* Taller now that it is worth exploring: zoom buttons and the attribution
+     line both sit inside it, and 190px left barely a strip of map between. */
+  height: 240px;
   margin: 16px 0 4px;
   border: 1px solid var(--line);
   border-radius: 12px;
@@ -1809,6 +1811,16 @@ a.news-row:hover .nt { color: var(--blue-600); }
   background: var(--bg-soft);
 }
 .insight-modal-map .leaflet-container { background: #dfe7f0; font: inherit; }
+/* Leaflet's default controls are sized for a full page; in a card this small
+   they read as furniture rather than as the map. */
+.insight-modal-map .leaflet-control-zoom { border: 0; box-shadow: 0 1px 4px rgba(5, 16, 45, .2); }
+.insight-modal-map .leaflet-control-zoom a {
+  width: 26px; height: 26px; line-height: 26px; font-size: 15px;
+  color: var(--body); border-color: var(--line);
+}
+.insight-modal-map .leaflet-control-attribution {
+  font-size: 10px; padding: 1px 5px; background: rgba(255, 255, 255, .72);
+}
 .insight-modal-card .btn-block { width: 100%; }
 body.insight-modal-open { overflow: hidden; }
 
@@ -1825,7 +1837,9 @@ body.insight-modal-open { overflow: hidden; }
   .analysis-table-tools { display: grid; grid-template-columns: 1fr; }
   .analysis-pager { align-items: flex-start; flex-direction: column; }
   .insight-modal-card { padding: 24px 20px 20px; }
-  .insight-modal-map { height: 150px; }
+  /* The card has room: it was 670px of a 844px screen with 150px of map.
+     Now that you can zoom and pan, give it something to pan around in. */
+  .insight-modal-map { height: 200px; }
   .insight-modal-grid { grid-template-columns: 1fr; }
   .insight-modal-grid > div,
   .insight-modal-grid > div:nth-child(odd),
