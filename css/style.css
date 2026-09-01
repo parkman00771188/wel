@@ -2841,6 +2841,21 @@ a.pub:hover .pub-title { color: var(--blue-600); }
    analysis intro, so the redundant embedded header can disappear entirely. */
 .embed[data-nav="insights"] .content-head { display: none; }
 
+/* The seven data sources want about 790px on one line. Below that the strip
+   was a horizontal scroller, which hid four of the seven behind a gesture
+   nobody knows is there -- the whole point of the strip is that you can read
+   it at a glance. Wrapping keeps every logo on screen, and centring the rows
+   keeps the ragged last line from looking like a mistake. */
+@media (max-width: 900px) {
+  .trust-row.sources {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px 26px;
+    overflow-x: visible;
+  }
+  .trust-row.sources .wordmark { flex-shrink: 1; min-width: 0; }
+}
+
 /* ---------------- Ad anchor (phones) ----------------
    The console's sidebar unit is only visible while the drawer is open, which
    on a phone is almost never. This bar is the placement that actually gets
