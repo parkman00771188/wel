@@ -19,12 +19,68 @@
     </a>
 
     <nav class="app-nav" id="appNav">
-      <a href="#overview" data-view="overview"><i data-icon="grid" data-size="19"></i><span>Overview</span></a>
-      <a href="#map" data-view="map"><i data-icon="target" data-size="19"></i><span>Live Map</span></a>
-      <a href="#learn" data-view="learn"><i data-icon="book" data-size="19"></i><span>Earthquake Guide</span></a>
-      <a href="#insights" data-view="insights"><i data-icon="chartline" data-size="19"></i><span>Seismic Insights</span></a>
-      <a href="#research" data-view="research"><i data-icon="folder" data-size="19"></i><span>Research Hub</span></a>
-      <a href="#news" data-view="news"><i data-icon="radio" data-size="19"></i><span>News &amp; Updates</span></a>
+      <div class="app-nav-group" data-nav-group="overview">
+        <a href="#overview" data-view="overview"><i data-icon="grid" data-size="19"></i><span class="app-nav-label">Overview</span></a>
+      </div>
+
+      <div class="app-nav-group has-subnav" data-nav-group="map">
+        <a href="#map" data-view="map" aria-expanded="false" aria-controls="appSubnavMap"><i data-icon="target" data-size="19"></i><span class="app-nav-label">Live Map</span><span class="app-nav-caret" aria-hidden="true"></span></a>
+        <div class="app-subnav" id="appSubnavMap">
+          <a href="#map/3d" data-parent-view="map" data-subview="3d"><span>3D Globe</span></a>
+          <a href="#map/2d" data-parent-view="map" data-subview="2d"><span>2D Map</span></a>
+        </div>
+      </div>
+
+      <div class="app-nav-group has-subnav" data-nav-group="learn">
+        <a href="#learn" data-view="learn" aria-expanded="false" aria-controls="appSubnavLearn"><i data-icon="book" data-size="19"></i><span class="app-nav-label">Earthquake Guide</span><span class="app-nav-caret" aria-hidden="true"></span></a>
+        <div class="app-subnav" id="appSubnavLearn">
+          <a href="#learn/overview" data-parent-view="learn" data-subview="overview"><span>Overview</span></a>
+          <a href="#learn/basics" data-parent-view="learn" data-subview="basics"><span>Basics</span></a>
+          <a href="#learn/plates" data-parent-view="learn" data-subview="plates"><span>Plate Tectonics</span></a>
+          <a href="#learn/magnitude" data-parent-view="learn" data-subview="magnitude"><span>Magnitude &amp; Intensity</span></a>
+          <a href="#learn/terms" data-parent-view="learn" data-subview="terms"><span>Key Terms</span></a>
+          <a href="#learn/faq" data-parent-view="learn" data-subview="faq"><span>FAQ</span></a>
+          <a href="#learn/safety" data-parent-view="learn" data-subview="safety"><span>Safety Guide</span></a>
+        </div>
+      </div>
+
+      <div class="app-nav-group has-subnav" data-nav-group="insights">
+        <a href="#insights" data-view="insights" aria-expanded="false" aria-controls="appSubnavInsights"><i data-icon="chartline" data-size="19"></i><span class="app-nav-label">Seismic Insights</span><span class="app-nav-caret" aria-hidden="true"></span></a>
+        <div class="app-subnav" id="appSubnavInsights">
+          <a href="#insights/overview" data-parent-view="insights" data-subview="overview"><span>Overview</span></a>
+          <a href="#insights/statistics" data-parent-view="insights" data-subview="statistics"><span>Statistics</span></a>
+          <a href="#insights/magnitude" data-parent-view="insights" data-subview="magnitude"><span>Magnitude Analysis</span></a>
+          <a href="#insights/depth" data-parent-view="insights" data-subview="depth"><span>Depth Analysis</span></a>
+          <a href="#insights/regional" data-parent-view="insights" data-subview="regional"><span>Regional Insights</span></a>
+          <a href="#insights/energy" data-parent-view="insights" data-subview="energy"><span>Energy Analysis</span></a>
+          <a href="#insights/forecast" data-parent-view="insights" data-subview="forecast"><span>Forecast Models</span></a>
+          <a href="#insights/custom" data-parent-view="insights" data-subview="custom"><span>Custom Analysis</span></a>
+        </div>
+      </div>
+
+      <div class="app-nav-group has-subnav" data-nav-group="research">
+        <a href="#research" data-view="research" aria-expanded="false" aria-controls="appSubnavResearch"><i data-icon="folder" data-size="19"></i><span class="app-nav-label">Research Hub</span><span class="app-nav-caret" aria-hidden="true"></span></a>
+        <div class="app-subnav" id="appSubnavResearch">
+          <a href="#research/overview" data-parent-view="research" data-subview="overview"><span>Overview</span></a>
+          <a href="#research/publications" data-parent-view="research" data-subview="publications"><span>Publications</span></a>
+          <a href="#research/data-library" data-parent-view="research" data-subview="data-library"><span>Data Library</span></a>
+          <a href="#research/datasets" data-parent-view="research" data-subview="datasets"><span>Datasets</span></a>
+          <a href="#research/tools" data-parent-view="research" data-subview="tools"><span>Tools &amp; Software</span></a>
+          <a href="#research/projects" data-parent-view="research" data-subview="projects"><span>Projects</span></a>
+          <a href="#research/partners" data-parent-view="research" data-subview="partners"><span>Partners</span></a>
+        </div>
+      </div>
+
+      <div class="app-nav-group has-subnav" data-nav-group="news">
+        <a href="#news" data-view="news" aria-expanded="false" aria-controls="appSubnavNews"><i data-icon="radio" data-size="19"></i><span class="app-nav-label">News &amp; Updates</span><span class="app-nav-caret" aria-hidden="true"></span></a>
+        <div class="app-subnav" id="appSubnavNews">
+          <a href="#news/all" data-parent-view="news" data-subview="all"><span>All Updates</span></a>
+          <a href="#news/event" data-parent-view="news" data-subview="event"><span>Events &amp; Advisories</span></a>
+          <a href="#news/network" data-parent-view="news" data-subview="network"><span>Network</span></a>
+          <a href="#news/data" data-parent-view="news" data-subview="data"><span>Data</span></a>
+          <a href="#news/research" data-parent-view="news" data-subview="research"><span>Research</span></a>
+        </div>
+      </div>
     </nav>
 
     <div class="spacer"></div>

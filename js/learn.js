@@ -19,6 +19,9 @@
     if (!fromHash) {
       try { history.replaceState(null, "", "#" + name); } catch (e) { /* ignore */ }
     }
+    if (window.parent !== window) {
+      window.parent.postMessage({ wel: "subnav-active", view: "learn", sub: name }, "*");
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 

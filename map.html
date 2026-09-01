@@ -29,7 +29,7 @@
       </div>
       <label class="select-chip"><span class="lbl">Period</span>
         <select id="mapPeriod">
-          <option value="1" selected>24h</option>
+          <option value="1">24h</option>
           <option value="7">7d</option>
           <option value="30">30d</option>
           <option value="90">90d</option>
@@ -37,7 +37,7 @@
           <option value="1095">3y</option>
           <option value="1826">5y</option>
           <option value="3652">10y</option>
-          <option value="all">All</option>
+          <option value="all" selected>All</option>
           <option value="custom" hidden>Custom</option>
         </select>
       </label>
@@ -48,8 +48,8 @@
         </select>
       </label>
       <div class="range-chips" id="dimToggle">
-        <button data-dim="2d" class="active">2D</button>
-        <button data-dim="3d">3D</button>
+        <button data-dim="2d">2D</button>
+        <button data-dim="3d" class="active">3D</button>
       </div>
       <div class="drop-wrap">
         <button class="btn-chip" id="filtersBtn">
@@ -166,7 +166,7 @@
       <button class="play-btn" id="playBtn" aria-label="Play timeline"></button>
       <input type="range" id="timeScrub" min="0" max="1000" value="1000" aria-label="Timeline position">
       <div class="time-readout" id="timeReadout">—</div>
-      <button class="now-btn active" id="nowBtn">Now</button>
+      <button class="now-btn" id="nowBtn">Now</button>
     </div>
 
     <div class="zoom-ctl">
@@ -187,7 +187,10 @@
       <div class="legend-item"><span class="legend-dot" style="width:21px;height:21px;background:#8e24aa"></span>M 8 – 8.9</div>
       <div class="legend-item"><span class="legend-dot" style="width:24px;height:24px;background:#4a148c"></span>M 9+</div>
       <div class="ml-title" style="margin-top:10px">Map layers</div>
-      <div class="legend-item"><span class="legend-line"></span>Plate boundaries</div>
+      <div class="legend-item" id="legend2dCoast"><span class="legend-line coast"></span>Coastlines</div>
+      <div class="legend-item" id="legend2dPlates"><span class="legend-line"></span>Plate boundaries</div>
+      <div class="legend-item" id="legend2dFaults" hidden><span class="legend-line fault"></span>Active faults</div>
+      <div class="legend-item" id="legend2dVolcanoes" hidden><span class="legend-volcano"></span>Volcanoes</div>
     </div>
 
     <!-- in-map layer settings (2D basemaps / 3D map layers) -->
@@ -197,15 +200,27 @@
       <div id="layers2d">
         <h4>Basemap</h4>
         <div class="chip-row">
-          <button class="pchip on" data-base="sat">Satellite</button>
+          <button class="pchip" data-base="sat">Satellite</button>
           <button class="pchip" data-base="gray">Light Gray</button>
           <button class="pchip" data-base="topo">Topographic</button>
-          <button class="pchip" data-base="ocean">Ocean</button>
+          <button class="pchip on" data-base="ocean">Ocean</button>
           <button class="pchip" data-base="osm">Streets</button>
         </div>
         <h4>Overlays</h4>
+        <label class="check"><input type="checkbox" id="ck2dCoast" checked> Coastlines</label>
         <label class="check"><input type="checkbox" id="ck2dPlates" checked> Plate boundaries</label>
-        <label class="check"><input type="checkbox" id="ck2dTint" checked> Night tint</label>
+        <label class="check"><input type="checkbox" id="ck2dFaults"> Active faults</label>
+        <label class="check"><input type="checkbox" id="ck2dVolcanoes"> Volcanoes</label>
+        <label class="check"><input type="checkbox" id="ck2dTint"> Night tint</label>
+        <label class="prow"><span>Plate line width</span>
+          <input type="range" id="in2dPlateWidth" min="0.5" max="4" step="0.25" value="1">
+          <output id="out2dPlateWidth">1</output></label>
+        <label class="prow"><span>Fault line width</span>
+          <input type="range" id="in2dFaultWidth" min="0.5" max="4" step="0.25" value="1">
+          <output id="out2dFaultWidth">1</output></label>
+        <label class="prow"><span>Volcano size</span>
+          <input type="range" id="in2dVolcanoSize" min="0.5" max="2.5" step="0.25" value="1">
+          <output id="out2dVolcanoSize">1</output></label>
       </div>
 
       <div id="layers3d" class="x3dscope" hidden>
@@ -276,7 +291,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="js/common.js"></script>
 <script src="js/i18n.js"></script>
-<script>window.EQ_ALL_BANDS = true; // the live map shows the full M2+ catalog</script>
+<script>
+window.EQ_ALL_BANDS = true;  // the 2D view shows the full M2+ catalog
+window.EQ_DEFER_LOAD = true; // 3D is the default; load 2D data only on demand
+window.EQ_LIGHTWEIGHT = true; // 2D reads typed arrays directly; skip duplicate event objects/stat scans
+</script>
 <script src="js/data.js"></script>
 <script src="js/map.js"></script>
 </body>

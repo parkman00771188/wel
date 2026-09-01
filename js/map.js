@@ -5,8 +5,8 @@
   EQ.ready.then(function () {
 
   var state = {
-    live: true,                          // rolling last-24h with live refreshes
-    startMs: Date.now() - 24 * 3600e3,   // selected window [startMs, endMs]
+    live: false,                         // All is the default; Now enables rolling 24h updates
+    startMs: Date.parse("1900-01-01T00:00:00Z"), // selected window [startMs, endMs]
     endMs: Date.now(),
     magLo: 1, magHi: 9.5,                // shared filters (2D map, table, 4D globe)
     bands: { 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true, 8: true, 9: true, 10: true },
@@ -44,16 +44,25 @@
 
   var REGION_VIEWS = {
     global: { center: [23, 8], zoom: null, bbox: null },
-    japan: { center: [36.8, 137.2], zoom: 5.25, bbox: [24, 122, 46.5, 150] } // [latMin, lngMin, latMax, lngMax]
+    // Exact coverage of the Japan-specific ISC/JMA + USGS catalogue.
+    japan: { center: [35, 136], zoom: 5.25, bbox: [22, 120, 48, 152] } // [latMin, lngMin, latMax, lngMax]
   };
   state.mapRegion = "global";
 
   document.getElementById("mapRegion").addEventListener("change", function () {
     state.mapRegion = this.value;
     var v = REGION_VIEWS[state.mapRegion];
-    map.flyTo(v.center, v.zoom || baseZoom, { duration: 1.6 });
+    if (!document.getElementById("mapShell").classList.contains("mode-3d")) {
+      map.flyTo(v.center, v.zoom || baseZoom, { duration: 1.6 });
+    }
     renderTable();
-    sync3dView();
+    sync3dView(true);
+    if ((requestedDim === "2d" ||
+         !document.getElementById("mapShell").classList.contains("mode-3d")) &&
+        (!EQ.loaded || EQ.catalogRegion !== state.mapRegion)) {
+      requestedDim = "2d";
+      load2dAndActivate(document.querySelector('#dimToggle button[data-dim="2d"]'));
+    }
   });
 
   function inRegionRaw(lat, lng) {
@@ -76,7 +85,7 @@
     } catch (e) { /* ignore */ }
     frame3d = document.createElement("iframe");
     frame3d.className = "map-3d-frame";
-    frame3d.src = "3d/index.html";
+    frame3d.src = "3d/index.html?view=globe";
     frame3d.title = "Earthquake 4D";
     document.getElementById("mapShell").appendChild(frame3d);
     frame3d.addEventListener("load", function () {
@@ -91,17 +100,29 @@
 
   // drive the 4D app's Japan/World toggle from our Region combo (same origin);
   // keeps enforcing for a while because the app may restore a saved view mid-boot
-  function sync3dView() {
+  function sync3dView(force) {
     if (!frame3d) return;
+    if (!force && !document.getElementById("mapShell").classList.contains("mode-3d")) return;
     var want = state.mapRegion === "japan" ? "japan" : "globe";
     var tries = 0;
     (function poll() {
       var doc;
       try { doc = frame3d.contentDocument; } catch (e) { return; }
       var btn = doc && doc.querySelector('#seg-view [data-v="' + want + '"]');
-      if (btn && btn.classList.contains("on")) return;      // in the wanted view
-      if (btn) btn.click();
-      if (++tries < 30) setTimeout(poll, 600);
+      if (btn && btn.classList.contains("on")) {
+        // A Japan-mode reload may finish after the fixed post-load timers.
+        // Reapply the host period and filters at the authoritative ready point.
+        if (frame3d.contentWindow && frame3d.contentWindow.__app) {
+          frame3d.contentWindow.__app.suspendedByHost =
+            !document.getElementById("mapShell").classList.contains("mode-3d");
+          sync3dDates();
+          push3dShared();
+          primeRecentTable(want === "japan" ? "japan" : "global");
+          return;
+        }
+      }
+      if (btn && !btn.classList.contains("on")) btn.click();
+      if (++tries < 120) setTimeout(poll, 600);
     })();
   }
 
@@ -154,16 +175,166 @@
     }
   }
 
+  var requestedDim = "3d";
+
+  function reportDimension(dim) {
+    if (window.parent !== window) {
+      window.parent.postMessage({ wel: "subnav-active", view: "map", sub: dim }, "*");
+    }
+  }
+
+  function activateDimension(b) {
+    var toggle = document.getElementById("dimToggle");
+    toggle.querySelectorAll("button").forEach(function (x) { x.classList.toggle("active", x === b); });
+    var is3d = b.dataset.dim === "3d";
+    if (is3d) { ensure3d(); sync3dView(true); map.closePopup(); }
+    try {
+      var app3d = frame3d && frame3d.contentWindow && frame3d.contentWindow.__app;
+      if (app3d) app3d.suspendedByHost = !is3d;
+    } catch (err) { /* same-origin access is expected */ }
+    document.getElementById("mapShell").classList.toggle("mode-3d", is3d);
+    if (is3d) setFast(false);
+    if (is3d) { sync3dDates(); push3dShared(); }
+    syncFilterSections();
+    syncLayerSections();
+    if (!is3d) {
+      var view2d = REGION_VIEWS[state.mapRegion];
+      map.setView(view2d.center, view2d.zoom || baseZoom, { animate: false });
+      ensure2dReferenceData();
+      if (EQ.loaded) renderQuakes();
+      setTimeout(function () { map.invalidateSize(); }, 0);
+    }
+    reportDimension(is3d ? "3d" : "2d");
+  }
+
+  function adopt3dCatalog(region) {
+    try {
+      var app = frame3d && frame3d.contentWindow && frame3d.contentWindow.__app;
+      if (!app || !app.data) return false;
+      var events, sourceMeta;
+      if (region === "japan") {
+        if (app.view !== "japan") return false;
+        events = app.data.events;
+        sourceMeta = app.data.meta || {};
+      } else {
+        var globe = app.globe;
+        if (app.view !== "globe") return false;
+        events = globe && globe.layer && globe.layer.events;
+        sourceMeta = globe && globe.meta || {};
+      }
+      if (!events || !events.t || !events.t.length) return false;
+      var meta = Object.assign({}, sourceMeta, {
+        epochMs: app.data.epochMs,
+        count: events.t.length,
+        regionKey: region,
+        source: region === "japan"
+          ? "Japan regional catalogue (ISC/JMA + USGS)"
+          : sourceMeta.source
+      });
+      EQ.adoptRaw(events, meta);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  /* Prefer the catalogue already resident in the same-origin 3D iframe. Only
+     fall back to a second fetch if the globe explicitly fails or never boots. */
+  function waitFor3dCatalog(region) {
+    if (EQ.loaded && EQ.catalogRegion === region) return Promise.resolve(EQ);
+    ensure3d();
+    return new Promise(function (resolve, reject) {
+      var started = Date.now();
+      (function poll() {
+        if (adopt3dCatalog(region)) { resolve(EQ); return; }
+        var failed = false;
+        try {
+          var doc = frame3d && frame3d.contentDocument;
+          failed = !!(doc && (region === "global"
+            ? doc.querySelector("#globe-loader.error")
+            : (doc.getElementById("fail") && !doc.getElementById("fail").hidden)));
+        } catch (err) { /* same-origin access is expected */ }
+        if (failed || Date.now() - started > 60000) {
+          reject(new Error(failed ? "3D catalogue load failed" : "3D catalogue wait timed out"));
+          return;
+        }
+        setTimeout(poll, 120);
+      })();
+    });
+  }
+
+  var recentPrimeId = 0;
+  function primeRecentTable(region) {
+    var id = ++recentPrimeId;
+    Promise.all([EQ.ensureCountries(), waitFor3dCatalog(region)]).then(function () {
+      if (id !== recentPrimeId || region !== state.mapRegion) return;
+      renderTable();
+    }).catch(function (err) {
+      console.warn("Recent earthquake catalogue was not ready.", err);
+    });
+  }
+
+  var load2dRequestId = 0;
+  function load2dAndActivate(b) {
+    var region = state.mapRegion;
+    var requestId = ++load2dRequestId;
+    b.disabled = true;
+    b.setAttribute("aria-busy", "true");
+    b.textContent = "Preparing 2D\u2026";
+    Promise.all([
+      EQ.ensureCountries(),
+      waitFor3dCatalog(region).catch(function (err) {
+        if (region !== "global") throw err;
+        console.warn("Reusing the 3D catalogue was unavailable; loading the 2D fallback.", err);
+        return EQ.ensureLoaded();
+      })
+    ]).then(function () {
+      if (requestId !== load2dRequestId) return;
+      if (region !== state.mapRegion) {
+        b.disabled = false;
+        b.removeAttribute("aria-busy");
+        b.textContent = "2D";
+        return;
+      }
+      b.disabled = false;
+      b.removeAttribute("aria-busy");
+      b.textContent = "2D";
+      renderTable();
+      if (requestedDim === "2d") activateDimension(b);
+    }).catch(function (err) {
+      if (requestId !== load2dRequestId) return;
+      if (region !== state.mapRegion || requestedDim !== "2d") {
+        b.disabled = false;
+        b.removeAttribute("aria-busy");
+        b.textContent = "2D";
+        return;
+      }
+      console.error("2D catalog load failed:", err);
+      b.disabled = false;
+      b.removeAttribute("aria-busy");
+      b.textContent = "Retry 2D";
+    });
+  }
+
   document.getElementById("dimToggle").addEventListener("click", function (ev) {
     var b = ev.target.closest("button");
     if (!b) return;
-    this.querySelectorAll("button").forEach(function (x) { x.classList.toggle("active", x === b); });
+    requestedDim = b.dataset.dim;
     var is3d = b.dataset.dim === "3d";
-    if (is3d) { ensure3d(); sync3dView(); map.closePopup(); }
-    document.getElementById("mapShell").classList.toggle("mode-3d", is3d);
-    syncFilterSections();
-    syncLayerSections();
+    if (!is3d && (!EQ.loaded || EQ.catalogRegion !== state.mapRegion)) {
+      load2dAndActivate(b);
+      return;
+    }
+    activateDimension(b);
   });
+
+  function applyDimensionHash() {
+    var dim = (location.hash || "").slice(1);
+    if (dim !== "2d" && dim !== "3d") return;
+    var button = document.querySelector('#dimToggle button[data-dim="' + dim + '"]');
+    if (button && !button.classList.contains("active")) button.click();
+  }
+  window.addEventListener("hashchange", applyDimensionHash);
 
   /* ---------------- 3D filter proxy (the 4D panel, re-homed into our Filters) ---------------- */
 
@@ -312,10 +483,16 @@
     setBasemap(b.dataset.base);
   });
 
-  document.getElementById("ck2dPlates").addEventListener("change", function () {
-    if (this.checked) platesLayer2d.addTo(map);
-    else map.removeLayer(platesLayer2d);
-  });
+  function wire2dOverlay(id, key) {
+    document.getElementById(id).addEventListener("change", function () {
+      set2dOverlay(key, this.checked);
+      sync2dLayerLegend(key, this.checked);
+    });
+  }
+  wire2dOverlay("ck2dCoast", "coast");
+  wire2dOverlay("ck2dPlates", "plates");
+  wire2dOverlay("ck2dFaults", "faults");
+  wire2dOverlay("ck2dVolcanoes", "volcanoes");
 
   document.getElementById("ck2dTint").addEventListener("change", function () {
     if (this.checked) { if (!map.hasLayer(tintRect)) tintRect.addTo(map); }
@@ -335,7 +512,7 @@
     osm: { url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png", attr: "&copy; OpenStreetMap contributors" }
   };
 
-  var baseLayer = L.tileLayer(BASES.topo.url, { attribution: BASES.topo.attr, noWrap: false }).addTo(map);
+  var baseLayer = L.tileLayer(BASES.ocean.url, { attribution: BASES.ocean.attr, noWrap: false }).addTo(map);
 
   function setBasemap(key) {
     var b = BASES[key];
@@ -360,12 +537,193 @@
   });
   document.getElementById("ck2dTint").disabled = true; // enabled with the Satellite basemap
 
-  // plate boundaries (toggleable overlay)
-  var platesLayer2d = L.layerGroup();
+  /* Global 2D reference layers. The 3D iframe normally owns this 2.8 MB
+     payload, so reuse it when possible and only fetch as a fallback. */
+  map.createPane("tectonic2d");
+  map.getPane("tectonic2d").style.zIndex = 360;
+  map.getPane("tectonic2d").style.pointerEvents = "none";
+  var referenceRenderer2d = L.canvas({ pane: "tectonic2d", padding: 0.45 });
+  var referenceData2d = null, referenceDataPromise2d = null;
+  var referenceLayers2d = {};
+
+  var fallbackPlates2d = L.layerGroup();
   EQ.segments.forEach(function (seg) {
-    platesLayer2d.addLayer(L.polyline(seg.pts, { color: "#ff6b35", weight: 1.3, opacity: 0.75, dashArray: "3 4", interactive: false }));
+    fallbackPlates2d.addLayer(L.polyline(seg.pts, {
+      pane: "tectonic2d", renderer: referenceRenderer2d,
+      color: "#ff8a3d", weight: 1.1, opacity: 0.72,
+      dashArray: "3 4", interactive: false
+    }));
   });
-  platesLayer2d.addTo(map);
+  referenceLayers2d.plates = fallbackPlates2d;
+  fallbackPlates2d.addTo(map);
+
+  function referencePaths2d(strips) {
+    var paths = [];
+    (strips || []).forEach(function (strip) {
+      var path = [], prevLon = null;
+      for (var i = 0; i + 1 < strip.length; i += 2) {
+        var lon = strip[i], lat = strip[i + 1];
+        if (prevLon != null && Math.abs(lon - prevLon) > 180) {
+          if (path.length > 1) paths.push(path);
+          path = [];
+        }
+        path.push([lat, lon]);
+        prevLon = lon;
+      }
+      if (path.length > 1) paths.push(path);
+    });
+    return paths;
+  }
+
+  function referenceScale2d(key) {
+    var input = document.getElementById({
+      plates: "in2dPlateWidth", faults: "in2dFaultWidth", volcanoes: "in2dVolcanoSize"
+    }[key]);
+    return input ? +input.value : 1;
+  }
+
+  function create2dReferenceLayer(key) {
+    if (!referenceData2d) return null;
+    var common = { pane: "tectonic2d", renderer: referenceRenderer2d, interactive: false };
+    if (key === "coast") {
+      return L.polyline(referencePaths2d(referenceData2d.coast), Object.assign({}, common, {
+        color: "#7f9ebb", weight: 0.8, opacity: 0.72, smoothFactor: 1.25
+      }));
+    }
+    if (key === "plates") {
+      return L.polyline(referencePaths2d(referenceData2d.plates), Object.assign({}, common, {
+        color: "#ff8a3d", weight: 1.15 * referenceScale2d("plates"),
+        opacity: 0.78, dashArray: "3 4", smoothFactor: 1.1
+      }));
+    }
+    if (key === "faults") {
+      return L.polyline(referencePaths2d(referenceData2d.faults), Object.assign({}, common, {
+        color: "#e0566e", weight: 0.85 * referenceScale2d("faults"),
+        opacity: 0.62, smoothFactor: 1.4
+      }));
+    }
+    if (key === "volcanoes") {
+      var volcanoes = L.layerGroup();
+      (referenceData2d.volcanoes || []).forEach(function (row) {
+        volcanoes.addLayer(L.circleMarker([row[1], row[0]], Object.assign({}, common, {
+          radius: 2.4 * referenceScale2d("volcanoes"),
+          color: "rgba(255,255,255,.8)", weight: 0.7,
+          fillColor: "#e55b3d", fillOpacity: 0.88
+        })));
+      });
+      return volcanoes;
+    }
+    return null;
+  }
+
+  function checkboxFor2dLayer(key) {
+    return document.getElementById({
+      coast: "ck2dCoast", plates: "ck2dPlates",
+      faults: "ck2dFaults", volcanoes: "ck2dVolcanoes"
+    }[key]);
+  }
+
+  function set2dOverlay(key, on) {
+    var layer = referenceLayers2d[key];
+    if (!layer && referenceData2d) {
+      layer = create2dReferenceLayer(key);
+      referenceLayers2d[key] = layer;
+    }
+    if (layer) {
+      if (on) { if (!map.hasLayer(layer)) layer.addTo(map); }
+      else if (map.hasLayer(layer)) map.removeLayer(layer);
+    } else if (on) {
+      ensure2dReferenceData();
+    }
+  }
+
+  function sync2dLayerLegend(key, on) {
+    var el = document.getElementById({
+      coast: "legend2dCoast", plates: "legend2dPlates",
+      faults: "legend2dFaults", volcanoes: "legend2dVolcanoes"
+    }[key]);
+    if (el) el.hidden = !on;
+  }
+
+  function sync2dReferenceLayers() {
+    ["coast", "plates", "faults", "volcanoes"].forEach(function (key) {
+      var checkbox = checkboxFor2dLayer(key);
+      set2dOverlay(key, !!(checkbox && checkbox.checked));
+      sync2dLayerLegend(key, !!(checkbox && checkbox.checked));
+    });
+  }
+
+  function install2dReferenceData(data) {
+    if (!data || !data.coast || !data.plates || !data.faults || !data.volcanoes) return null;
+    var oldPlates = referenceLayers2d.plates;
+    if (oldPlates && map.hasLayer(oldPlates)) map.removeLayer(oldPlates);
+    referenceData2d = data;
+    referenceLayers2d.plates = null;
+    sync2dReferenceLayers();
+    return data;
+  }
+
+  function shared2dReferenceData() {
+    try {
+      var app = frame3d && frame3d.contentWindow && frame3d.contentWindow.__app;
+      return app && app.globe && app.globe.basemapData || null;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  function ensure2dReferenceData() {
+    if (referenceData2d) return Promise.resolve(referenceData2d);
+    if (referenceDataPromise2d) return referenceDataPromise2d;
+    var shared = shared2dReferenceData();
+    if (shared) return Promise.resolve(install2dReferenceData(shared));
+    referenceDataPromise2d = fetch("3d/data/global/basemap.json")
+      .then(function (response) {
+        if (!response.ok) throw new Error("2D reference layers -> HTTP " + response.status);
+        return response.json();
+      })
+      .then(install2dReferenceData)
+      .catch(function (err) {
+        referenceDataPromise2d = null;
+        console.warn("2D reference layers unavailable:", err);
+        return null;
+      });
+    return referenceDataPromise2d;
+  }
+
+  function apply2dReferenceScale(key) {
+    var layer = referenceLayers2d[key];
+    if (!layer) return;
+    var scale = referenceScale2d(key);
+    if (key === "volcanoes") {
+      layer.eachLayer(function (marker) {
+        if (marker.setRadius) marker.setRadius(2.4 * scale);
+      });
+      return;
+    }
+    var style = { weight: (key === "plates" ? 1.15 : 0.85) * scale };
+    if (layer.setStyle) layer.setStyle(style);
+    else if (layer.eachLayer) layer.eachLayer(function (line) {
+      if (line.setStyle) line.setStyle(style);
+    });
+  }
+
+  function wire2dReferenceScale(inputId, outputId, key) {
+    var input = document.getElementById(inputId);
+    var output = document.getElementById(outputId);
+    input.addEventListener("input", function () {
+      output.textContent = String(+this.value);
+      apply2dReferenceScale(key);
+    });
+  }
+  wire2dReferenceScale("in2dPlateWidth", "out2dPlateWidth", "plates");
+  wire2dReferenceScale("in2dFaultWidth", "out2dFaultWidth", "faults");
+  wire2dReferenceScale("in2dVolcanoSize", "out2dVolcanoSize", "volcanoes");
+
+  ["coast", "plates", "faults", "volcanoes"].forEach(function (key) {
+    var checkbox = checkboxFor2dLayer(key);
+    sync2dLayerLegend(key, !!(checkbox && checkbox.checked));
+  });
 
   var quakeLayer = L.layerGroup().addTo(map);
   var pulseMarker = null;
@@ -390,10 +748,14 @@
     return state.startMs >= Date.now() - 118 * EQ.D;
   }
 
+  function objectCacheCovers() {
+    return cacheCovers() && EQ.events.length > 0;
+  }
+
   /* recent windows only — long windows are painted straight off the raw
      catalog by the fast canvas layer, with no per-event objects at all */
   function filtered() {
-    if (!cacheCovers()) return [];
+    if (!objectCacheCovers()) return [];
     return EQ.events.filter(function (e) {
       return e.t >= state.startMs && e.t <= state.endMs && magOk(e.m) && depthOk(e.depth);
     });
@@ -404,6 +766,8 @@
   /* ---- fast canvas layer: paints any span (up to the full catalog) ---- */
 
   var fastCanvas = null, fastActive = false, fastCount = 0;
+  var fastPaintRAF = null, fastPaintTimer = null, fastRequest = 0;
+  var fastHit = null, fastGrid = null, lastFastPaint = 0;
 
   function ensureFastCanvas() {
     if (fastCanvas) return;
@@ -413,11 +777,46 @@
     map.on("moveend zoomend resize", function () { if (fastActive) drawFast(); });
   }
 
-  function passesShared(mag, depth, tMs) {
-    return magOk(mag) && depthOk(depth) && (state.cursor == null || tMs <= state.cursor);
+  function dotRadius(mag, fast) {
+    return Math.max(fast ? 1 : 1.4, EQ.magRadius(mag) * (fast ? 0.55 : 0.58));
+  }
+
+  function getFastGrid(cells) {
+    if (!fastGrid || fastGrid.capacity < cells) {
+      var capacity = Math.ceil(cells * 1.12);
+      fastGrid = {
+        capacity: capacity,
+        mag: new Float32Array(capacity),
+        lat: new Float32Array(capacity),
+        lng: new Float32Array(capacity),
+        rawLng: new Float32Array(capacity),
+        depth: new Float32Array(capacity),
+        time: new Float64Array(capacity),
+        x: new Float32Array(capacity),
+        y: new Float32Array(capacity),
+        occupied: new Int32Array(capacity)
+      };
+    } else {
+      fastGrid.mag.fill(0, 0, cells);
+    }
+    return fastGrid;
   }
 
   function drawFast() {
+    ensureFastCanvas();
+    var request = ++fastRequest;
+    if (fastPaintRAF) cancelAnimationFrame(fastPaintRAF);
+    if (fastPaintTimer) clearTimeout(fastPaintTimer);
+    // Collapse rapid slider and scrubber input into one capped redraw.
+    var wait = Math.max(0, 45 - (performance.now() - lastFastPaint));
+    fastPaintTimer = setTimeout(function () {
+      fastPaintRAF = requestAnimationFrame(function () { paintFast(request); });
+    }, wait);
+  }
+
+  function paintFast(request) {
+    if (request !== fastRequest || !fastActive) return;
+    lastFastPaint = performance.now();
     ensureFastCanvas();
     var size = map.getSize();
     var dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -431,71 +830,131 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, size.x, size.y);
 
-    var b = map.getBounds();
-    var west = b.getWest(), east = b.getEast();
-    var count = 0;
+    var bounds = map.getBounds();
+    var west = bounds.getWest(), east = bounds.getEast();
+    var south = bounds.getSouth(), north = bounds.getNorth();
+    var lngSpan = Math.max(0.001, east - west);
+    var latSpan = Math.max(0.001, north - south);
+    // One representative per tiny screen cell removes fully overlapping arcs.
+    // The largest event wins, keeping significant earthquakes visible.
+    var cellPx = spanDays() > 3650 ? 3 : 2;
+    var cols = Math.max(1, Math.ceil(size.x / cellPx));
+    var rows = Math.max(1, Math.ceil(size.y / cellPx));
+    var cells = cols * rows;
+    var grid = getFastGrid(cells);
+    var bestMag = grid.mag;
+    var bestLat = grid.lat;
+    var bestLng = grid.lng;
+    var bestRawLng = grid.rawLng;
+    var bestDepth = grid.depth;
+    var bestTime = grid.time;
+    var screenX = grid.x;
+    var screenY = grid.y;
+    var occupied = grid.occupied;
+    var occupiedCount = 0, count = 0;
+    var effectiveEnd = state.cursor == null ? state.endMs : Math.min(state.endMs, state.cursor);
+    var ranges = EQ.rawRanges(state.startMs, effectiveEnd);
 
-    EQ.forEachInRange(state.startMs, state.endMs, function (mag, lat, lon, depth, tMs) {
-      if (!passesShared(mag, depth, tMs)) return;
-      count++;
-      for (var k = -360; k <= 360; k += 360) {
-        var lng = lon + k;
-        if (lng < west - 3 || lng > east + 3) continue;
-        var p = map.latLngToContainerPoint([lat, lng]);
-        var r = Math.max(1.6, EQ.magRadius(mag) * 0.8);
-        ctx.globalAlpha = 0.72;
-        ctx.fillStyle = EQ.magColor(mag);
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, r, 0, 6.2832);
-        ctx.fill();
-        if (mag >= 6) { // halo for the big ones
-          ctx.globalAlpha = 0.14;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, r + 8, 0, 6.2832);
-          ctx.fill();
+    for (var ri = 0; ri < ranges.length; ri++) {
+      var range = ranges[ri], band = range.band;
+      for (var i = range.from; i < range.to; i++) {
+        var mag = band.mag[i], depth = band.depth[i];
+        if (mag > 9.55 || !magOk(mag) || !depthOk(depth)) continue;
+        count++;
+        var lat = band.lat[i];
+        if (lat < south || lat > north) continue;
+        var lon = band.lon[i];
+        var firstCopy = Math.ceil((west - lon) / 360);
+        var lastCopy = Math.floor((east - lon) / 360);
+        for (var copy = firstCopy; copy <= lastCopy; copy++) {
+          var displayLng = lon + copy * 360;
+          var col = Math.floor((displayLng - west) / lngSpan * cols);
+          var row = Math.floor((north - lat) / latSpan * rows);
+          if (col < 0 || col >= cols || row < 0 || row >= rows) continue;
+          var cell = row * cols + col;
+          var tMs = range.epochMs + band.t[i] * 1000;
+          if (!bestMag[cell]) occupied[occupiedCount++] = cell;
+          if (mag > bestMag[cell] || (mag === bestMag[cell] && tMs > bestTime[cell])) {
+            bestMag[cell] = mag;
+            bestLat[cell] = lat;
+            bestLng[cell] = displayLng;
+            bestRawLng[cell] = lon;
+            bestDepth[cell] = depth;
+            bestTime[cell] = tMs;
+          }
         }
       }
-    });
+    }
+
+    for (var oi = 0; oi < occupiedCount; oi++) {
+      var ci = occupied[oi];
+      var point = map.latLngToContainerPoint([bestLat[ci], bestLng[ci]]);
+      var radius = dotRadius(bestMag[ci], true);
+      screenX[ci] = point.x;
+      screenY[ci] = point.y;
+      ctx.fillStyle = EQ.magColor(bestMag[ci]);
+      if (bestMag[ci] >= 6) {
+        ctx.globalAlpha = 0.11;
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, radius + 4, 0, 6.2832);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 0.76;
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, radius, 0, 6.2832);
+      ctx.fill();
+    }
 
     ctx.globalAlpha = 1;
     fastCount = count;
+    fastHit = {
+      occupied: occupied, count: occupiedCount,
+      mag: bestMag, lat: bestLat, lng: bestRawLng, depth: bestDepth, time: bestTime,
+      x: screenX, y: screenY
+    };
     var fc = document.getElementById("filterCount");
     if (fc) fc.textContent = count.toLocaleString() + " events";
   }
 
   function setFast(on) {
     fastActive = on;
+    if (!on) {
+      fastRequest++;
+      if (fastPaintRAF) cancelAnimationFrame(fastPaintRAF);
+      if (fastPaintTimer) clearTimeout(fastPaintTimer);
+      fastHit = null;
+    }
     if (fastCanvas) fastCanvas.style.display = on ? "" : "none";
   }
 
   // click → nearest drawn event within 10 px (long windows only)
   map.on("click", function (ev) {
-    if (!fastActive) return;
+    if (!fastActive || !fastHit) return;
     var pt = ev.containerPoint;
-    var best = null, bestD = 100; // 10px squared
-    EQ.forEachInRange(state.startMs, state.endMs, function (mag, lat, lon, depth, tMs) {
-      if (!passesShared(mag, depth, tMs)) return;
-      for (var k = -360; k <= 360; k += 360) {
-        var p = map.latLngToContainerPoint([lat, lon + k]);
-        var dx = p.x - pt.x, dy = p.y - pt.y;
-        var d = dx * dx + dy * dy;
-        if (d < bestD) { bestD = d; best = { m: mag, lat: lat, lng: lon, depth: depth, t: tMs }; }
-      }
-    });
-    if (!best) return;
-    var who = EQ.regionFor(best.lat, best.lng);
+    var bestCell = -1, bestD = 81; // 9px squared
+    for (var hi = 0; hi < fastHit.count; hi++) {
+      var hitCell = fastHit.occupied[hi];
+      var dx = fastHit.x[hitCell] - pt.x, dy = fastHit.y[hitCell] - pt.y;
+      var dist = dx * dx + dy * dy;
+      if (dist < bestD) { bestD = dist; bestCell = hitCell; }
+    }
+    if (bestCell < 0) return;
+    var hitLat = fastHit.lat[bestCell], hitLng = fastHit.lng[bestCell];
+    var who = EQ.regionFor(hitLat, hitLng);
     select({
-      id: "hit", m: Math.round(best.m * 10) / 10,
-      lat: Math.round(best.lat * 1000) / 1000, lng: Math.round(best.lng * 1000) / 1000,
-      depth: Math.max(0, Math.round(best.depth)), t: best.t,
-      loc: who.loc, group: who.group, rof: who.rof, status: "Reviewed"
+      id: "hit", m: Math.round(fastHit.mag[bestCell] * 10) / 10,
+      lat: Math.round(hitLat * 1000) / 1000, lng: Math.round(hitLng * 1000) / 1000,
+      depth: Math.max(0, Math.round(fastHit.depth[bestCell])), t: fastHit.time[bestCell],
+      loc: who.loc, group: who.group, region: who.region || who.group,
+      rof: who.rof, status: "Reviewed"
     }, false);
   });
 
   var lastFastDraw = 0;
 
   function renderQuakes() {
-    if (!cacheCovers()) {
+    if (document.getElementById("mapShell").classList.contains("mode-3d")) return;
+    if (!objectCacheCovers()) {
       quakeLayer.clearLayers();
       setFast(true);
       // playback repaints every frame — throttle full-catalog redraws
@@ -514,10 +973,10 @@
     for (var i = list.length - 1; i >= 0; i--) {
       var e = list[i];
       var color = EQ.magColor(e.m);
-      var r = EQ.magRadius(e.m);
+      var r = dotRadius(e.m, false);
       if (e.m >= 5) {
         quakeLayer.addLayer(L.circleMarker([e.lat, e.lng], {
-          radius: r + (e.m >= 6 ? 9 : 6), stroke: false, fillColor: color, fillOpacity: 0.16, interactive: false
+          radius: r + (e.m >= 6 ? 5 : 3), stroke: false, fillColor: color, fillOpacity: 0.12, interactive: false
         }));
       }
       var dot = L.circleMarker([e.lat, e.lng], {
@@ -538,7 +997,7 @@
   function setPulse(e) {
     if (pulseMarker) { map.removeLayer(pulseMarker); pulseMarker = null; }
     if (!e) return;
-    var size = Math.max(26, EQ.magRadius(e.m) * 2 + 22);
+    var size = Math.max(22, dotRadius(e.m, false) * 2 + 14);
     pulseMarker = L.marker([e.lat, e.lng], {
       interactive: false,
       icon: L.divIcon({
@@ -561,7 +1020,7 @@
   function select(e, pan) {
     state.selectedId = e.id;
     var html =
-      '<button class="qc-close" id="qcClose">' + WEL.icon("x", 16) + "</button>" +
+      '<button class="qc-close" id="qcClose" type="button" aria-label="Close earthquake details">' + WEL.icon("x", 16) + "</button>" +
       '<div class="qc-mag">M ' + e.m.toFixed(1) + "</div>" +
       '<div class="qc-title">' + e.loc + "</div>" +
       '<div class="qc-row"><span>' + EQ.fmtUTC(e.t, true) + "</span></div>" +
@@ -569,16 +1028,16 @@
       '<div class="qc-row"><span class="k">Depth</span><span>' + e.depth + " km</span></div>" +
       '<div class="qc-div"></div>' +
       '<div class="qc-row"><span class="k">Status</span><span>' + (e.status || "Automatic") + "</span></div>" +
-      '<button class="btn btn-primary btn-block" id="qcDetails">View Details</button>';
+      '<button class="btn btn-primary btn-block" id="qcDetails" type="button">View Details</button>';
 
     if (activePopup) map.closePopup(activePopup);
     activePopup = L.popup({
       className: "quake-pop",
       closeButton: false,
       autoPan: true,
-      autoPanPadding: [46, 46],
+      autoPanPadding: [36, 36],
       offset: [0, -4],
-      maxWidth: 290
+      maxWidth: 320
     }).setLatLng([e.lat, e.lng]).setContent(html).openOn(map);
 
     document.getElementById("qcClose").onclick = function () { map.closePopup(activePopup); };
@@ -605,7 +1064,7 @@
       '<div class="qc-row"><span class="k">Origin time</span><span>' + EQ.fmtUTC(e.t, true) + "</span></div>" +
       '<div class="qc-row"><span class="k">Epicenter</span><span>' + coordStr(e) + "</span></div>" +
       '<div class="qc-row"><span class="k">Depth</span><span>' + e.depth + " km</span></div>" +
-      '<div class="qc-row"><span class="k">Region</span><span>' + e.group + "</span></div>" +
+      '<div class="qc-row"><span class="k">Region</span><span>' + (e.region || e.group) + "</span></div>" +
       '<div class="qc-row"><span class="k">Event ID</span><span>wel' + e.id.slice(2) + "</span></div>" +
       '<div class="qc-row"><span class="k">Type</span><span>Earthquake</span></div>' +
       '<div class="qc-row"><span class="k">Review status</span><span>' + (e.status || "Automatic") + "</span></div>" +
@@ -622,10 +1081,17 @@
   /* ---------------- table ---------------- */
 
   function renderTable() {
+    var body = document.getElementById("eqTableBody");
+    if (!EQ.loaded || EQ.catalogRegion !== state.mapRegion) {
+      lastTableRows = [];
+      body.innerHTML = '<tr class="eq-loading"><td colspan="4">Loading ' +
+        (state.mapRegion === "japan" ? "Japan" : "global") + ' earthquakes…</td></tr>';
+      return;
+    }
     var baseCount = window.WEL && WEL.embed ? 14 : 5;
     var want = state.expandedTable ? (baseCount === 5 ? 25 : 40) : baseCount;
     var rows;
-    if (cacheCovers()) {
+    if (objectCacheCovers()) {
       // recent window: the events cache already carries full M2+ detail
       rows = filtered().filter(inRegion).slice(0, want);
     } else {
@@ -636,15 +1102,15 @@
       });
     }
     lastTableRows = rows;
-    document.getElementById("eqTableBody").innerHTML = rows.map(function (e) {
+    body.innerHTML = rows.map(function (e) {
       var timeStr = window.WEL && WEL.embed ? EQ.fmtList(e.t) : EQ.fmtShort(e.t);
       return "<tr data-id=\"" + e.id + "\" style=\"cursor:pointer\">" +
         '<td class="mag' + (e.m >= 6 ? " big" : "") + '">M&nbsp;&nbsp;' + e.m.toFixed(1) + "</td>" +
         "<td>" + e.loc + "</td>" +
         "<td>" + timeStr + "</td>" +
         '<td class="right">' + e.depth + " km</td></tr>";
-    }).join("");
-    Array.prototype.forEach.call(document.querySelectorAll("#eqTableBody tr"), function (tr) {
+    }).join("") || '<tr class="eq-loading"><td colspan="4">No earthquakes in this period.</td></tr>';
+    Array.prototype.forEach.call(document.querySelectorAll("#eqTableBody tr[data-id]"), function (tr) {
       tr.addEventListener("click", function () {
         var byId = function (x) { return x.id === tr.dataset.id; };
         var e = lastTableRows.find(byId) || EQ.events.find(byId);
@@ -760,7 +1226,7 @@
 
   var PRESET_DAYS = [1, 7, 30, 90, 365, 1095, 1826, 3652];
 
-  function setRange(startMs, endMs, live) {
+  function setRange(startMs, endMs, live, from3d) {
     stopPlay();
     state.startMs = Math.min(startMs, endMs - 60e3);
     state.endMs = endMs;
@@ -783,7 +1249,7 @@
     nowBtn.classList.toggle("active", state.live);
     renderQuakes();
     renderTable();
-    sync3dDates();
+    if (!from3d) sync3dDates();
   }
 
   function setPresetDays(days, live) {
@@ -816,16 +1282,46 @@
 
   // push the selected dates into the 4D app so its timeline matches
   function sync3dDates() {
+    if (!document.getElementById("mapShell").classList.contains("mode-3d")) return;
     x3(function (doc, w) {
       var a = doc.getElementById("in-date-a");
       var b = doc.getElementById("in-date-b");
       if (!a || !b) return;
-      a.value = isoUTC(state.startMs);
-      b.value = isoUTC(state.endMs);
-      a.dispatchEvent(new w.Event("change", { bubbles: true }));
-      b.dispatchEvent(new w.Event("change", { bubbles: true }));
+      // Both inputs share the same change handler in the 3D app. Update them
+      // together and fire it once, while preventing this host-driven sync from
+      // being echoed back as a user-created Custom period.
+      w.__welHostPeriodSync = true;
+      try {
+        a.value = isoUTC(state.startMs);
+        b.value = isoUTC(state.endMs);
+        b.dispatchEvent(new w.Event("change", { bubbles: true }));
+      } finally {
+        w.__welHostPeriodSync = false;
+      }
     });
   }
+
+  // Timeline grips live inside the same-origin 3D iframe. Apply their newest
+  // range once per animation frame so the host dates / Period selector follow
+  // smoothly without echoing the change back into the iframe.
+  var pending3dPeriod = null;
+  var pending3dPeriodFrame = 0;
+  window.addEventListener("message", function (ev) {
+    if (!frame3d || ev.source !== frame3d.contentWindow) return;
+    if (location.origin !== "null" && ev.origin !== location.origin) return;
+    var msg = ev.data;
+    if (!msg || msg.type !== "wel:3d-period") return;
+    var startMs = Number(msg.startMs), endMs = Number(msg.endMs);
+    if (!isFinite(startMs) || !isFinite(endMs) || endMs <= startMs) return;
+    pending3dPeriod = [startMs, endMs];
+    if (pending3dPeriodFrame) return;
+    pending3dPeriodFrame = requestAnimationFrame(function () {
+      pending3dPeriodFrame = 0;
+      var range = pending3dPeriod;
+      pending3dPeriod = null;
+      if (range) setRange(range[0], range[1], false, true);
+    });
+  });
 
   /* ---------------- zoom ---------------- */
 
@@ -880,14 +1376,25 @@
   }
 
   function applyShared() {
+    if (sharedApplyTimer) { clearTimeout(sharedApplyTimer); sharedApplyTimer = null; }
     renderQuakes();
     renderTable();
     updateFilterBadge();
     push3dShared();
   }
 
+  var sharedApplyTimer = null;
+  function scheduleSharedApply() {
+    if (sharedApplyTimer) clearTimeout(sharedApplyTimer);
+    sharedApplyTimer = setTimeout(function () {
+      sharedApplyTimer = null;
+      applyShared();
+    }, 55);
+  }
+
   /* mirror the shared filters into the 4D app (magnitude range, bands, depth) */
   function push3dShared() {
+    if (!document.getElementById("mapShell").classList.contains("mode-3d")) return;
     x3(function (doc, w) {
       var set = function (id, v) {
         var t = doc.getElementById(id);
@@ -910,7 +1417,8 @@
   [fMagLo, fMagHi, fDepthLo, fDepthHi].forEach(function (el) {
     el.addEventListener("input", function () {
       readSharedInputs();
-      applyShared();
+      updateFilterBadge();
+      scheduleSharedApply();
     });
   });
 
@@ -946,7 +1454,12 @@
 
   /* ---------------- boot ---------------- */
 
-  setPresetDays(1, true); // live last-24h, and seeds the date inputs
+  setRange(Date.parse("1900-01-01T00:00:00Z"), Date.now(), false);
+
+  // Open the full-catalog 3D globe by default, unless the console requested
+  // the 2D child route before this embedded page finished booting.
+  var initialDim = location.hash === "#2d" ? "2d" : "3d";
+  document.querySelector('#dimToggle button[data-dim="' + initialDim + '"]').click();
 
   var dm = (location.hash || "").match(/^#d(\d+)$/); // deep-link: #d365 = 1y window
   if (dm) setPresetDays(+dm[1], false);
@@ -956,13 +1469,10 @@
     if (big) select(big, true);
   }
 
-  if (location.hash === "#3d" || location.hash === "#3d-filters") {
-    document.querySelector('#dimToggle button[data-dim="3d"]').click();
-    if (location.hash === "#3d-filters") {
-      document.getElementById("filtersPanel").classList.add("open");
-      setTimeout(refresh3dFilters, 2500);
-      setTimeout(refresh3dFilters, 8000);
-    }
+  if (location.hash === "#3d-filters") {
+    document.getElementById("filtersPanel").classList.add("open");
+    setTimeout(refresh3dFilters, 2500);
+    setTimeout(refresh3dFilters, 8000);
   }
   });
 })();

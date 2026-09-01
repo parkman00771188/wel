@@ -128,13 +128,32 @@
     }).join("") || '<p style="color:var(--faint);padding:20px 0">No updates in this category.</p>';
   }
 
+  var CATEGORIES = ["all", "event", "network", "data", "research"];
+
+  function selectCategory(cat, writeHash) {
+    if (CATEGORIES.indexOf(cat) === -1) cat = "all";
+    document.querySelectorAll("#newsFilter button").forEach(function (button) {
+      button.classList.toggle("active", button.dataset.cat === cat);
+    });
+    render(cat);
+    if (writeHash) {
+      try { history.replaceState(null, "", "#" + cat); } catch (e) { /* ignore */ }
+    }
+    if (window.parent !== window) {
+      window.parent.postMessage({ wel: "subnav-active", view: "news", sub: cat }, "*");
+    }
+  }
+
   document.getElementById("newsFilter").addEventListener("click", function (ev) {
     var b = ev.target.closest("button");
     if (!b) return;
-    this.querySelectorAll("button").forEach(function (x) { x.classList.toggle("active", x === b); });
-    render(b.dataset.cat);
+    selectCategory(b.dataset.cat, true);
   });
 
-  render("all");
+  window.addEventListener("hashchange", function () {
+    selectCategory((location.hash || "#all").slice(1), false);
+  });
+
+  selectCategory((location.hash || "#all").slice(1), false);
   });
 })();

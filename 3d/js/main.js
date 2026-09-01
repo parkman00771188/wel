@@ -9,7 +9,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from '../vendor/OrbitControls.js';
 
-import { loadData, loadChanges } from './data.js';
+import { loadData, loadGlobeShellData, loadChanges } from './data.js';
 import { makeProjection, SCALE } from './projection.js';
 import { QuakeLayer, MAG_SIZE_DEFAULTS } from './quakeLayer.js';
 import { RefLayer } from './refLayer.js';
@@ -53,11 +53,15 @@ const SAVED_INPUTS = [
 ];
 
 const DAY_MS = 86400000;
+const INITIAL_VIEW = new URLSearchParams(location.search).get('view') === 'japan'
+  ? 'japan' : 'globe';
 
 async function boot() {
   let data;
   try {
-    data = await loadData((msg, frac) => {
+    const globeFirst = INITIAL_VIEW === 'globe';
+    const load = globeFirst ? loadGlobeShellData : loadData;
+    data = await load((msg, frac) => {
       $('loader-msg').textContent = msg;
       $('loader-pct').textContent = `${Math.round(frac * 100)}%`;
       $('loader-fill').style.width = `${(frac * 100).toFixed(1)}%`;
@@ -123,6 +127,7 @@ class App {
     this.meta = data.meta;
     this.proj = makeProjection(data.meta);
     this.saved = store.load();
+    this.initialView = INITIAL_VIEW;
 
     const T = data.totalDays;
     let [ra, rb] = sanitizeRange(this.saved.range, T);
@@ -413,6 +418,15 @@ class App {
 
   async setView(v) {
     if (v === this.view) return;
+    // Globe-first boot intentionally contains no 34 MB Japan catalogue. When
+    // Japan is requested, restart once in Japan mode so the normal loader can
+    // fetch and build it instead of switching to an empty scene.
+    if (v === 'japan' && this.data.events.count === 0) {
+      const url = new URL(location.href);
+      url.searchParams.set('view', 'japan');
+      location.replace(url.href);
+      return;
+    }
     $('vcard').hidden = true;
     this.view = v;
     const globeMode = v === 'globe';
@@ -657,7 +671,7 @@ class App {
     $('dr-close').addEventListener('click', () => openDrawer(false));
     drawer.addEventListener('click', (ev) => { if (ev.target === drawer) openDrawer(false); });
     seg($('dr-view'), (v) => { this.setView(v); markChip($('seg-view'), (b) => b.dataset.v === v); },
-      'globe');
+      this.initialView);
     drawer.addEventListener('click', (ev) => {
       const item = ev.target.closest('.dr-item');
       if (!item) return;
@@ -965,6 +979,17 @@ class App {
     this.updateSpeedOptions();
     this.syncTime();
     this.persist();
+
+    // When embedded in the Live Map, keep the host's date inputs and Period
+    // selector aligned with timeline-grip changes made inside the 3D app.
+    if (window.parent !== window && !window.__welHostPeriodSync) {
+      const targetOrigin = location.origin === 'null' ? '*' : location.origin;
+      window.parent.postMessage({
+        type: 'wel:3d-period',
+        startMs: this.data.epochMs + s.rangeStart * DAY_MS,
+        endMs: this.data.epochMs + s.rangeEnd * DAY_MS,
+      }, targetOrigin);
+    }
   }
 
   syncDates() {
@@ -1040,7 +1065,7 @@ class App {
     seg($('seg-view'), (v) => {
       this.setView(v);
       markChip($('dr-view'), (b) => b.dataset.v === v);
-    }, 'globe');
+    }, this.initialView);
 
     this.bindUiSize();
     this.bindLang();
@@ -1810,6 +1835,9 @@ class App {
     const frame = () => {
       requestAnimationFrame(frame);
       const dt = Math.min(0.1, this.clock.getDelta());
+      // The host Live Map keeps this iframe mounted so its catalogue can be
+      // shared with 2D. Do no hidden WebGL work while the 2D map is active.
+      if (this.suspendedByHost) return;
       const s = this.state;
 
       if (s.playing) {

@@ -18,14 +18,14 @@
   <!-- ============ Sidebar ============ -->
   <aside class="side-nav">
     <div class="side-title">Insights</div>
-    <a href="#" class="active" data-target="chartsTop"><i data-icon="grid" data-size="18"></i> Overview</a>
-    <a href="#" data-target="cardTime"><i data-icon="bars" data-size="18"></i> Statistics</a>
-    <a href="#" data-target="cardMag"><i data-icon="activity" data-size="18"></i> Magnitude Analysis</a>
-    <a href="#" data-target="cardDepth"><i data-icon="layers" data-size="18"></i> Depth Analysis</a>
-    <a href="#" data-target="cardHot"><i data-icon="globe" data-size="18"></i> Regional Insights</a>
-    <a href="#" data-target="cardEnergy"><i data-icon="antenna" data-size="18"></i> Station Performance</a>
-    <a href="#" data-target="cardModel"><i data-icon="branch" data-size="18"></i> Forecast Models</a>
-    <a href="#" data-target="chartsTop"><i data-icon="sliders" data-size="18"></i> Custom Analysis</a>
+    <a href="#overview" class="active" data-insight-view="overview" aria-current="page"><i data-icon="grid" data-size="18"></i> Overview</a>
+    <a href="#statistics" data-insight-view="statistics"><i data-icon="bars" data-size="18"></i> Statistics</a>
+    <a href="#magnitude" data-insight-view="magnitude"><i data-icon="activity" data-size="18"></i> Magnitude Analysis</a>
+    <a href="#depth" data-insight-view="depth"><i data-icon="layers" data-size="18"></i> Depth Analysis</a>
+    <a href="#regional" data-insight-view="regional"><i data-icon="globe" data-size="18"></i> Regional Insights</a>
+    <a href="#energy" data-insight-view="energy"><i data-icon="antenna" data-size="18"></i> Energy Analysis</a>
+    <a href="#forecast" data-insight-view="forecast"><i data-icon="branch" data-size="18"></i> Forecast Models</a>
+    <a href="#custom" data-insight-view="custom"><i data-icon="sliders" data-size="18"></i> Custom Analysis</a>
   </aside>
 
   <!-- ============ Content ============ -->
@@ -35,7 +35,16 @@
         <h1>Seismic Insights</h1>
         <p class="sub">Explore trend patterns, key forecasts across time and space.</p>
       </div>
-      <div class="controls">
+    </div>
+
+    <section class="insight-view-intro" id="insightViewIntro" aria-live="polite">
+      <div class="insight-view-copy">
+        <div class="insight-view-kicker" id="insightViewKicker">Overview</div>
+        <h2 id="insightViewTitle">The seismic record, connected</h2>
+        <p id="insightViewCopy">Compare event frequency, magnitude, depth, energy, regional concentration, and model performance in one view.</p>
+        <p class="insight-data-scope" id="analysisScope">Selected catalog: M 2+ events</p>
+      </div>
+      <div class="controls insight-view-controls">
         <label class="select-chip"><span class="lbl">Time Range</span>
           <select id="rangeSelect">
             <option value="1">24h</option>
@@ -60,29 +69,30 @@
           </select>
         </label>
       </div>
-    </div>
+    </section>
 
-    <div class="charts-grid">
+    <div class="charts-grid" id="insightCharts">
       <div class="card" id="cardTime">
         <div class="card-title">Earthquakes Over Time</div>
+        <p class="card-sub">Event totals and a smoothed average across the selected time range and region.</p>
         <div class="chart-box"><canvas id="timeChart"></canvas></div>
       </div>
 
       <div class="card" id="cardMag">
         <div class="card-title">Magnitude Frequency Distribution</div>
-        <p class="card-sub">Full catalog since 1900 (M 2+) · USGS + ISC</p>
+        <p class="card-sub" id="magDataNote">Selected-period event counts in 0.2-magnitude bins on a logarithmic scale.</p>
         <div class="chart-box"><canvas id="magChart"></canvas></div>
       </div>
 
       <div class="card" id="cardDepth">
         <div class="card-title">Depth Distribution</div>
-        <p class="card-sub">Distribution of earthquake depths</p>
+        <p class="card-sub">Share of shallow, intermediate, and deep earthquakes in the selected data.</p>
         <div class="chart-box"><canvas id="depthChart"></canvas></div>
       </div>
 
       <div class="card" id="cardEnergy">
         <div class="card-title">Seismic Energy Release</div>
-        <p class="card-sub">Relative seismic energy release over time</p>
+        <p class="card-sub">Relative energy through time; large-magnitude events dominate this logarithmic measure.</p>
         <div class="chart-box"><canvas id="energyChart"></canvas></div>
       </div>
 
@@ -90,7 +100,7 @@
         <div class="card-head" style="margin-bottom:2px">
           <div>
             <div class="card-title">Regional Hotspots <span class="light" id="hotRangeLbl">(30 Days)</span></div>
-            <p class="card-sub">Top regions by event count</p>
+            <p class="card-sub">Regions with the most cataloged events in the selected time range.</p>
           </div>
           <a class="link" href="map.html">View all</a>
         </div>
@@ -98,24 +108,123 @@
       </div>
 
       <div class="card" id="cardModel">
-        <div class="card-title">Model Performance</div>
-        <p class="card-sub">Skill scores vs observed</p>
-        <div class="score-row">
-          <div class="score">
-            <div class="k">Skill Score</div>
-            <div class="v">0.18</div>
-            <div class="hint">Short-term (24h) forecast</div>
+        <div class="card-title">Activity Anomaly Monitor</div>
+        <p class="card-sub">Observed event counts compared with a rolling baseline. This is a statistical signal, not an earthquake prediction.</p>
+        <div class="chart-box short"><canvas id="modelChart"></canvas></div>
+      </div>
+
+      <div class="card analysis-wide" id="cardStats">
+        <div class="card-title">Selected Period Summary</div>
+        <p class="card-sub">Core statistics calculated from the active time range and region.</p>
+        <div class="analysis-kpi-grid" id="statsKpis"></div>
+      </div>
+
+      <div class="card" id="cardMagBands">
+        <div class="card-title">Magnitude Composition</div>
+        <p class="card-sub">Share of selected earthquakes in each magnitude band.</p>
+        <div class="chart-box"><canvas id="magBandsChart"></canvas></div>
+      </div>
+
+      <div class="card" id="cardDepthScatter">
+        <div class="card-title">Magnitude vs Depth</div>
+        <p class="card-sub">Each point is an earthquake. Select a point to inspect the event.</p>
+        <div class="chart-box"><canvas id="depthScatterChart"></canvas></div>
+      </div>
+
+      <div class="card" id="cardHeatmap">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Spatial Density Heatmap</div>
+            <p class="card-sub">Event density in 10° latitude–longitude cells for the selected data.</p>
           </div>
-          <div class="score">
-            <div class="k">Skill Score</div>
-            <div class="v">0.62</div>
-            <div class="hint">Long-term (30d) forecast</div>
+          <span class="analysis-legend" id="heatmapMax"></span>
+        </div>
+        <div class="heatmap-box"><canvas id="spatialHeatmap" aria-label="Spatial earthquake density heatmap"></canvas></div>
+        <div class="heatmap-axis"><span>90°S</span><span>Equator</span><span>90°N</span></div>
+      </div>
+
+      <div class="card analysis-wide" id="cardTopEvents">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Top 10 Largest Earthquakes</div>
+            <p class="card-sub">Largest events in the selected period and region. Select a row for details.</p>
           </div>
         </div>
-        <div class="chart-box short"><canvas id="modelChart"></canvas></div>
+        <div class="analysis-table-wrap">
+          <table class="analysis-table">
+            <thead><tr><th>#</th><th>Magnitude</th><th>Location</th><th>Origin time</th><th class="right">Depth</th></tr></thead>
+            <tbody id="topEventsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card analysis-wide" id="cardDeepEvents">
+        <div class="card-title">Deepest Earthquakes</div>
+        <p class="card-sub">Events with the greatest hypocentral depth in the selected data.</p>
+        <div class="analysis-table-wrap">
+          <table class="analysis-table">
+            <thead><tr><th>#</th><th>Depth</th><th>Magnitude</th><th>Location</th><th>Origin time</th></tr></thead>
+            <tbody id="deepEventsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card analysis-wide" id="cardEnergyTop">
+        <div class="card-title">Top Energy Contributors</div>
+        <p class="card-sub">Events contributing the largest share of relative seismic energy in the selected data.</p>
+        <div class="analysis-table-wrap">
+          <table class="analysis-table">
+            <thead><tr><th>#</th><th>Magnitude</th><th>Location</th><th>Relative share</th><th>Origin time</th></tr></thead>
+            <tbody id="energyEventsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card analysis-wide" id="cardHistory">
+        <div class="card-head analysis-table-head">
+          <div>
+            <div class="card-title">Earthquake History</div>
+            <p class="card-sub">Search and sort events within the selected time range and region.</p>
+          </div>
+          <div class="analysis-table-tools">
+            <input type="search" id="historySearch" placeholder="Search location" aria-label="Search earthquake location">
+            <select id="historySort" aria-label="Sort earthquake history">
+              <option value="latest">Latest first</option>
+              <option value="largest">Largest first</option>
+              <option value="deepest">Deepest first</option>
+            </select>
+          </div>
+        </div>
+        <div class="analysis-table-wrap">
+          <table class="analysis-table">
+            <thead><tr><th>Magnitude</th><th>Location</th><th>Origin time</th><th class="right">Depth</th></tr></thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+        <div class="analysis-pager">
+          <span id="historyCount"></span>
+          <div><button type="button" id="historyPrev">Previous</button><button type="button" id="historyNext">Next</button></div>
+        </div>
       </div>
     </div>
   </section>
+</div>
+
+<div class="insight-modal" id="eventModal" hidden>
+  <div class="insight-modal-backdrop" data-modal-close></div>
+  <article class="insight-modal-card" role="dialog" aria-modal="true" aria-labelledby="eventModalTitle">
+    <button class="insight-modal-close" type="button" data-modal-close aria-label="Close event details"><i data-icon="x" data-size="18"></i></button>
+    <div class="insight-modal-mag" id="eventModalMag">M 0.0</div>
+    <h2 id="eventModalTitle">Earthquake details</h2>
+    <p class="insight-modal-time" id="eventModalTime"></p>
+    <dl class="insight-modal-grid">
+      <div><dt>Coordinates</dt><dd id="eventModalCoords"></dd></div>
+      <div><dt>Depth</dt><dd id="eventModalDepth"></dd></div>
+      <div><dt>Region</dt><dd id="eventModalRegion"></dd></div>
+      <div><dt>Status</dt><dd id="eventModalStatus"></dd></div>
+    </dl>
+    <button class="btn btn-primary btn-block" type="button" data-modal-close>Close</button>
+  </article>
 </div>
 
 <div id="site-footer"></div>
