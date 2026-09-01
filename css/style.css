@@ -824,6 +824,25 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 .map-layers-panel .check { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--body); padding: 4px 0; cursor: pointer; }
 .map-layers-panel input[type="checkbox"] { accent-color: var(--blue-600); width: 15px; height: 15px; }
 
+/* Panel heading with its own reset. Sits above the first h4, so that h4's
+   :first-child margin rule no longer applies -- the head supplies the gap. */
+.panel-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin: 0 0 12px; padding-bottom: 9px; border-bottom: 1px solid var(--line-soft);
+}
+.panel-head > span {
+  font-size: 11px; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--muted);
+}
+.panel-reset {
+  border: 1px solid var(--line); background: #fff; border-radius: 7px;
+  padding: 4px 10px; font-size: 11.5px; font-weight: 600; color: var(--body);
+  cursor: pointer; transition: background .12s, border-color .12s, color .12s;
+}
+.panel-reset:hover { border-color: #b9c8de; color: var(--blue-600); }
+.map-layers-panel .panel-head + #layers2d h4:first-child,
+.map-layers-panel .panel-head + #layers3d h4:first-child { margin-top: 0; }
+
 /* A proxy control the 3D app has locked -- additive glow under the light
    palette. Say so visually instead of letting a dead box look clickable. */
 .drop-panel label.check:has(input:disabled),
@@ -3138,6 +3157,22 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   .select-chip { flex: 1 1 145px; justify-content: space-between; }
   .content-head .controls, .insight-view-controls { width: 100%; }
 
+  /* A dropdown anchored to its button cannot work here. Filters is 400px wide
+     and its button sits at the right of a wrapped toolbar, so `right: 0` threw
+     the panel off the left edge -- and nothing scrolls into negative space, so
+     most of it was simply unreachable. Detach it from the button and pin it to
+     the viewport as a sheet: full width, its own scroll, above everything. */
+  .drop-panel, .drop-panel.lg {
+    position: fixed;
+    inset: auto 10px 10px 10px;
+    width: auto;
+    max-height: min(72vh, calc(100dvh - 96px));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px;
+    z-index: 1200;
+  }
+
   /* Wide tables scroll in their own box rather than widening the page. */
   .eq-table-wrap, .analysis-table-wrap {
     overflow-x: auto;
@@ -3203,7 +3238,16 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   .quake-card { left: 12px; right: 12px; width: auto; }
 
   .map-layers-btn { top: 12px; right: 12px; width: 38px; height: 38px; }
-  .map-layers-panel { top: 58px; left: 12px; right: 12px; width: auto; }
+  /* This one cannot become a viewport sheet like the Filters panel: it lives
+     inside .map-shell, which sets perspective and will-change and so becomes
+     the containing block for anything fixed. Anchored to the shell it can
+     easily hang below the fold, so cap it well short of the map's height and
+     let it scroll inside itself -- the bottom rows stay reachable from where
+     the layers button is tapped. */
+  .map-layers-panel {
+    top: 58px; left: 12px; right: 12px; width: auto;
+    max-height: min(calc(100% - 90px), 340px);
+  }
 
   .map-legend {
     left: 12px;

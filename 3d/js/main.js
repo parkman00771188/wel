@@ -1041,8 +1041,12 @@ class App {
         dist = span * 1.32;
         break;
       default:                                        // iso
-        dir = new THREE.Vector3(0.6, 0.44, 0.67);
-        dist = span * 1.78;
+        // Steep enough that the box reads as a volume rather than a lid seen
+        // edge-on: at the old 26 deg the surface collapsed into a band and the
+        // slab under it was guesswork. 42 deg opens the top face and still
+        // keeps the trench plunging across the frame rather than straight down.
+        dir = new THREE.Vector3(0.6, 0.80, 0.67);
+        dist = span * 1.95;
     }
 
     this.controls.target.copy(t);

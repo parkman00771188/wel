@@ -464,6 +464,71 @@
 
   document.getElementById("filtersBtn").addEventListener("click", syncFilterSections);
 
+  /* ---------------- reset a panel to its defaults ---------------- */
+
+  /* Inputs carry their own defaults forever (defaultValue / defaultChecked),
+     so nothing has to be registered here. Chip groups do not, and the console's
+     own groups declare theirs with class "on" in the markup -- recorded now,
+     before a click can move it. Proxy chips are skipped: their state belongs to
+     the 3D app, which resets them itself. */
+  var CHIP_DEFAULTS = [];
+  document.querySelectorAll("#layers2d .chip-row, #fDepthPresets").forEach(function (row) {
+    var on = row.querySelector(".pchip.on");
+    if (on) CHIP_DEFAULTS.push([row, on]);
+  });
+
+  function resetOwnControls(root) {
+    root.querySelectorAll("input, select").forEach(function (el) {
+      if (el.closest(".x3dscope")) return;        // the app owns those
+      if (el.type === "checkbox" || el.type === "radio") {
+        if (el.checked === el.defaultChecked) return;
+        el.checked = el.defaultChecked;
+        el.dispatchEvent(new Event("change", { bubbles: true }));
+        return;
+      }
+      var want = el.tagName === "SELECT"
+        ? ((el.querySelector("option[selected]") || el.options[0] || {}).value)
+        : el.defaultValue;
+      if (!want || el.value === want) return;
+      el.value = want;
+      el.dispatchEvent(new Event("input", { bubbles: true }));
+      el.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    CHIP_DEFAULTS.forEach(function (pair) {
+      if (root.contains(pair[0]) && !pair[1].classList.contains("on")) pair[1].click();
+    });
+    paintDuals();
+  }
+
+  /* The 3D halves of these panels are the app's controls seen through a proxy.
+     Clicking the app's own per-section reset is better than pushing values in
+     from here: it owns the defaults and every side effect they carry. */
+  function resetInApp(sections) {
+    x3(function (doc) {
+      sections.forEach(function (sel) {
+        var b = doc.querySelector(sel + " .sec-reset");
+        if (b) b.click();
+      });
+    });
+    setTimeout(refresh3dFilters, 220);
+  }
+
+  function in3d() {
+    return document.getElementById("mapShell").classList.contains("mode-3d");
+  }
+
+  document.getElementById("filtersReset").addEventListener("click", function (ev) {
+    ev.stopPropagation();
+    resetOwnControls(document.getElementById("filtersShared"));
+    if (in3d()) resetInApp([".sec-anim", ".sec-visual"]);
+  });
+
+  document.getElementById("layersReset").addEventListener("click", function (ev) {
+    ev.stopPropagation();
+    if (in3d()) resetInApp([".sec-map"]);
+    else resetOwnControls(document.getElementById("layers2d"));
+  });
+
   /* ---------------- in-map layers button (2D basemaps / 3D map layers) ---------------- */
 
   var layersPanel = document.getElementById("layersPanel");

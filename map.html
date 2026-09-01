@@ -98,6 +98,11 @@
           <i data-icon="filter" data-size="17"></i> Filters <span class="badge" id="filterBadge" hidden>1</span>
         </button>
         <div class="drop-panel lg" id="filtersPanel">
+          <div class="panel-head">
+            <span>Filters</span>
+            <button type="button" class="panel-reset" id="filtersReset"
+                    title="Put these filters back to their defaults">Reset</button>
+          </div>
 
           <!-- shared filters: drive the 2D map, the event table, and the 4D globe -->
           <div id="filtersShared">
@@ -243,6 +248,11 @@
     <!-- in-map layer settings (2D basemaps / 3D map layers) -->
     <button class="map-layers-btn" id="layersBtn" aria-label="Map layers"><i data-icon="layers" data-size="19"></i></button>
     <div class="map-layers-panel" id="layersPanel" hidden>
+      <div class="panel-head">
+        <span>Map layers</span>
+        <button type="button" class="panel-reset" id="layersReset"
+                title="Put these layers back to their defaults">Reset</button>
+      </div>
 
       <div id="layers2d">
         <h4>Basemap</h4>
@@ -278,8 +288,8 @@
           <button class="pchip" data-x3d="#seg-mapstyle [data-v='sat']">Satellite</button>
         </div>
         <label class="prow"><span>Map opacity</span>
-          <input type="range" min="0" max="100" step="5" value="50" data-x3d-range="#in-land">
-          <output data-x3d-out="#out-land">50%</output></label>
+          <input type="range" min="0" max="100" step="5" value="100" data-x3d-range="#in-land">
+          <output data-x3d-out="#out-land">100%</output></label>
         <!-- Scene palette, not an overlay: it repaints the backdrop and every
              reference line, and it switches additive glow off (that blend only
              brightens, so over a pale backdrop the points wash out to white). -->
