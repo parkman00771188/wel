@@ -89,11 +89,6 @@ body.theme-light .readout dd { color: #1c2c47; }
 body.theme-light #stat-visible { color: #0b7c93; }
 body.theme-light #stat-max { color: #c2560a; }
 
-/* Additive glow is unavailable over a light backdrop; say so rather than
-   leaving a live-looking switch. */
-.checks label.is-off { opacity: .45; }
-.checks label.is-off input { cursor: not-allowed; }
-
 /* ── globe mode ────────────────────────────────────────────── */
 /* The whole-Earth view keeps the full panel/timeline/feed; only overlays that
    are meaningless on a sphere (axis labels, the pick tooltip/card) and the

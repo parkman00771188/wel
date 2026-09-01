@@ -6,16 +6,15 @@
  * modules. Dark is the default and the values are exactly what they were
  * before this file existed.
  *
- * The light side is not simply "the dark one inverted". Two things force real
- * decisions:
+ * The light side is not simply "the dark one inverted". The magnitude and depth
+ * ramps stay as they are, because the HTML legend reads from the same stops.
+ * Their palest stop is #ffe14d, so the light background is a cool grey rather
+ * than paper white -- enough to keep a shallow M2 visible without the view
+ * reading as grey.
  *
- *   - Additive blending. It only ever brightens, so over a pale backdrop every
- *     point saturates to white and the map disappears. Light mode turns it off
- *     and the control that drives it is disabled while light is on.
- *   - The magnitude and depth ramps stay as they are, because the HTML legend
- *     reads from the same stops. Their palest stop is #ffe14d, so the light
- *     background is a cool grey rather than paper white -- enough to keep a
- *     shallow M2 visible without the view reading as grey.
+ * Additive blending is deliberately NOT decided here. It only ever brightens,
+ * so dense clusters do wash out over a pale backdrop -- but that is a judgement
+ * about how the map should look, and the checkbox owns it in either palette.
  *
  * Reference lines all darken and gain opacity: a 30%-alpha powder blue that
  * reads clearly against near-black is invisible against near-white.
@@ -42,7 +41,6 @@ export const THEMES = {
     faults: 0xe0566e,
     marker: 0xffffff,
 
-    additive: true,
   },
 
   light: {
@@ -65,7 +63,6 @@ export const THEMES = {
     faults: 0xc32f4c,
     marker: 0x16294e,
 
-    additive: false,
   },
 };
 

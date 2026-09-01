@@ -792,9 +792,9 @@ class App {
     });
     $('mp-apply').addEventListener('click', () => {
       const a = Date.parse(`${$('mp-a').value}T00:00:00Z`);
-      const b = Date.parse(`${$('mp-b').value}T00:00:00Z`);
+      const b = this.endDateToDays($('mp-b').value);
       if (Number.isFinite(a) && Number.isFinite(b)) {
-        this.setRange([this.dateToDays(new Date(a)), this.dateToDays(new Date(b))]);
+        this.setRange([this.dateToDays(new Date(a)), b]);
         this.state.now = this.state.rangeEnd;
         this.syncTime();
         markChip($('span-presets'), () => false);
@@ -882,10 +882,14 @@ class App {
    * and disables the control, rather than leaving a switch that does nothing.
    */
   applyAdditive() {
+    // The checkbox decides, in either palette. Locking it under the light one
+    // was defensible -- additive only ever brightens, so dense clusters wash
+    // out against a pale backdrop -- but that is a judgement about how the map
+    // looks, and it belongs to whoever is looking at it. The theme still turns
+    // switching palettes leaves it exactly as you set it.
     const box = $('ck-additive');
-    box.disabled = !this.theme.additive;
-    box.closest('label')?.classList.toggle('is-off', !this.theme.additive);
-    this.quakes.setAdditive(this.theme.additive && box.checked);
+    box.disabled = false;
+    this.quakes.setAdditive(box.checked);
   }
 
   /**
@@ -1087,12 +1091,32 @@ class App {
   daysToDate(days) { return new Date(this.data.epochMs + days * DAY_MS); }
   dateToDays(d) { return (d.getTime() - this.data.epochMs) / DAY_MS; }
 
+  /**
+   * Days for the END of a date-input value. A date field carries no time, so
+   * reading it as midnight makes the last day of the window an empty instant:
+   * with "2026-09-01" selected the scene stopped at 00:00 and dropped every
+   * event since, while the table beside it -- which reads the same date as
+   * 23:59:59 -- listed them. Same reading here, then clamped to where the data
+   * actually ends so picking today reaches the newest event rather than a
+   * midnight that has not happened yet.
+   */
+  endDateToDays(iso) {
+    const ms = Date.parse(`${iso}T23:59:59Z`);
+    return Number.isFinite(ms)
+      ? Math.min(this.dateToDays(new Date(ms)), this.data.totalDays)
+      : NaN;
+  }
+
   setRange([a, b]) {
     const T = this.data.totalDays;
     const s = this.state;
+    // A playhead parked at the end of the window is following the present, not
+    // resting on a chosen instant -- so it follows the new end rather than
+    // being left behind it when the window grows or fresh data lands.
+    const wasAtEnd = s.now >= s.rangeEnd - 1e-6;
     s.rangeStart = clamp(a, 0, T - MIN_SPAN_DAYS);
     s.rangeEnd = clamp(b, s.rangeStart + MIN_SPAN_DAYS, T);
-    s.now = clamp(s.now, s.rangeStart, s.rangeEnd);
+    s.now = wasAtEnd ? s.rangeEnd : clamp(s.now, s.rangeStart, s.rangeEnd);
     this.syncDates();
     this.updateSpeedOptions();
     this.syncTime();
@@ -1164,9 +1188,9 @@ class App {
     this.syncDates();
     const onDate = () => {
       const a = Date.parse(dA.value + 'T00:00:00Z');
-      const b = Date.parse(dB.value + 'T00:00:00Z');
+      const b = this.endDateToDays(dB.value);
       if (!Number.isFinite(a) || !Number.isFinite(b)) return;
-      this.setRange([this.dateToDays(new Date(a)), this.dateToDays(new Date(b))]);
+      this.setRange([this.dateToDays(new Date(a)), b]);
       markChip($('span-presets'), () => false);
     };
     dA.addEventListener('change', onDate);
