@@ -311,10 +311,14 @@ class App {
 
     this.feed.setSelected(i);
 
+    // Ring the epicentre and open its card, but leave the camera alone.
+    // Reading down a list is not a request to be flown somewhere: the view you
+    // had framed is the one you want to compare the next row against, and on
+    // the globe a swing to the far side hides everything you were looking at.
+    // Clicking a point on the map still glides -- there you asked for that one.
     if (onGlobe) {
-      // Swing the globe to the epicentre, close in, ring it and open its card.
       const ev = layer.events;
-      this.globe.focusOn(ev.lon[i], ev.lat[i], ev.depth[i]);
+      this.globe.markAt(ev.lon[i], ev.lat[i], ev.depth[i]);
       this.showCard(i);
       this.dirty = true;
       return;
@@ -322,8 +326,6 @@ class App {
 
     this.marker.show(i, this.quakes.positions);
     this.showCard(i);
-    this.flyTo(this.worldPos(i));
-    markChip($('view-presets'), () => false);   // no longer a preset framing
     this.dirty = true;
   }
 
@@ -1768,7 +1770,7 @@ class App {
       this.marker.show(i, this.quakes.positions);
       this.feed.setSelected(i);
       this.showCard(i);
-      this.flyTo(this.worldPos(i));       // glide to it, as the list does
+      this.flyTo(this.worldPos(i));       // you clicked this one: centre it
       markChip($('view-presets'), () => false);
       this.dirty = true;
     });

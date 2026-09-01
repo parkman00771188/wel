@@ -46,13 +46,12 @@
   <!-- ============ Sidebar ============ -->
   <aside class="side-nav">
     <div class="side-title">Research Hub</div>
-    <a href="#overview" class="active" data-subview="overview" data-target="resTop"><i data-icon="grid" data-size="18"></i> Overview</a>
-    <a href="#publications" data-subview="publications" data-target="secPubs"><i data-icon="book" data-size="18"></i> Publications</a>
-    <a href="#data-library" data-subview="data-library" data-target="resources"><i data-icon="database" data-size="18"></i> Data Library</a>
-    <a href="#datasets" data-subview="datasets" data-target="secDatasets"><i data-icon="box" data-size="18"></i> Datasets</a>
-    <a href="#tools" data-subview="tools" data-target="resources"><i data-icon="tool" data-size="18"></i> Tools &amp; Software</a>
-    <a href="#projects" data-subview="projects" data-target="resources"><i data-icon="folder" data-size="18"></i> Projects</a>
-    <a href="#partners" data-subview="partners" data-target="resources"><i data-icon="users" data-size="18"></i> Partners</a>
+    <!-- Three views, because there are three things here. The dropped tabs
+         (Data Library, Tools, Projects, Partners) all pointed at the same
+         block of tiles that linked nowhere. -->
+    <a href="#overview" class="active" data-subview="overview"><i data-icon="grid" data-size="18"></i> Overview</a>
+    <a href="#publications" data-subview="publications"><i data-icon="book" data-size="18"></i> Publications</a>
+    <a href="#sources" data-subview="sources"><i data-icon="database" data-size="18"></i> Data Sources</a>
   </aside>
 
   <!-- ============ Content ============ -->
@@ -60,37 +59,45 @@
     <div class="content-head" id="resTop">
       <div>
         <h1>Research Hub</h1>
-        <p class="sub">Explore our research, data, and resources.</p>
+        <p class="sub" id="resSub">The seismology literature and the data this site is built on.</p>
       </div>
     </div>
 
-    <!-- stats -->
-    <div class="res-stats">
+    <!-- Every figure here is read from the data at runtime; none are typed in. -->
+    <div class="res-stats" id="resStats">
       <div class="res-stat">
         <div class="res-icon"><i data-icon="book" data-size="22"></i></div>
         <div><div class="k">Publications</div><div class="v" id="pubCount">—</div></div>
       </div>
       <div class="res-stat">
+        <div class="res-icon"><i data-icon="activity" data-size="22"></i></div>
+        <div><div class="k">Earthquakes</div><div class="v" id="quakeCount">—</div></div>
+      </div>
+      <div class="res-stat">
         <div class="res-icon"><i data-icon="database" data-size="22"></i></div>
-        <div><div class="k">Datasets</div><div class="v">86</div></div>
+        <div><div class="k">Data sources</div><div class="v" id="sourceCount">—</div></div>
       </div>
       <div class="res-stat">
-        <div class="res-icon"><i data-icon="tool" data-size="22"></i></div>
-        <div><div class="k">Tools &amp; Software</div><div class="v">24</div></div>
-      </div>
-      <div class="res-stat">
-        <div class="res-icon"><i data-icon="bookmark" data-size="22"></i></div>
-        <div><div class="k">Active Projects</div><div class="v">15</div></div>
+        <div class="res-icon"><i data-icon="radio" data-size="22"></i></div>
+        <div><div class="k">Refreshed every</div><div class="v">30 min</div></div>
       </div>
     </div>
 
-    <!-- publications + datasets -->
-    <div class="res-main">
+    <section class="res-view" id="viewPubs">
       <div class="card" id="secPubs">
         <div class="card-head">
-          <div class="card-title" style="font-size:17px">Featured Publications</div>
-          <span class="pub-source" id="pubSource"></span>
+          <div class="card-title" style="font-size:17px">Publications</div>
+          <label class="select-chip pub-sort">
+            <span class="lbl">Sort</span>
+            <select id="pubSort">
+              <option value="cited">Most cited</option>
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+              <option value="title">Title A–Z</option>
+            </select>
+          </label>
         </div>
+        <p class="card-sub" id="pubSource"></p>
         <!-- Filled from data/papers.json, refreshed on the same 30-minute
              cycle as the earthquake data (scripts/update_content.py). -->
         <div class="pub-grid" id="pubGrid"></div>
@@ -98,78 +105,18 @@
           <button class="btn btn-outline" id="pubMore" type="button">Show more publications</button>
         </div>
       </div>
+    </section>
 
-      <div class="card" id="secDatasets">
+    <section class="res-view" id="viewSources">
+      <div class="card" id="secSources">
         <div class="card-head">
-          <div class="card-title" style="font-size:17px">Latest Datasets</div>
-          <a class="link" href="#" onclick="return false">View all datasets</a>
+          <div class="card-title" style="font-size:17px">Data Sources</div>
         </div>
-        <div>
-          <div class="ds-row">
-            <div class="ds-icon"><i data-icon="database" data-size="16"></i></div>
-            <div><div class="ds-name">Global Earthquake Catalog (1900–Present, v1.0.0)</div>
-              <div class="ds-meta">Updated May 10, 2024 &nbsp;&bull;&nbsp; 18.6 GB</div></div>
-          </div>
-          <div class="ds-row">
-            <div class="ds-icon"><i data-icon="database" data-size="16"></i></div>
-            <div><div class="ds-name">Global Seismic Station Metadata (Updated Weekly, v3.0)</div>
-              <div class="ds-meta">Updated Apr 28, 2024 &nbsp;&bull;&nbsp; 4.0 GB</div></div>
-          </div>
-          <div class="ds-row">
-            <div class="ds-icon"><i data-icon="database" data-size="16"></i></div>
-            <div><div class="ds-name">Global Vs30 Grid</div>
-              <div class="ds-meta">Updated Apr 20, 2024 &nbsp;&bull;&nbsp; 2.0 GB</div></div>
-          </div>
-          <div class="ds-row">
-            <div class="ds-icon"><i data-icon="database" data-size="16"></i></div>
-            <div><div class="ds-name">Strong Motion Database</div>
-              <div class="ds-meta">Updated Apr 17, 2024 &nbsp;&bull;&nbsp; 9.5 GB</div></div>
-          </div>
-          <div class="ds-row">
-            <div class="ds-icon"><i data-icon="database" data-size="16"></i></div>
-            <div><div class="ds-name">Subduction Zone Interface Model</div>
-              <div class="ds-meta">Updated Apr 10, 2024 &nbsp;&bull;&nbsp; v1.1</div></div>
-          </div>
-        </div>
+        <p class="card-sub">Every catalogue, basemap and feed this site reads. All of
+          them are public and free; the links go to the source, not to a copy.</p>
+        <div class="src-list" id="srcList"></div>
       </div>
-    </div>
-
-    <!-- resources -->
-    <div class="card" id="resources" style="margin-top:22px">
-      <div class="card-title" style="font-size:17px">Explore Resources</div>
-      <div class="resources-grid">
-        <a class="resource-tile" href="#" onclick="return false">
-          <div class="ic"><i data-icon="book" data-size="20"></i></div>
-          <div class="t">Data Library</div>
-          <div class="d">Access curated datasets and metadata.</div>
-        </a>
-        <a class="resource-tile" href="#" onclick="return false">
-          <div class="ic"><i data-icon="tool" data-size="20"></i></div>
-          <div class="t">Tools &amp; Software</div>
-          <div class="d">Open-source tools for researchers.</div>
-        </a>
-        <a class="resource-tile" href="#" onclick="return false">
-          <div class="ic"><i data-icon="playcircle" data-size="20"></i></div>
-          <div class="t">Learning Resources</div>
-          <div class="d">Tutorials, docs, and guides.</div>
-        </a>
-        <a class="resource-tile" href="#" onclick="return false">
-          <div class="ic"><i data-icon="users" data-size="20"></i></div>
-          <div class="t">Collaborate</div>
-          <div class="d">Join projects and partnerships.</div>
-        </a>
-        <a class="resource-tile" href="#" onclick="return false">
-          <div class="ic"><i data-icon="upload" data-size="20"></i></div>
-          <div class="t">Submit Your Work</div>
-          <div class="d">Share datasets and publications.</div>
-        </a>
-        <a class="resource-tile" href="#" onclick="return false">
-          <div class="ic"><i data-icon="mail" data-size="20"></i></div>
-          <div class="t">Stay Informed</div>
-          <div class="d">Subscribe to updates and news.</div>
-        </a>
-      </div>
-    </div>
+    </section>
   </section>
 </div>
 

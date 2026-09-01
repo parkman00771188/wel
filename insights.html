@@ -23,6 +23,7 @@
 <meta name="twitter:title" content="Seismic Insights — World Earthquake Labs">
 <meta name="twitter:description" content="Seismic analysis of the global catalogue: activity over time, magnitude-frequency distribution, depth profiles, energy release and regional hotspots.">
 <meta name="twitter:image" content="https://worldearthquakelabs.com/resource/img/og-cover.jpg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="css/style.css">
 <!-- Inside the console every child page runs in an iframe, and the shell has
      already loaded AdSense. Pausing here keeps a second copy from stacking a
@@ -245,6 +246,9 @@
     <div class="insight-modal-mag" id="eventModalMag">M 0.0</div>
     <h2 id="eventModalTitle">Earthquake details</h2>
     <p class="insight-modal-time" id="eventModalTime"></p>
+    <!-- Coordinates are precise but not legible; the map is what tells you
+         whether this was a trench, a rift, or somewhere unexpected. -->
+    <div class="insight-modal-map" id="eventModalMap"></div>
     <dl class="insight-modal-grid">
       <div><dt>Coordinates</dt><dd id="eventModalCoords"></dd></div>
       <div><dt>Depth</dt><dd id="eventModalDepth"></dd></div>
@@ -258,6 +262,7 @@
 <div id="site-footer"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="js/common.js"></script>
 <script src="js/i18n.js"></script>
 <script>window.EQ_ALL_BANDS = true; // stats run on the full M2+ catalog</script>

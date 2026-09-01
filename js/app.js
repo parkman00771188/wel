@@ -20,7 +20,7 @@
     map: ["3d", "2d"],
     learn: ["overview", "basics", "plates", "magnitude", "terms", "faq", "safety"],
     insights: ["overview", "statistics", "magnitude", "depth", "regional", "energy", "forecast", "custom"],
-    research: ["overview", "publications", "data-library", "datasets", "tools", "projects", "partners"],
+    research: ["overview", "publications", "sources"],
     news: ["all", "event", "research", "network"]
   };
   var DEFAULT_SUBVIEW = { map: "3d", learn: "overview", insights: "overview", research: "overview", news: "all" };

@@ -1775,6 +1775,16 @@ a.news-row:hover .nt { color: var(--blue-600); }
 .insight-modal-grid > div:nth-last-child(-n + 2) { border-bottom: 0; }
 .insight-modal-grid dt { color: var(--faint); font-size: 10.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
 .insight-modal-grid dd { margin: 4px 0 0; color: var(--navy-800); font-size: 13px; font-weight: 600; }
+
+.insight-modal-map {
+  height: 190px;
+  margin: 16px 0 4px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-soft);
+}
+.insight-modal-map .leaflet-container { background: #dfe7f0; font: inherit; }
 .insight-modal-card .btn-block { width: 100%; }
 body.insight-modal-open { overflow: hidden; }
 
@@ -1791,6 +1801,7 @@ body.insight-modal-open { overflow: hidden; }
   .analysis-table-tools { display: grid; grid-template-columns: 1fr; }
   .analysis-pager { align-items: flex-start; flex-direction: column; }
   .insight-modal-card { padding: 24px 20px 20px; }
+  .insight-modal-map { height: 150px; }
   .insight-modal-grid { grid-template-columns: 1fr; }
   .insight-modal-grid > div,
   .insight-modal-grid > div:nth-child(odd),
@@ -1929,6 +1940,47 @@ a.pub:hover .pub-title { color: var(--blue-600); }
 .pub-oa { background: var(--green-050); color: var(--green-500); }
 
 .pub-source { font-size: 12px; color: var(--faint); text-align: right; }
+.pub-sort { flex-shrink: 0; }
+.pub-sort .lbl { font-size: 12.5px; }
+
+/* Data sources: one row per catalogue or feed, each linking to the source
+   itself rather than to a copy of it. */
+.src-list { display: flex; flex-direction: column; margin-top: 14px; }
+
+.src-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 15px 2px;
+  border-bottom: 1px solid var(--line-soft);
+  transition: background .12s;
+}
+.src-row:last-child { border-bottom: 0; }
+.src-row:hover { background: var(--bg-soft); }
+.src-row:hover .src-name { color: var(--blue-600); }
+
+.src-main { flex: 1; min-width: 0; }
+.src-name { font-size: 14.5px; font-weight: 700; color: var(--navy-800); transition: color .12s; }
+.src-note { margin-top: 5px; font-size: 12.5px; line-height: 1.65; color: var(--muted); }
+
+.src-side {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  text-align: right;
+}
+.src-tag {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--bg-soft);
+  border-radius: 20px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+.src-count { font-size: 12px; color: var(--faint); font-variant-numeric: tabular-nums; }
 .pub-empty { grid-column: 1 / -1; color: var(--faint); padding: 22px 2px; margin: 0; }
 
 .ds-row {
@@ -3093,7 +3145,12 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   .pub { padding: 16px; }
 
   /* Card headings and their right-hand note stop fighting for one line. */
-  .card-head { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .card-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .pub-sort { width: 100%; }
+  /* The tag and the count read fine under the name on a narrow screen; beside
+     it they squeeze the note to three words a line. */
+  .src-row { flex-direction: column; gap: 8px; }
+  .src-side { flex-direction: row; align-items: center; text-align: left; }
   .pub-source { text-align: left; }
 
   /* 4px between two tap targets is not enough to hit reliably. */

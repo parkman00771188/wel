@@ -477,6 +477,46 @@
     document.getElementById("historyNext").disabled = historyState.page >= pages - 1;
   }
 
+  /* The modal's locator map. Built on first open and reused: Leaflet in a
+     hidden container measures zero, so it is created only once the card is on
+     screen and told to re-measure right after. */
+  var modalMap = null;
+  var modalMarks = null;
+
+  function showModalMap(e) {
+    var host = document.getElementById("eventModalMap");
+    if (!host || typeof L === "undefined") { if (host) host.hidden = true; return; }
+    host.hidden = false;
+
+    if (!modalMap) {
+      modalMap = L.map(host, {
+        zoomControl: false, attributionControl: false, scrollWheelZoom: false,
+        doubleClickZoom: false, boxZoom: false, keyboard: false, zoomSnap: 0.1
+      });
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+        maxZoom: 10
+      }).addTo(modalMap);
+      modalMarks = L.layerGroup().addTo(modalMap);
+    }
+
+    modalMarks.clearLayers();
+    var colour = EQ.magColor(e.m);
+    // Two rings: a filled dot for the epicentre and a wide halo, so a single
+    // point still reads as a location at continent zoom.
+    L.circleMarker([e.lat, e.lng], {
+      radius: Math.max(6, EQ.magRadius(e.m)), color: "#fff", weight: 2,
+      fillColor: colour, fillOpacity: 0.95
+    }).addTo(modalMarks);
+    L.circleMarker([e.lat, e.lng], {
+      radius: Math.max(16, EQ.magRadius(e.m) * 2.6), color: colour, weight: 1.5,
+      opacity: 0.45, fill: false
+    }).addTo(modalMarks);
+
+    modalMap.setView([e.lat, e.lng], e.m >= 6 ? 4 : 5, { animate: false });
+    // The container had no size while the modal was hidden.
+    requestAnimationFrame(function () { modalMap.invalidateSize(); });
+  }
+
   function openEventModal(e) {
     if (!e) return;
     var modal = document.getElementById("eventModal");
@@ -490,6 +530,7 @@
     document.getElementById("eventModalStatus").textContent = e.status ? e.status.charAt(0).toUpperCase() + e.status.slice(1) : "Reviewed";
     modal.hidden = false;
     document.body.classList.add("insight-modal-open");
+    showModalMap(e);
     modal.querySelector(".insight-modal-close").focus();
   }
 
