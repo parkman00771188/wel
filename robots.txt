@@ -1,0 +1,9 @@
+# World Earthquake Labs
+User-agent: *
+Allow: /
+
+# The catalogue binaries are about 100 MB and hold nothing a crawler can read.
+# (This pattern also covers the .part files they are split into.)
+Disallow: /3d/data/*.bin
+
+Sitemap: https://worldearthquakelabs.com/sitemap.xml

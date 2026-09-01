@@ -159,6 +159,23 @@ HTTPS 까지 끝납니다.
 앵커를 직접 두므로 AdSense 자동 광고의 **앵커 형식은 꺼 두세요.** 켜 두면 두 개가
 겹칩니다.
 
+## 검색 노출 (SEO)
+
+| 파일 | 역할 |
+|---|---|
+| `robots.txt` | 전체 허용 + 사이트맵 위치. 100MB 짜리 카탈로그 바이너리(`/3d/data/*.bin`)만 크롤 제외 |
+| `sitemap.xml` | 색인 대상 9개 페이지 |
+| `scripts/build_seo.py` | 위 두 파일 생성 (페이지를 늘리거나 지웠으면 다시 실행) |
+
+각 페이지 `<head>` 에 description · canonical · Open Graph · Twitter 카드가 들어
+있습니다. **canonical 이 특히 중요합니다** — 콘솔이 하위 페이지를 iframe 으로 부를 때
+`?embed=1` 이 붙어서 같은 내용이 두 주소로 존재하는데, canonical 이 깨끗한 주소로
+신호를 모아 줍니다. 구조화 데이터는 첫 화면에 Organization/WebSite, 지도 페이지에
+WebApplication 을 넣었습니다.
+
+Google Search Console 에 도메인을 등록하고 `sitemap.xml` 을 제출해야 색인이
+시작됩니다. 도메인 자체가 새것이라 첫 색인까지는 며칠 걸립니다.
+
 ## 모바일
 
 폰 화면에서는 콘솔 사이드바가 **햄버거 드로어**로 바뀌고(≤760px), 태블릿
