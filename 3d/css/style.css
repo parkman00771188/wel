@@ -1122,6 +1122,8 @@ input[type=checkbox]:checked::after {
     font: 400 10.5px/1 var(--mono); color: var(--ink-faint);
   }
   #head .readout { display: none; }
+  /* 4.6px between two 34px buttons is a miss waiting to happen on a thumb. */
+  .head-actions { gap: 7px; }
   .head-actions button { width: 34px; height: 34px; color: var(--ink-dim); }
   .head-actions button.m-only { display: grid; }
   .head-actions svg { width: 21px; height: 21px; }

@@ -4,8 +4,9 @@
   1. USGS 에 최신 지진 몇 건만 물어본다.
   2. 그게 전부 이미 우리 스냅샷에 있으면 -> 여기서 끝.
      내려받지도, 커밋하지도, GitHub 에 올리지도 않는다.
-  3. 새 지진이 있으면 최근 14일을 다시 받아 3d/data/live/ 를 갱신하고,
-     그 두 파일만 커밋해서 push 한다.
+  3. 새 지진이 있으면 최근 14일을 다시 받아 3d/data/live/ 를 갱신한다.
+  4. 이어서 뉴스와 논문도 확인해 새 것만 data/ 에 더한다.
+  5. 셋 중 하나라도 바뀌었으면 그 파일들만 커밋해서 push 한다.
 
 작업 폴더의 다른 수정 사항은 건드리지 않는다. 커밋에 경로를 지정하기 때문에
 사용자가 스테이징해 둔 것도 그대로 남는다.
@@ -29,12 +30,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from update_content import refresh_content  # noqa: E402
 from update_live_data import refresh, use_utf8_console  # noqa: E402
 
 use_utf8_console()
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA_PATH = "3d/data/live"
+DATA_PATHS = ["3d/data/live", "data"]
 AUTO_PREFIX = "[auto]"
 
 LOG_FILE = ROOT / "scripts" / "logs" / "auto_update.log"
@@ -126,7 +128,7 @@ def push(branch: str, force: bool) -> bool:
 
 def publish() -> bool:
     """갱신된 스냅샷만 커밋해서 push. 실제로 올렸으면 True."""
-    if not git("status", "--porcelain", "--", DATA_PATH).stdout.strip():
+    if not git("status", "--porcelain", "--", *DATA_PATHS).stdout.strip():
         log("[auto] 파일 내용이 그대로입니다 - 커밋할 것이 없습니다")
         return False
 
@@ -136,10 +138,10 @@ def publish() -> bool:
 
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%MZ")
     message = f"{AUTO_PREFIX} 지진 데이터 업데이트 ({stamp})"
-    # 경로를 지정해 커밋하면(-- DATA_PATH) 사용자가 스테이징해 둔 다른 파일은
+    # 경로를 지정해 커밋하면(-- DATA_PATHS) 사용자가 스테이징해 둔 다른 파일은
     # 함께 올라가지 않고 인덱스도 그대로 남는다.
-    git("add", "--", DATA_PATH)
-    git("commit", *(["--amend"] if amend else []), "-m", message, "--", DATA_PATH)
+    git("add", "--", *DATA_PATHS)
+    git("commit", *(["--amend"] if amend else []), "-m", message, "--", *DATA_PATHS)
     log(f"[auto] 커밋 {'교체' if amend else '생성'}: {sha('HEAD')[:8]}")
 
     if push(branch, force):
@@ -165,7 +167,11 @@ def main() -> int:
         return 0
     try:
         log("[auto] ================ 사이클 시작 ================")
-        if not refresh():
+        # 지진과 콘텐츠는 서로 독립이다. 지진이 없어도 새 논문이나 기사는 있을 수
+        # 있으니 둘 다 확인하고, 하나라도 바뀌었을 때만 커밋한다.
+        moved = refresh()
+        moved = refresh_content() or moved
+        if not moved:
             log("[auto] 업데이트할 것이 없습니다 - GitHub 에 올릴 것도 없습니다")
             return 0
         publish()

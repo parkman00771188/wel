@@ -18,15 +18,14 @@
   <div class="page-head">
     <div>
       <h1>News &amp; Updates</h1>
-      <p class="sub">Event reports, advisories, and platform announcements.</p>
+      <p class="sub">Earthquake coverage and research, refreshed every 30 minutes.</p>
     </div>
     <div class="page-actions">
       <div class="range-chips" id="newsFilter">
         <button data-cat="all" class="active">All</button>
-        <button data-cat="event">Events &amp; Advisories</button>
-        <button data-cat="network">Network</button>
-        <button data-cat="data">Data</button>
+        <button data-cat="event">Events</button>
         <button data-cat="research">Research</button>
+        <button data-cat="network">Network</button>
       </div>
     </div>
   </div>
@@ -40,6 +39,9 @@
 
 <script src="js/common.js"></script>
 <script src="js/i18n.js"></script>
+<!-- The feed is its own JSON file, so this page never needs the 13 MB
+     earthquake bands; loading them would just delay the headlines. -->
+<script>window.EQ_DEFER_LOAD = true;</script>
 <script src="js/data.js"></script>
 <script src="js/news.js"></script>
 </body>

@@ -255,7 +255,9 @@ h1, h2, h3, h4 { margin: 0; color: var(--navy-800); }
   font-size: 34px;
   font-weight: 700;
   color: #1a56db;
-  line-height: 1.1;
+  /* Source Serif 4 wants ~1.2em of line box. Tighter than that and the
+     descenders sit outside the card -- visible on every stat tile. */
+  line-height: 1.2;
   margin-top: 12px;
   letter-spacing: -.01em;
 }
@@ -591,7 +593,7 @@ h1, h2, h3, h4 { margin: 0; color: var(--navy-800); }
   font-size: 34px;
   font-weight: 700;
   color: var(--red-500);
-  line-height: 1;
+  line-height: 1.15;
 }
 
 .qc-title {
@@ -766,6 +768,9 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
   padding: 12px 16px 13px;
   box-shadow: 0 8px 30px rgba(6, 18, 48, .32);
 }
+
+/* Phones turn the legend into a button; wide screens never see it. */
+.map-legend .ml-toggle { display: none; }
 
 .map-legend .ml-title {
   font-size: 10.5px;
@@ -1038,33 +1043,26 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 
 .news-list { display: flex; flex-direction: column; margin-top: 4px; }
 
+/* One headline per row: title, standfirst, then outlet and age. The feed
+   carries no artwork -- Google News gives none -- and a grey "no image" box
+   on every row was worse than no box at all. */
 .news-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  padding: 12px 2px;
+  display: block;
+  padding: 16px 2px;
   border-bottom: 1px solid var(--line-soft);
 }
 .news-row:last-child { border-bottom: none; }
-.news-row .grow { flex: 1; min-width: 0; }
-.news-row .nt { font-size: 14px; font-weight: 600; color: var(--ink); line-height: 1.5; }
+.news-row .nt {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.5;
+  transition: color .12s;
+}
 .news-row .nm { font-size: 12px; color: var(--faint); margin-top: 3px; }
 
-.news-tag {
-  flex-shrink: 0;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .06em;
-  padding: 4px 9px;
-  border-radius: 6px;
-  margin-top: 3px;
-  white-space: nowrap;
-}
-.news-tag.t-event { background: #fdecea; color: #c62828; }
-.news-tag.t-advisory { background: #fff3e0; color: #e65100; }
-.news-tag.t-network { background: var(--green-050); color: var(--green-500); }
-.news-tag.t-data { background: var(--blue-050); color: var(--blue-600); }
-.news-tag.t-research { background: #f3e8ff; color: #7c3aed; }
+.news-empty { color: var(--faint); padding: 26px 2px; margin: 0; }
+
 
 /* ---------------- Earthquake guide page ---------------- */
 
@@ -1403,48 +1401,13 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 
 /* news page */
 .news-page { padding: 10px 28px; }
-.news-row.lg { padding: 18px 2px; gap: 20px; align-items: flex-start; }
-.news-row.lg .nt { font-size: 15px; }
-.news-row .nd { font-size: 13px; color: var(--muted); margin-top: 5px; line-height: 1.65; max-width: 88ch; }
+.news-row .nd { font-size: 13px; color: var(--muted); margin-top: 6px; line-height: 1.65; max-width: 88ch; }
 .news-time { flex-shrink: 0; font-size: 12.5px; color: var(--faint); white-space: nowrap; }
 
-.news-thumb {
-  position: relative;
-  width: 172px;
-  height: 112px;
-  border-radius: 10px;
-  overflow: hidden;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, #eef2f8, #e2eaf4);
-  display: grid;
-  place-items: center;
-}
-.news-thumb img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.news-thumb .ph-in {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  color: #93a1b5;
-}
-.news-thumb .ph-in svg { color: #aeb9c9; }
-
 .news-meta { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
-.news-meta .news-tag { margin-top: 0; }
 .news-src { font-size: 12.5px; font-weight: 600; color: var(--faint); }
-.news-tag.t-news { background: #e9eef7; color: #1d3560; }
 
-a.news-row.lg { transition: background .12s; }
-a.news-row.lg:hover { background: var(--bg-soft); }
-a.news-row.lg:hover .nt { color: var(--blue-600); }
+a.news-row:hover .nt { color: var(--blue-600); }
 
 /* compact guide banner on the dashboard */
 .dash-hero {
@@ -1460,8 +1423,6 @@ a.news-row.lg:hover .nt { color: var(--blue-600); }
 .dash-hero .btn { padding: 10px 20px; font-size: 13.5px; }
 
 @media (max-width: 640px) {
-  .news-row.lg { flex-direction: column; }
-  .news-thumb { width: 100%; height: 150px; }
 }
 
 @media (max-width: 960px) {
@@ -1667,7 +1628,7 @@ a.news-row.lg:hover .nt { color: var(--blue-600); }
   font-family: var(--font-serif);
   font-size: 26px;
   font-weight: 700;
-  line-height: 1.15;
+  line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -1901,7 +1862,7 @@ body.insight-modal-open { overflow: hidden; }
 }
 
 .res-stat .k { font-size: 13.5px; color: var(--muted); font-weight: 500; }
-.res-stat .v { font-family: var(--font-serif); font-size: 28px; font-weight: 700; color: var(--navy-800); line-height: 1.15; }
+.res-stat .v { font-family: var(--font-serif); font-size: 28px; font-weight: 700; color: var(--navy-800); line-height: 1.2; }
 
 .res-main {
   display: grid;
@@ -1936,9 +1897,38 @@ body.insight-modal-open { overflow: hidden; }
   margin: 14px 0 7px;
 }
 
-.pub-title { font-size: 15px; font-weight: 700; color: var(--navy-800); line-height: 1.4; }
+/* Each card is the whole paper: title, authors, venue, then the two facts
+   that actually help you choose one -- how often it is cited and whether you
+   can read it without a subscription. */
+.pub {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  transition: border-color .14s, box-shadow .14s;
+}
+a.pub:hover { border-color: #b9cdf0; box-shadow: var(--card-shadow); }
+a.pub:hover .pub-title { color: var(--blue-600); }
+
+.pub-title { font-size: 15px; font-weight: 700; color: var(--navy-800); line-height: 1.4; transition: color .14s; }
 .pub-authors { font-size: 12.5px; color: var(--muted); margin-top: 9px; line-height: 1.5; }
 .pub-meta { font-size: 12px; color: var(--faint); margin-top: 9px; }
+
+.pub-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 12px; }
+.pub-cites, .pub-oa {
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+.pub-cites { background: var(--bg-soft); color: var(--muted); }
+.pub-oa { background: var(--green-050); color: var(--green-500); }
+
+.pub-source { font-size: 12px; color: var(--faint); text-align: right; }
+.pub-empty { grid-column: 1 / -1; color: var(--faint); padding: 22px 2px; margin: 0; }
 
 .ds-row {
   display: flex;
@@ -2007,7 +1997,7 @@ body.insight-modal-open { overflow: hidden; }
   font-family: var(--font-serif);
   font-size: clamp(38px, 4.5vw, 57px);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.22;
   letter-spacing: -.015em;
   color: var(--navy-900);
 }
@@ -2364,7 +2354,7 @@ body.insight-modal-open { overflow: hidden; }
   font-size: 31px;
   font-weight: 700;
   color: var(--navy-800);
-  line-height: 1.1;
+  line-height: 1.2;
 }
 .stat-strip .k { font-size: 13px; color: var(--muted); margin-top: 6px; }
 
@@ -2635,20 +2625,35 @@ body.insight-modal-open { overflow: hidden; }
 
 .app-top h1 { font-size: 17px; font-weight: 700; color: var(--navy-800); }
 
-.app-live {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: .06em;
-  color: var(--green-500);
-  background: var(--green-050);
-  padding: 5px 12px;
-  border-radius: 20px;
+/* Shown only once the sidebar becomes a drawer. */
+.app-burger {
+  display: none;
+  width: 38px; height: 38px;
+  flex-shrink: 0;
+  place-content: center;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 0;
 }
-.app-live .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-500); animation: blink 1.6s infinite; }
-@keyframes blink { 50% { opacity: .3; } }
+.app-burger span {
+  display: block;
+  width: 17px; height: 1.8px;
+  border-radius: 2px;
+  background: var(--navy-800);
+}
+
+.app-scrim {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: rgba(10, 26, 60, .42);
+  opacity: 0;
+  transition: opacity .22s ease;
+}
+.app-scrim.on { opacity: 1; }
 
 .app-updated {
   display: inline-flex;
@@ -2700,7 +2705,9 @@ body.insight-modal-open { overflow: hidden; }
 }
 .app-frame.active { display: block; }
 
-@media (max-width: 860px) {
+/* Tablet only. Phones get the drawer further down instead, and letting this
+   rail also apply there would mean undoing every rule in it. */
+@media (min-width: 761px) and (max-width: 860px) {
   .app-body { grid-template-columns: 66px minmax(0, 1fr); }
   .app-side { padding: 14px 9px; align-items: center; }
   .app-side .brand img { height: 38px; width: 38px; object-fit: cover; object-position: left; }
@@ -2825,6 +2832,7 @@ body.insight-modal-open { overflow: hidden; }
 /* ---------------- Responsive ---------------- */
 
 @media (max-width: 1120px) {
+  .pub-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .stat-grid { grid-template-columns: repeat(3, 1fr); }
   .resources-grid { grid-template-columns: repeat(3, 1fr); }
   .band-grid { grid-template-columns: 1fr 1fr; }
@@ -2850,11 +2858,17 @@ body.insight-modal-open { overflow: hidden; }
     min-width: 200px;
   }
   .main-nav.open { display: flex; }
+  /* The nav leaves the flex row when it becomes a dropdown, and it was the
+     thing holding the actions over on the right. Without this the CTA ends up
+     pressed against the wordmark with the whole right half of the bar empty. */
+  .header-actions { margin-left: auto; }
   .main-nav a { padding: 10px 14px; border-radius: 8px; }
   .main-nav a:hover { background: var(--bg-soft); }
   .nav-burger { display: grid; }
 
-  .hero { grid-template-columns: 1fr; padding-top: 48px; }
+  /* Stacked, the hero has no image column to give the row height, so the last
+     button ended up flush against the section below it. */
+  .hero { grid-template-columns: 1fr; padding: 44px 0 52px; }
   .hero-img { order: -1; }
   .hero-img img { max-width: 440px; }
   .mission-grid { grid-template-columns: 1fr; gap: 20px; }
@@ -2885,13 +2899,10 @@ body.insight-modal-open { overflow: hidden; }
 
 @media (max-width: 640px) {
   .stat-grid, .feature-grid, .status-grid, .res-stats { grid-template-columns: 1fr; }
-  .resources-grid, .pub-grid { grid-template-columns: repeat(2, 1fr); }
+  .resources-grid { grid-template-columns: repeat(2, 1fr); }
   .resources-grid.landing, .stat-strip { grid-template-columns: 1fr; }
   .band-grid { grid-template-columns: 1fr; }
-  .map-shell { height: 520px; }
-  .map-timebar { left: 12px; right: 12px; bottom: 74px; flex-wrap: wrap; }
-  .zoom-ctl { bottom: 14px; right: 12px; }
-  .quake-card { right: 12px; left: 12px; width: auto; }
+  /* map furniture is positioned in the Mobile section below */
   .quake-pop .leaflet-popup-content {
     width: min(258px, calc(100vw - 80px)) !important;
     margin: 19px 21px 20px;
@@ -2907,4 +2918,264 @@ body.insight-modal-open { overflow: hidden; }
     width: clamp(44px, 14vw, 72px);
     flex-basis: 72px;
   }
+}
+
+/* ============================================================
+   Mobile
+   ============================================================
+   Three things break these pages on a phone, and none of them are the
+   breakpoints:
+
+     1. grid and flex items refuse to shrink below their own content, so one
+        wide chart canvas sizes an entire track and pushes the document
+        sideways -- the page then renders zoomed out and clipped;
+     2. control rows (period pickers, filter chips) sit on one unwrapping
+        line that is wider than the screen;
+     3. the console keeps its sidebar as a real grid column, spending 66px of
+        a 390px screen on a strip of icons.
+
+   Each is fixed once here rather than page by page.
+   ============================================================ */
+
+/* --- 1. let every track shrink ----------------------------------------
+   `min-width: auto` is the initial value for grid and flex items. These are
+   all laid out in tracks and would all rather wrap or scroll internally than
+   widen the page. */
+.card,
+.card-head, .card-head > *,
+.chart-box,
+.stat-card,
+.hot-row, .hot-name,
+.page-head, .page-head > *,
+.page-actions, .page-actions > *,
+.side-content,
+.app-main, .app-top, .app-top h1 { min-width: 0; }
+
+/* Chart.js writes an explicit pixel width onto its canvas, which becomes the
+   card's min-content width and locks the track open at that size. Capping it
+   lets the container shrink; the library's resize observer then redraws to
+   match on the next frame. */
+.chart-box canvas { max-width: 100%; }
+
+/* Place names arrive from the catalogue and can be long and unbreakable. */
+.hot-name, .eq-table td, .analysis-table td { overflow-wrap: anywhere; }
+
+/* ---------------- Phones ---------------- */
+
+@media (max-width: 760px) {
+
+  /* --- site chrome ---
+     Horizontal only: several sections are `class="container hero"` and the
+     like, and the shorthand would wipe out their vertical rhythm too -- which
+     is how the hero's last button ended up flush against the next section. */
+  .container { padding-left: 16px; padding-right: 16px; }
+  .header-inner { height: 62px; gap: 12px; }
+  .brand img { height: 44px; }
+  .header-actions { gap: 8px; }
+  .header-actions .btn { padding: 9px 14px; font-size: 13px; }
+
+  /* The dropdown hangs off a 62px header here, not the 78px desktop one, and
+     a fixed 200px card looks stranded on a narrow screen. */
+  .main-nav {
+    top: 62px;
+    left: 16px;
+    right: 16px;
+    min-width: 0;
+    max-height: calc(100vh - 78px);
+    overflow-y: auto;
+  }
+
+  /* --- page furniture --- */
+  .page-head { padding: 24px 0 16px; gap: 12px; }
+  .page-head h1 { font-size: clamp(24px, 7.4vw, 32px); }
+  .page-head .sub { font-size: 14px; }
+  .section-title { margin: 26px 0 12px; }
+  .card { padding: 18px 16px; }
+  .chart-box { height: 220px; }
+  .chart-box.tall { height: 250px; }
+  .chart-box.short { height: 190px; }
+
+  /* Filter and period rows wrap instead of running off the screen. Chips
+     share the row two-up rather than each claiming a full line. */
+  .page-actions { width: 100%; flex-wrap: wrap; gap: 8px; }
+  .range-chips { flex-wrap: wrap; }
+  .range-chips button { padding: 7px 11px; font-size: 12.5px; }
+  .select-chip { flex: 1 1 145px; justify-content: space-between; }
+  .content-head .controls, .insight-view-controls { width: 100%; }
+
+  /* Wide tables scroll in their own box rather than widening the page. */
+  .eq-table-wrap, .analysis-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Three columns of paper cards on a phone leaves each 145px wide and 460px
+     tall. One per row, and two on a tablet. */
+  .pub-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .pub { padding: 16px; }
+
+  /* Card headings and their right-hand note stop fighting for one line. */
+  .card-head { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .pub-source { text-align: left; }
+
+  /* 4px between two tap targets is not enough to hit reliably. */
+  .range-chips { gap: 6px; padding: 5px; }
+  .range-chips button { padding: 9px 13px; }
+
+  /* The chip is what you see, but the select is what you tap: make them the
+     same box instead of leaving a 19px target inside a 44px pill. */
+  .select-chip { padding: 0 12px; }
+  .select-chip select, .select-chip .lbl { padding: 11px 0; }
+
+  /* --- on-map furniture ---
+     A phone has to fit the scrubber, the zoom pad, the layer control and a
+     nine-step legend onto the same 390px as the map. The scrubber takes the
+     bottom edge, zoom and legend sit above it on opposite sides, and the
+     legend stays collapsed until it is asked for. */
+  .map-shell { height: 62vh; min-height: 360px; }
+
+  /* Two deterministic rows -- transport on top, date underneath -- so the
+     zoom pad and the legend can be parked at a known height above it instead
+     of guessing at whatever a wrapping flex row happens to measure. */
+  .map-shell { --map-tb-space: 124px; }
+  .map-timebar {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px 10px;
+    padding: 9px 11px;
+  }
+  .map-timebar .play-btn { width: 38px; height: 38px; }
+  .map-timebar input[type="range"] { grid-column: 2; }
+  .map-timebar .now-btn { grid-column: 3; padding: 8px 2px; }
+  .map-timebar .time-readout {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    max-width: none;
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+
+  .zoom-ctl { right: 12px; bottom: var(--map-tb-space); }
+  .quake-card { left: 12px; right: 12px; width: auto; }
+
+  .map-layers-btn { top: 12px; right: 12px; width: 38px; height: 38px; }
+  .map-layers-panel { top: 58px; left: 12px; right: 12px; width: auto; }
+
+  .map-legend {
+    left: 12px;
+    right: auto;
+    bottom: var(--map-tb-space);
+    max-width: calc(100% - 90px);
+    padding: 0;
+  }
+  .map-legend .ml-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 0;
+    background: none;
+    padding: 9px 13px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .map-legend .ml-toggle::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-right: 1.6px solid currentColor;
+    border-bottom: 1.6px solid currentColor;
+    transform: rotate(-135deg) translate(-1px, -1px);
+    transition: transform .16s ease;
+  }
+  .map-legend.open .ml-toggle::after { transform: rotate(45deg) translate(-1px, -1px); }
+
+  .map-legend .ml-body { display: none; padding: 0 13px 11px; }
+  .map-legend.open .ml-body {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 14px;
+  }
+  .map-legend .ml-title { grid-column: 1 / -1; }
+  .map-legend .legend-item { font-size: 11.5px; padding: 2px 0; }
+  .map-legend .legend-dot { margin-right: 7px; }
+
+  /* The donut and its nine-row key cannot share a 360px line. Stack them and
+     let the label side shrink, so "M 4 - 4.9 ... 362 (62%)" stays on one row
+     instead of pushing the card wider than the screen. */
+  .donut-flex { flex-direction: column; align-items: stretch; gap: 16px; }
+  .donut-hold { align-self: center; }
+  .donut-legend .row { gap: 8px; font-size: 13px; }
+  .donut-legend .row > span:not(.grow):not(.legend-dot) { min-width: 0; }
+  .donut-legend .row .val { flex-shrink: 0; white-space: nowrap; }
+
+  .footer-top { flex-direction: column; align-items: flex-start; gap: 18px; }
+
+  /* --- console: sidebar becomes a drawer --- */
+  .app-body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 56px minmax(0, 1fr);
+    grid-template-areas: "top" "main";
+  }
+
+  .app-side {
+    position: fixed;
+    z-index: 1200;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(84vw, 300px);
+    padding: 16px 14px 20px;
+    background: #fff;
+    border-right: 1px solid var(--line);
+    box-shadow: var(--pop-shadow);
+    transform: translateX(-100%);
+    transition: transform .22s ease;
+    overscroll-behavior: contain;
+  }
+  .app-side.open { transform: none; }
+  .app-side .brand img { height: 52px; }
+
+  .app-scrim { display: block; }
+  body.app-drawer-open { overflow: hidden; }
+
+  .app-burger { display: inline-grid; }
+  .app-top { padding: 0 12px; gap: 10px; }
+  .app-top h1 {
+    flex: 1;
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  /* The clock and the freshness chip are the first things to go: the title
+     and the language picker have to survive at 360px. */
+  .app-clock, .app-updated { display: none; }
+  /* Same story as the period chips: the pill is 44px but the select inside it
+     was a 17px target. Let the select own the pill's height. */
+  .app-lang { padding: 0 6px 0 9px; }
+  .app-lang select { padding: 11px 0; font-size: 12.5px; }
+
+  /* --- pages inside the console iframe --- */
+  .embed .container { padding-left: 16px; padding-right: 16px; }
+  .embed .side-content { padding: 20px 16px 48px; }
+  .embed .side-nav { padding: 10px 16px; }
+  .embed .page-head { padding-top: 20px; }
+  .embed .map-main { display: block; }
+  .embed .map-shell { height: 56vh; min-height: 320px; }
+  .embed .map-side { margin-top: 18px; }
+  .embed .eq-table-wrap { max-height: 340px; }
+}
+
+/* Narrow phones: 360px and below can no longer carry the LIVE pill next to
+   the burger, the title and the language picker. */
+@media (max-width: 400px) {
+  .select-chip { flex-basis: 100%; }
 }

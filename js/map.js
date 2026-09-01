@@ -468,6 +468,16 @@
     if (is3d) refresh3dFilters();
   }
 
+  /* The on-map legend is a button on phones (see the .ml-toggle rules): nine
+     magnitude steps and the layer keys do not fit beside a 390px map. */
+  var legendBox = document.getElementById("mapLegend");
+  var legendToggle = document.getElementById("mapLegendToggle");
+  if (legendToggle) legendToggle.addEventListener("click", function (ev) {
+    ev.stopPropagation();
+    var open = legendBox.classList.toggle("open");
+    legendToggle.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+
   document.getElementById("layersBtn").addEventListener("click", function (ev) {
     ev.stopPropagation();
     layersPanel.hidden = !layersPanel.hidden;

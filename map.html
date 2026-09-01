@@ -176,6 +176,10 @@
 
     <!-- on-map legend (2D; the 4D engine draws its own in 3D) -->
     <div class="map-legend" id="mapLegend">
+      <!-- Phone widths collapse this to the button; nine magnitude steps plus
+           the layer keys would otherwise cover half the map. -->
+      <button class="ml-toggle" id="mapLegendToggle" aria-expanded="false" aria-controls="mapLegendBody">Legend</button>
+      <div class="ml-body" id="mapLegendBody">
       <div class="ml-title">Magnitude</div>
       <div class="legend-item"><span class="legend-dot" style="width:4px;height:4px;background:#ffe082"></span>M 1 – 1.9</div>
       <div class="legend-item"><span class="legend-dot" style="width:6px;height:6px;background:#ffd54f"></span>M 2 – 2.9</div>
@@ -191,6 +195,7 @@
       <div class="legend-item" id="legend2dPlates"><span class="legend-line"></span>Plate boundaries</div>
       <div class="legend-item" id="legend2dFaults" hidden><span class="legend-line fault"></span>Active faults</div>
       <div class="legend-item" id="legend2dVolcanoes" hidden><span class="legend-volcano"></span>Volcanoes</div>
+      </div>
     </div>
 
     <!-- in-map layer settings (2D basemaps / 3D map layers) -->

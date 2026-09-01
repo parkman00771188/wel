@@ -21,7 +21,7 @@
     learn: ["overview", "basics", "plates", "magnitude", "terms", "faq", "safety"],
     insights: ["overview", "statistics", "magnitude", "depth", "regional", "energy", "forecast", "custom"],
     research: ["overview", "publications", "data-library", "datasets", "tools", "projects", "partners"],
-    news: ["all", "event", "network", "data", "research"]
+    news: ["all", "event", "research", "network"]
   };
   var DEFAULT_SUBVIEW = { map: "3d", learn: "overview", insights: "overview", research: "overview", news: "all" };
 
@@ -36,6 +36,39 @@
 
   var current = null;
   var currentSub = {};
+
+  /* ---------- phone sidebar drawer ----------
+     Below 760px the sidebar leaves the grid and slides in over the content:
+     a 66px icon rail is a sixth of a phone screen, and the console has no
+     width to spare. Everything that changes the view also closes it. */
+
+  var side = document.getElementById("appSide");
+  var scrim = document.getElementById("appScrim");
+  var burger = document.getElementById("appBurger");
+
+  function drawerOpen() { return document.body.classList.contains("app-drawer-open"); }
+
+  function setDrawer(open) {
+    document.body.classList.toggle("app-drawer-open", open);
+    side.classList.toggle("open", open);
+    scrim.hidden = !open;
+    // The scrim fades, so it needs a frame between being displayed and being
+    // told to become opaque -- otherwise the transition never runs.
+    if (open) requestAnimationFrame(function () { scrim.classList.add("on"); });
+    else scrim.classList.remove("on");
+    burger.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+
+  burger.addEventListener("click", function () { setDrawer(!drawerOpen()); });
+  scrim.addEventListener("click", function () { setDrawer(false); });
+  document.addEventListener("keydown", function (ev) {
+    if (ev.key === "Escape" && drawerOpen()) setDrawer(false);
+  });
+  // Back on a wide screen the sidebar is part of the grid again; a leftover
+  // open state would otherwise keep the scrim and the scroll lock around.
+  window.matchMedia("(min-width: 761px)").addEventListener("change", function (ev) {
+    if (ev.matches && drawerOpen()) setDrawer(false);
+  });
 
   function validSubview(view, sub) {
     return !!(sub && SUBVIEWS[view] && SUBVIEWS[view].indexOf(sub) !== -1);
@@ -66,6 +99,7 @@
   }
 
   function activate(view, pushHash, sub) {
+    if (drawerOpen()) setDrawer(false);
     if (!VIEWS[view]) view = "overview";
     if (!validSubview(view, sub)) sub = currentSub[view] || DEFAULT_SUBVIEW[view] || null;
     if (validSubview(view, sub)) currentSub[view] = sub;

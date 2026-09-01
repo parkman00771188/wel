@@ -12,8 +12,11 @@
 </head>
 <body class="app-body">
 
+  <!-- Phone-width backdrop: the sidebar slides over the content, not beside it. -->
+  <div class="app-scrim" id="appScrim" hidden></div>
+
   <!-- ============ Sidebar ============ -->
-  <aside class="app-side">
+  <aside class="app-side" id="appSide">
     <a class="brand" href="index.html" title="World Earthquake Labs website">
       <img src="resource/img/logo_new.png" alt="World Earthquake Labs">
     </a>
@@ -75,10 +78,9 @@
         <a href="#news" data-view="news" aria-expanded="false" aria-controls="appSubnavNews"><i data-icon="radio" data-size="19"></i><span class="app-nav-label">News &amp; Updates</span><span class="app-nav-caret" aria-hidden="true"></span></a>
         <div class="app-subnav" id="appSubnavNews">
           <a href="#news/all" data-parent-view="news" data-subview="all"><span>All Updates</span></a>
-          <a href="#news/event" data-parent-view="news" data-subview="event"><span>Events &amp; Advisories</span></a>
-          <a href="#news/network" data-parent-view="news" data-subview="network"><span>Network</span></a>
-          <a href="#news/data" data-parent-view="news" data-subview="data"><span>Data</span></a>
+          <a href="#news/event" data-parent-view="news" data-subview="event"><span>Events</span></a>
           <a href="#news/research" data-parent-view="news" data-subview="research"><span>Research</span></a>
+          <a href="#news/network" data-parent-view="news" data-subview="network"><span>Network</span></a>
         </div>
       </div>
     </nav>
@@ -111,8 +113,10 @@
 
   <!-- ============ Top bar ============ -->
   <header class="app-top">
+    <button class="app-burger" id="appBurger" aria-label="Menu" aria-expanded="false" aria-controls="appSide">
+      <span></span><span></span><span></span>
+    </button>
     <h1 id="appTitle">Dashboard Overview</h1>
-    <span class="app-live"><span class="dot"></span>LIVE</span>
     <span class="app-updated" id="appUpdated" hidden></span>
     <span class="app-clock" id="appClock">—</span>
     <label class="app-lang" title="Language">
