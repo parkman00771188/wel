@@ -16,12 +16,26 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 import tempfile
 import time
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+
+
+def use_utf8_console() -> None:
+    """한글 메시지가 cp949 콘솔에서 죽지 않게 stdout/stderr 을 UTF-8 로 고정한다.
+
+    예약 작업은 숨겨진 콘솔에서 도는데, 그 콘솔의 코드페이지는 보통 949 라
+    그대로 두면 첫 한글 줄에서 UnicodeEncodeError 로 사이클이 통째로 죽는다.
+    """
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError, OSError):
+            pass  # pythonw 로 띄웠거나 리다이렉트된 경우 - 파일 로그만 남는다
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -136,22 +150,22 @@ def has_new_events() -> bool:
     """Whether USGS is holding an earthquake our snapshot has never seen."""
     known = stored_ids("global")
     if known is None:
-        print("[live] 저장된 스냅샷이 없습니다 — 전체를 받습니다")
+        print("[live] 저장된 스냅샷이 없습니다 - 전체를 받습니다")
         return True
 
     newest = fetch_newest(PROBE_FETCH)[-PROBE_KEEP:]
     if not newest:
-        print("[live] USGS 응답이 비어 있습니다 — 기존 데이터를 유지합니다")
+        print("[live] USGS 응답이 비어 있습니다 - 기존 데이터를 유지합니다")
         return False
 
     unseen = [event for event in newest if event["id"] not in known]
     if not unseen:
-        print(f"[live] 새 지진 없음 — 최신 {len(newest)}건이 모두 기존 데이터에 있습니다")
+        print(f"[live] 새 지진 없음 - 최신 {len(newest)}건이 모두 기존 데이터에 있습니다")
         return False
 
     latest = unseen[-1]
     print(f"[live] 새 지진 {len(unseen)}건 감지 (최신 {len(newest)}건 중) "
-          f"— 최신: M{latest['magnitude']} {latest['place']}")
+          f"- 최신: M{latest['magnitude']} {latest['place']}")
     return True
 
 
@@ -226,6 +240,7 @@ def main() -> int:
     if args.window_days != WINDOW_DAYS:
         raise SystemExit(f"window length is fixed at {WINDOW_DAYS} days to match the browser merge policy")
 
+    use_utf8_console()
     refresh(force=args.force)
     return 0
 

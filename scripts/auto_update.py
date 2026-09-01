@@ -29,7 +29,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from update_live_data import refresh  # noqa: E402
+from update_live_data import refresh, use_utf8_console  # noqa: E402
+
+use_utf8_console()
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = "3d/data/live"
@@ -43,7 +45,10 @@ LOCK_STALE_SECONDS = 25 * 60
 
 def log(message: str) -> None:
     line = f"[{datetime.now():%Y-%m-%d %H:%M:%S}] {message}"
-    print(line, flush=True)
+    try:
+        print(line, flush=True)
+    except (OSError, UnicodeError, AttributeError):
+        pass  # 콘솔이 없거나(pythonw) 인코딩이 막아도 파일 로그는 남긴다
     try:
         LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
         if LOG_FILE.exists() and LOG_FILE.stat().st_size > LOG_MAX_BYTES:
@@ -77,7 +82,7 @@ def acquire_lock() -> bool:
     if LOCK_FILE.exists():
         age = time.time() - LOCK_FILE.stat().st_mtime
         if age < LOCK_STALE_SECONDS:
-            log(f"[auto] 이전 사이클이 아직 실행 중입니다 ({int(age)}초 전 시작) — 건너뜁니다")
+            log(f"[auto] 이전 사이클이 아직 실행 중입니다 ({int(age)}초 전 시작) - 건너뜁니다")
             return False
         log(f"[auto] 중단된 사이클의 잠금 파일을 정리합니다 ({int(age)}초 경과)")
     LOCK_FILE.write_text(str(os.getpid()), encoding="utf-8")
@@ -122,7 +127,7 @@ def push(branch: str, force: bool) -> bool:
 def publish() -> bool:
     """갱신된 스냅샷만 커밋해서 push. 실제로 올렸으면 True."""
     if not git("status", "--porcelain", "--", DATA_PATH).stdout.strip():
-        log("[auto] 파일 내용이 그대로입니다 — 커밋할 것이 없습니다")
+        log("[auto] 파일 내용이 그대로입니다 - 커밋할 것이 없습니다")
         return False
 
     branch = git("rev-parse", "--abbrev-ref", "HEAD").stdout.strip() or "main"
@@ -141,7 +146,7 @@ def publish() -> bool:
         log(f"[auto] push 완료 -> origin/{branch}")
         return True
 
-    log("[auto] push 거절 — 원격 변경을 받아 다시 시도합니다")
+    log("[auto] push 거절 - 원격 변경을 받아 다시 시도합니다")
     if git("pull", "--rebase", "--autostash", "origin", branch, check=False).returncode != 0:
         git("rebase", "--abort", check=False)
         log("[auto] ERROR: rebase 실패. 커밋은 로컬에 남아 있으니 직접 정리한 뒤 push 해 주세요")
@@ -151,7 +156,7 @@ def publish() -> bool:
         log(f"[auto] push 완료 -> origin/{branch} (rebase 후)")
         return True
 
-    log("[auto] ERROR: push 실패. 커밋은 로컬에 남아 있습니다 — 다음 회차에 다시 시도합니다")
+    log("[auto] ERROR: push 실패. 커밋은 로컬에 남아 있습니다 - 다음 회차에 다시 시도합니다")
     return False
 
 
@@ -161,7 +166,7 @@ def main() -> int:
     try:
         log("[auto] ================ 사이클 시작 ================")
         if not refresh():
-            log("[auto] 업데이트할 것이 없습니다 — GitHub 에 올릴 것도 없습니다")
+            log("[auto] 업데이트할 것이 없습니다 - GitHub 에 올릴 것도 없습니다")
             return 0
         publish()
         return 0
