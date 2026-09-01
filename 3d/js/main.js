@@ -135,7 +135,7 @@ class App {
     // A saved range/playhead that sat at the catalogue's end meant "through
     // the latest data", not that exact date -- the catalogue has grown since,
     // so the end keeps tracking it. Otherwise every reload (including the
-    // half-hourly auto-refresh) would freeze the view at the save date.
+    // periodic auto-refresh) would freeze the view at the save date.
     // Old payloads carry no `total`; within 30 days of the end counts as
     // "at the end" for them.
     const savedT = Number.isFinite(this.saved.total) ? this.saved.total : null;
@@ -1550,7 +1550,7 @@ class App {
 
   /**
    * "Updated N min ago" for whichever catalogue is on screen. The pill used
-   * to show a build date and a refresh icon; with the half-hourly auto
+   * to show a build date and a refresh icon; with the periodic auto
    * update, freshness-at-a-glance is the useful part.
    */
   refreshUpdatedAgo() {
@@ -1586,7 +1586,7 @@ class App {
     this.refreshUpdatedAgo();
     // Keep the "updated N min ago" pill honest while the tab stays open.
     this.agoTimer ??= setInterval(() => this.refreshUpdatedAgo(), 30000);
-    // The site republishes itself every half hour; a page that stays open
+    // The site republishes itself every 45 minutes; a page that stays open
     // should say so instead of silently counting the old payload's age up.
     this.freshTimer ??= setInterval(() => this.checkForNewData(), 300000);
     $('head-sub').textContent = isc

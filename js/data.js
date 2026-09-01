@@ -472,7 +472,7 @@
 
   /* ---------- live overlay ----------
      The 1900-present archive is rebuilt offline and is far too large to
-     republish every half hour. A GitHub Action refetches the last 14 days from
+     republish on a schedule. A scheduled task refetches the last 14 days from
      USGS ComCat into 3d/data/live/global.json instead, and the browser splices
      that window over the tail of the archive. The seam is the overlay's
      window_start: everything at or after it comes from the fresh file, so
@@ -897,7 +897,7 @@
       });
 
   /* Refresh in place. Two cadences, because two things can change: the
-     overlay is republished every 30 minutes by the "Update earthquake data"
+     overlay is republished every 45 minutes by the "Update earthquake data"
      action, the archive only when it is rebuilt offline. */
   var POLL_MS = 5 * 60e3;
   var polling = false;

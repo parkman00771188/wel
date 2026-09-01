@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""이 PC에서 30분마다 도는 지진 데이터 자동 업데이트 한 사이클.
+"""이 PC에서 45분마다 도는 지진 데이터 자동 업데이트 한 사이클.
 
   1. USGS 에 최신 지진 몇 건만 물어본다.
   2. 그게 전부 이미 우리 스냅샷에 있으면 -> 여기서 끝.
@@ -11,7 +11,7 @@
 작업 폴더의 다른 수정 사항은 건드리지 않는다. 커밋에 경로를 지정하기 때문에
 사용자가 스테이징해 둔 것도 그대로 남는다.
 
-하루 48번 도는 만큼, 직전 커밋이 우리가 만든 [auto] 커밋이면 그 위에 쌓지 않고
+하루 32번 도는 만큼, 직전 커밋이 우리가 만든 [auto] 커밋이면 그 위에 쌓지 않고
 교체한다. 사람이 직접 만든 커밋은 절대 교체하지 않는다.
 
   자동 실행 등록 : auto_update_start.bat
@@ -41,7 +41,7 @@ DATA_PATHS = ["3d/data/live", "data"]
 AUTO_PREFIX = "[auto]"
 # Cloudflare Pages skips a build when the commit message starts with this.
 # The data the site reads goes to R2, so a data commit has nothing for Pages
-# to rebuild -- and at 30-minute intervals the builds alone would run past the
+# to rebuild -- and at short intervals the builds alone would run past the
 # free tier's 500 a month. Dropped automatically while R2 is not configured,
 # because then the deployment is still where the site reads its data from.
 SKIP_PREFIX = "[CF-Pages-Skip]"

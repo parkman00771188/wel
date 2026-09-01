@@ -2,7 +2,7 @@
  * The live overlay.
  *
  * The 1900-present archives (`quakes.bin`, `quakes-m*.bin`) are rebuilt offline
- * and are far too large to republish every half hour. The "Update earthquake
+ * and are far too large to republish on a schedule. The "Update earthquake
  * data" action instead refetches the last 14 days from USGS ComCat into
  * `data/live/<region>.json` and commits that, so a deployed site keeps pace
  * with the catalogue without touching a single byte of the binaries.

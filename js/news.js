@@ -1,7 +1,7 @@
 /* World Earthquake Labs — news & updates page
 
    The feed is real coverage, collected by scripts/update_content.py on the
-   same 30-minute cycle as the earthquake data and committed to
+   same 45-minute cycle as the earthquake data and committed to
    data/news.json. Nothing here is generated from the catalogue, so the page
    does not wait on the 13 MB band download to render. */
 (function () {
