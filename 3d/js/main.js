@@ -164,10 +164,82 @@ class App {
     this.buildScene();
     this.buildTimeline();
     this.buildFeeds();
+    this.captureDefaults();            // before anything is restored over them
     this.restoreInputs();
     this.bindUI();
+    this.buildSectionResets();
     this.fillMeta();
     if (!this.restoreCamera()) this.applyPreset('iso');
+    this.dirty = true;
+  }
+
+  /* ── per-section reset ──────────────────────────────────── */
+
+  /**
+   * The markup already declares every default: `value`, `checked`, and the
+   * `on` class on a segmented button. Inputs keep theirs in defaultValue and
+   * defaultChecked whatever the user does afterwards; button groups do not,
+   * so their opening choice is recorded here -- before restoreInputs writes a
+   * previous session over it.
+   */
+  captureDefaults() {
+    this.groupDefaults = new Map();
+    for (const group of $('panel').querySelectorAll('.seg, .chips')) {
+      const on = group.querySelector('button.on');
+      if (on) this.groupDefaults.set(group, on);
+    }
+  }
+
+  /** A ↺ on each panel heading, resetting only that heading's section. */
+  buildSectionResets() {
+    const sections = ['.sec-anim', '.sec-period', '.sec-mag', '.sec-depth',
+      '.sec-visual', '.sec-map'];
+    for (const selector of sections) {
+      const section = $('panel').querySelector(selector);
+      const heading = section?.querySelector('h2');
+      if (!heading) continue;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'sec-reset';
+      button.textContent = '↺';
+      button.title = t('이 항목 초기화');
+      button.setAttribute('aria-label', button.title);
+      button.addEventListener('click', () => this.resetSection(section));
+      heading.appendChild(button);
+    }
+  }
+
+  /**
+   * Put one section back to what the markup declares. Reading the defaults off
+   * the controls themselves, rather than a table kept alongside, means a
+   * control added to the panel later is covered without anyone remembering to
+   * register it.
+   */
+  resetSection(section) {
+    for (const el of section.querySelectorAll('input, select')) {
+      if (el.type === 'checkbox' || el.type === 'radio') {
+        if (el.checked === el.defaultChecked) continue;
+        el.checked = el.defaultChecked;
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+        continue;
+      }
+      const want = el.tagName === 'SELECT'
+        ? (el.querySelector('option[selected]') ?? el.options[0])?.value
+        : el.defaultValue;
+      // The date fields carry no value in the markup -- they are filled from
+      // the catalogue at boot. Blanking them would be a reset to nothing; the
+      // period chip below puts them back properly.
+      if (!want || el.value === want) continue;
+      el.value = want;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    for (const [group, button] of this.groupDefaults) {
+      if (section.contains(group) && !button.classList.contains('on')) button.click();
+    }
+
+    this.persist();
     this.dirty = true;
   }
 
@@ -454,12 +526,17 @@ class App {
           this.data.totalDays, () => this.onGlobeReady());
       }
       this.globe.setActive(true);
+      // A view switch hands back the opening framing. Carrying one view's pan
+      // and zoom into the other lands you somewhere arbitrary -- a corner of
+      // the depth box, or the far side of the planet. Filters are untouched.
+      this.globe.home();
       this.globe.controls.autoRotate = $('ck-spin').checked;
       if (this.globe.layer) this.useGlobeData(true);
     } else {
       this.globe?.setActive(false);
       this.useGlobeData(false);
       this.recenter();
+      this.applyPreset('iso');
     }
     this.refreshUpdatedAgo();
     this.dirty = true;

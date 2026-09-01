@@ -493,17 +493,6 @@ export class GlobeView {
 
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(40, 1, 0.1, 300);
-    // Open facing the app's home region: Korea/Japan (~36N 133E) dead centre.
-    {
-      const la = (32 * Math.PI) / 180;
-      const lo = (133 * Math.PI) / 180;
-      const d = R * 3.1;
-      this.camera.position.set(
-        d * Math.cos(la) * Math.cos(lo),
-        d * Math.sin(la),
-        -d * Math.cos(la) * Math.sin(lo),
-      );
-    }
 
     this.controls = new OrbitControls(this.camera, canvas);
     Object.assign(this.controls, {
@@ -515,6 +504,7 @@ export class GlobeView {
       enabled: false,
     });
     this.controls.addEventListener('start', () => { this.fly = null; });
+    this.home();
 
     this.body = new THREE.Mesh(
       new THREE.SphereGeometry(1, 96, 48),
@@ -839,6 +829,24 @@ export class GlobeView {
   }
 
   /** Satellite mode only: ocean on = full imagery; off = clipped to land. */
+  /**
+   * The opening framing: the app's home region (Korea/Japan, ~32N 133E) dead
+   * centre with the whole sphere in frame. Also what a view switch returns to.
+   */
+  home() {
+    const la = (32 * Math.PI) / 180;
+    const lo = (133 * Math.PI) / 180;
+    const d = R * 3.1;
+    this.fly = null;
+    this.camera.position.set(
+      d * Math.cos(la) * Math.cos(lo),
+      d * Math.sin(la),
+      -d * Math.cos(la) * Math.sin(lo),
+    );
+    this.controls.target.set(0, 0, 0);
+    this.controls.update();
+  }
+
   /** Same contract as RefLayer.applyTheme, for the globe's own objects. */
   applyTheme(theme) {
     this.theme = theme;
