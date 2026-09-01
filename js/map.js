@@ -111,7 +111,6 @@
         "#panel{display:none!important}" +
         "#panel-toggle{display:none!important}" +
         "#mfabs{display:none!important}" +
-        "#feed{display:none!important}" +      // our side table lists events instead
         "#mcards{display:none!important}" +
         "#m-edit-period{display:none!important}" + // dates are set from our header
         "#m-update{display:none!important}";       // shown in the console top bar instead
@@ -380,6 +379,7 @@
 
   function autoFloor() {
     var d = spanDays();
+    if (d > 7300) return 6;    // full catalog: only strong events stay drawable
     if (d > 1826) return 5;    // 5y–10y
     if (d > 365) return 4.5;   // 3y
     if (d > 120) return 4;     // 1y
@@ -412,7 +412,7 @@
   function renderQuakes() {
     quakeLayer.clearLayers();
     var list = filtered();
-    if (state.playing && state.cursor) {
+    if (state.cursor != null) { // playing or scrubbed
       list = list.filter(function (e) { return e.t <= state.cursor; });
     }
     // oldest first so recent/big draw on top
@@ -531,8 +531,7 @@
     var pool = filtered().filter(inRegion);
     var rows;
     if (spanDays() > 120) {
-      // long windows: the notable events, largest first
-      rows = pool.slice().sort(function (a, b) { return b.m - a.m; });
+      rows = pool; // newest first — the long-window floor already keeps it significant
     } else {
       rows = pool.filter(function (e) { return e.m >= floor; });
       var need = window.WEL && WEL.embed ? 14 : 5;
@@ -585,8 +584,10 @@
   var PAUSE_SVG = '<svg width="16" height="16" viewBox="0 0 24 24"><path d="M8 5.5v13M16 5.5v13" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>';
   playBtn.innerHTML = PLAY_SVG;
 
+  var scrub = document.getElementById("timeScrub");
+
   function tickReadout() {
-    if (state.playing && state.cursor) {
+    if (state.cursor != null) {
       readout.textContent = EQ.fmtUTC(state.cursor, true);
     } else if (state.live) {
       readout.textContent = EQ.fmtUTC(Date.now(), true);
@@ -599,36 +600,64 @@
 
   var playRAF = null;
 
-  function stopPlay() {
+  function syncScrub() {
+    var span = state.endMs - state.startMs;
+    scrub.value = state.cursor == null ? 1000
+      : Math.round(((state.cursor - state.startMs) / span) * 1000);
+  }
+
+  /* pause: keep the playhead where it is */
+  function pausePlay() {
     state.playing = false;
-    state.cursor = null;
     if (playRAF) cancelAnimationFrame(playRAF);
     playBtn.innerHTML = PLAY_SVG;
+  }
+
+  /* full reset (window changed, Now pressed, …) */
+  function stopPlay() {
+    pausePlay();
+    state.cursor = null;
+    scrub.value = 1000;
     renderQuakes();
     tickReadout();
   }
 
+  var PLAY_TOTAL_MS = 14000; // full window sweep duration
+
   function startPlay() {
-    var from = state.startMs;
-    var span = state.endMs - from;
-    var dur = 12000;
+    var span = state.endMs - state.startMs;
+    var from = (state.cursor != null && state.cursor < state.endMs - span * 0.005)
+      ? state.cursor
+      : state.startMs;
+    var dur = Math.max(600, PLAY_TOTAL_MS * ((state.endMs - from) / span));
     var t0 = performance.now();
     state.playing = true;
     playBtn.innerHTML = PAUSE_SVG;
 
     function step(now) {
       var k = Math.min(1, (now - t0) / dur);
-      state.cursor = from + span * k;
+      state.cursor = from + (state.endMs - from) * k;
+      syncScrub();
       renderQuakes();
       tickReadout();
       if (k < 1 && state.playing) playRAF = requestAnimationFrame(step);
-      else stopPlay();
+      else pausePlay();
     }
     playRAF = requestAnimationFrame(step);
   }
 
   playBtn.addEventListener("click", function () {
-    if (state.playing) stopPlay(); else startPlay();
+    if (state.playing) pausePlay(); else startPlay();
+  });
+
+  /* drag the bar to scrub through the window */
+  scrub.addEventListener("input", function () {
+    pausePlay();
+    var span = state.endMs - state.startMs;
+    state.cursor = state.startMs + (+this.value / 1000) * span;
+    if (+this.value >= 1000) state.cursor = null; // fully right = everything
+    renderQuakes();
+    tickReadout();
   });
 
   function isoUTC(ms) {
@@ -656,6 +685,7 @@
     var preset = null;
     if (endsNow) {
       PRESET_DAYS.forEach(function (p) { if (Math.abs(days - p) < 0.2) preset = p; });
+      if (state.startMs <= Date.parse("1900-01-02T00:00:00Z")) preset = "all";
     }
     sel.value = preset ? String(preset) : "custom";
 
@@ -671,6 +701,10 @@
 
   document.getElementById("mapPeriod").addEventListener("change", function () {
     if (this.value === "custom") return;
+    if (this.value === "all") {
+      setRange(Date.parse("1900-01-01T00:00:00Z"), Date.now(), false);
+      return;
+    }
     var days = +this.value;
     setPresetDays(days, days === 1); // 24h keeps the live rolling behaviour
   });
@@ -756,7 +790,7 @@
   /* ---------------- live updates ---------------- */
 
   EQ.onLive(function (e) {
-    if (!state.live || state.playing) return;
+    if (!state.live || state.playing || state.cursor != null) return;
     state.endMs = Date.now();
     state.startMs = state.endMs - 24 * EQ.H;
     longCache.key = null; // catalog was refreshed in place

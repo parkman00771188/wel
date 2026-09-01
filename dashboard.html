@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-nav="overview" data-cta="dashboard">
+<body data-nav="platform" data-cta="dashboard">
 
 <div id="site-header"></div>
 
@@ -37,8 +37,8 @@
       </select></label>
       <label class="select-chip"><span class="lbl">Period</span>
         <select id="periodSelect">
-          <option value="1" selected>24h</option>
-          <option value="7">7d</option>
+          <option value="1">24h</option>
+          <option value="7" selected>7d</option>
           <option value="30">30d</option>
           <option value="90">90d</option>
           <option value="365">1y</option>
@@ -79,7 +79,7 @@
 
     <div class="card">
       <div class="card-head">
-        <div class="card-title">Magnitude Distribution <span class="light" id="donutRangeLbl">(24h)</span></div>
+        <div class="card-title">Magnitude Distribution <span class="light" id="donutRangeLbl">(7d)</span></div>
       </div>
       <div class="donut-flex">
         <div class="donut-hold"><canvas id="donutChart"></canvas></div>

@@ -37,15 +37,17 @@
 
   <!-- ============ Data sources ============ -->
   <section class="trust">
-    <div class="container trust-row">
-      <div class="trust-label">Built on open data from</div>
-      <div class="wordmark"><span class="main src">ISC</span><span class="sub">INTERNATIONAL SEISMOLOGICAL CENTRE</span></div>
-      <div class="wordmark"><span class="main src">USGS</span><span class="sub">ANSS COMCAT</span></div>
-      <div class="wordmark"><span class="main src">JMA</span><span class="sub">JAPAN METEOROLOGICAL AGENCY</span></div>
-      <div class="wordmark"><span class="main src">GEM</span><span class="sub">GLOBAL ACTIVE FAULTS</span></div>
-      <div class="wordmark"><span class="main src">GVP</span><span class="sub">SMITHSONIAN VOLCANISM</span></div>
-      <div class="wordmark"><span class="main src">NASA</span><span class="sub">GIBS · BLUE MARBLE</span></div>
-      <div class="wordmark"><span class="main src">Natural Earth</span><span class="sub">COASTLINES · PLATES</span></div>
+    <div class="container">
+      <div class="trust-label center">Built on open data from</div>
+      <div class="trust-row sources">
+        <div class="wordmark"><span class="main src">ISC</span><span class="sub">SEISMOLOGICAL CENTRE</span></div>
+        <div class="wordmark"><span class="main src">USGS</span><span class="sub">ANSS COMCAT</span></div>
+        <div class="wordmark"><span class="main src">JMA</span><span class="sub">JAPAN MET. AGENCY</span></div>
+        <div class="wordmark"><span class="main src">GEM</span><span class="sub">ACTIVE FAULTS</span></div>
+        <div class="wordmark"><span class="main src">GVP</span><span class="sub">SMITHSONIAN</span></div>
+        <div class="wordmark"><span class="main src">NASA</span><span class="sub">GIBS · BLUE MARBLE</span></div>
+        <div class="wordmark"><span class="main src">Natural&nbsp;Earth</span><span class="sub">COASTLINES · PLATES</span></div>
+      </div>
     </div>
   </section>
 
@@ -157,6 +159,184 @@
       <div class="sec-cta">
         <a class="btn-text" href="app.html#map" >Explore the Platform</a>
         <a class="btn-text" href="app.html#overview" >View the Dashboard</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Live Map ============ -->
+  <section class="land-sec" id="livemap">
+    <div class="container">
+      <div class="sec-head">
+        <div class="eyebrow">Live Map</div>
+        <h2>Every earthquake since 1900 — on a map you can play.</h2>
+        <p class="lead">The live map is two instruments in one. In 2D, a fast interactive world map for
+          browsing recent seismicity; in 3D, the Earthquake&nbsp;4D engine — a globe that replays the
+          entire catalog through time and shows every hypocenter at its true depth.</p>
+      </div>
+
+      <div class="split">
+        <div class="rich-text">
+          <p>Pick any window with the <b>start–end date controls</b> — the last 24 hours, a famous
+            sequence from decades ago, or all 126 years at once — and both views follow. Press play
+            and events light up in order; drag the time bar to scrub back and forth.</p>
+          <ul class="ticks">
+            <li><i data-icon="check" data-size="17"></i><span><b>Any date range, 1900 → today.</b> Presets from 24 hours to 10 years, or type exact dates.</span></li>
+            <li><i data-icon="check" data-size="17"></i><span><b>2D basemaps</b> — topographic, satellite with night tint, ocean, gray, and streets — plus plate-boundary overlays.</span></li>
+            <li><i data-icon="check" data-size="17"></i><span><b>The 4D globe</b> renders depth in 3D: subducting slabs and deep seismic zones appear as real structures.</span></li>
+            <li><i data-icon="check" data-size="17"></i><span><b>Layers &amp; filters</b> — magnitude bands, depth ranges, active faults, volcanoes, coloring by depth, magnitude, time, or density.</span></li>
+          </ul>
+        </div>
+        <div>
+          <div class="kb-facts one-col">
+            <div class="kb-fact"><div class="v">2,974,013</div><div class="k">events in the merged USGS + ISC catalog, deduplicated, 1900–present</div></div>
+            <div class="kb-fact"><div class="v">M 9.5</div><div class="k">the largest event in the catalog — Valdivia, Chile, 1960</div></div>
+            <div class="kb-fact"><div class="v">126 yrs</div><div class="k">replayable on the 4D timeline, with speeds from minutes to decades per second</div></div>
+          </div>
+          <div class="sec-cta" style="margin-top:26px">
+            <a class="btn-text" href="app.html#map">Open the live map &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Guide ============ -->
+  <section class="land-sec alt" id="guide">
+    <div class="container">
+      <div class="sec-head">
+        <div class="eyebrow">Earthquake Guide</div>
+        <h2>Understand the shaking — then prepare for it.</h2>
+        <p class="lead">A plain-language guide to earthquake science and safety, organized by topic so
+          you can read the piece you need in a few minutes.</p>
+      </div>
+
+      <div class="split">
+        <div>
+          <ul class="ticks" style="margin-top:4px">
+            <li><i data-icon="check" data-size="17"></i><span><b>Basics</b> — what an earthquake is, hypocenter vs epicenter, and how P and S waves make early warning possible.</span></li>
+            <li><i data-icon="check" data-size="17"></i><span><b>Plate tectonics</b> — convergent, divergent, and transform boundaries, and why 90% of quakes trace the Ring of Fire.</span></li>
+            <li><i data-icon="check" data-size="17"></i><span><b>Magnitude vs intensity</b> — the logarithmic scale, ×32 energy per step, and the M 2–9 class table with worldwide frequencies.</span></li>
+            <li><i data-icon="check" data-size="17"></i><span><b>Key terms &amp; FAQ</b> — aftershocks, liquefaction, tsunamis; can quakes be predicted, and how alerts work.</span></li>
+          </ul>
+        </div>
+        <div class="rich-text">
+          <p>The <b>Safety Guide</b> turns knowledge into habits: what to do indoors, outdoors, while
+            driving, or in an elevator — each as a three-step drill — plus an interactive
+            <b>emergency-kit checklist</b> that remembers your progress, and a three-point home
+            readiness check.</p>
+          <div class="sec-cta" style="margin-top:22px">
+            <a class="btn-text" href="app.html#learn">Open the guide &rarr;</a>
+            <a class="btn-text" href="app.html#learn">Safety checklist &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Insights ============ -->
+  <section class="land-sec" id="insights">
+    <div class="container">
+      <div class="sec-head">
+        <div class="eyebrow">Seismic Insights</div>
+        <h2>Trends, spectra, and hotspots — for any window you choose.</h2>
+        <p class="lead">Six chart families recomputed on demand from the same catalog that drives the
+          map, from a single day to a full decade, globally or per region.</p>
+      </div>
+
+      <div class="split">
+        <div class="rich-text">
+          <ul class="ticks" style="margin-top:0">
+            <li><i data-icon="check" data-size="17"></i><span><b>Activity over time</b> with rolling averages — hourly, daily, or monthly bins depending on the window.</span></li>
+            <li><i data-icon="check" data-size="17"></i><span><b>A real Gutenberg–Richter curve</b> computed from the full catalog, M 2 to M 9.5.</span></li>
+            <li><i data-icon="check" data-size="17"></i><span><b>Depth distribution and seismic energy release</b>, log-scaled so great earthquakes stay readable.</span></li>
+            <li><i data-icon="check" data-size="17"></i><span><b>Regional hotspots</b> ranked by event count, and forecast-model skill tracking.</span></li>
+            <li><i data-icon="check" data-size="17"></i><span><b>One-click CSV export</b> of whatever selection you are looking at.</span></li>
+          </ul>
+        </div>
+        <div>
+          <div class="kb-facts one-col">
+            <div class="kb-fact"><div class="v">~15 / yr</div><div class="k">magnitude 7+ earthquakes worldwide — the real long-term average</div></div>
+            <div class="kb-fact"><div class="v">54,096</div><div class="k">Ring-of-Fire events (M 4+) in just the last five years</div></div>
+            <div class="kb-fact"><div class="v">24h – 10y</div><div class="k">analysis windows, with region filters for the major seismic zones</div></div>
+          </div>
+          <div class="sec-cta" style="margin-top:26px">
+            <a class="btn-text" href="app.html#insights">Explore insights &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Research ============ -->
+  <section class="land-sec alt" id="research">
+    <div class="container">
+      <div class="sec-head">
+        <div class="eyebrow">Research</div>
+        <h2>Science that turns measurements into understanding.</h2>
+        <p class="lead">Our research program feeds every improvement straight back into the platform —
+          a better algorithm on paper becomes a better earthquake solution in production.</p>
+      </div>
+
+      <div class="topic-grid">
+        <div class="topic-card">
+          <div class="ic"><i data-icon="activity" data-size="21"></i></div>
+          <div>
+            <h3>Rapid Source Characterization</h3>
+            <p>Waveform-inversion methods that estimate magnitude, rupture geometry, and mechanism
+              within seconds of detection — the foundation for early warning.</p>
+          </div>
+        </div>
+        <div class="topic-card">
+          <div class="ic"><i data-icon="layers" data-size="21"></i></div>
+          <div>
+            <h3>Seismic Hazard &amp; Uncertainty</h3>
+            <p>Global assessments that quantify not just expected shaking but how confident we can
+              be in it — numbers engineers and insurers can build with.</p>
+          </div>
+        </div>
+        <div class="topic-card">
+          <div class="ic"><i data-icon="branch" data-size="21"></i></div>
+          <div>
+            <h3>Machine-Learned Detection</h3>
+            <p>Deep-learning pickers that find small earthquakes traditional pipelines miss,
+              sharpening our picture of faults between the large events.</p>
+          </div>
+        </div>
+        <div class="topic-card">
+          <div class="ic"><i data-icon="antenna" data-size="21"></i></div>
+          <div>
+            <h3>Network Performance</h3>
+            <p>Continuous evaluation of the global station network — noise, thresholds, coverage —
+              guiding where the next instruments should go.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-cta">
+        <a class="btn-text" href="app.html#research">Visit the Research Hub &rarr;</a>
+        <a class="btn-text" href="app.html#research">Browse datasets &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ News ============ -->
+  <section class="land-sec" id="news">
+    <div class="container">
+      <div class="sec-head">
+        <div class="eyebrow">News &amp; Updates</div>
+        <h2>What the planet did today — and what we shipped this week.</h2>
+        <p class="lead">One feed for everything worth knowing: automatic reports for significant
+          earthquakes, humanitarian advisories, real-world coverage, and platform announcements.</p>
+      </div>
+
+      <ul class="ticks" style="max-width:760px">
+        <li><i data-icon="check" data-size="17"></i><span><b>Event reports, generated live.</b> When a significant earthquake enters the catalog, a rapid report and an aftershock advisory appear automatically.</span></li>
+        <li><i data-icon="check" data-size="17"></i><span><b>Real coverage, linked to the source.</b> Curated articles from agencies and newsrooms open in the original outlet.</span></li>
+        <li><i data-icon="check" data-size="17"></i><span><b>Platform announcements</b> — data releases, network expansions, and research highlights, filterable by category.</span></li>
+      </ul>
+
+      <div class="sec-cta">
+        <a class="btn-text" href="app.html#news">Read the latest &rarr;</a>
       </div>
     </div>
   </section>

@@ -494,13 +494,21 @@ h1, h2, h3, h4 { margin: 0; color: var(--navy-800); }
 }
 .play-btn:hover { border-color: #b9c8de; }
 
-.time-readout {
+#timeScrub {
   flex: 1;
+  min-width: 60px;
+  accent-color: var(--blue-600);
+  height: 22px;
+  cursor: pointer;
+}
+
+.time-readout {
   min-width: 0;
+  max-width: 46%;
   border: 1px solid #e2e8f2;
   border-radius: 10px;
   padding: 10px 16px;
-  font-size: 14px;
+  font-size: 13px;
   color: #33445f;
   text-align: center;
   font-variant-numeric: tabular-nums;
@@ -864,33 +872,33 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 }
 
 .quake-pop .leaflet-popup-content {
-  margin: 14px 16px 15px;
+  margin: 19px 22px 20px;
   width: auto !important;
-  min-width: 208px;
+  min-width: 236px;
   font-family: var(--font-sans);
-  font-size: 12.5px;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.55;
   position: relative;
   color: var(--ink);
 }
 
-.quake-pop .qc-mag { font-size: 23px; }
-.quake-pop .qc-title { font-size: 14px; margin: 5px 0 9px; padding-right: 18px; }
-.quake-pop .qc-row { font-size: 12.5px; padding: 2px 0; }
-.quake-pop .qc-div { margin: 9px 0; }
+.quake-pop .qc-mag { font-size: 26px; }
+.quake-pop .qc-title { font-size: 14.5px; margin: 7px 0 12px; padding-right: 20px; }
+.quake-pop .qc-row { font-size: 13px; padding: 3px 0; }
+.quake-pop .qc-div { margin: 11px 0; }
 
 .quake-pop .qc-close {
-  top: -5px;
-  right: -7px;
-  width: 24px;
-  height: 24px;
+  top: -6px;
+  right: -8px;
+  width: 26px;
+  height: 26px;
 }
 
 .quake-pop .btn-block {
-  margin-top: 11px;
-  padding: 8px 14px;
-  font-size: 12.5px;
-  border-radius: 8px;
+  margin-top: 14px;
+  padding: 9px 15px;
+  font-size: 13px;
+  border-radius: 9px;
 }
 
 .quake-pop .leaflet-popup-tip { box-shadow: 0 8px 22px rgba(5, 16, 45, .25); }
@@ -1727,6 +1735,16 @@ a.news-row.lg:hover .nt { color: var(--blue-600); }
 }
 
 .trust-label { font-size: 13.5px; color: #5d6b82; max-width: 170px; line-height: 1.5; }
+.trust-label.center { max-width: none; text-align: center; margin-bottom: 18px; font-size: 12.5px; letter-spacing: .02em; }
+
+.trust-row.sources {
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.trust-row.sources .wordmark { flex-shrink: 0; }
 
 .wordmark { color: #707c8f; opacity: .85; text-align: center; line-height: 1; user-select: none; }
 .wordmark .main { display: block; }

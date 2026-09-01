@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-nav="map" data-cta="dashboard">
+<body data-nav="livemap" data-cta="dashboard">
 
 <div id="site-header"></div>
 
@@ -37,6 +37,7 @@
           <option value="1095">3y</option>
           <option value="1826">5y</option>
           <option value="3652">10y</option>
+          <option value="all">All</option>
           <option value="custom" hidden>Custom</option>
         </select>
       </label>
@@ -178,6 +179,7 @@
 
     <div class="map-timebar">
       <button class="play-btn" id="playBtn" aria-label="Play timeline"></button>
+      <input type="range" id="timeScrub" min="0" max="1000" value="1000" aria-label="Timeline position">
       <div class="time-readout" id="timeReadout">—</div>
       <button class="now-btn active" id="nowBtn">Now</button>
     </div>

@@ -10,7 +10,7 @@
 
   var PERIOD_LBL = { 1: "24h", 7: "7d", 30: "30d", 90: "90d", 365: "1y", 1095: "3y", 1826: "5y", 3652: "10y" };
 
-  var state = { region: "All Regions", tz: "utc", days: 1 };
+  var state = { region: "All Regions", tz: "utc", days: 7 };
 
   function regionEvents() {
     return EQ.byRegion(EQ.events, state.region);
