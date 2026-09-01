@@ -93,6 +93,9 @@ export class SelectionMarker {
 
   setPixelRatio(dpr) { this.uniforms.uSizePx.value = 100 * dpr; }
 
+  /** The ring reads as white over a dark scene and as navy over a light one. */
+  setColor(color) { this.uniforms.uColor.value.set(color); }
+
   /** @param {number[]} positions flat xyz array from the quake layer */
   show(index, positions) {
     this.showAt(positions[index * 3], positions[index * 3 + 1], positions[index * 3 + 2]);

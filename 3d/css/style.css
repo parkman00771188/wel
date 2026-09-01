@@ -65,6 +65,20 @@ code {
 #labels span.depth { color: #8fa6c4; }
 #labels span.strong { color: var(--ink-dim); font-weight: 600; }
 
+/* Light scene: the axis and depth labels now sit on near-white, so they need
+   dark ink and a pale halo instead of the black one they glow against. */
+body.theme-light #labels span {
+  color: #41556e;
+  text-shadow: 0 0 6px #e9eff6, 0 0 3px #e9eff6;
+}
+body.theme-light #labels span.depth { color: #3f6a95; }
+body.theme-light #labels span.strong { color: #22364f; }
+
+/* Additive glow is unavailable over a light backdrop; say so rather than
+   leaving a live-looking switch. */
+.checks label.is-off { opacity: .45; }
+.checks label.is-off input { cursor: not-allowed; }
+
 /* ── globe mode ────────────────────────────────────────────── */
 /* The whole-Earth view keeps the full panel/timeline/feed; only overlays that
    are meaningless on a sphere (axis labels, the pick tooltip/card) and the

@@ -19,6 +19,7 @@ import { Picker } from './picking.js';
 import { SelectionMarker } from './marker.js';
 import { EventFeed, ChangeFeed } from './feed.js';
 import * as store from './store.js';
+import { THEMES } from './theme.js';
 import {
   DEPTH_STOPS, MAG_STOPS, TIME_STOPS, cssGradient, rampColor,
 } from './palette.js';
@@ -48,7 +49,7 @@ const SAVED_INPUTS = [
   ...Array.from({ length: 10 }, (_, i) => `ck-band-${i + 1}`),
   'ck-additive', 'ck-coast', 'ck-admin', 'ck-plates', 'ck-faults', 'ck-box',
   'ck-ocean',
-  'ck-spin', 'ck-loop',
+  'ck-spin', 'ck-loop', 'ck-light',
   'sel-speed',
 ];
 
@@ -327,7 +328,10 @@ class App {
       canvas, antialias: true, powerPreference: 'high-performance',
     });
     this.renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-    this.renderer.setClearColor(0x05070d, 1);
+    // Dark until the restored ck-light says otherwise; applyTheme does the
+    // rest once the layers below exist.
+    this.theme = THEMES.dark;
+    this.renderer.setClearColor(this.theme.clear, 1);
 
     // No scene fog: the point shader does not sample it, so fogging the
     // reference lines alone would read as an inconsistency.
@@ -357,11 +361,12 @@ class App {
     this.world.add(this.quakes.points);
 
     this.ref = new RefLayer(this.data.basemap, this.proj, this.meta,
-      () => { this.dirty = true; });        // repaint when the texture arrives
+      () => { this.dirty = true; },         // repaint when the texture arrives
+      this.theme);
     this.ref.maxAnisotropy = this.renderer.capabilities.getMaxAnisotropy();
     this.world.add(this.ref.group);
 
-    this.marker = new SelectionMarker({ color: 0xffffff });
+    this.marker = new SelectionMarker({ color: this.theme.marker });
     this.marker.setPixelRatio(this.renderer.getPixelRatio());
     this.world.add(this.marker.points);
 
@@ -441,7 +446,7 @@ class App {
       if (!this.globe) {
         // Lazy: the globe module and its data cost nothing until first use.
         const { GlobeView } = await import('./globe.js');
-        this.globe = new GlobeView(this.renderer, this.canvas);
+        this.globe = new GlobeView(this.renderer, this.canvas, this.theme);
         this.globe.resize(window.innerWidth, window.innerHeight,
           this.renderer.getPixelRatio());
         this.globe.setInsets(this.viewInsets());
@@ -790,6 +795,34 @@ class App {
   }
 
   /** Point the shared feed / stats / timeline at the active catalogue. */
+  /**
+   * Additive blending only ever brightens, so over a pale backdrop every point
+   * saturates towards white and the map washes out. Light mode forces it off
+   * and disables the control, rather than leaving a switch that does nothing.
+   */
+  applyAdditive() {
+    const box = $('ck-additive');
+    box.disabled = !this.theme.additive;
+    box.closest('label')?.classList.toggle('is-off', !this.theme.additive);
+    this.quakes.setAdditive(this.theme.additive && box.checked);
+  }
+
+  /**
+   * Swap the scene palette. Both catalogues follow: the Japan layer through
+   * RefLayer, the globe through GlobeView -- and if the globe has not been
+   * opened yet it is constructed with this.theme already set.
+   */
+  applyTheme(light) {
+    this.theme = light ? THEMES.light : THEMES.dark;
+    document.body.classList.toggle('theme-light', light);
+    this.renderer.setClearColor(this.theme.clear, 1);
+    this.ref?.applyTheme(this.theme);
+    this.globe?.applyTheme(this.theme);
+    this.marker?.setColor(this.theme.marker);
+    this.applyAdditive();
+    this.dirty = true;
+  }
+
   useGlobeData(globe) {
     const g = this.globe;
     if (globe && g?.layer) {
@@ -1270,7 +1303,8 @@ class App {
       this.renderLegend();
       this.dirty = true;
     }, String(s.colorMode));
-    check('ck-additive', (on) => { this.quakes.setAdditive(on); this.dirty = true; });
+    check('ck-additive', () => { this.applyAdditive(); this.dirty = true; });
+    check('ck-light', (on) => this.applyTheme(on));
     check('ck-coast', (on) => {
       this.ref.setCoastVisible(on);
       this.globe?.setCoastVisible(on);

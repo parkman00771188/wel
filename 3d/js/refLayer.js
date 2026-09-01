@@ -6,6 +6,7 @@
  * whole basemap costs a handful of draw calls regardless of strip count.
  */
 
+import { THEMES, paint } from './theme.js';
 import * as THREE from 'three';
 import { LineMaterial } from '../vendor/lines/LineMaterial.js';
 import { LineSegments2 } from '../vendor/lines/LineSegments2.js';
@@ -106,8 +107,9 @@ function volcanoPoints(rows, toPos, size) {
 }
 
 export class RefLayer {
-  constructor(basemap, proj, meta, onTextureReady) {
+  constructor(basemap, proj, meta, onTextureReady, theme = THEMES.dark) {
     this.proj = proj;
+    this.theme = theme;
     this.group = new THREE.Group();
 
     const mat = (color, opacity) => new THREE.LineBasicMaterial({
@@ -120,22 +122,22 @@ export class RefLayer {
     // ── administrative boundaries ────────────────────────────
     // Under the coastline in the stacking order and much dimmer: context, not
     // content. Prefecture/province lines are what make it read as a map.
-    this.admin = stripsToFat(basemap.admin ?? [], proj, 0.004, 0x7d93ad, 0.3, 1);
+    this.admin = stripsToFat(basemap.admin ?? [], proj, 0.004, ...this.theme.japanAdmin, 1);
     if (this.admin) this.group.add(this.admin);
-    this.borders = stripsToSegments(basemap.borders ?? [], proj, 0.006, mat(0xa8b6c8, 0.42));
+    this.borders = stripsToSegments(basemap.borders ?? [], proj, 0.006, mat(...this.theme.japanBorders));
     if (this.borders) this.group.add(this.borders);
 
     // ── coastline ────────────────────────────────────────────
-    this.coast = stripsToSegments(basemap.coast ?? [], proj, 0.008, mat(0x9fc4e8, 0.7));
+    this.coast = stripsToSegments(basemap.coast ?? [], proj, 0.008, mat(...this.theme.japanCoast));
     if (this.coast) this.group.add(this.coast);
 
     // ── plate boundaries ─────────────────────────────────────
     // Lifted a hair above the surface so it never z-fights the coastline.
-    this.plates = stripsToFat(basemap.plates ?? [], proj, 0.014, 0xff8a3d, 0.85, 1);
+    this.plates = stripsToFat(basemap.plates ?? [], proj, 0.014, this.theme.plates, 0.85, 1);
     if (this.plates) this.group.add(this.plates);
 
     // ── active faults (GEM) ──────────────────────────────────
-    this.faults = stripsToFat(basemap.faults ?? [], proj, 0.011, 0xe0566e, 0.65, 1);
+    this.faults = stripsToFat(basemap.faults ?? [], proj, 0.011, this.theme.faults, 0.65, 1);
     if (this.faults) { this.faults.visible = false; this.group.add(this.faults); }
 
     // ── Holocene volcanoes (Smithsonian GVP) ─────────────────
@@ -167,7 +169,7 @@ export class RefLayer {
     geo.rotateX(-Math.PI / 2);             // lie flat: plane +y -> scene -z (north)
 
     this.landMaterial = new THREE.MeshBasicMaterial({
-      color: 0x2f4a63,
+      color: this.theme.japanFill,
       transparent: true,
       opacity: 0.5,
       depthWrite: false,
@@ -251,7 +253,7 @@ export class RefLayer {
     } else if (this.mapStyle === 'fill') {
       m.map = null;
       m.alphaMap = this.maskTex ?? null;
-      m.color.set(0x2f4a63);
+      m.color.set(this.theme.japanFill);
       this.land.visible = !!this.landAvailable;
     } else {
       this.land.visible = false;
@@ -302,9 +304,26 @@ export class RefLayer {
       faint.push(V(xMin, 0, z), V(xMax, 0, z));
     }
 
-    this.strongLines = segmentsFromPoints(strong, mat(0x8fb0d6, 0.3));
-    this.faintLines = segmentsFromPoints(faint, mat(0x7794b8, 0.1));
+    this.strongLines = segmentsFromPoints(strong, mat(...this.theme.cageStrong));
+    this.faintLines = segmentsFromPoints(faint, mat(...this.theme.cageFaint));
     return [this.strongLines, this.faintLines];
+  }
+
+  /**
+   * Recolour every reference line and the land fill. The quake points are not
+   * touched: their ramps are shared with the HTML legend, so a second set for
+   * light mode would have to be mirrored there too.
+   */
+  applyTheme(theme) {
+    this.theme = theme;
+    paint(this.coast, theme.japanCoast);
+    paint(this.admin, theme.japanAdmin);
+    paint(this.borders, theme.japanBorders);
+    paint(this.plates, theme.plates);
+    paint(this.faults, theme.faults);
+    paint(this.strongLines, theme.cageStrong);
+    paint(this.faintLines, theme.cageFaint);
+    this.applyMapStyle();          // picks japanFill back up
   }
 
   setCoastVisible(on) { if (this.coast) this.coast.visible = on; }

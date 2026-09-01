@@ -182,6 +182,7 @@ js/insights.js    인사이트 차트 + CSV 다운로드
 js/news.js        뉴스 피드
 js/research.js    논문 목록
 3d/js/            Three.js 엔진 (globe, quakeLayer, timeline, feed …)
+3d/js/theme.js    씬 팔레트 (다크 기본 / 라이트) — 레이어 패널의 "밝은 배경"
 3d/js/chunks.js   25 MiB 초과 파일 조각 이어붙이기
 3d/js/live.js     최근 14일 오버레이 로더
 scripts/          자동 업데이트 · 콘텐츠 수집 · 파일 분할 · 배포 스크립트

@@ -21,6 +21,7 @@ import {
 import { FILTER_EPS } from './quakeLayer.js';
 import { count, t } from './i18n.js';
 import { fetchParts } from './chunks.js';
+import { THEMES, paint } from './theme.js';
 import { liveRows, loadLive, lowerBound } from './live.js';
 import { LineMaterial } from '../vendor/lines/LineMaterial.js';
 import { LineSegments2 } from '../vendor/lines/LineSegments2.js';
@@ -486,8 +487,9 @@ function mergeBands(buffers, live, epochMs) {
 }
 
 export class GlobeView {
-  constructor(renderer, canvas) {
+  constructor(renderer, canvas, theme = THEMES.dark) {
     this.renderer = renderer;
+    this.theme = theme;
 
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(40, 1, 0.1, 300);
@@ -516,7 +518,7 @@ export class GlobeView {
 
     this.body = new THREE.Mesh(
       new THREE.SphereGeometry(1, 96, 48),
-      new THREE.MeshBasicMaterial({ color: 0x080c14 }),
+      new THREE.MeshBasicMaterial({ color: this.theme.globeBody }),
     );
     this.body.scale.setScalar(R * 0.82);
     this.scene.add(this.body);
@@ -526,7 +528,7 @@ export class GlobeView {
     // A step brighter than the Japan quad's fill: against the pure-black space
     // backdrop the same colour reads much darker than it does over the box.
     this.landMaterial = new THREE.MeshBasicMaterial({
-      color: 0x41608c,
+      color: this.theme.globeFill,
       transparent: true,
       opacity: 0.5,
       depthWrite: false,
@@ -537,7 +539,7 @@ export class GlobeView {
     this.scene.add(this.land);
     this.mapStyle = 'sat';
 
-    this.marker = new SelectionMarker({ color: 0xffffff });
+    this.marker = new SelectionMarker({ color: this.theme.marker });
     // Same device-pixel scaling as the Japan marker, or the two views show
     // the same marker at different sizes on a HiDPI screen.
     this.marker.setPixelRatio(renderer.getPixelRatio());
@@ -586,10 +588,10 @@ export class GlobeView {
           const mat = (color, opacity) => new THREE.LineBasicMaterial({
             color, transparent: true, opacity, depthWrite: false,
           });
-          this.coast = stripsToSegments(bm.coast ?? [], R * 1.001, mat(0x8fa9c6, 0.3));
-          this.plates = stripsToFat(bm.plates ?? [], R * 1.003, 0xff8a3d, 0.55,
+          this.coast = stripsToSegments(bm.coast ?? [], R * 1.001, mat(...this.theme.globeCoast));
+          this.plates = stripsToFat(bm.plates ?? [], R * 1.003, this.theme.plates, 0.55,
             this.lw?.plates ?? 1);
-          this.faults = stripsToFat(bm.faults ?? [], R * 1.002, 0xe0566e, 0.55,
+          this.faults = stripsToFat(bm.faults ?? [], R * 1.002, this.theme.faults, 0.55,
             this.lw?.faults ?? 1);
           this.faults.visible = this.faultsOn ?? false;
           if (this.res) {
@@ -837,6 +839,17 @@ export class GlobeView {
   }
 
   /** Satellite mode only: ocean on = full imagery; off = clipped to land. */
+  /** Same contract as RefLayer.applyTheme, for the globe's own objects. */
+  applyTheme(theme) {
+    this.theme = theme;
+    this.body.material.color.set(theme.globeBody);
+    this.marker?.setColor?.(theme.marker);
+    paint(this.coast, theme.globeCoast);
+    paint(this.plates, theme.plates);
+    paint(this.faults, theme.faults);
+    this.applyMapStyle();          // picks globeFill back up
+  }
+
   setOceanVisible(on) {
     this.oceanOn = on;
     this.applyMapStyle();
@@ -852,7 +865,7 @@ export class GlobeView {
     } else if (this.mapStyle === 'fill') {
       m.map = null;
       m.alphaMap = this.maskTex ?? null;
-      m.color.set(0x41608c);
+      m.color.set(this.theme.globeFill);
       this.land.visible = !!this.landAvailable;
     } else {
       this.land.visible = false;

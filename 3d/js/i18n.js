@@ -126,6 +126,8 @@ const DICT = {
   '색상 기준': { en: 'Colour by', ja: '色の基準' },
   '시간': { en: 'Time', ja: '時間' },
   '밀도': { en: 'Density', ja: '密度' },
+  '밝은 배경': { en: 'Light background', ja: '明るい背景' },
+  '(흰색 테마)': { en: '(white theme)', ja: '(白テーマ)' },
   '발광 합성': { en: 'Additive glow', ja: '発光合成' },
   '(밀집 강조)': { en: '(density boost)', ja: '(密集強調)' },
   '자동 회전': { en: 'Auto-rotate', ja: '自動回転' },
