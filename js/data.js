@@ -876,20 +876,23 @@
     if (EQ.catalogRegion && EQ.catalogRegion !== "global") return;
     ticks++;
 
-    if (ticks % 2 === 0) {
-      polling = true;
-      fetchJSON(DATA_BASE + "meta.json").then(function (m2) {
-        if (m2.generated_utc === EQ.meta.generated) return null;
-        return loadAll().then(notifyLive);
-      }).catch(function () { /* offline — try again next tick */ })
-        .then(function () { polling = false; });
-      return;
-    }
+    polling = true;
 
-    fetchLive().then(function (live) {
-      if (!live || (EQ.live && live.generated_utc === EQ.live.generated)) return;
-      applyLive(live);
-      notifyLive();
-    });
+    // The archive only moves when it is rebuilt offline, so look at its
+    // meta.json every other tick; the overlay is worth checking every one.
+    var archive = (ticks % 2 === 0)
+      ? fetchJSON(DATA_BASE + "meta.json").catch(function () { return null; })
+      : Promise.resolve(null);
+
+    archive.then(function (m2) {
+      // A rebuilt archive means new binaries — reload it all, overlay included.
+      if (m2 && m2.generated_utc !== EQ.meta.generated) return loadAll().then(notifyLive);
+      return fetchLive().then(function (live) {
+        if (!live || (EQ.live && live.generated_utc === EQ.live.generated)) return;
+        applyLive(live);
+        notifyLive();
+      });
+    }).catch(function () { /* offline — try again next tick */ })
+      .then(function () { polling = false; });
   }, POLL_MS);
 })();
