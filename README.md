@@ -110,6 +110,26 @@ GitHub Pages 로 `main` 브랜치를 그대로 서빙합니다.
 지진·뉴스·논문이 저절로 최신 상태가 됩니다. `.nojekyll` 은 Jekyll 처리를 건너뛰게
 해서 `_` 로 시작하는 경로와 원본 파일이 그대로 나가게 합니다.
 
+### 커스텀 도메인 (worldearthquakelabs.com)
+
+가비아 → 도메인 → **DNS 관리 → DNS 설정** 에서 아래를 추가합니다.
+
+| 호스트 | 타입 | 값 |
+|---|---|---|
+| `@` | A | `185.199.108.153` |
+| `@` | A | `185.199.109.153` |
+| `@` | A | `185.199.110.153` |
+| `@` | A | `185.199.111.153` |
+| `www` | CNAME | `parkman00771188.github.io.` |
+
+전파된 뒤 `python scripts/link_domain.py --apply` 를 실행하면 GitHub 쪽 설정과
+HTTPS 까지 끝납니다.
+
+**순서를 지켜야 합니다.** 커스텀 도메인을 먼저 걸면 GitHub 은 그 즉시
+`parkman00771188.github.io/wel/` 를 새 도메인으로 리다이렉트하는데, DNS 가 아직
+안 붙어 있으면 멀쩡하던 주소까지 같이 죽습니다. 그래서 `link_domain.py` 는 DNS 를
+먼저 확인하고 맞을 때만 설정을 바꿉니다. 인수 없이 실행하면 확인만 합니다.
+
 ## 모바일
 
 폰 화면에서는 콘솔 사이드바가 **햄버거 드로어**로 바뀌고(≤760px), 태블릿
@@ -138,7 +158,7 @@ js/dashboard.js   대시보드 차트/통계
 js/insights.js    인사이트 차트 + CSV 다운로드
 resource/img/     로고, 배너 이미지
 scripts/          auto_update.py (30분 사이클) + update_live_data.py (USGS 오버레이)
-                  + update_content.py (뉴스·논문)
+                  + update_content.py (뉴스·논문) + link_domain.py (도메인 연결)
 data/             news.json, papers.json (30분마다 누적)
 3d/js/live.js     오버레이 로더 (3D 전세계/일본 공용)
 ```
