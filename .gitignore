@@ -11,3 +11,6 @@ node_modules/
 # the earthquake-layer-3d pipeline rebuilds them.
 3d/data/quakes.bin
 3d/data/global/quakes-m3.bin
+
+# R2 자격증명. 이 저장소는 공개이므로 절대 커밋되면 안 된다.
+scripts/r2.json

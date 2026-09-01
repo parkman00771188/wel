@@ -30,6 +30,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from r2_upload import upload_data  # noqa: E402
 from update_content import refresh_content  # noqa: E402
 from update_live_data import refresh, use_utf8_console  # noqa: E402
 
@@ -38,6 +39,12 @@ use_utf8_console()
 ROOT = Path(__file__).resolve().parents[1]
 DATA_PATHS = ["3d/data/live", "data"]
 AUTO_PREFIX = "[auto]"
+# Cloudflare Pages skips a build when the commit message starts with this.
+# The data the site reads goes to R2, so a data commit has nothing for Pages
+# to rebuild -- and at 30-minute intervals the builds alone would run past the
+# free tier's 500 a month. Dropped automatically while R2 is not configured,
+# because then the deployment is still where the site reads its data from.
+SKIP_PREFIX = "[CF-Pages-Skip]"
 
 LOG_FILE = ROOT / "scripts" / "logs" / "auto_update.log"
 LOG_MAX_BYTES = 2_000_000
@@ -105,7 +112,9 @@ def squash_plan(branch: str) -> tuple[bool, bool]:
     하므로 force 가 필요하고, 원격이 그 하나 전에 있으면 (지난번 push 가 실패한
     경우) 그냥 amend 후 평범하게 push 하면 된다. 그 밖에는 손대지 않는다.
     """
-    if not git("log", "-1", "--pretty=%s").stdout.strip().startswith(AUTO_PREFIX):
+    # AUTO_PREFIX may now be preceded by the build-skip marker, so look for it
+    # anywhere in the subject rather than only at the start.
+    if AUTO_PREFIX not in git("log", "-1", "--pretty=%s").stdout.strip():
         return False, False
     remote = sha(f"origin/{branch}")
     if remote is None:
@@ -126,7 +135,7 @@ def push(branch: str, force: bool) -> bool:
     return git(*args, "origin", f"HEAD:{branch}", check=False).returncode == 0
 
 
-def publish() -> bool:
+def publish(skip_build: bool = False) -> bool:
     """갱신된 스냅샷만 커밋해서 push. 실제로 올렸으면 True."""
     if not git("status", "--porcelain", "--", *DATA_PATHS).stdout.strip():
         log("[auto] 파일 내용이 그대로입니다 - 커밋할 것이 없습니다")
@@ -138,6 +147,8 @@ def publish() -> bool:
 
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%MZ")
     message = f"{AUTO_PREFIX} 지진 데이터 업데이트 ({stamp})"
+    if skip_build:
+        message = f"{SKIP_PREFIX} {message}"
     # 경로를 지정해 커밋하면(-- DATA_PATHS) 사용자가 스테이징해 둔 다른 파일은
     # 함께 올라가지 않고 인덱스도 그대로 남는다.
     git("add", "--", *DATA_PATHS)
@@ -172,9 +183,13 @@ def main() -> int:
         moved = refresh()
         moved = refresh_content() or moved
         if not moved:
-            log("[auto] 업데이트할 것이 없습니다 - GitHub 에 올릴 것도 없습니다")
+            log("[auto] 업데이트할 것이 없습니다 - 올릴 것도 없습니다")
             return 0
-        publish()
+        # R2 first: that is what the site actually reads. The commit that
+        # follows is the archive copy, and it can skip the Pages build only
+        # because the upload already happened.
+        on_r2 = upload_data(log)
+        publish(skip_build=on_r2)
         return 0
     except Exception as exc:
         log(f"[auto] ERROR: {type(exc).__name__}: {exc}")
