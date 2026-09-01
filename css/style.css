@@ -2791,11 +2791,22 @@ a.pub:hover .pub-title { color: var(--blue-600); }
 .embed .view-all-row { margin-top: 14px; }
 .embed .view-all-row .btn { width: 100%; }
 
+/* Below this the 400px event column costs the map more than it is worth, so
+   the two stack.
+   The table needs its flex sizing undone as well, not just the columns. Beside
+   the map it is `flex: 1 1 0; height: 0`, which is right when the grid row
+   hands it a definite height: the table then scrolls inside a fixed box
+   instead of inflating the row and pushing the map down. Stacked, the column
+   has no height to give, so a zero-basis item stays zero -- which is exactly
+   what happened: fourteen rows of earthquakes rendered inside a 2px box.
+   (The old rule targeted .map-layout, which is `display: contents` here and
+   therefore has no columns of its own to change.) */
 @media (max-width: 1100px) {
-  .embed .map-layout { grid-template-columns: 1fr; }
+  .embed .map-main { display: block; }
+  .embed .map-main > .map-layout { display: block; }
   .embed .map-shell { height: calc(100vh - 330px); min-height: 420px; }
-  .embed .map-side { height: auto; }
-  .embed .eq-table-wrap { max-height: 380px; }
+  .embed .map-side { display: block; height: auto; margin-top: 18px; }
+  .embed .eq-table-wrap { flex: none; height: auto; max-height: 380px; }
 }
 
 /* Keep each child page's horizontal menu visible inside the console as a
@@ -3168,10 +3179,8 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   .embed .side-content { padding: 20px 16px 48px; }
   .embed .side-nav { padding: 10px 16px; }
   .embed .page-head { padding-top: 20px; }
-  .embed .map-main { display: block; }
   .embed .map-shell { height: 56vh; min-height: 320px; }
-  .embed .map-side { margin-top: 18px; }
-  .embed .eq-table-wrap { max-height: 340px; }
+  .embed .eq-table-wrap { max-height: 60vh; }
 }
 
 /* Narrow phones: 360px and below can no longer carry the LIVE pill next to
