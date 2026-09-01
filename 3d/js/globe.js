@@ -20,6 +20,7 @@ import {
 } from './palette.js';
 import { FILTER_EPS } from './quakeLayer.js';
 import { count, t } from './i18n.js';
+import { fetchParts } from './chunks.js';
 import { liveRows, loadLive, lowerBound } from './live.js';
 import { LineMaterial } from '../vendor/lines/LineMaterial.js';
 import { LineSegments2 } from '../vendor/lines/LineSegments2.js';
@@ -412,31 +413,6 @@ function stripsToSegments(strips, radius, material) {
   return new THREE.LineSegments(geo, material);
 }
 
-/** Fetch a binary streaming byte counts out, so a progress bar can move. */
-async function getBuffer(url, onBytes) {
-  const res = await fetch(url, { cache: 'no-cache' });
-  if (!res.ok) throw new Error(`${url} -> HTTP ${res.status}`);
-  if (!res.body) {
-    const buf = await res.arrayBuffer();
-    onBytes?.(buf.byteLength);
-    return buf;
-  }
-  const chunks = [];
-  let read = 0;
-  const reader = res.body.getReader();
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    chunks.push(value);
-    read += value.length;
-    onBytes?.(value.length);
-  }
-  const out = new Uint8Array(read);
-  let at = 0;
-  for (const c of chunks) { out.set(c, at); at += c.length; }
-  return out.buffer;
-}
-
 /** The live overlay dressed as one more band, so the merge below can eat it. */
 function overlayBand(rows, epochMs) {
   const n = rows.length;
@@ -641,7 +617,9 @@ export class GlobeView {
         const buffers = [];
         for (const band of this.meta.bands) {
           say(`${t('전세계 데이터 불러오는 중…')} ${count(this.meta.count)}`);
-          buffers.push(await getBuffer(`data/global/${band.path}`, (n) => {
+          // Paths are relative to data/ because that is where parts.json
+          // lives and what its entries are keyed on.
+          buffers.push(await fetchParts('data/', `global/${band.path}`, (n) => {
             read += n;
             cardProgress(read, total);
           }));

@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "chunk_bytes": 20971520,
+  "files": {
+    "quakes.bin": {
+      "bytes": 35885254,
+      "parts": [
+        "quakes.bin.part0",
+        "quakes.bin.part1"
+      ]
+    },
+    "global/quakes-m3.bin": {
+      "bytes": 29515208,
+      "parts": [
+        "global/quakes-m3.bin.part0",
+        "global/quakes-m3.bin.part1"
+      ]
+    }
+  }
+}

@@ -422,6 +422,39 @@
     });
   }
 
+  /* Two of the archives are over the 25 MiB an asset may be on Cloudflare
+     Pages, so they ship as `.partN` files listed in 3d/data/parts.json. The
+     module loaders under 3d/js use chunks.js for this; this page is a plain
+     IIFE and carries its own copy of the same three lines. A name the
+     manifest does not mention is fetched as-is, which is what happens on a
+     host with no such limit and before the split has ever run. */
+
+  var PARTS_BASE = "3d/data/";
+  var partsPromise = null;
+
+  function partsManifest() {
+    partsPromise = partsPromise || fetchJSON(PARTS_BASE + "parts.json")
+      .then(function (m) { return (m && m.files) || {}; })
+      .catch(function () { return {}; });
+    return partsPromise;
+  }
+
+  /** One logical binary, whatever number of files it actually took. */
+  function fetchBinary(key) {
+    return partsManifest().then(function (files) {
+      var entry = files[key];
+      var urls = (entry && entry.parts && entry.parts.length) ? entry.parts : [key];
+      return Promise.all(urls.map(function (u) { return fetchBuf(PARTS_BASE + u); }))
+        .then(function (buffers) {
+          if (buffers.length === 1) return buffers[0];
+          var total = buffers.reduce(function (n, b) { return n + b.byteLength; }, 0);
+          var out = new Uint8Array(total), at = 0;
+          buffers.forEach(function (b) { out.set(new Uint8Array(b), at); at += b.byteLength; });
+          return out.buffer;
+        });
+    });
+  }
+
   var MAGIC = 0x00315147; // 'GQ1\0'
 
   function parseBand(buf) {
@@ -824,7 +857,7 @@
   function loadAll() {
     return fetchJSON(DATA_BASE + "meta.json").then(function (meta) {
       return Promise.all([
-        Promise.all(BANDS.map(function (p) { return fetchBuf(DATA_BASE + p); })),
+        Promise.all(BANDS.map(function (p) { return fetchBinary("global/" + p); })),
         ensureCountries(),
         fetchLive()
       ]).then(function (loaded) {

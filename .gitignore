@@ -4,3 +4,10 @@ __pycache__/
 *.pyc
 *.log
 node_modules/
+
+# Archives over Cloudflare Pages' 25 MiB per-asset limit. What ships is the
+# .part files scripts/split_bins.py writes beside them, listed in
+# 3d/data/parts.json; the originals stay local as the thing to re-split when
+# the earthquake-layer-3d pipeline rebuilds them.
+3d/data/quakes.bin
+3d/data/global/quakes-m3.bin

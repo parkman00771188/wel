@@ -12,6 +12,7 @@
  */
 
 import { count, t } from './i18n.js';
+import { fetchParts } from './chunks.js';
 import { liveEndSeconds, liveRows, loadLive } from './live.js';
 
 const MAGIC = 'JQ4D';
@@ -26,30 +27,6 @@ async function getJSON(url) {
   const res = await fetch(url, { cache: 'no-cache' });
   if (!res.ok) throw new Error(`${url} -> HTTP ${res.status}`);
   return res.json();
-}
-
-async function getBuffer(url, onProgress) {
-  const res = await fetch(url, { cache: 'no-cache' });
-  if (!res.ok) throw new Error(`${url} -> HTTP ${res.status}`);
-
-  const total = Number(res.headers.get('content-length')) || 0;
-  if (!res.body || !total) return res.arrayBuffer();
-
-  // Stream so the loader bar reflects real progress -- the payload is tens of MB.
-  const chunks = [];
-  let read = 0;
-  const reader = res.body.getReader();
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    chunks.push(value);
-    read += value.length;
-    onProgress?.(read / total);
-  }
-  const out = new Uint8Array(read);
-  let at = 0;
-  for (const c of chunks) { out.set(c, at); at += c.length; }
-  return out.buffer;
 }
 
 const CTORS = {
@@ -230,8 +207,14 @@ export async function loadData(onStage) {
   const label = `${t('지진 데이터 불러오는 중…')} ${count(meta.count)}`;
 
   onStage?.(label, 0.06);
-  const buffer = await getBuffer('data/quakes.bin',
-    (p) => onStage?.(label, 0.06 + p * 0.66));
+  // quakes.bin is 34 MiB and ships as two parts on hosts that cap an asset at
+  // 25; fetchParts stitches them back into the one buffer decodeBinary wants.
+  const totalBytes = meta.binary?.bytes ?? 0;
+  let read = 0;
+  const buffer = await fetchParts('data/', 'quakes.bin', (n) => {
+    read += n;
+    if (totalBytes) onStage?.(label, 0.06 + (read / totalBytes) * 0.66);
+  });
   const events = decodeBinary(buffer, meta);
 
   onStage?.(t('지명 · 기준 지형 불러오는 중…'), 0.76);
