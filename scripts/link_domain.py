@@ -100,8 +100,9 @@ def dns_ready() -> bool:
 
 def apply_domain(token: str) -> None:
     print(f"커스텀 도메인 설정: {DOMAIN}")
-    call("PUT", f"/repos/{OWNER}/{REPO}/pages", token,
-         {"cname": DOMAIN, "https_enforced": False})
+    # cname 만 보낸다. 인증서가 아직 없는 상태에서 https_enforced 를 같이 실으면
+    # GitHub 은 403 도 422 도 아닌 404 로 거절한다.
+    call("PUT", f"/repos/{OWNER}/{REPO}/pages", token, {"cname": DOMAIN})
 
     # 인증서는 GitHub 이 발급한다. 발급 전에 https_enforced 를 켜면 거절당하므로
     # 준비될 때까지 기다렸다가 켠다.
