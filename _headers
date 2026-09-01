@@ -1,0 +1,29 @@
+# Cloudflare Pages header rules.
+#
+# All matching rules are combined and duplicate headers are joined with a
+# comma, so the patterns below are written not to overlap. In particular
+# nothing here matches 3d/data/live/*.json or data/*.json: those are rewritten
+# every 30 minutes and must keep the default revalidate-always behaviour.
+
+# The catalogue binaries are 8-20 MiB each and only change when the archive is
+# rebuilt offline. Without a long cache every cold edge pulls the whole file
+# from the origin -- which is exactly what produced a 524 on the first request
+# to a new region.
+/3d/data/*.bin
+  Cache-Control: public, max-age=604800
+
+/3d/data/*.bin.part0
+  Cache-Control: public, max-age=604800
+
+/3d/data/*.bin.part1
+  Cache-Control: public, max-age=604800
+
+/3d/data/*.jpg
+  Cache-Control: public, max-age=604800
+
+/3d/data/*.png
+  Cache-Control: public, max-age=604800
+
+# Logo, banner and the social card: same file for the life of the design.
+/resource/*
+  Cache-Control: public, max-age=604800
