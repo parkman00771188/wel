@@ -138,6 +138,11 @@ Cloudflare Pages 가 `main` 을 그대로 서빙한다. 빌드 명령 없음, �
 - **`.html` 없는 주소가 기본.** `/app.html` 은 `/app` 으로 308 리다이렉트된다.
   각 페이지의 canonical 은 `.html` 을 쓰므로 신호는 한 곳에 모인다.
 
+`gh-pages` 브랜치는 사이트가 아니라 **옛 주소를 넘겨주는 껍데기**다. 이전 호스팅
+주소로 들어온 방문자를 경로째 현재 주소로 보내는 `index.html` · `404.html` 과,
+색인하지 말라는 `robots.txt` 세 장뿐이다. CNAME 파일은 일부러 두지 않았다 —
+DNS 는 Cloudflare 만 가리켜야 한다. `main` 과 히스토리를 공유하지 않는다.
+
 robots/sitemap 생성은 스크립트에 들어 있다.
 
 ```
