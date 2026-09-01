@@ -214,7 +214,90 @@
     }, true);
   }
 
-  window.WEL = { icon: icon, renderIcons: renderIcons, toast: toast, embed: EMBED };
+  /* ---------- Google AdSense ----------
+
+     Two placements, and they never both apply at once. On a wide screen the
+     console shows a unit at the bottom of its sidebar. On a phone that
+     sidebar is a drawer, so the unit is only visible while the drawer is
+     open -- which is almost never -- and a dismissible anchor bar takes over
+     at the bottom of the viewport instead.
+
+     Both need an ad-unit id from AdSense (광고 → 광고 단위 → 디스플레이 광고).
+     Paste them below. While an id is empty nothing is pushed for it: an <ins>
+     without a slot can never fill, and a permanent grey bar across the bottom
+     of a live site is worse than no bar. */
+
+  var AD = {
+    client: "ca-pub-7720076982812531",
+    sidebar: "",   // 콘솔 사이드바 하단 (데스크톱)
+    anchor: ""     // 모바일 하단 앵커
+  };
+
+  /** Turn a container into a display unit and ask AdSense to fill it. */
+  function mountAd(host, slot, style) {
+    if (!host || !slot) return false;
+    var ins = document.createElement("ins");
+    ins.className = "adsbygoogle";
+    ins.style.cssText = style || "display:block;width:100%";
+    ins.dataset.adClient = AD.client;
+    ins.dataset.adSlot = slot;
+    if (!style) {
+      ins.dataset.adFormat = "auto";
+      ins.dataset.fullWidthResponsive = "true";
+    }
+    host.textContent = "";
+    host.appendChild(ins);
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (err) {
+      console.warn("adsbygoogle unavailable:", err);
+      return false;
+    }
+    return true;
+  }
+
+  /* The anchor belongs to the top-level document only. Inside the console the
+     child pages run in iframes; an anchor there would sit on top of the one
+     the shell already has. */
+  function mountAnchor() {
+    if (EMBED || window.parent !== window || !AD.anchor) return;
+    try {
+      if (sessionStorage.getItem("wel-ad-anchor-closed")) return;
+    } catch (e) { /* private mode: just show it */ }
+
+    var bar = document.createElement("div");
+    bar.className = "ad-anchor";
+    bar.id = "adAnchor";
+    var close = document.createElement("button");
+    close.className = "ad-anchor-close";
+    close.type = "button";
+    close.setAttribute("aria-label", "Close ad");
+    close.innerHTML = icon("x", 15);
+    var inner = document.createElement("div");
+    inner.className = "ad-anchor-inner";
+    bar.appendChild(close);
+    bar.appendChild(inner);
+    document.body.appendChild(bar);
+
+    close.addEventListener("click", function () {
+      bar.remove();
+      document.body.classList.remove("has-ad-anchor");
+      try { sessionStorage.setItem("wel-ad-anchor-closed", "1"); } catch (e) { /* ignore */ }
+    });
+
+    // 320x50 fixed: the bar then has a height the layout can reserve, instead
+    // of resizing under the reader once a creative arrives.
+    if (mountAd(inner, AD.anchor, "display:inline-block;width:320px;height:50px")) {
+      document.body.classList.add("has-ad-anchor");
+    } else {
+      bar.remove();
+    }
+  }
+
+  window.WEL = {
+    icon: icon, renderIcons: renderIcons, toast: toast, embed: EMBED,
+    AD: AD, mountAd: mountAd
+  };
 
   document.addEventListener("DOMContentLoaded", function () {
     if (EMBED) {
@@ -225,5 +308,6 @@
     }
     renderIcons(document);
     initSideNav();
+    mountAnchor();
   });
 })();

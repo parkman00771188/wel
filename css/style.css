@@ -23,6 +23,7 @@
   --card-shadow: 0 1px 2px rgba(18, 42, 83, .05);
   --pop-shadow: 0 14px 40px rgba(10, 26, 60, .16);
   --radius: 16px;
+  --ad-anchor-h: 58px;
   --font-sans: "Inter", -apple-system, "Segoe UI", "Noto Sans KR", sans-serif;
   --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
 }
@@ -2840,6 +2841,47 @@ a.pub:hover .pub-title { color: var(--blue-600); }
    analysis intro, so the redundant embedded header can disappear entirely. */
 .embed[data-nav="insights"] .content-head { display: none; }
 
+/* ---------------- Ad anchor (phones) ----------------
+   The console's sidebar unit is only visible while the drawer is open, which
+   on a phone is almost never. This bar is the placement that actually gets
+   seen there: fixed to the bottom, dismissible, and sitting under the drawer
+   and its scrim rather than over them. */
+
+.ad-anchor {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1050;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--ad-anchor-h);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: rgba(255, 255, 255, .97);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid var(--line);
+  box-shadow: 0 -6px 22px rgba(10, 26, 60, .1);
+}
+
+.ad-anchor-inner { display: flex; align-items: center; justify-content: center; }
+
+.ad-anchor-close {
+  position: absolute;
+  top: -13px;
+  right: 10px;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--muted);
+  box-shadow: 0 2px 8px rgba(10, 26, 60, .12);
+}
+
 /* ---------------- Responsive ---------------- */
 
 @media (max-width: 1120px) {
@@ -2975,6 +3017,16 @@ a.pub:hover .pub-title { color: var(--blue-600); }
 
 @media (max-width: 760px) {
 
+  .ad-anchor { display: flex; }
+  /* Reserve the bar's height so the end of the page stays reachable. */
+  body.has-ad-anchor { padding-bottom: calc(var(--ad-anchor-h) + env(safe-area-inset-bottom, 0px)); }
+  /* The console is a full-height grid, not a scrolling document, so it has to
+     shrink instead -- padding would just leave the iframe under the bar. */
+  body.app-body.has-ad-anchor {
+    padding-bottom: 0;
+    height: calc(100vh - var(--ad-anchor-h) - env(safe-area-inset-bottom, 0px));
+  }
+
   /* --- site chrome ---
      Horizontal only: several sections are `class="container hero"` and the
      like, and the shorthand would wipe out their vertical rhythm too -- which
@@ -3043,7 +3095,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
      nine-step legend onto the same 390px as the map. The scrubber takes the
      bottom edge, zoom and legend sit above it on opposite sides, and the
      legend stays collapsed until it is asked for. */
-  .map-shell { height: 62vh; min-height: 360px; }
+  .map-shell { height: 74vh; min-height: 430px; }
 
   /* Two deterministic rows -- transport on top, date underneath -- so the
      zoom pad and the legend can be parked at a known height above it instead
@@ -3179,7 +3231,9 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   .embed .side-content { padding: 20px 16px 48px; }
   .embed .side-nav { padding: 10px 16px; }
   .embed .page-head { padding-top: 20px; }
-  .embed .map-shell { height: 56vh; min-height: 320px; }
+  /* Taller than it looks like it needs: the map is the page here, and the
+     3D view's first-run gesture guide has to fit inside this frame. */
+  .embed .map-shell { height: 72vh; min-height: 420px; }
   .embed .eq-table-wrap { max-height: 60vh; }
 }
 

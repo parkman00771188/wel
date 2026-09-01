@@ -937,6 +937,20 @@ input[type=checkbox]:checked::after {
 #fail #fail-msg { font-family: var(--mono); font-size: 10.5px; color: var(--hot); }
 
 /* ── responsive ───────────────────────────────────────────── */
+
+/* Embedded in the console on a phone the frame is ~330-440px tall. Trim the
+   guide to fit it outright rather than leaving the reader to scroll a card
+   that only exists to be dismissed. */
+@media (max-height: 560px) {
+  .gg-box { padding: 16px 14px 14px; }
+  .gg-cards { gap: 8px; }
+  .gg-card { padding: 10px 8px 9px; }
+  .gg-card p { display: none; }
+  .gg-stage { height: 72px; max-width: 96px; }
+  .gg-note { margin-top: 9px; }
+  #gg-close { margin-top: 10px; padding: 10px; }
+}
+
 @media (max-height: 720px) {
   /* Not enough vertical room for both; the list keeps its own scroll. */
   #legend { display: none; }
@@ -958,14 +972,19 @@ input[type=checkbox]:checked::after {
 }
 
 /* ── touch gesture guide ───────────────────────────────────── */
+/* This overlay lives inside the map frame, which on a phone can be barely
+   330px tall -- shorter than the card. Centring a 419px card in a 327px box
+   pushes the dismiss button off both ends and traps the reader, so the card
+   is capped to the frame and scrolls inside it instead. */
 #gguide {
   position: fixed; inset: 0; z-index: 80;
-  display: grid; place-items: center; padding: 20px;
+  display: grid; place-items: center; padding: 14px;
   background: rgba(3, 5, 9, .62); backdrop-filter: blur(3px);
 }
 #gguide[hidden] { display: none; }
 .gg-box {
   max-width: 400px; width: 100%;
+  max-height: 100%; overflow-y: auto;
   padding: 22px 18px 18px; text-align: center;
   background: var(--panel-sol, rgba(10, 14, 22, .97));
   border: 1px solid var(--line-hi); border-radius: 14px;
