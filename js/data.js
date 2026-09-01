@@ -211,7 +211,7 @@
     var windowStart = Date.now() - days * D;
     for (var i = 0; i < days; i++) {
       var dd = new Date(windowStart + (i + 0.5) * D);
-      labels.push(MON[dd.getUTCMonth()] + " " + dd.getUTCDate());
+      labels.push(MON[dd.getUTCMonth()] + " " + dd.getUTCDate() + " '" + String(dd.getUTCFullYear()).slice(2));
       out.push(0);
     }
     list.forEach(function (e) {
@@ -287,7 +287,8 @@
     dailyCounts: dailyCounts, movingAvg: movingAvg, depthBins: depthBins,
     energySeries: energySeries, hotspots: hotspots, onLive: onLive,
     rangeStats: rangeStats, buildWindow: buildWindow, buildRange: buildRange,
-    latestInRange: latestInRange, forEachInRange: forEachInRange, regionFor: nameFor
+    latestInRange: latestInRange, forEachInRange: forEachInRange, regionFor: nameFor,
+    thinYearLabels: thinYearLabels
   };
   window.EQ = EQ;
 
@@ -315,6 +316,18 @@
   }
 
   var RAW = null; // parsed band arrays kept for long-range aggregation
+
+  /* keep at most ~12 year labels on a monthly axis (mutates in place) */
+  function thinYearLabels(labels) {
+    var years = labels.filter(function (l) { return l; }).length;
+    var step = Math.max(1, Math.ceil(years / 12));
+    var seen = 0;
+    for (var i = 0; i < labels.length; i++) {
+      if (!labels[i]) continue;
+      if (seen % step !== 0) labels[i] = "";
+      seen++;
+    }
+  }
 
   function makeEvent(b, i, epochMs, id) {
     var lat = b.lat[i], lon = b.lon[i];
@@ -428,10 +441,11 @@
       var y = d0.getUTCFullYear(), mo = d0.getUTCMonth();
       var end = new Date(now);
       while (y < end.getUTCFullYear() || (y === end.getUTCFullYear() && mo <= end.getUTCMonth())) {
-        labels.push(MON[mo] + " '" + String(y).slice(2));
+        labels.push(mo === 0 ? String(y) : ""); // year ticks only
         binStartsSec.push((Date.UTC(y, mo, 1) - RAW.epochMs) / 1000);
         mo++; if (mo === 12) { mo = 0; y++; }
       }
+      thinYearLabels(labels);
       series = labels.map(function () { return 0; });
     } else {
       var windowStartMs = now - days * D;

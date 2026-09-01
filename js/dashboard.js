@@ -118,8 +118,7 @@
       labels = dc.labels.map(function (l, i4) { return i4 % every === 0 ? l : ""; });
       counts = dc.counts;
     } else {
-      var everyM = s.labels.length > 240 ? 120 : s.labels.length > 40 ? 12 : (s.labels.length > 14 ? 3 : 1);
-      labels = s.labels.map(function (l, i5) { return i5 % everyM === 0 ? l : ""; });
+      labels = s.labels; // already year-ticked and thinned
       counts = s.series;
     }
     return { labels: labels, counts: counts };

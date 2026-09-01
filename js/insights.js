@@ -37,17 +37,18 @@
     return EQ.byRegion(baseEvents(), state.region);
   }
 
-  /* month bins for 1y+ charts */
+  /* month bins for 1y+ charts, labeled by year ticks only */
   function monthBins() {
     var now = new Date();
     var start = new Date(Date.now() - state.days * EQ.D);
     var y = start.getUTCFullYear(), mo = start.getUTCMonth();
     var labels = [], keys = [];
     while (y < now.getUTCFullYear() || (y === now.getUTCFullYear() && mo <= now.getUTCMonth())) {
-      labels.push(MON[mo] + " '" + String(y).slice(2));
+      labels.push(mo === 0 ? String(y) : "");
       keys.push(y * 12 + mo);
       mo++; if (mo === 12) { mo = 0; y++; }
     }
+    EQ.thinYearLabels(labels);
     return {
       labels: labels,
       idx: function (t) {
@@ -56,8 +57,6 @@
       }
     };
   }
-
-  function labelEvery(n) { return n > 240 ? 120 : n > 40 ? 12 : n > 14 ? 3 : 1; }
 
   function logTicks(value) {
     var l = Math.log10(value);
@@ -95,7 +94,7 @@
       labels = mb.labels;
       counts = labels.map(function () { return 0; });
       evs.forEach(function (e) { var bi2 = mb.idx(e.t); if (bi2 >= 0) counts[bi2]++; });
-      every = labelEvery(labels.length);
+      every = 1; // labels are pre-thinned year ticks
       mainLbl = "Monthly Count"; avgLbl = "6-Month Average"; avgW = 6;
     }
 
@@ -183,7 +182,7 @@
         if (bi >= 0) values[bi] += Math.pow(10, 1.5 * (e.m - 3));
       });
       values = values.map(function (x) { return Math.max(1, Math.round(x)); });
-      every = labelEvery(labels.length);
+      every = 1; // labels are pre-thinned year ticks
     } else if (state.days === 1) {
       labels = []; values = [];
       var start = Date.now() - 24 * EQ.H;
