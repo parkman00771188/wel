@@ -129,8 +129,16 @@ python scripts/split_bins.py
 
 ## 배포
 
-정적 파일이라 어디에 올려도 된다. 도메인 연결과 robots/sitemap 생성은 스크립트에
-들어 있다.
+Cloudflare Pages 가 `main` 을 그대로 서빙한다. 빌드 명령 없음, 출력 디렉터리는
+저장소 루트. push 하면 자동으로 새 배포가 돈다.
+
+호스팅에서 오는 두 가지가 코드에 영향을 준다.
+
+- **자산 하나당 25 MiB.** 큰 바이너리 둘은 `.part` 로 나뉘어 올라간다(위 참고).
+- **`.html` 없는 주소가 기본.** `/app.html` 은 `/app` 으로 308 리다이렉트된다.
+  각 페이지의 canonical 은 `.html` 을 쓰므로 신호는 한 곳에 모인다.
+
+robots/sitemap 생성은 스크립트에 들어 있다.
 
 ```
 python scripts/link_domain.py         # DNS 확인만
