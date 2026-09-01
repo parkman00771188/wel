@@ -67,6 +67,34 @@
     if (ev.data && ev.data.wel === "nav" && VIEWS[ev.data.view]) activate(ev.data.view);
   });
 
+  /* ---------- catalog freshness chip (next to LIVE) ---------- */
+
+  var updatedAt = null;
+
+  function agoText(ms) {
+    var m = Math.max(1, Math.round((Date.now() - ms) / 60e3));
+    if (LANG === "ko") return m < 60 ? m + "분 전 갱신" : Math.round(m / 60) + "시간 전 갱신";
+    if (LANG === "ja") return m < 60 ? m + "分前更新" : Math.round(m / 60) + "時間前更新";
+    return "Updated " + (m < 60 ? m + " min ago" : Math.round(m / 60) + " h ago");
+  }
+
+  function renderUpdated() {
+    var el = document.getElementById("appUpdated");
+    if (!updatedAt) { el.hidden = true; return; }
+    el.hidden = false;
+    el.textContent = agoText(updatedAt);
+  }
+
+  function fetchMeta() {
+    fetch("3d/data/global/meta.json", { cache: "no-cache" })
+      .then(function (r) { return r.json(); })
+      .then(function (m) { updatedAt = Date.parse(m.generated_utc); renderUpdated(); })
+      .catch(function () { /* offline — keep last value */ });
+  }
+  fetchMeta();
+  setInterval(fetchMeta, 10 * 60e3);
+  setInterval(renderUpdated, 60e3);
+
   /* ---------- UTC clock ---------- */
   var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   function p2(x) { return (x < 10 ? "0" : "") + x; }

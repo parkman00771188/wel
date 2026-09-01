@@ -308,6 +308,20 @@ h1, h2, h3, h4 { margin: 0; color: var(--navy-800); }
 
 .select-chip .lbl { color: var(--muted); font-size: 13.5px; }
 
+.date-chip { gap: 7px; }
+.date-chip input[type="date"] {
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy-800);
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  width: 118px;
+}
+
 .select-chip select {
   border: none;
   background: none;
@@ -1718,6 +1732,8 @@ a.news-row.lg:hover .nt { color: var(--blue-600); }
 .wordmark .main { display: block; }
 .wordmark .sub { display: block; font-size: 7.5px; letter-spacing: .14em; margin-top: 4px; color: #8a94a4; }
 
+.wordmark .main.src { font-size: 21px; font-weight: 800; letter-spacing: .04em; }
+
 .wm-caltech .main { font-size: 27px; font-weight: 600; letter-spacing: .01em; }
 .wm-usgs .main { font-size: 25px; font-weight: 800; letter-spacing: .12em; font-style: italic; }
 .wm-gfz .main { font-size: 26px; font-weight: 800; letter-spacing: .3em; }
@@ -2207,6 +2223,20 @@ a.news-row.lg:hover .nt { color: var(--blue-600); }
 .app-live .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-500); animation: blink 1.6s infinite; }
 @keyframes blink { 50% { opacity: .3; } }
 
+.app-updated {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--bg-soft);
+  border: 1px solid var(--line-soft);
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+.app-updated::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #35c08e; }
+
 .app-clock { margin-left: auto; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 
 .app-lang {
@@ -2295,7 +2325,9 @@ a.news-row.lg:hover .nt { color: var(--blue-600); }
 .embed .map-side .section-title { margin: 4px 0 12px; }
 
 .embed .eq-table-wrap {
-  flex: 1;
+  flex: 1 1 0;
+  height: 0;         /* no intrinsic height: an expanded table scrolls here
+                        instead of inflating the grid row and pushing the map */
   min-height: 0;
   overflow-y: auto;
   border: 1px solid var(--line);

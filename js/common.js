@@ -64,11 +64,12 @@
   /* ---------- header / footer ---------- */
 
   var NAV = [
-    { id: "platform", label: "Platform", href: "index.html#platform" },
-    { id: "research", label: "Research", href: "index.html#research" },
-    { id: "data", label: "Data", href: "index.html#data" },
-    { id: "about", label: "About", href: "index.html#mission" },
-    { id: "resources", label: "Resources", href: "index.html#resources" }
+    { id: "overview", label: "Overview", href: "app.html#overview" },
+    { id: "map", label: "Live Map", href: "app.html#map" },
+    { id: "learn", label: "Earthquake Guide", href: "app.html#learn" },
+    { id: "insights", label: "Insights", href: "app.html#insights" },
+    { id: "research", label: "Research Hub", href: "app.html#research" },
+    { id: "news", label: "News", href: "app.html#news" }
   ];
 
   var CTA = {

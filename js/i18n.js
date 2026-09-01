@@ -33,6 +33,9 @@
     "About": ["소개", "会社概要"],
     "Resources": ["리소스", "リソース"],
     "Get Started": ["시작하기", "はじめる"],
+    "Insights": ["인사이트", "インサイト"],
+    "News": ["뉴스", "ニュース"],
+    "Built on open data from": ["오픈 데이터 출처", "オープンデータ提供元"],
     "Dashboard": ["대시보드", "ダッシュボード"],
 
     /* dashboard */

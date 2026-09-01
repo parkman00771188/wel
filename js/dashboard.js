@@ -154,7 +154,7 @@
   /* ---------------- donut ---------------- */
 
   var donutChart = null;
-  var DONUT_COLORS = ["#0b3a8c", "#1d5fd6", "#3b82f6", "#8ab4f8", "#c8dcfb"];
+  var DONUT_COLORS = ["#082c6e", "#0b3a8c", "#1d5fd6", "#3b82f6", "#8ab4f8", "#d4e4fb"];
 
   var centerText = {
     id: "centerText",
@@ -250,7 +250,7 @@
     });
   }
 
-  var KEY = [["M 4–4.9", "#f2b544"], ["M 5–5.9", "#ef8b3a"], ["M 6+", "#e8432d"]];
+  var KEY = [["M 2–2.9", "#a7c8f0"], ["M 3–3.9", "#2f6bff"], ["M 4–4.9", "#f2b544"], ["M 5–5.9", "#ef8b3a"], ["M 6+", "#e8432d"]];
   document.getElementById("mapKey").innerHTML = KEY.map(function (k) {
     return "<span><span class='legend-dot' style='width:9px;height:9px;margin:0;background:" + k[1] + "'></span>" + k[0] + "</span>";
   }).join("");

@@ -25,17 +25,12 @@ export class Timeline {
     this.now = 0;
     this.windowDays = null;
     this.range = [0, totalDays];
+    this.d0 = 0;                        // visible domain follows the selected period
+    this.d1 = totalDays;
 
     const h = meta.histogram ?? { counts: [] };
     this.setHistogram(h, false);
-
-    // Year gridlines: every 5 years across the catalogue span.
-    const y0 = h.start_year ?? 1975;
-    const yEnd = new Date(epochMs + totalDays * DAY_MS).getUTCFullYear();
-    this.years = [];
-    for (let y = Math.ceil(y0 / 5) * 5; y <= yEnd; y += 5) {
-      this.years.push({ year: y, d: (Date.UTC(y, 0, 1) - epochMs) / DAY_MS });
-    }
+    this.buildTicks();
 
     this.bindDrag();
     this.observeSize();
@@ -43,7 +38,54 @@ export class Timeline {
 
   /* ── geometry ─────────────────────────────────────────────── */
 
-  frac(days) { return Math.min(1, Math.max(0, days / this.totalDays)); }
+  frac(days) {
+    const span = this.d1 - this.d0 || 1;
+    return Math.min(1, Math.max(0, (days - this.d0) / span));
+  }
+
+  /** Adaptive axis ticks for the current domain (years → months → days → hours). */
+  buildTicks() {
+    const MONS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const span = this.d1 - this.d0;
+    const start = new Date(this.epochMs + this.d0 * DAY_MS);
+    const end = new Date(this.epochMs + this.d1 * DAY_MS);
+    const t = [];
+    const push = (label, utcMs) => t.push({ label, d: (utcMs - this.epochMs) / DAY_MS });
+
+    if (span >= 365 * 12) {
+      const step = span >= 365 * 60 ? 10 : 5;
+      for (let y = Math.ceil(start.getUTCFullYear() / step) * step; y <= end.getUTCFullYear(); y += step) {
+        push(String(y), Date.UTC(y, 0, 1));
+      }
+    } else if (span >= 365 * 2.5) {
+      for (let y = start.getUTCFullYear(); y <= end.getUTCFullYear(); y++) push(String(y), Date.UTC(y, 0, 1));
+    } else if (span >= 70) {
+      let y = start.getUTCFullYear(), m = start.getUTCMonth();
+      while (y < end.getUTCFullYear() || (y === end.getUTCFullYear() && m <= end.getUTCMonth())) {
+        push(m === 0 ? String(y) : MONS[m], Date.UTC(y, m, 1));
+        m++; if (m === 12) { m = 0; y++; }
+      }
+    } else if (span >= 3) {
+      const stepD = span >= 21 ? 7 : 1;
+      let d = Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate());
+      const endMs = end.getTime();
+      while (d <= endMs) {
+        const dd = new Date(d);
+        push((dd.getUTCMonth() + 1) + '/' + dd.getUTCDate(), d);
+        d += stepD * DAY_MS;
+      }
+    } else {
+      const stepH = span >= 1 ? 6 : 1;
+      let ms = Math.ceil((this.epochMs + this.d0 * DAY_MS) / (stepH * 3600e3)) * (stepH * 3600e3);
+      const endMs = this.epochMs + this.d1 * DAY_MS;
+      while (ms <= endMs) {
+        const dd = new Date(ms);
+        push(String(dd.getUTCHours()).padStart(2, '0') + ':00', ms);
+        ms += stepH * 3600e3;
+      }
+    }
+    this.years = t;
+  }
 
   observeSize() {
     const resize = () => {
@@ -62,11 +104,11 @@ export class Timeline {
 
   /* ── interaction ──────────────────────────────────────────── */
 
-  /** Pointer x -> days since epoch, clamped to the catalogue. */
+  /** Pointer x -> days since epoch, mapped through the visible domain. */
   daysAt(clientX) {
     const r = this.track.getBoundingClientRect();
     const f = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
-    return f * this.totalDays;
+    return this.d0 + f * (this.d1 - this.d0);
   }
 
   bindDrag() {
@@ -120,6 +162,17 @@ export class Timeline {
     this.now = nowDays;
     this.windowDays = windowDays;
     if (range) this.range = range;
+
+    // zoom the axis to the selected period (small margin keeps grips reachable)
+    const margin = Math.max(0.02, (this.range[1] - this.range[0]) * 0.02);
+    const nd0 = Math.max(0, this.range[0] - margin);
+    const nd1 = Math.min(this.totalDays, this.range[1] + margin);
+    if (nd0 !== this.d0 || nd1 !== this.d1) {
+      this.d0 = nd0;
+      this.d1 = nd1;
+      this.buildTicks();
+    }
+
     this.head.style.left = `${(this.frac(nowDays) * 100).toFixed(3)}%`;
     if (this.gripA) this.gripA.style.left = `${(this.frac(this.range[0]) * 100).toFixed(3)}%`;
     if (this.gripB) this.gripB.style.left = `${(this.frac(this.range[1]) * 100).toFixed(3)}%`;
@@ -184,7 +237,7 @@ export class Timeline {
       lastLabelX = x;
       ctx.fillStyle = 'rgba(120,140,168,.85)';
       ctx.textAlign = x < 18 ? 'left' : x > w - 18 ? 'right' : 'center';
-      ctx.fillText(String(y.year), Math.min(Math.max(x, 1), w - 1), h - 2);
+      ctx.fillText(y.label ?? String(y.year), Math.min(Math.max(x, 1), w - 1), h - 2);
     }
 
     // Source handoff: the detection threshold changes here, so the bar height

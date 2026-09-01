@@ -5,7 +5,9 @@
   EQ.ready.then(function () {
 
   var state = {
-    range: "live",          // live | 24h | 7d | 30d
+    live: true,                          // rolling last-24h with live refreshes
+    startMs: Date.now() - 24 * 3600e3,   // selected window [startMs, endMs]
+    endMs: Date.now(),
     minMag: 2,
     depths: { shallow: true, mid: true, deep: true },
     playing: false,
@@ -14,7 +16,7 @@
     expandedTable: false
   };
 
-  var RANGE_MS = { live: 24 * EQ.H, "24h": 24 * EQ.H, "7d": 7 * EQ.D, "30d": 30 * EQ.D };
+  function spanDays() { return (state.endMs - state.startMs) / EQ.D; }
 
   /* ---------------- map ---------------- */
 
@@ -75,6 +77,9 @@
     frame3d.addEventListener("load", function () {
       style3dFrame();
       sync3dView();
+      // dates once the app has bound its inputs (it boots asynchronously)
+      setTimeout(sync3dDates, 2500);
+      setTimeout(sync3dDates, 8000);
     });
   }
 
@@ -107,7 +112,9 @@
         "#panel-toggle{display:none!important}" +
         "#mfabs{display:none!important}" +
         "#feed{display:none!important}" +      // our side table lists events instead
-        "#mcards{display:none!important}";
+        "#mcards{display:none!important}" +
+        "#m-edit-period{display:none!important}" + // dates are set from our header
+        "#m-update{display:none!important}";       // shown in the console top bar instead
       doc.head.appendChild(st);
     } catch (e) { /* ignore */ }
   }
@@ -367,12 +374,36 @@
     return state.depths.deep;
   }
 
-  function windowStart() { return Date.now() - RANGE_MS[state.range]; }
+  /* recent windows use the always-loaded events cache (full M2+ detail);
+     older/longer windows materialize from the raw catalog with a floor */
+  var longCache = { key: null, list: [] };
+
+  function autoFloor() {
+    var d = spanDays();
+    if (d > 1826) return 5;    // 5y–10y
+    if (d > 365) return 4.5;   // 3y
+    if (d > 120) return 4;     // 1y
+    return 2;
+  }
+
+  function cacheCovers() {
+    // the recent cache holds the last ~120 days
+    return state.startMs >= Date.now() - 118 * EQ.D;
+  }
+
+  function windowList() {
+    if (cacheCovers()) return EQ.events;
+    var floor = Math.max(autoFloor(), state.minMag);
+    var key = Math.round(state.startMs / 6e4) + ":" + Math.round(state.endMs / 6e4) + ":" + floor;
+    if (longCache.key !== key) {
+      longCache = { key: key, list: EQ.buildRange(state.startMs, state.endMs, floor) };
+    }
+    return longCache.list;
+  }
 
   function filtered() {
-    var from = windowStart();
-    return EQ.events.filter(function (e) {
-      return e.t >= from && e.m >= state.minMag && depthOk(e.depth);
+    return windowList().filter(function (e) {
+      return e.t >= state.startMs && e.t <= state.endMs && e.m >= state.minMag && depthOk(e.depth);
     });
   }
 
@@ -498,15 +529,22 @@
   function renderTable() {
     var floor = Math.max(4.3, state.minMag);
     var pool = filtered().filter(inRegion);
-    var rows = pool.filter(function (e) { return e.m >= floor; });
-    var baseCount = window.WEL && WEL.embed ? 14 : 5;
-    if (rows.length < baseCount) rows = pool;
-    if (rows.length < baseCount) {
-      // quiet region/window: widen beyond the selected range so the list is never empty
-      rows = EQ.events.filter(function (e) {
-        return e.m >= state.minMag && depthOk(e.depth) && inRegion(e);
-      });
+    var rows;
+    if (spanDays() > 120) {
+      // long windows: the notable events, largest first
+      rows = pool.slice().sort(function (a, b) { return b.m - a.m; });
+    } else {
+      rows = pool.filter(function (e) { return e.m >= floor; });
+      var need = window.WEL && WEL.embed ? 14 : 5;
+      if (rows.length < need) rows = pool;
+      if (rows.length < need) {
+        // quiet region/window: widen beyond the selected range so the list is never empty
+        rows = EQ.events.filter(function (e) {
+          return e.m >= state.minMag && depthOk(e.depth) && inRegion(e);
+        });
+      }
     }
+    var baseCount = window.WEL && WEL.embed ? 14 : 5;
     rows = rows.slice(0, state.expandedTable ? (baseCount === 5 ? 25 : 40) : baseCount);
     document.getElementById("eqTableBody").innerHTML = rows.map(function (e) {
       var timeStr = window.WEL && WEL.embed ? EQ.fmtList(e.t) : EQ.fmtShort(e.t);
@@ -518,7 +556,8 @@
     }).join("");
     Array.prototype.forEach.call(document.querySelectorAll("#eqTableBody tr"), function (tr) {
       tr.addEventListener("click", function () {
-        var e = EQ.events.find(function (x) { return x.id === tr.dataset.id; });
+        var byId = function (x) { return x.id === tr.dataset.id; };
+        var e = windowList().find(byId) || EQ.events.find(byId);
         if (!e) return;
         if (document.getElementById("mapShell").classList.contains("mode-3d")) {
           focus3d(e);   // swing the 4D globe to the event and open its card
@@ -549,8 +588,10 @@
   function tickReadout() {
     if (state.playing && state.cursor) {
       readout.textContent = EQ.fmtUTC(state.cursor, true);
-    } else {
+    } else if (state.live) {
       readout.textContent = EQ.fmtUTC(Date.now(), true);
+    } else {
+      readout.textContent = EQ.fmtUTC(state.startMs) + "  —  " + EQ.fmtUTC(state.endMs);
     }
   }
   setInterval(tickReadout, 1000);
@@ -568,8 +609,8 @@
   }
 
   function startPlay() {
-    var from = windowStart();
-    var span = Date.now() - from;
+    var from = state.startMs;
+    var span = state.endMs - from;
     var dur = 12000;
     var t0 = performance.now();
     state.playing = true;
@@ -590,30 +631,76 @@
     if (state.playing) stopPlay(); else startPlay();
   });
 
-  document.getElementById("rangeChips").addEventListener("click", function (ev) {
-    var b = ev.target.closest("button");
-    if (!b) return;
+  function isoUTC(ms) {
+    var d = new Date(ms);
+    return d.getUTCFullYear() + "-" +
+      String(d.getUTCMonth() + 1).padStart(2, "0") + "-" +
+      String(d.getUTCDate()).padStart(2, "0");
+  }
+
+  var PRESET_DAYS = [1, 7, 30, 90, 365, 1095, 1826, 3652];
+
+  function setRange(startMs, endMs, live) {
     stopPlay();
-    state.range = b.dataset.range;
-    Array.prototype.forEach.call(this.querySelectorAll("button"), function (x) {
-      x.classList.toggle("active", x === b);
-    });
-    nowBtn.classList.toggle("active", state.range === "live");
+    state.startMs = Math.min(startMs, endMs - 60e3);
+    state.endMs = endMs;
+    state.live = !!live;
+
+    document.getElementById("dateFrom").value = isoUTC(state.startMs);
+    document.getElementById("dateTo").value = isoUTC(state.endMs);
+
+    // reflect a matching preset in the Period combo, else "Custom"
+    var sel = document.getElementById("mapPeriod");
+    var days = spanDays();
+    var endsNow = Math.abs(state.endMs - Date.now()) < 36e5;
+    var preset = null;
+    if (endsNow) {
+      PRESET_DAYS.forEach(function (p) { if (Math.abs(days - p) < 0.2) preset = p; });
+    }
+    sel.value = preset ? String(preset) : "custom";
+
+    nowBtn.classList.toggle("active", state.live);
     renderQuakes();
     renderTable();
+    sync3dDates();
+  }
+
+  function setPresetDays(days, live) {
+    setRange(Date.now() - days * EQ.D, Date.now(), live);
+  }
+
+  document.getElementById("mapPeriod").addEventListener("change", function () {
+    if (this.value === "custom") return;
+    var days = +this.value;
+    setPresetDays(days, days === 1); // 24h keeps the live rolling behaviour
   });
 
-  nowBtn.addEventListener("click", function () {
-    stopPlay();
-    state.range = "live";
-    var chips = document.querySelectorAll("#rangeChips button");
-    Array.prototype.forEach.call(chips, function (x) {
-      x.classList.toggle("active", x.dataset.range === "live");
+  function onDateInput() {
+    var a = document.getElementById("dateFrom").value;
+    var b = document.getElementById("dateTo").value;
+    if (!a || !b) return;
+    var s = Date.parse(a + "T00:00:00Z");
+    var e = Date.parse(b + "T23:59:59Z");
+    if (isNaN(s) || isNaN(e) || e <= s) return;
+    setRange(s, Math.min(e, Date.now()), false);
+  }
+  document.getElementById("dateFrom").addEventListener("change", onDateInput);
+  document.getElementById("dateTo").addEventListener("change", onDateInput);
+
+  nowBtn.addEventListener("click", function () { setPresetDays(1, true); });
+
+  // push the selected dates into the 4D app so its timeline matches
+  function sync3dDates() {
+    x3(function (doc, w) {
+      var a = doc.getElementById("in-date-a");
+      var b = doc.getElementById("in-date-b");
+      if (!a || !b) return;
+      a.value = isoUTC(state.startMs);
+      b.value = isoUTC(state.endMs);
+      a.dispatchEvent(new w.Event("change", { bubbles: true }));
+      b.dispatchEvent(new w.Event("change", { bubbles: true }));
     });
-    nowBtn.classList.add("active");
-    renderQuakes();
-    renderTable();
-  });
+  }
 
   /* ---------------- zoom ---------------- */
 
@@ -669,7 +756,10 @@
   /* ---------------- live updates ---------------- */
 
   EQ.onLive(function (e) {
-    if (state.range !== "live" || state.playing) return;
+    if (!state.live || state.playing) return;
+    state.endMs = Date.now();
+    state.startMs = state.endMs - 24 * EQ.H;
+    longCache.key = null; // catalog was refreshed in place
     renderQuakes();
     renderTable();
     if (!state.selectedId) setPulse(e);
@@ -677,8 +767,10 @@
 
   /* ---------------- boot ---------------- */
 
-  renderQuakes();
-  renderTable();
+  setPresetDays(1, true); // live last-24h, and seeds the date inputs
+
+  var dm = (location.hash || "").match(/^#d(\d+)$/); // deep-link: #d365 = 1y window
+  if (dm) setPresetDays(+dm[1], false);
 
   if (location.hash === "#pop") { // debug/deep-link: open the largest recent event's card
     var big = filtered().reduce(function (a, b) { return (!a || b.m > a.m) ? b : a; }, null);

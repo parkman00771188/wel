@@ -962,6 +962,7 @@ class App {
     s.rangeEnd = clamp(b, s.rangeStart + MIN_SPAN_DAYS, T);
     s.now = clamp(s.now, s.rangeStart, s.rangeEnd);
     this.syncDates();
+    this.updateSpeedOptions();
     this.syncTime();
     this.persist();
   }
@@ -969,6 +970,34 @@ class App {
   syncDates() {
     $('in-date-a').value = fmtISO(this.daysToDate(this.state.rangeStart));
     $('in-date-b').value = fmtISO(this.daysToDate(this.state.rangeEnd));
+  }
+
+  /** Playback speeds that make sense for the selected span — a one-month
+   *  period gets hour/minute steps instead of "1 year / s". */
+  updateSpeedOptions() {
+    const sel = $('sel-speed');
+    if (!sel) return;
+    const span = this.state.rangeEnd - this.state.rangeStart;
+    const MINU = 1 / 1440, H = 1 / 24;
+    let opts;
+    if (span <= 2) {
+      opts = [[MINU, '1 min / s'], [10 * MINU, '10 min / s'], [H, '1 hr / s'], [3 * H, '3 hr / s'], [6 * H, '6 hr / s']];
+    } else if (span <= 45) {
+      opts = [[H, '1 hr / s'], [6 * H, '6 hr / s'], [1, '1 day / s'], [7, '1 wk / s']];
+    } else if (span <= 400) {
+      opts = [[1, '1 day / s'], [7, '1 wk / s'], [30, '1 mo / s'], [91, '3 mo / s']];
+    } else if (span <= 3700) {
+      opts = [[7, '1 wk / s'], [30, '1 mo / s'], [91, '3 mo / s'], [365, '1 yr / s'], [1095, '3 yr / s']];
+    } else {
+      opts = [[1, '1 day / s'], [7, '1 wk / s'], [30, '1 mo / s'], [91, '3 mo / s'], [152, '5 mo / s'],
+              [365, '1 yr / s'], [1095, '3 yr / s'], [1826, '5 yr / s'], [3650, '10 yr / s']];
+    }
+    const prev = this.state.speed;
+    sel.innerHTML = opts.map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
+    let pick = opts[Math.min(2, opts.length - 1)][0];
+    for (const [v] of opts) if (Math.abs(v - prev) < 1e-9) pick = v;
+    sel.value = String(pick);
+    this.state.speed = +sel.value;
   }
 
   /* ── UI wiring ──────────────────────────────────────────── */
@@ -1302,6 +1331,7 @@ class App {
     });
     $('sel-speed').addEventListener('change', (e) => { s.speed = +e.target.value; });
     s.speed = +$('sel-speed').value;   // apply the restored selection, not the default
+    this.updateSpeedOptions();         // fit the speed ladder to the restored span
     check('ck-loop', (on) => { s.loop = on; });
 
     /* panel + card */

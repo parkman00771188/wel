@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-nav="platform" data-cta="dashboard">
+<body data-nav="map" data-cta="dashboard">
 
 <div id="site-header"></div>
 
@@ -22,6 +22,24 @@
       <p class="sub">Real-time global seismic activity.</p>
     </div>
     <div class="page-actions">
+      <div class="select-chip date-chip">
+        <input type="date" id="dateFrom" aria-label="Start date">
+        <span class="lbl">–</span>
+        <input type="date" id="dateTo" aria-label="End date">
+      </div>
+      <label class="select-chip"><span class="lbl">Period</span>
+        <select id="mapPeriod">
+          <option value="1" selected>24h</option>
+          <option value="7">7d</option>
+          <option value="30">30d</option>
+          <option value="90">90d</option>
+          <option value="365">1y</option>
+          <option value="1095">3y</option>
+          <option value="1826">5y</option>
+          <option value="3652">10y</option>
+          <option value="custom" hidden>Custom</option>
+        </select>
+      </label>
       <label class="select-chip"><span class="lbl">Region</span>
         <select id="mapRegion">
           <option value="global" selected>Global</option>
@@ -57,19 +75,6 @@
             <label class="prow" id="p3dWindowRow" hidden><span>Window length</span>
               <input type="range" min="0" max="10" step="1" value="6" data-x3d-range="#in-window">
               <output data-x3d-out="#out-window">1 y</output></label>
-
-            <h4>Period</h4>
-            <div class="prow dates">
-              <span>Start</span><input type="date" data-x3d-date="#in-date-a">
-              <span>End</span><input type="date" data-x3d-date="#in-date-b">
-            </div>
-            <div class="chip-row">
-              <button class="pchip" data-x3d="#span-presets [data-span='all']">All</button>
-              <button class="pchip" data-x3d="#span-presets [data-span='10y']">10 y</button>
-              <button class="pchip" data-x3d="#span-presets [data-span='1y']">1 y</button>
-              <button class="pchip" data-x3d="#span-presets [data-span='30d']">30 d</button>
-              <button class="pchip" data-x3d="#span-presets [data-span='7d']">7 d</button>
-            </div>
 
             <h4>Magnitude</h4>
             <div class="prow"><span>Range M</span><span class="grow"></span>
@@ -172,12 +177,6 @@
     <div class="map-horizon"></div>
 
     <div class="map-timebar">
-      <div class="range-chips" id="rangeChips">
-        <button data-range="live" class="active">Live</button>
-        <button data-range="24h">24h</button>
-        <button data-range="7d">7d</button>
-        <button data-range="30d">30d</button>
-      </div>
       <button class="play-btn" id="playBtn" aria-label="Play timeline"></button>
       <div class="time-readout" id="timeReadout">—</div>
       <button class="now-btn active" id="nowBtn">Now</button>

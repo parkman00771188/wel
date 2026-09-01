@@ -35,15 +35,17 @@
     </div>
   </section>
 
-  <!-- ============ Trusted by ============ -->
+  <!-- ============ Data sources ============ -->
   <section class="trust">
     <div class="container trust-row">
-      <div class="trust-label">Trusted by researchers and organizations worldwide</div>
-      <div class="wordmark wm-caltech"><span class="main">Caltech</span></div>
-      <div class="wordmark wm-usgs"><span class="main">USGS</span><span class="sub">SCIENCE FOR A CHANGING WORLD</span></div>
-      <div class="wordmark wm-gfz"><span class="main">GFZ</span><span class="sub">HELMHOLTZ CENTRE FOR GEOSCIENCES</span></div>
-      <div class="wordmark wm-berkeley"><span class="main">Berkeley</span><span class="sub">UNIVERSITY OF CALIFORNIA</span></div>
-      <div class="wordmark wm-eth"><span class="main"><b>ETH</b> zürich</span></div>
+      <div class="trust-label">Built on open data from</div>
+      <div class="wordmark"><span class="main src">ISC</span><span class="sub">INTERNATIONAL SEISMOLOGICAL CENTRE</span></div>
+      <div class="wordmark"><span class="main src">USGS</span><span class="sub">ANSS COMCAT</span></div>
+      <div class="wordmark"><span class="main src">JMA</span><span class="sub">JAPAN METEOROLOGICAL AGENCY</span></div>
+      <div class="wordmark"><span class="main src">GEM</span><span class="sub">GLOBAL ACTIVE FAULTS</span></div>
+      <div class="wordmark"><span class="main src">GVP</span><span class="sub">SMITHSONIAN VOLCANISM</span></div>
+      <div class="wordmark"><span class="main src">NASA</span><span class="sub">GIBS · BLUE MARBLE</span></div>
+      <div class="wordmark"><span class="main src">Natural Earth</span><span class="sub">COASTLINES · PLATES</span></div>
     </div>
   </section>
 
@@ -95,32 +97,53 @@
       </div>
 
       <div class="plat-grid">
-        <a class="plat-card" href="app.html#map" >
-          <div class="ic"><i data-icon="target" data-size="22"></i></div>
-          <h3>Live Earthquake Map</h3>
-          <p>Watch global seismicity unfold in real time on an interactive map with plate boundaries
-            and magnitude-scaled events. Rewind and replay the last 24 hours, 7 days, or 30 days,
-            filter by magnitude and depth, and open any event for its full solution — origin time,
-            epicenter, depth, and review status.</p>
-          <span class="link">Open the live map &rarr;</span>
-        </a>
-        <a class="plat-card" href="app.html#overview" >
+        <a class="plat-card" href="app.html#overview">
           <div class="ic"><i data-icon="grid" data-size="22"></i></div>
-          <h3>Dashboard Overview</h3>
-          <p>A single screen that answers "what is happening right now?" — 24-hour event counts and
-            trends, magnitude distribution, the largest recent events, live global activity, and the
-            operational health of the network, from ingestion to alerting. Filter everything by region
-            or switch between UTC and local time.</p>
+          <h3>Overview</h3>
+          <p>A single screen that answers "what is happening right now?" — event counts and trends
+            for any period from 24 hours to 10 years, magnitude distribution, the largest events,
+            live global activity, and system health.</p>
           <span class="link">Go to the dashboard &rarr;</span>
         </a>
-        <a class="plat-card" href="app.html#insights" >
+        <a class="plat-card" href="app.html#map">
+          <div class="ic"><i data-icon="target" data-size="22"></i></div>
+          <h3>Live Map</h3>
+          <p>Global seismicity on an interactive 2D map — or the Earthquake 4D globe in 3D, replaying
+            126 years of the catalog in space and depth. Pick any date range, filter by magnitude and
+            depth, and open any event for its full solution.</p>
+          <span class="link">Open the live map &rarr;</span>
+        </a>
+        <a class="plat-card" href="app.html#learn">
+          <div class="ic"><i data-icon="book" data-size="22"></i></div>
+          <h3>Earthquake Guide</h3>
+          <p>The essentials, explained simply: what an earthquake is, P and S waves, plate tectonics,
+            magnitude vs intensity, key terms, an FAQ — and a practical safety guide with an
+            emergency-kit checklist you can tick off.</p>
+          <span class="link">Open the guide &rarr;</span>
+        </a>
+        <a class="plat-card" href="app.html#insights">
           <div class="ic"><i data-icon="chartline" data-size="22"></i></div>
           <h3>Seismic Insights</h3>
-          <p>Go deeper than the headline numbers: daily activity with rolling averages,
-            Gutenberg&ndash;Richter magnitude-frequency curves, depth profiles, seismic energy release,
-            regional hotspots, and the skill of our forecast models — all recomputed on demand and
-            exportable as CSV for your own analysis.</p>
+          <p>Deeper analysis over any window: activity trends with rolling averages,
+            Gutenberg&ndash;Richter magnitude-frequency curves, depth profiles, energy release,
+            regional hotspots, and forecast-model skill — exportable as CSV.</p>
           <span class="link">Explore insights &rarr;</span>
+        </a>
+        <a class="plat-card" href="app.html#research">
+          <div class="ic"><i data-icon="folder" data-size="22"></i></div>
+          <h3>Research Hub</h3>
+          <p>Publications, datasets, and open-source tools — from rapid source characterization to
+            hazard-uncertainty studies — with the data library and resources for researchers,
+            developers, and students.</p>
+          <span class="link">Visit the hub &rarr;</span>
+        </a>
+        <a class="plat-card" href="app.html#news">
+          <div class="ic"><i data-icon="radio" data-size="22"></i></div>
+          <h3>News &amp; Updates</h3>
+          <p>Event reports and aftershock advisories generated from the live catalog, alongside real
+            world coverage and platform announcements — data releases, network expansions, and
+            research highlights.</p>
+          <span class="link">Read the latest &rarr;</span>
         </a>
       </div>
 
@@ -134,168 +157,6 @@
       <div class="sec-cta">
         <a class="btn-text" href="app.html#map" >Explore the Platform</a>
         <a class="btn-text" href="app.html#overview" >View the Dashboard</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ Research ============ -->
-  <section class="land-sec" id="research">
-    <div class="container">
-      <div class="sec-head">
-        <div class="eyebrow">Research</div>
-        <h2>Science that turns measurements into understanding.</h2>
-        <p class="lead">Monitoring tells you what happened; research tells you what it means and what
-          to expect next. Our scientists and engineers publish openly, release their code, and feed
-          every improvement straight back into the operational platform — so a better algorithm on
-          paper becomes a better earthquake solution in production.</p>
-      </div>
-
-      <div class="topic-grid">
-        <div class="topic-card">
-          <div class="ic"><i data-icon="activity" data-size="21"></i></div>
-          <div>
-            <h3>Rapid Source Characterization</h3>
-            <p>Waveform-inversion methods that estimate an earthquake's magnitude, rupture geometry,
-              and mechanism within seconds of detection — the foundation for early warning and rapid
-              impact assessment.</p>
-          </div>
-        </div>
-        <div class="topic-card">
-          <div class="ic"><i data-icon="layers" data-size="21"></i></div>
-          <div>
-            <h3>Seismic Hazard &amp; Uncertainty</h3>
-            <p>Global assessments of ground-shaking hazard that quantify not just the expected level
-              of shaking, but how confident we can be in it — information engineers and insurers can
-              actually build with.</p>
-          </div>
-        </div>
-        <div class="topic-card">
-          <div class="ic"><i data-icon="branch" data-size="21"></i></div>
-          <div>
-            <h3>Machine-Learned Detection</h3>
-            <p>Deep-learning pickers and association models that find small earthquakes traditional
-              pipelines miss, sharpening our picture of faults between the large events and improving
-              catalog completeness.</p>
-          </div>
-        </div>
-        <div class="topic-card">
-          <div class="ic"><i data-icon="antenna" data-size="21"></i></div>
-          <div>
-            <h3>Network Performance</h3>
-            <p>Continuous evaluation of the global station network — noise levels, detection
-              thresholds, and coverage gaps — published as technical reports that guide where the
-              next instruments should go.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="stat-strip">
-        <div><div class="v">248</div><div class="k">Peer-reviewed publications</div></div>
-        <div><div class="v">15</div><div class="k">Active research projects</div></div>
-        <div><div class="v">24</div><div class="k">Open-source tools maintained</div></div>
-        <div><div class="v">40+</div><div class="k">Partner institutions worldwide</div></div>
-      </div>
-
-      <div class="sec-cta">
-        <a class="btn-text" href="app.html#research" >Visit the Research Hub</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ Data ============ -->
-  <section class="land-sec alt" id="data">
-    <div class="container">
-      <div class="sec-head">
-        <div class="eyebrow">Open Data</div>
-        <h2>High-quality seismic data, open to everyone.</h2>
-        <p class="lead">Openness is not an afterthought — it is how earthquake science moves forward.
-          Everything we produce is documented, versioned, and free to use for research, education,
-          and operational applications alike.</p>
-      </div>
-
-      <div class="split">
-        <div class="rich-text">
-          <p>At the core sits the <b>Global Earthquake Catalog</b>, a homogenized record of seismicity
-            from 1900 to the present, reviewed by analysts and updated continuously as new solutions
-            are published. Around it we maintain the supporting datasets that serious work requires:</p>
-          <ul class="ticks">
-            <li><i data-icon="check" data-size="17"></i><span><b>Global Earthquake Catalog</b> — origin times, hypocenters, magnitudes, and review status for every event, 1900&ndash;present.</span></li>
-            <li><i data-icon="check" data-size="17"></i><span><b>Seismic Station Metadata</b> — locations, instrument responses, and availability for 2,800+ stations, refreshed weekly.</span></li>
-            <li><i data-icon="check" data-size="17"></i><span><b>Strong Motion Database</b> — processed accelerograms and intensity measures from significant earthquakes.</span></li>
-            <li><i data-icon="check" data-size="17"></i><span><b>Site &amp; Fault Models</b> — the global Vs30 grid and subduction-zone interface geometries used in hazard modeling.</span></li>
-          </ul>
-          <p style="margin-top:22px">Every dataset ships in open formats — CSV, JSON/GeoJSON, and QuakeML — with stable
-            versioned releases you can cite, and the same REST API that powers this website.</p>
-        </div>
-        <div>
-          <div class="code-card"><span class="d"># Query the public catalog API</span>
-<span class="g">GET</span> /v1/events?starttime=<span class="o">2026-08-01</span>
-      &amp;minmagnitude=<span class="o">4.5</span>&amp;format=<span class="o">geojson</span>
-
-{
-  <span class="b">"type"</span>:  <span class="o">"FeatureCollection"</span>,
-  <span class="b">"count"</span>: <span class="o">312</span>,
-  <span class="b">"features"</span>: [
-    {
-      <span class="b">"mag"</span>:    <span class="o">6.3</span>,
-      <span class="b">"place"</span>:  <span class="o">"Off the coast of Chiapas"</span>,
-      <span class="b">"depth"</span>:  <span class="o">22</span>,
-      <span class="b">"status"</span>: <span class="o">"reviewed"</span>
-    }, <span class="d">…</span>
-  ]
-}</div>
-          <p class="code-cap">REST API with GeoJSON, CSV, and QuakeML output — no key required for public data.</p>
-        </div>
-      </div>
-
-      <div class="sec-cta">
-        <a class="btn-text" href="app.html#insights" >Explore the Data in Charts</a>
-        <a class="btn-text" href="app.html#research" >Browse All Datasets</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ Resources ============ -->
-  <section class="land-sec" id="resources">
-    <div class="container">
-      <div class="sec-head">
-        <div class="eyebrow">Resources</div>
-        <h2>Guides, tools, and a community to help you build.</h2>
-        <p class="lead">Whether you are a researcher reproducing a study, a developer integrating the
-          API, or a student opening a seismogram for the first time — start here.</p>
-      </div>
-
-      <div class="resources-grid landing">
-        <a class="resource-tile" href="app.html#research" >
-          <div class="ic"><i data-icon="book" data-size="20"></i></div>
-          <div class="t">Documentation</div>
-          <div class="d">Concepts, data dictionaries, and how our catalog is built — from waveform to reviewed solution.</div>
-        </a>
-        <a class="resource-tile" href="app.html#research" >
-          <div class="ic"><i data-icon="server" data-size="20"></i></div>
-          <div class="t">API Reference</div>
-          <div class="d">Endpoints, parameters, and response schemas for events, stations, and strong-motion queries.</div>
-        </a>
-        <a class="resource-tile" href="app.html#research" >
-          <div class="ic"><i data-icon="playcircle" data-size="20"></i></div>
-          <div class="t">Tutorials &amp; Guides</div>
-          <div class="d">Step-by-step walkthroughs: fetch a catalog, plot a magnitude-frequency curve, build an alert feed.</div>
-        </a>
-        <a class="resource-tile" href="app.html#research" >
-          <div class="ic"><i data-icon="tool" data-size="20"></i></div>
-          <div class="t">Tools &amp; Software</div>
-          <div class="d">Our open-source pickers, catalog utilities, and visualization libraries — issues and PRs welcome.</div>
-        </a>
-        <a class="resource-tile" href="app.html#research" >
-          <div class="ic"><i data-icon="users" data-size="20"></i></div>
-          <div class="t">Community &amp; Collaboration</div>
-          <div class="d">Join working groups, propose a joint project, or bring your network's data into the platform.</div>
-        </a>
-        <a class="resource-tile" href="app.html#research" >
-          <div class="ic"><i data-icon="mail" data-size="20"></i></div>
-          <div class="t">Newsletter</div>
-          <div class="d">A monthly digest of notable earthquakes, new datasets, and research highlights. No spam, ever.</div>
-        </a>
       </div>
     </div>
   </section>

@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-nav="platform" data-cta="dashboard">
+<body data-nav="overview" data-cta="dashboard">
 
 <div id="site-header"></div>
 
@@ -70,7 +70,7 @@
       <div class="card-head">
         <div>
           <div class="card-title">Earthquakes Over Time</div>
-          <p class="card-sub">Worldwide M 4.0+ events · USGS + ISC</p>
+          <p class="card-sub">Worldwide M 2.0+ events · USGS + ISC</p>
         </div>
         <span class="card-sub" id="histRangeLbl"></span>
       </div>
@@ -141,6 +141,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="js/common.js"></script>
 <script src="js/i18n.js"></script>
+<script>window.EQ_ALL_BANDS = true; // stats run on the full M2+ catalog</script>
 <script src="js/data.js"></script>
 <script src="js/dashboard.js"></script>
 </body>

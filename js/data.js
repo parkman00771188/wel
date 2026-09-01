@@ -189,12 +189,14 @@
   }
 
   function magBuckets(list) {
-    var b = { "M 7+": 0, "M 6–6.9": 0, "M 5–5.9": 0, "M 4–4.9": 0 };
+    var b = { "M 7+": 0, "M 6–6.9": 0, "M 5–5.9": 0, "M 4–4.9": 0, "M 3–3.9": 0, "M 2–2.9": 0 };
     list.forEach(function (e) {
       if (e.m >= 7) b["M 7+"]++;
       else if (e.m >= 6) b["M 6–6.9"]++;
       else if (e.m >= 5) b["M 5–5.9"]++;
-      else b["M 4–4.9"]++;
+      else if (e.m >= 4) b["M 4–4.9"]++;
+      else if (e.m >= 3) b["M 3–3.9"]++;
+      else b["M 2–2.9"]++;
     });
     return b;
   }
@@ -280,7 +282,7 @@
     inWindow: inWindow, byRegion: byRegion, magBuckets: magBuckets,
     dailyCounts: dailyCounts, movingAvg: movingAvg, depthBins: depthBins,
     energySeries: energySeries, hotspots: hotspots, onLive: onLive,
-    rangeStats: rangeStats
+    rangeStats: rangeStats, buildWindow: buildWindow, buildRange: buildRange
   };
   window.EQ = EQ;
 
@@ -308,6 +310,49 @@
   }
 
   var RAW = null; // parsed band arrays kept for long-range aggregation
+
+  function makeEvent(b, i, epochMs, id) {
+    var lat = b.lat[i], lon = b.lon[i];
+    var who = nameFor(lat, lon);
+    var tMs = epochMs + b.t[i] * 1000;
+    return {
+      id: id,
+      m: Math.round(b.mag[i] * 10) / 10,
+      lat: Math.round(lat * 1000) / 1000,
+      lng: Math.round(lon * 1000) / 1000,
+      depth: Math.max(0, Math.round(b.depth[i])),
+      t: tMs,
+      loc: who.loc,
+      group: who.group,
+      rof: who.rof,
+      status: (Date.now() - tMs) > 5 * D ? "Reviewed" : "Automatic"
+    };
+  }
+
+  /* Materialize every event in [startMs, endMs] at or above `minMag` as plain
+     objects (named, region-tagged, newest first). Long windows should pass a
+     sensible floor — 10 years of M2+ would be hundreds of thousands of rows. */
+  function buildRange(startMs, endMs, minMag) {
+    if (!RAW) return [];
+    var startSec = (startMs - RAW.epochMs) / 1000;
+    var endSec = (endMs - RAW.epochMs) / 1000;
+    var out = [], idc = 1;
+    RAW.bands.forEach(function (b) {
+      var i = lowerBound(b.t, startSec);
+      for (; i < b.n; i++) {
+        if (b.t[i] > endSec) break;
+        var mag = b.mag[i];
+        if (mag > 9.55 || mag < minMag) continue;
+        out.push(makeEvent(b, i, RAW.epochMs, "w" + idc++));
+      }
+    });
+    out.sort(function (a, b2) { return b2.t - a.t; });
+    return out;
+  }
+
+  function buildWindow(days, minMag) {
+    return buildRange(Date.now() - days * D, Date.now(), minMag);
+  }
 
   function lowerBound(arr, val) {
     var lo = 0, hi = arr.length;
@@ -345,7 +390,7 @@
       }
     }
 
-    var buckets = { "M 7+": 0, "M 6–6.9": 0, "M 5–5.9": 0, "M 4–4.9": 0 };
+    var buckets = { "M 7+": 0, "M 6–6.9": 0, "M 5–5.9": 0, "M 4–4.9": 0, "M 3–3.9": 0, "M 2–2.9": 0 };
     var count = 0, sumMag = 0, prevCount = 0, prevSum = 0;
     var top = []; // [{m, lat, lng, depth, tMs}]
 
@@ -359,7 +404,9 @@
         if (mag >= 7) buckets["M 7+"]++;
         else if (mag >= 6) buckets["M 6–6.9"]++;
         else if (mag >= 5) buckets["M 5–5.9"]++;
-        else buckets["M 4–4.9"]++;
+        else if (mag >= 4) buckets["M 4–4.9"]++;
+        else if (mag >= 3) buckets["M 3–3.9"]++;
+        else buckets["M 2–2.9"]++;
 
         if (top.length < 5 || mag > top[top.length - 1].m) {
           top.push({ m: mag, lat: b.lat[i], lng: b.lon[i], depth: b.depth[i], tSec: tSec });
@@ -404,9 +451,10 @@
     RAW = { epochMs: epochMs, bands: bands };
     var cutoff = (Date.now() - RECENT_DAYS * D - epochMs) / 1000;
 
-    // full-catalog magnitude histogram (Gutenberg–Richter, M4–9.4, 0.2 bins)
+    // full-catalog magnitude histogram (Gutenberg–Richter, 0.2 bins)
+    var grStart = BANDS.length > 2 ? 2.0 : 4.0;
     var gx = [], gy = [];
-    for (var m0 = 4.0; m0 < 9.4; m0 += 0.2) { gx.push(Math.round(m0 * 10) / 10); gy.push(0); }
+    for (var m0 = grStart; m0 < 9.4; m0 += 0.2) { gx.push(Math.round(m0 * 10) / 10); gy.push(0); }
 
     var events = [];
     var idc = 1;
@@ -415,25 +463,11 @@
       for (var i = 0; i < b.n; i++) {
         var mag = b.mag[i];
         if (mag > 9.55) continue; // bogus catalog rows (largest ever recorded: M 9.5)
-        var gi = Math.floor((mag - 4.0) / 0.2);
+        var gi = Math.floor((mag - grStart) / 0.2);
         if (gi >= 0 && gi < gy.length) gy[gi]++;
 
         if (b.t[i] < cutoff) continue; // bands are time-sorted, but cheap to test all
-        var lat = b.lat[i], lon = b.lon[i];
-        var who = nameFor(lat, lon);
-        var tMs = epochMs + b.t[i] * 1000;
-        events.push({
-          id: "g" + idc++,
-          m: Math.round(mag * 10) / 10,
-          lat: Math.round(lat * 1000) / 1000,
-          lng: Math.round(lon * 1000) / 1000,
-          depth: Math.max(0, Math.round(b.depth[i])),
-          t: tMs,
-          loc: who.loc,
-          group: who.group,
-          rof: who.rof,
-          status: (Date.now() - tMs) > 5 * D ? "Reviewed" : "Automatic"
-        });
+        events.push(makeEvent(b, i, epochMs, "g" + idc++));
       }
     });
 
