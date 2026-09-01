@@ -1,0 +1,6 @@
+# Local run artefacts -- regenerated on every cycle, never worth committing.
+scripts/logs/
+__pycache__/
+*.pyc
+*.log
+node_modules/

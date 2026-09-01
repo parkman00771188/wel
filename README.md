@@ -34,20 +34,38 @@
 [earthquake-layer-3d](https://github.com/parkman00771188/earthquake-layer-3d) 저장소의
 업데이트 파이프라인(update.bat)으로 오프라인에서 다시 만들어 `3d/` 폴더에 넣습니다.
 
-## 자동 업데이트 (30분 주기)
+## 자동 업데이트 (30분 주기, 이 PC에서)
 
-수백만 행짜리 바이너리를 30분마다 다시 올릴 수는 없으므로, **최근 14일치만** 따로
-갱신합니다.
+수백만 행짜리 바이너리를 30분마다 다시 올릴 수는 없으므로 **최근 14일치만** 갱신합니다.
+[earthquake-layer-3d](https://github.com/parkman00771188/earthquake-layer-3d) 의
+`auto_update_*.bat` 과 같은 방식입니다 — GitHub Actions 가 아니라 이 PC의 작업
+스케줄러가 돌립니다.
 
-| 구성 | 역할 |
+| 파일 | 역할 |
 |---|---|
-| `.github/workflows/update-earthquake-data.yml` | 매시 07분·37분에 실행 (수동 실행도 가능) |
-| `scripts/update_live_data.py` | USGS ComCat에서 최근 14일(M2.0+)을 받아 아래 두 파일로 저장 |
-| `3d/data/live/global.json` | 전세계 오버레이 (약 300KB) |
-| `3d/data/live/japan.json` | 일본 영역 오버레이 |
+| `auto_update_start.bat` | 30분 주기 예약 작업 등록 + 첫 사이클 즉시 실행 |
+| `auto_update_stop.bat` | 예약 작업 해제 (이미 만들어진 커밋은 그대로) |
+| `auto_update_run.bat` | 한 사이클 수동 실행 (더블클릭 가능) |
+| `scripts/run_hidden.vbs` | 창이 뜨지 않게 감싸는 실행기 — 스케줄러가 여기를 가리킴 |
+| `scripts/auto_update.py` | 한 사이클 본체: 확인 → 갱신 → 커밋 → push |
+| `scripts/update_live_data.py` | USGS ComCat 에서 최근 14일(M2.0+)을 받아 스냅샷 작성 |
+| `scripts/logs/auto_update.log` | 실행 기록 (git 에 올라가지 않음) |
 
-내용이 실제로 바뀐 경우에만 `[auto] update earthquake data` 커밋이 만들어져
-자동으로 push 됩니다. 바이너리는 한 바이트도 건드리지 않습니다.
+**한 사이클이 하는 일**
+
+1. USGS 에 **최신 20건**만 물어보고 그중 **최신 5건**을 기존 스냅샷과 대조합니다.
+2. 5건이 전부 이미 있으면 → **거기서 끝.** 내려받지도, 커밋하지도, push 하지도 않습니다.
+3. 새 지진이 있으면 최근 14일을 다시 받아 `3d/data/live/{global,japan}.json` 을
+   덮어쓰고, **그 두 파일만** 커밋해서 push 합니다. 작업 폴더의 다른 수정 사항이나
+   스테이징해 둔 파일은 건드리지 않습니다.
+
+하루 48번 도는 만큼, 직전 커밋이 우리가 만든 `[auto]` 커밋이면 그 위에 쌓지 않고
+**교체**합니다(`--amend` + `--force-with-lease`). 사람이 직접 만든 커밋은 절대
+교체하지 않습니다.
+
+동시 실행은 `%TEMP%\wel_auto_update.lock` 으로 막고, 25분 넘은 잠금은 중단된
+사이클로 보고 정리합니다. PC가 꺼져 있거나 로그아웃 상태면 그 회차는 건너뜁니다
+(하루 48번 중 일부라 문제되지 않습니다).
 
 **브라우저 쪽 병합** — 두 카탈로그가 오버레이를 다르게 씁니다.
 
@@ -60,11 +78,6 @@
 
 2D 페이지는 5분마다 오버레이를, 10분마다 아카이브 `meta.json` 을 확인해
 **갱신되면 다시 불러옵니다.** 오버레이 파일이 없어도 아카이브만으로 정상 동작합니다.
-
-> 저장소 설정 필요: **Settings → Actions → General → Workflow permissions** 를
-> *Read and write permissions* 로 두어야 봇이 push 할 수 있습니다. 또 GitHub 스케줄러는
-> 최선 노력 방식이라 실행이 몇 분 밀릴 수 있고, 저장소에 60일간 활동이 없으면
-> 스케줄이 자동으로 중지됩니다(Actions 탭에서 다시 활성화).
 
 ## 3D 지도
 
@@ -82,6 +95,6 @@ js/map.js         라이브 지도 로직
 js/dashboard.js   대시보드 차트/통계
 js/insights.js    인사이트 차트 + CSV 다운로드
 resource/img/     로고, 배너 이미지
-scripts/          update_live_data.py (최근 14일 USGS 오버레이 생성)
+scripts/          auto_update.py (30분 사이클) + update_live_data.py (USGS 오버레이)
 3d/js/live.js     오버레이 로더 (3D 전세계/일본 공용)
 ```
