@@ -9,6 +9,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<!-- Google AdSense. Static in <head> on every page so the verification
+     crawler finds it in the source, not only after JavaScript runs. -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7720076982812531"
+        crossorigin="anonymous"></script>
 </head>
 <body class="app-body">
 
@@ -88,19 +92,11 @@
     <div class="spacer"></div>
 
     <!-- ── Google AdSense slot ──────────────────────────────────────────
-         AdSense 승인 후:
-         1) 아래 placeholder(div.ad-placeholder)를 지우고
-         2) 이 자리에 AdSense 코드를 붙여넣으세요. 예:
-
-         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
-                 crossorigin="anonymous"></script>
-         <ins class="adsbygoogle"
-              style="display:block"
-              data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-              data-ad-slot="0000000000"
-              data-ad-format="auto"
-              data-full-width-responsive="true"></ins>
-         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+         The loader is already in <head> on every page, which is what AdSense
+         needs to verify the site and to run Auto ads. A fixed unit here needs
+         one more thing: an ad-unit id. Create a display unit in
+         AdSense → 광고 → 광고 단위 and paste its data-ad-slot into AD_SLOT at
+         the top of js/app.js. Until then this keeps its labelled placeholder.
     ──────────────────────────────────────────────────────────────────── -->
     <div class="ad-slot" id="adSlot">
       <div class="ad-placeholder">

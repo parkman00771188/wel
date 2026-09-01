@@ -162,7 +162,31 @@
     }
   });
 
-  /* ---------- catalog freshness chip (next to LIVE) ---------- */
+  /* ---------- sidebar ad ----------
+     The <head> loader is enough for verification and for Auto ads. A fixed
+     unit in the sidebar slot additionally needs an ad-unit id, which only
+     exists once a display unit has been created in AdSense; leave AD_SLOT
+     empty until then and the slot keeps its labelled placeholder rather than
+     pushing an <ins> that can never fill. */
+
+  var AD_CLIENT = "ca-pub-7720076982812531";
+  var AD_SLOT = "";   // AdSense → 광고 → 광고 단위 에서 만든 디스플레이 광고의 data-ad-slot
+
+  (function mountAd() {
+    var host = document.getElementById("adSlot");
+    if (!host || !AD_SLOT) return;
+    host.innerHTML = '<ins class="adsbygoogle" style="display:block;width:100%"'
+      + ' data-ad-client="' + AD_CLIENT + '"'
+      + ' data-ad-slot="' + AD_SLOT + '"'
+      + ' data-ad-format="auto" data-full-width-responsive="true"></ins>';
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (err) {
+      console.warn("adsbygoogle unavailable:", err);
+    }
+  })();
+
+  /* ---------- catalog freshness chip ---------- */
 
   var updatedAt = null;
 
