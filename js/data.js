@@ -7,11 +7,16 @@
   "use strict";
 
   var DATA_BASE = "3d/data/global/";
+  var LIVE_PATH = "3d/data/live/global.json";
   // default: M4+ (~13 MB) for the analytics pages; the live map opts into all
   // bands (M2+, ~59 MB) by setting window.EQ_ALL_BANDS before this script
   var BANDS = window.EQ_ALL_BANDS
     ? ["quakes-m5.bin", "quakes-m4.bin", "quakes-m3.bin", "quakes-m2.bin"]
     : ["quakes-m5.bin", "quakes-m4.bin"];
+  // Magnitude floor of the bands we actually downloaded. The live overlay is
+  // held to the same floor: splicing M2 events onto an M4+ history would put a
+  // step change into every count-per-day chart right at the seam.
+  var MIN_MAG = BANDS.length > 2 ? 2.0 : 4.0;
   var RECENT_DAYS = 120;                          // window kept in memory as objects
   var H = 3600e3, D = 86400e3;
 
@@ -115,7 +120,15 @@
     seg.pts.forEach(function (p, vi) { VERTS.push({ lat: p[0], lng: p[1], seg: seg, vi: vi }); });
   });
 
-  function nameFor(lat, lng) {
+  /* Natural Earth country polygons replace the old nearest-plate guess on
+     land. The old names remain useful offshore, where a country polygon is
+     intentionally absent. A small grid keeps repeated table lookups cheap. */
+  var COUNTRY_PATH = DATA_BASE + "countries-110m.geojson";
+  var COUNTRY_GRID_SIZE = 10;
+  var COUNTRY_GRID = null;
+  var countryPromise = null;
+
+  function tectonicNameFor(lat, lng) {
     var best = null, bestD = Infinity;
     var coslat = Math.cos(lat * Math.PI / 180);
     for (var i = 0; i < VERTS.length; i++) {
@@ -137,6 +150,108 @@
     var seg = best.seg;
     var ni = Math.min(seg.names.length - 1, Math.floor(best.vi / seg.pts.length * seg.names.length));
     return { loc: seg.names[ni], group: seg.group, rof: !!seg.rof };
+  }
+
+  function pointInRing(lat, lng, ring) {
+    var inside = false;
+    for (var i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      var xi = ring[i][0], yi = ring[i][1];
+      var xj = ring[j][0], yj = ring[j][1];
+      if ((yi > lat) !== (yj > lat) &&
+          lng < (xj - xi) * (lat - yi) / (yj - yi) + xi) inside = !inside;
+    }
+    return inside;
+  }
+
+  function pointInPolygon(lat, lng, polygon) {
+    if (!polygon.length || !pointInRing(lat, lng, polygon[0])) return false;
+    for (var i = 1; i < polygon.length; i++) {
+      if (pointInRing(lat, lng, polygon[i])) return false;
+    }
+    return true;
+  }
+
+  function countryCell(lng, lat) {
+    var x = Math.max(0, Math.min(35, Math.floor((lng + 180) / COUNTRY_GRID_SIZE)));
+    var y = Math.max(0, Math.min(17, Math.floor((lat + 90) / COUNTRY_GRID_SIZE)));
+    return x + ":" + y;
+  }
+
+  function prepareCountries(geojson) {
+    var grid = Object.create(null);
+    (geojson.features || []).forEach(function (feature) {
+      var geometry = feature.geometry;
+      if (!geometry || (geometry.type !== "Polygon" && geometry.type !== "MultiPolygon")) return;
+      var polygons = geometry.type === "Polygon" ? [geometry.coordinates] : geometry.coordinates;
+      var bounds = [Infinity, Infinity, -Infinity, -Infinity];
+      polygons.forEach(function (polygon) {
+        polygon.forEach(function (ring) {
+          ring.forEach(function (pt) {
+            bounds[0] = Math.min(bounds[0], pt[0]);
+            bounds[1] = Math.min(bounds[1], pt[1]);
+            bounds[2] = Math.max(bounds[2], pt[0]);
+            bounds[3] = Math.max(bounds[3], pt[1]);
+          });
+        });
+      });
+      var props = feature.properties || {};
+      var country = {
+        name: props.NAME_EN || props.ADMIN || props.NAME_LONG || props.NAME,
+        bounds: bounds,
+        polygons: polygons
+      };
+      if (!country.name || !isFinite(bounds[0])) return;
+      var x0 = Math.max(0, Math.floor((bounds[0] + 180) / COUNTRY_GRID_SIZE));
+      var x1 = Math.min(35, Math.floor((bounds[2] + 180) / COUNTRY_GRID_SIZE));
+      var y0 = Math.max(0, Math.floor((bounds[1] + 90) / COUNTRY_GRID_SIZE));
+      var y1 = Math.min(17, Math.floor((bounds[3] + 90) / COUNTRY_GRID_SIZE));
+      for (var x = x0; x <= x1; x++) {
+        for (var y = y0; y <= y1; y++) {
+          var key = x + ":" + y;
+          (grid[key] || (grid[key] = [])).push(country);
+        }
+      }
+    });
+    COUNTRY_GRID = grid;
+  }
+
+  function countryFor(lat, lng) {
+    if (!COUNTRY_GRID) return null;
+    while (lng > 180) lng -= 360;
+    while (lng < -180) lng += 360;
+    var candidates = COUNTRY_GRID[countryCell(lng, lat)] || [];
+    for (var i = 0; i < candidates.length; i++) {
+      var country = candidates[i], b = country.bounds;
+      if (lng < b[0] || lng > b[2] || lat < b[1] || lat > b[3]) continue;
+      for (var p = 0; p < country.polygons.length; p++) {
+        if (pointInPolygon(lat, lng, country.polygons[p])) return country;
+      }
+    }
+    return null;
+  }
+
+  function ensureCountries() {
+    if (COUNTRY_GRID) return Promise.resolve(true);
+    if (countryPromise) return countryPromise;
+    countryPromise = fetchJSON(COUNTRY_PATH).then(function (geojson) {
+      prepareCountries(geojson);
+      return true;
+    }).catch(function (err) {
+      countryPromise = null;
+      console.warn("country boundary load failed; using tectonic region names", err);
+      return false;
+    });
+    return countryPromise;
+  }
+
+  function nameFor(lat, lng) {
+    var tectonic = tectonicNameFor(lat, lng);
+    var country = countryFor(lat, lng);
+    if (country) {
+      tectonic.loc = country.name;
+      tectonic.region = country.name;
+    }
+    return tectonic;
   }
 
   /* ---------- palettes / sizing ---------- */
@@ -278,6 +393,7 @@
     events: [],
     segments: SEGMENTS,
     meta: null,
+    live: null,
     grCurve: { x: [], y: [] },
     NOW: Date.now(),
     H: H, D: D,
@@ -287,7 +403,8 @@
     dailyCounts: dailyCounts, movingAvg: movingAvg, depthBins: depthBins,
     energySeries: energySeries, hotspots: hotspots, onLive: onLive,
     rangeStats: rangeStats, buildWindow: buildWindow, buildRange: buildRange,
-    latestInRange: latestInRange, forEachInRange: forEachInRange, regionFor: nameFor,
+    latestInRange: latestInRange, forEachInRange: forEachInRange, rawRanges: rawRanges,
+    adoptRaw: adoptRaw, regionFor: nameFor, ensureCountries: ensureCountries,
     thinYearLabels: thinYearLabels
   };
   window.EQ = EQ;
@@ -315,7 +432,131 @@
     return { n: n, lon: f(0), lat: f(1), depth: f(2), mag: f(3), t: new Uint32Array(buf, 8 + 4 * n * 4, n) };
   }
 
-  var RAW = null; // parsed band arrays kept for long-range aggregation
+  var RAW = null;  // bands the aggregation helpers walk: archive + live overlay
+  var BASE = null; // the archive bands as downloaded, never mutated
+  var LIVE = null; // last live overlay payload spliced over them
+  var META = null; // 3d/data/global/meta.json for the loaded archive
+
+  /* ---------- live overlay ----------
+     The 1900-present archive is rebuilt offline and is far too large to
+     republish every half hour. A GitHub Action refetches the last 14 days from
+     USGS ComCat into 3d/data/live/global.json instead, and the browser splices
+     that window over the tail of the archive. The seam is the overlay's
+     window_start: everything at or after it comes from the fresh file, so
+     revised magnitudes and withdrawn events are picked up too, not just new
+     ones. The overlay is optional -- if it is missing the archive still
+     renders exactly as it did before. */
+
+  function liveToBand(live, epochMs) {
+    var rows = (live && live.events) || [];
+    if (!rows.length) return null;
+    // The writer emits these time-ascending; sort defensively because every
+    // reader below binary-searches `t`.
+    rows = rows.slice().sort(function (a, b) { return a.time_ms - b.time_ms; });
+
+    var cap = rows.length, n = 0;
+    var lon = new Float32Array(cap), lat = new Float32Array(cap),
+        depth = new Float32Array(cap), mag = new Float32Array(cap),
+        t = new Uint32Array(cap);
+    for (var i = 0; i < cap; i++) {
+      var r = rows[i], m = +r.magnitude, sec = (r.time_ms - epochMs) / 1000;
+      if (!(m >= MIN_MAG) || m > 9.55 || !(sec > 0)) continue;
+      lon[n] = +r.longitude; lat[n] = +r.latitude;
+      depth[n] = Math.max(0, +r.depth_km); mag[n] = m; t[n] = sec;
+      n++;
+    }
+    if (!n) return null;
+    return { n: n, lon: lon.subarray(0, n), lat: lat.subarray(0, n),
+             depth: depth.subarray(0, n), mag: mag.subarray(0, n), t: t.subarray(0, n) };
+  }
+
+  /* Archive bands shortened to the seam, plus the overlay as one more band.
+     subarray() returns a view, so trimming millions of rows copies nothing. */
+  function spliceLive(base, live, epochMs) {
+    var band = live && liveToBand(live, epochMs);
+    var seamMs = live && Date.parse(live.window_start_utc);
+    if (!band || !isFinite(seamMs)) return base;
+    var seamSec = (seamMs - epochMs) / 1000;
+    var out = base.map(function (b) {
+      var k = lowerBound(b.t, seamSec);
+      if (k >= b.n) return b;
+      return { n: k, lon: b.lon.subarray(0, k), lat: b.lat.subarray(0, k),
+               depth: b.depth.subarray(0, k), mag: b.mag.subarray(0, k),
+               t: b.t.subarray(0, k) };
+    });
+    out.push(band);
+    return out;
+  }
+
+  function fetchLive() {
+    return fetchJSON(LIVE_PATH).then(function (live) {
+      return (live && live.events && live.window_start_utc) ? live : null;
+    }).catch(function () { return null; });
+  }
+
+  function notifyLive() {
+    var newest = (EQ.events && EQ.events.length) ? EQ.events[0] : null;
+    liveListeners.forEach(function (cb) {
+      try { cb(newest); } catch (err) { console.error("live listener failed:", err); }
+    });
+  }
+
+  /* Return typed-array slices for a time window. The 2D map uses these to
+     aggregate straight into screen cells without a callback and without
+     allocating one object per earthquake. */
+  function rawRanges(startMs, endMs) {
+    if (!RAW) return [];
+    var startSec = (startMs - RAW.epochMs) / 1000;
+    var endSec = (endMs - RAW.epochMs) / 1000;
+    return RAW.bands.map(function (band) {
+      return {
+        band: band,
+        epochMs: RAW.epochMs,
+        from: lowerBound(band.t, startSec),
+        to: lowerBound(band.t, endSec + 0.001)
+      };
+    });
+  }
+
+  /* The 3D iframe has already downloaded the active regional catalogue. Reuse
+     its typed arrays in-place when 2D is opened: same-origin frames can share
+     these objects without another transfer or copy. */
+  function adoptRaw(events, meta) {
+    if (!events || !events.t || !events.mag || !events.lat || !events.lon || !events.depth) {
+      throw new Error("invalid shared globe catalogue");
+    }
+    var n = events.t.length;
+    if (!n || events.mag.length !== n || events.lat.length !== n ||
+        events.lon.length !== n || events.depth.length !== n) {
+      throw new Error("incomplete shared globe catalogue");
+    }
+    var epoch = meta && (meta.epochMs != null ? meta.epochMs : Date.parse(meta.epoch));
+    if (!isFinite(epoch)) epoch = Date.parse("1900-01-01T00:00:00Z");
+    RAW = {
+      epochMs: epoch,
+      bands: [{
+        n: n,
+        lon: events.lon,
+        lat: events.lat,
+        depth: events.depth,
+        mag: events.mag,
+        t: events.t
+      }]
+    };
+    EQ.events = [];
+    EQ.meta = {
+      generated: meta && (meta.generated_utc || meta.generated) || "",
+      updated: meta && (meta.updated || meta.generated_utc || meta.generated) || "",
+      count: meta && meta.count || n,
+      source: meta && meta.source || "Shared Earthquake 4D catalogue",
+      epoch: meta && meta.epoch || new Date(epoch).toISOString()
+    };
+    EQ.NOW = Date.now();
+    EQ.loaded = true;
+    EQ.catalogRegion = meta && meta.regionKey || "global";
+    EQ.sharedSource = true;
+    return EQ;
+  }
 
   /* keep at most ~12 year labels on a monthly axis (mutates in place) */
   function thinYearLabels(labels) {
@@ -342,6 +583,7 @@
       t: tMs,
       loc: who.loc,
       group: who.group,
+      region: who.region || who.group,
       rof: who.rof,
       status: (Date.now() - tMs) > 5 * D ? "Reviewed" : "Automatic"
     };
@@ -501,7 +743,7 @@
         lng: Math.round(e.lng * 1000) / 1000,
         depth: Math.max(0, Math.round(e.depth)),
         t: RAW.epochMs + e.tSec * 1000,
-        loc: who.loc, group: who.group, rof: who.rof
+        loc: who.loc, group: who.group, region: who.region || who.group, rof: who.rof
       };
     });
 
@@ -513,68 +755,141 @@
     };
   }
 
-  function build(meta, bands) {
-    var epochMs = Date.parse(meta.epoch);
-    RAW = { epochMs: epochMs, bands: bands };
-    var cutoff = (Date.now() - RECENT_DAYS * D - epochMs) / 1000;
-
-    // full-catalog magnitude histogram (Gutenberg–Richter, 0.2 bins)
-    var grStart = BANDS.length > 2 ? 2.0 : 4.0;
-    var gx = [], gy = [];
-    for (var m0 = grStart; m0 < 9.4; m0 += 0.2) { gx.push(Math.round(m0 * 10) / 10); gy.push(0); }
-
-    var events = [];
-    var idc = 1;
-
-    bands.forEach(function (b) {
-      for (var i = 0; i < b.n; i++) {
-        var mag = b.mag[i];
-        if (mag > 9.55) continue; // bogus catalog rows (largest ever recorded: M 9.5)
-        var gi = Math.floor((mag - grStart) / 0.2);
-        if (gi >= 0 && gi < gy.length) gy[gi]++;
-
-        if (b.t[i] < cutoff) continue; // bands are time-sorted, but cheap to test all
-        events.push(makeEvent(b, i, epochMs, "g" + idc++));
-      }
-    });
-
-    events.sort(function (a, b2) { return b2.t - a.t; });
-
-    EQ.events = events;
-    EQ.grCurve = { x: gx, y: gy.map(function (v) { return Math.max(1, v); }) };
+  function build(meta, bands, live) {
+    META = meta;
+    BASE = bands;
     EQ.meta = {
-      generated: meta.generated_utc,
+      generated: meta.generated_utc,   // when the archive itself was rebuilt
+      updated: meta.generated_utc,     // …and when its newest rows arrived
       count: meta.count,
       source: meta.source,
       epoch: meta.epoch
     };
+    EQ.catalogRegion = "global";
+    EQ.sharedSource = false;
+    applyLive(live);
+  }
+
+  /* (Re)splice the overlay and recompute everything derived from the bands.
+     Re-running this when the overlay changes costs one pass over the loaded
+     catalogue: nothing is re-downloaded and the archive arrays are reused. */
+  function applyLive(live) {
+    var epochMs = Date.parse(META.epoch);
+    LIVE = (live && live.events && live.window_start_utc) ? live : null;
+    RAW = { epochMs: epochMs, bands: spliceLive(BASE, LIVE, epochMs) };
+    EQ.live = LIVE ? {
+      generated: LIVE.generated_utc,
+      windowStart: LIVE.window_start_utc,
+      windowDays: LIVE.window_days,
+      count: LIVE.count != null ? LIVE.count : LIVE.events.length,
+      source: LIVE.source
+    } : null;
+    EQ.meta.updated = LIVE ? LIVE.generated_utc : EQ.meta.generated;
+
+    var bands = RAW.bands;
+    var cutoff = (Date.now() - RECENT_DAYS * D - epochMs) / 1000;
+
+    // full-catalog magnitude histogram (Gutenberg–Richter, 0.2 bins)
+    var grStart = MIN_MAG;
+    var gx = [], gy = [];
+    if (!window.EQ_LIGHTWEIGHT) {
+      for (var m0 = grStart; m0 < 9.4; m0 += 0.2) { gx.push(Math.round(m0 * 10) / 10); gy.push(0); }
+    }
+
+    var events = [];
+    var idc = 1;
+
+    if (!window.EQ_LIGHTWEIGHT) {
+      bands.forEach(function (b) {
+        for (var i = 0; i < b.n; i++) {
+          var mag = b.mag[i];
+          if (mag > 9.55) continue; // bogus catalog rows (largest ever recorded: M 9.5)
+          var gi = Math.floor((mag - grStart) / 0.2);
+          if (gi >= 0 && gi < gy.length) gy[gi]++;
+
+          if (b.t[i] < cutoff) continue; // bands are time-sorted, but cheap to test all
+          events.push(makeEvent(b, i, epochMs, "g" + idc++));
+        }
+      });
+
+      events.sort(function (a, b2) { return b2.t - a.t; });
+    }
+
+    EQ.events = events;
+    EQ.grCurve = { x: gx, y: gy.map(function (v) { return Math.max(1, v); }) };
     EQ.NOW = Date.now();
+    EQ.loaded = true;
   }
 
   function loadAll() {
     return fetchJSON(DATA_BASE + "meta.json").then(function (meta) {
-      return Promise.all(BANDS.map(function (p) { return fetchBuf(DATA_BASE + p); }))
-        .then(function (bufs) {
-          build(meta, bufs.map(parseBand));
+      return Promise.all([
+        Promise.all(BANDS.map(function (p) { return fetchBuf(DATA_BASE + p); })),
+        ensureCountries(),
+        fetchLive()
+      ]).then(function (loaded) {
+          build(meta, loaded[0].map(parseBand), loaded[2]);
           return EQ;
         });
     });
   }
 
-  EQ.ready = loadAll().catch(function (err) {
-    console.error("catalog load failed:", err);
-    EQ.loadError = String(err && err.message || err);
-    return EQ; // pages still boot; charts show empty states
-  });
+  var loadPromise = null;
 
-  /* refresh in place when the update pipeline publishes a new build */
+  function ensureLoaded() {
+    if (EQ.loaded && EQ.catalogRegion === "global") return Promise.resolve(EQ);
+    if (loadPromise) return loadPromise;
+    loadPromise = loadAll().then(function (eq) {
+      loadPromise = null;
+      return eq;
+    }).catch(function (err) {
+        loadPromise = null; // allow a user-triggered retry
+        EQ.loadError = String(err && err.message || err);
+        throw err;
+      });
+    return loadPromise;
+  }
+
+  EQ.loaded = false;
+  EQ.catalogRegion = null;
+  EQ.ensureLoaded = ensureLoaded;
+
+  // The Live Map opens in 3D and does not need a second copy of the global
+  // catalogue. Its 2D view opts into this deferred path and loads on demand.
+  EQ.ready = window.EQ_DEFER_LOAD
+    ? Promise.resolve(EQ)
+    : ensureLoaded().catch(function (err) {
+        console.error("catalog load failed:", err);
+        return EQ; // pages still boot; charts show empty states
+      });
+
+  /* Refresh in place. Two cadences, because two things can change: the
+     overlay is republished every 30 minutes by the "Update earthquake data"
+     action, the archive only when it is rebuilt offline. */
+  var POLL_MS = 5 * 60e3;
+  var polling = false;
+  var ticks = 0;
+
   setInterval(function () {
-    fetchJSON(DATA_BASE + "meta.json").then(function (m2) {
-      if (EQ.meta && m2.generated_utc !== EQ.meta.generated) {
-        loadAll().then(function () {
-          liveListeners.forEach(function (cb) { cb(null); });
-        });
-      }
-    }).catch(function () { /* offline — try again next tick */ });
-  }, 10 * 60e3);
+    // A 2D map running off the 3D globe's shared arrays is not ours to reload.
+    if (!EQ.loaded || EQ.sharedSource || polling) return;
+    if (EQ.catalogRegion && EQ.catalogRegion !== "global") return;
+    ticks++;
+
+    if (ticks % 2 === 0) {
+      polling = true;
+      fetchJSON(DATA_BASE + "meta.json").then(function (m2) {
+        if (m2.generated_utc === EQ.meta.generated) return null;
+        return loadAll().then(notifyLive);
+      }).catch(function () { /* offline — try again next tick */ })
+        .then(function () { polling = false; });
+      return;
+    }
+
+    fetchLive().then(function (live) {
+      if (!live || (EQ.live && live.generated_utc === EQ.live.generated)) return;
+      applyLive(live);
+      notifyLive();
+    });
+  }, POLL_MS);
 })();

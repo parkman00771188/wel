@@ -1,0 +1,65 @@
+name: Update earthquake data
+
+on:
+  schedule:
+    # Twice per hour, offset from the busiest top-of-hour Actions window.
+    # GitHub's scheduler is best effort: a tick can slip by several minutes or
+    # be dropped entirely under load, and schedules stop firing after 60 days
+    # with no repository activity (re-enable them from the Actions tab).
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: earthquake-data-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out wel
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Refresh recent USGS catalog
+        run: python scripts/update_live_data.py
+
+      - name: Commit and push changed data
+        shell: bash
+        run: |
+          set -euo pipefail
+          # --porcelain, not `git diff`: on the first run the snapshots are
+          # untracked, and `git diff` reports nothing for files git has never
+          # seen -- which would silently skip the initial commit forever.
+          if [ -z "$(git status --porcelain -- 3d/data/live)" ]; then
+            echo "No earthquake changes; nothing to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- 3d/data/live
+          git commit -m "[auto] update earthquake data ($(date -u '+%Y-%m-%d %H:%MZ'))"
+
+          # Another push can land between our checkout and our push. Rebase the
+          # single data commit on top and retry rather than failing the run.
+          for attempt in 1 2 3; do
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              echo "Pushed on attempt ${attempt}."
+              exit 0
+            fi
+            echo "Push rejected; rebasing onto origin/${GITHUB_REF_NAME} (attempt ${attempt})."
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          done
+          echo "Could not push the data update after 3 attempts." >&2
+          exit 1

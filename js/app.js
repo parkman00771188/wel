@@ -16,6 +16,15 @@
     news: { title: "News & Updates", src: "news.html?embed=1" }
   };
 
+  var SUBVIEWS = {
+    map: ["3d", "2d"],
+    learn: ["overview", "basics", "plates", "magnitude", "terms", "faq", "safety"],
+    insights: ["overview", "statistics", "magnitude", "depth", "regional", "energy", "forecast", "custom"],
+    research: ["overview", "publications", "data-library", "datasets", "tools", "projects", "partners"],
+    news: ["all", "event", "network", "data", "research"]
+  };
+  var DEFAULT_SUBVIEW = { map: "3d", learn: "overview", insights: "overview", research: "overview", news: "all" };
+
   /* language switcher — pages inside the console load with the same language */
   var langSel = document.getElementById("langSelect");
   langSel.value = LANG;
@@ -26,15 +35,43 @@
   });
 
   var current = null;
+  var currentSub = {};
 
-  function activate(view, pushHash) {
+  function validSubview(view, sub) {
+    return !!(sub && SUBVIEWS[view] && SUBVIEWS[view].indexOf(sub) !== -1);
+  }
+
+  function parseRoute() {
+    var route = (location.hash || "#overview").slice(1).split("/");
+    return { view: route[0] || "overview", sub: route[1] || null };
+  }
+
+  function routeHash(view, sub) {
+    return "#" + view + (validSubview(view, sub) ? "/" + sub : "");
+  }
+
+  function paintNav(view, sub) {
+    document.querySelectorAll("#appNav .app-nav-group").forEach(function (group) {
+      var on = group.dataset.navGroup === view;
+      group.classList.toggle("open", on && group.classList.contains("has-subnav"));
+      var main = group.querySelector("a[data-view]");
+      if (main) {
+        main.classList.toggle("active", on);
+        if (main.hasAttribute("aria-expanded")) main.setAttribute("aria-expanded", on ? "true" : "false");
+      }
+    });
+    document.querySelectorAll("#appNav a[data-subview]").forEach(function (a) {
+      a.classList.toggle("active", a.dataset.parentView === view && a.dataset.subview === sub);
+    });
+  }
+
+  function activate(view, pushHash, sub) {
     if (!VIEWS[view]) view = "overview";
-    if (view === current) return;
+    if (!validSubview(view, sub)) sub = currentSub[view] || DEFAULT_SUBVIEW[view] || null;
+    if (validSubview(view, sub)) currentSub[view] = sub;
     current = view;
 
-    document.querySelectorAll("#appNav a").forEach(function (a) {
-      a.classList.toggle("active", a.dataset.view === view);
-    });
+    paintNav(view, sub);
     document.getElementById("appTitle").textContent = VIEWS[view].title;
 
     Object.keys(VIEWS).forEach(function (v) {
@@ -42,29 +79,53 @@
       var on = v === view;
       frame.classList.toggle("active", on);
       if (on && !frame.getAttribute("src")) {
-        frame.src = VIEWS[v].src + (LANG !== "en" ? "&lang=" + LANG : ""); // lazy-load
+        frame.src = VIEWS[v].src + (LANG !== "en" ? "&lang=" + LANG : "") +
+          (validSubview(v, sub) ? "#" + sub : ""); // lazy-load at the requested child view
+      } else if (on && validSubview(v, sub)) {
+        try {
+          if (frame.contentWindow.location.hash !== "#" + sub) frame.contentWindow.location.hash = sub;
+        } catch (e) { /* same-origin iframe is expected */ }
       }
     });
 
-    if (pushHash !== false && location.hash !== "#" + view) {
-      try { history.replaceState(null, "", "#" + view); } catch (e) { location.hash = view; }
+    var nextHash = routeHash(view, sub);
+    if (pushHash !== false && location.hash !== nextHash) {
+      try { history.replaceState(null, "", nextHash); } catch (e) { location.hash = nextHash.slice(1); }
     }
   }
 
   document.getElementById("appNav").addEventListener("click", function (ev) {
+    var child = ev.target.closest("a[data-subview]");
+    if (child) {
+      ev.preventDefault();
+      activate(child.dataset.parentView, true, child.dataset.subview);
+      return;
+    }
     var a = ev.target.closest("a[data-view]");
     if (!a) return;
     ev.preventDefault();
-    activate(a.dataset.view);
+    var group = a.closest(".app-nav-group");
+    if (a.dataset.view === current && group && group.classList.contains("has-subnav")) {
+      var open = !group.classList.contains("open");
+      group.classList.toggle("open", open);
+      a.setAttribute("aria-expanded", open ? "true" : "false");
+      return;
+    }
+    activate(a.dataset.view, true, currentSub[a.dataset.view] || DEFAULT_SUBVIEW[a.dataset.view]);
   });
 
   window.addEventListener("hashchange", function () {
-    activate((location.hash || "#overview").slice(1), false);
+    var route = parseRoute();
+    activate(route.view, false, route.sub);
   });
 
   // pages inside iframes ask the console to switch tabs
   window.addEventListener("message", function (ev) {
     if (ev.data && ev.data.wel === "nav" && VIEWS[ev.data.view]) activate(ev.data.view);
+    if (ev.data && ev.data.wel === "subnav-active" && VIEWS[ev.data.view] &&
+        validSubview(ev.data.view, ev.data.sub)) {
+      activate(ev.data.view, true, ev.data.sub);
+    }
   });
 
   /* ---------- catalog freshness chip (next to LIVE) ---------- */
@@ -85,14 +146,26 @@
     el.textContent = agoText(updatedAt);
   }
 
+  function fetchStamp(url) {
+    return fetch(url, { cache: "no-cache" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (m) { return (m && Date.parse(m.generated_utc)) || 0; })
+      .catch(function () { return 0; }); // offline — keep the last value
+  }
+
+  /* The live overlay is republished every half hour, the archive only on a
+     full rebuild, so the newer of the two is what "updated" actually means. */
   function fetchMeta() {
-    fetch("3d/data/global/meta.json", { cache: "no-cache" })
-      .then(function (r) { return r.json(); })
-      .then(function (m) { updatedAt = Date.parse(m.generated_utc); renderUpdated(); })
-      .catch(function () { /* offline — keep last value */ });
+    Promise.all([
+      fetchStamp("3d/data/live/global.json"),
+      fetchStamp("3d/data/global/meta.json")
+    ]).then(function (stamps) {
+      var newest = Math.max(stamps[0], stamps[1]);
+      if (newest) { updatedAt = newest; renderUpdated(); }
+    });
   }
   fetchMeta();
-  setInterval(fetchMeta, 10 * 60e3);
+  setInterval(fetchMeta, 5 * 60e3);
   setInterval(renderUpdated, 60e3);
 
   /* ---------- UTC clock ---------- */
@@ -114,5 +187,6 @@
   setInterval(tick, 1000);
   tick();
 
-  activate((location.hash || "#overview").slice(1), false);
+  var initialRoute = parseRoute();
+  activate(initialRoute.view, false, initialRoute.sub);
 })();

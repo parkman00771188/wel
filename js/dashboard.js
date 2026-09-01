@@ -10,6 +10,7 @@
 
   var PERIOD_LBL = { 1: "24h", 7: "7d", 30: "30d", 90: "90d", 365: "1y", 1095: "3y", 1826: "5y", 3652: "10y" };
   var ALL_DAYS = Math.ceil((Date.now() - Date.parse("1900-01-01T00:00:00Z")) / 86400e3);
+  var SIGNIFICANT_MIN_MAG = 4;
   function periodLbl() { return PERIOD_LBL[state.days] || "All"; }
 
   var state = { region: "All Regions", tz: "utc", days: 7 };
@@ -35,14 +36,19 @@
       cur.forEach(function (e) { sum += e.m; });
       prev.forEach(function (e) { prevSum += e.m; });
       var top5 = cur.slice().sort(function (a, b) { return b.m - a.m; }).slice(0, 5);
+      var recent5 = cur.filter(function (e) { return e.m >= SIGNIFICANT_MIN_MAG; })
+        .sort(function (a, b) { return b.t - a.t; }).slice(0, 5);
       return {
         count: cur.length, prevCount: prev.length,
         sumMag: sum, prevSum: prevSum,
         buckets: EQ.magBuckets(cur), top5: top5,
-        events: cur, long: false
+        recent5: recent5, events: cur, long: false
       };
     }
     var rs = EQ.rangeStats(state.days); // full catalog scan (region not applied)
+    rs.recent5 = EQ.events.filter(function (e) {
+      return e.t >= now - state.days * EQ.D && e.m >= SIGNIFICANT_MIN_MAG;
+    }).sort(function (a, b) { return b.t - a.t; }).slice(0, 5);
     rs.long = true;
     return rs;
   }
@@ -210,7 +216,7 @@
   /* ---------------- significant list ---------------- */
 
   function renderSig(s) {
-    document.getElementById("sigList").innerHTML = s.top5.map(function (e) {
+    document.getElementById("sigList").innerHTML = s.recent5.map(function (e) {
       return '<div class="sig-row">' +
         '<div class="sig-mag' + (e.m >= 6 ? " big" : "") + '">M&nbsp;&nbsp;' + e.m.toFixed(1) + "</div>" +
         '<div class="sig-loc"><div class="l1">' + e.loc + '</div><div class="l2">' +
@@ -219,7 +225,7 @@
     }).join("") || '<p style="color:var(--faint);font-size:13.5px">No events in this window.</p>';
   }
 
-  /* ---------------- mini map (always: live last 24h) ---------------- */
+  /* ---------------- mini map (follows the selected dashboard period) ---------------- */
 
   var mini = L.map("miniMap", {
     zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false,
@@ -233,19 +239,57 @@
 
   var miniLayer = L.layerGroup().addTo(mini);
 
+  function miniCellSize() {
+    if (state.days <= 1) return 1.25;
+    if (state.days <= 7) return 2;
+    if (state.days <= 30) return 3;
+    if (state.days <= 90) return 4;
+    if (state.days <= 365) return 5;
+    if (state.days <= 1095) return 6;
+    if (state.days <= 3652) return 8;
+    return 10;
+  }
+
   function renderMini() {
     miniLayer.clearLayers();
-    var evs = regionEvents().filter(function (e) { return e.t >= Date.now() - 24 * EQ.H && e.m >= 2.5; });
+    document.getElementById("mapRangeLbl").textContent = "(" + periodLbl() + ")";
+
+    var now = Date.now();
+    var from = now - state.days * EQ.D;
+    var cellSize = miniCellSize();
+    var cells = Object.create(null);
+
+    // Keep one representative (the strongest, then newest) per geographic
+    // cell so long periods remain responsive while still covering the full window.
+    function addPoint(mag, lat, lng, depth, t) {
+      if (mag < 2.5) return;
+      var key = Math.floor((lat + 90) / cellSize) + ":" + Math.floor((lng + 180) / cellSize);
+      var cur = cells[key];
+      if (!cur || mag > cur.m || (mag === cur.m && t > cur.t)) {
+        cells[key] = { m: mag, lat: lat, lng: lng, depth: depth, t: t };
+      }
+    }
+
+    if (state.days <= 120) {
+      regionEvents().forEach(function (e) {
+        if (e.t >= from && e.t <= now) addPoint(e.m, e.lat, e.lng, e.depth, e.t);
+      });
+    } else {
+      EQ.forEachInRange(from, now, addPoint);
+    }
+
+    var evs = Object.keys(cells).map(function (key) { return cells[key]; });
     evs.sort(function (a, b) { return a.m - b.m; });
     evs.forEach(function (e) {
+      var markerRadius = Math.max(1.5, EQ.magRadius(e.m) * 0.55);
       if (e.m >= 5.5) {
         miniLayer.addLayer(L.circleMarker([e.lat, e.lng], {
-          radius: EQ.magRadius(e.m) + 6, stroke: false, fillColor: EQ.miniColor(e.m), fillOpacity: 0.22, interactive: false
+          radius: markerRadius + 3, stroke: false, fillColor: EQ.miniColor(e.m), fillOpacity: 0.16, interactive: false
         }));
       }
       miniLayer.addLayer(L.circleMarker([e.lat, e.lng], {
-        radius: Math.max(2.5, EQ.magRadius(e.m) * 0.9),
-        color: "#ffffff", weight: 0.8,
+        radius: markerRadius,
+        color: "#ffffff", weight: 0.6,
         fillColor: EQ.miniColor(e.m), fillOpacity: 0.92, interactive: false
       }));
     });
@@ -277,6 +321,17 @@
     renderAll();
   });
 
+  /* "updated" is the live overlay's timestamp when one is spliced in — the
+     archive's own build date can be weeks old while the last 14 days are half
+     an hour fresh. */
+  function renderMeta() {
+    if (!EQ.meta) return;
+    var stamp = Date.parse(EQ.meta.updated || EQ.meta.generated);
+    document.getElementById("dataMeta").textContent =
+      "Catalog: USGS ANSS ComCat + ISC Bulletin · " + EQ.meta.count.toLocaleString() +
+      " events since 1900 · updated " + (isFinite(stamp) ? EQ.fmtUTC(stamp) : "—");
+  }
+
   function renderAll() {
     var s = winStats();
     renderStats(s);
@@ -284,14 +339,11 @@
     renderDonut(s);
     renderSig(s);
     renderMini();
+    renderMeta();
   }
 
-  if (EQ.meta) {
-    var g = new Date(EQ.meta.generated);
-    document.getElementById("dataMeta").textContent =
-      "Catalog: USGS ANSS ComCat + ISC Bulletin · " + EQ.meta.count.toLocaleString() +
-      " events since 1900 · updated " + EQ.fmtUTC(g.getTime());
-  }
+  // The overlay is refreshed every half hour; redraw when it lands.
+  EQ.onLive(function () { renderAll(); });
 
   renderAll();
   setTimeout(function () { mini.invalidateSize(); }, 250);

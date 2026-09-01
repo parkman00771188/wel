@@ -20,6 +20,7 @@ import {
 } from './palette.js';
 import { FILTER_EPS } from './quakeLayer.js';
 import { count, t } from './i18n.js';
+import { liveRows, loadLive, lowerBound } from './live.js';
 import { LineMaterial } from '../vendor/lines/LineMaterial.js';
 import { LineSegments2 } from '../vendor/lines/LineSegments2.js';
 import { LineSegmentsGeometry } from '../vendor/lines/LineSegmentsGeometry.js';
@@ -436,8 +437,41 @@ async function getBuffer(url, onBytes) {
   return out.buffer;
 }
 
-/** k-way merge of the per-band files into one time-sorted cloud. */
-function mergeBands(buffers) {
+/** The live overlay dressed as one more band, so the merge below can eat it. */
+function overlayBand(rows, epochMs) {
+  const n = rows.length;
+  const band = {
+    n, i: 0,
+    lon: new Float32Array(n), lat: new Float32Array(n),
+    depth: new Float32Array(n), mag: new Float32Array(n),
+    t: new Uint32Array(n),
+  };
+  for (let k = 0; k < n; k++) {
+    const r = rows[k];
+    band.lon[k] = r.longitude;
+    band.lat[k] = r.latitude;
+    band.depth[k] = Math.max(0, r.depth_km);
+    band.mag[k] = r.magnitude;
+    band.t[k] = (r.time_ms - epochMs) / 1000;
+  }
+  return band;
+}
+
+/**
+ * k-way merge of the per-band files into one time-sorted cloud, with the live
+ * overlay spliced over the tail.
+ *
+ * The seam is the overlay's window_start: the archive bands are cut there and
+ * the overlay joins the merge as one more band, so revised magnitudes and
+ * withdrawn events land as well -- not only newly appended ones. Folding the
+ * splice into the merge rather than doing it afterwards matters: the output is
+ * allocated exactly once, and at 3M events that is 60 MB not to allocate twice.
+ *
+ * Cutting the archive here is safe because ISC lags the present by about two
+ * years, so the last fortnight of the global archive is USGS-derived anyway --
+ * the overlay is the same catalogue, only fresher.
+ */
+function mergeBands(buffers, live, epochMs) {
   const bands = buffers.map((buf) => {
     const [magic, n] = new Uint32Array(buf, 0, 2);
     if (magic !== 0x00315147) throw new Error('bad global band file');
@@ -445,6 +479,15 @@ function mergeBands(buffers) {
     return { n, lon: f(0), lat: f(1), depth: f(2), mag: f(3),
              t: new Uint32Array(buf, 8 + 4 * n * 4, n), i: 0 };
   });
+
+  const rows = liveRows(live, epochMs);
+  const seamMs = Date.parse(live?.window_start_utc ?? '');
+  if (rows.length && Number.isFinite(seamMs)) {
+    const seamSec = (seamMs - epochMs) / 1000;
+    for (const b of bands) b.n = lowerBound(b.t, seamSec);
+    bands.push(overlayBand(rows, epochMs));
+  }
+
   const total = bands.reduce((s, b) => s + b.n, 0);
   const out = {
     lon: new Float32Array(total), lat: new Float32Array(total),
@@ -561,6 +604,9 @@ export class GlobeView {
         }
 
         fetch('data/global/basemap.json', { cache: 'no-cache' }).then((r) => r.json()).then((bm) => {
+          // Same-origin host pages can reuse this payload for their 2D layers
+          // instead of downloading and parsing the 2.8 MB reference data twice.
+          this.basemapData = bm;
           const mat = (color, opacity) => new THREE.LineBasicMaterial({
             color, transparent: true, opacity, depthWrite: false,
           });
@@ -585,6 +631,10 @@ export class GlobeView {
           this.scene.add(this.coast, this.plates, this.faults);
         });
 
+        // Kicked off before the 60 MB of bands so the overlay is already in
+        // hand by the time the merge needs it.
+        const livePromise = loadLive('global');
+
         const total = this.meta.bands.reduce((s, b) => s + (b.bytes ?? 0), 0);
         let read = 0;
         cardProgress(0, total);
@@ -600,7 +650,9 @@ export class GlobeView {
         if (cardDetail) cardDetail.textContent = t('전세계 지진 병합 중…');
         // Yield a frame so the merge message paints before the busy loop.
         await new Promise((r) => requestAnimationFrame(r));
-        this.layer = new GlobeLayer(mergeBands(buffers), shared, timeSpanDays);
+        const epochMs = Date.parse(this.meta.epoch ?? '1900-01-01T00:00:00Z');
+        this.layer = new GlobeLayer(
+          mergeBands(buffers, await livePromise, epochMs), shared, timeSpanDays);
         if (this.hh) this.layer.uniforms.uHalfHeight.value = this.hh;
         this.scene.add(this.layer.points);
         say('');
