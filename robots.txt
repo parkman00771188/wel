@@ -1,0 +1,3 @@
+# Forwarding shell only. The site itself is at https://worldearthquakelabs.com
+User-agent: *
+Disallow: /
