@@ -27,14 +27,21 @@
     news: { title: "News & Updates", src: "news.html?embed=1" }
   };
 
-  var SUBVIEWS = {
-    map: ["3d", "2d"],
-    learn: ["overview", "basics", "plates", "magnitude", "terms", "faq", "safety"],
-    insights: ["overview", "statistics", "magnitude", "depth", "regional", "energy", "forecast", "custom"],
-    research: ["overview", "publications", "sources"],
-    news: ["all", "event", "research", "network"]
-  };
-  var DEFAULT_SUBVIEW = { map: "3d", learn: "overview", insights: "overview", research: "overview", news: "all" };
+  /* Read off the sidebar rather than repeated here. The two had to agree, and
+     when they stopped agreeing -- three sections added to the Earthquake Guide
+     and to the sidebar, but not to this list -- validSubview rejected them, so
+     the sidebar quietly refused to follow the page and the route dropped them
+     from the URL. Deriving it means adding a link is the only step. This script
+     is the last thing in the body, so the markup is there to read. */
+  var SUBVIEWS = {};
+  var DEFAULT_SUBVIEW = {};
+  Array.prototype.forEach.call(
+    document.querySelectorAll("a[data-parent-view][data-subview]"),
+    function (a) {
+      var parent = a.dataset.parentView;
+      if (!SUBVIEWS[parent]) { SUBVIEWS[parent] = []; DEFAULT_SUBVIEW[parent] = a.dataset.subview; }
+      if (SUBVIEWS[parent].indexOf(a.dataset.subview) === -1) SUBVIEWS[parent].push(a.dataset.subview);
+    });
 
   /* language switcher — pages inside the console load with the same language */
   var langSel = document.getElementById("langSelect");
