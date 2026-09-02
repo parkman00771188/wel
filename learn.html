@@ -12,19 +12,19 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&display=swap" rel="stylesheet">
 <!-- SEO -->
-<meta name="description" content="How earthquakes work, explained simply: magnitude and intensity, plate tectonics, key terms, frequently asked questions, and a practical earthquake safety guide.">
+<meta name="description" content="A complete earthquake guide: faults and seismic waves, plate tectonics, how quakes are measured and located, magnitude and intensity scales, tsunamis and other hazards, the largest and deadliest events on record, and a practical safety checklist.">
 <link rel="canonical" href="https://worldearthquakelabs.com/learn.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="World Earthquake Labs">
 <meta property="og:title" content="Earthquake Guide — World Earthquake Labs">
-<meta property="og:description" content="How earthquakes work, explained simply: magnitude and intensity, plate tectonics, key terms, frequently asked questions, and a practical earthquake safety guide.">
+<meta property="og:description" content="A complete earthquake guide: faults and seismic waves, plate tectonics, how quakes are measured and located, magnitude and intensity scales, tsunamis and other hazards, the largest and deadliest events on record, and a practical safety checklist.">
 <meta property="og:url" content="https://worldearthquakelabs.com/learn.html">
 <meta property="og:image" content="https://worldearthquakelabs.com/resource/img/og-cover.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Earthquake Guide — World Earthquake Labs">
-<meta name="twitter:description" content="How earthquakes work, explained simply: magnitude and intensity, plate tectonics, key terms, frequently asked questions, and a practical earthquake safety guide.">
+<meta name="twitter:description" content="A complete earthquake guide: faults and seismic waves, plate tectonics, how quakes are measured and located, magnitude and intensity scales, tsunamis and other hazards, the largest and deadliest events on record, and a practical safety checklist.">
 <meta name="twitter:image" content="https://worldearthquakelabs.com/resource/img/og-cover.jpg">
 <link rel="stylesheet" href="css/style.css">
 <!-- Inside the console every child page runs in an iframe, and the shell has
@@ -51,7 +51,10 @@
     <a href="#overview" data-gd="overview" class="active"><i data-icon="grid" data-size="18"></i> Overview</a>
     <a href="#basics" data-gd="basics"><i data-icon="book" data-size="18"></i> Basics</a>
     <a href="#plates" data-gd="plates"><i data-icon="globe" data-size="18"></i> Plate Tectonics</a>
+    <a href="#measuring" data-gd="measuring"><i data-icon="antenna" data-size="18"></i> Measuring Quakes</a>
     <a href="#magnitude" data-gd="magnitude"><i data-icon="activity" data-size="18"></i> Magnitude &amp; Intensity</a>
+    <a href="#hazards" data-gd="hazards"><i data-icon="bell" data-size="18"></i> Hazards &amp; Effects</a>
+    <a href="#history" data-gd="history"><i data-icon="bookmark" data-size="18"></i> Notable Earthquakes</a>
     <a href="#terms" data-gd="terms"><i data-icon="doc" data-size="18"></i> Key Terms</a>
     <a href="#faq" data-gd="faq"><i data-icon="help" data-size="18"></i> FAQ</a>
     <a href="#safety" data-gd="safety"><i data-icon="shield" data-size="18"></i> Safety Guide</a>
@@ -65,7 +68,8 @@
     <div class="page-head" style="padding-top:28px">
       <div>
         <h1>Earthquake Guide</h1>
-        <p class="sub">Earthquakes strike without warning — pick a topic above, or start with the safety guide.</p>
+        <p class="sub">From the physics of a fault to what to keep in a kit — nine topics, in the order
+          they build on each other.</p>
       </div>
       <div class="page-actions">
         <a class="btn btn-primary" href="#safety">See the Safety Guide</a>
@@ -77,41 +81,61 @@
       <a class="resource-tile" href="#basics">
         <div class="ic"><i data-icon="book" data-size="20"></i></div>
         <div class="t">Basics</div>
-        <div class="d">What an earthquake is, and how P and S waves travel.</div>
+        <div class="d">Faults, the four kinds of seismic wave, depth, and how to read a seismogram.</div>
       </a>
       <a class="resource-tile" href="#plates">
         <div class="ic"><i data-icon="globe" data-size="20"></i></div>
         <div class="t">Plate Tectonics</div>
-        <div class="d">Why earthquakes happen where they do — the three boundary types.</div>
+        <div class="d">Why quakes cluster in lines — boundary types, the major plates, subduction.</div>
+      </a>
+      <a class="resource-tile" href="#measuring">
+        <div class="ic"><i data-icon="antenna" data-size="20"></i></div>
+        <div class="t">Measuring Quakes</div>
+        <div class="d">Seismometers, locating an epicenter, and which magnitude scale is which.</div>
       </a>
       <a class="resource-tile" href="#magnitude">
         <div class="ic"><i data-icon="activity" data-size="20"></i></div>
         <div class="t">Magnitude &amp; Intensity</div>
-        <div class="d">An earthquake's "size" vs its "impact" — and the M 2–8 scale.</div>
+        <div class="d">Size versus impact, the energy behind each step, and the MMI I–XII scale.</div>
+      </a>
+      <a class="resource-tile" href="#hazards">
+        <div class="ic"><i data-icon="bell" data-size="20"></i></div>
+        <div class="t">Hazards &amp; Effects</div>
+        <div class="d">Shaking, liquefaction, landslides, tsunami, fire — what actually does the damage.</div>
+      </a>
+      <a class="resource-tile" href="#history">
+        <div class="ic"><i data-icon="bookmark" data-size="20"></i></div>
+        <div class="t">Notable Earthquakes</div>
+        <div class="d">The largest and the deadliest on record — and what each one changed.</div>
       </a>
       <a class="resource-tile" href="#terms">
         <div class="ic"><i data-icon="doc" data-size="20"></i></div>
         <div class="t">Key Terms</div>
-        <div class="d">Epicenter, aftershock, liquefaction — the vocabulary, briefly.</div>
+        <div class="d">Thirty terms you will meet on this platform and in the news, grouped.</div>
       </a>
       <a class="resource-tile" href="#faq">
         <div class="ic"><i data-icon="help" data-size="20"></i></div>
         <div class="t">FAQ</div>
-        <div class="d">Can quakes be predicted? How do alerts work? Quick answers.</div>
+        <div class="d">Can quakes be predicted? Do small ones help? Twelve straight answers.</div>
       </a>
       <a class="resource-tile" href="#safety">
         <div class="ic"><i data-icon="shield" data-size="20"></i></div>
         <div class="t">Safety Guide</div>
-        <div class="d">What to do before, during, and after — plus your emergency kit.</div>
+        <div class="d">Before, during, and after — plus a kit checklist that remembers what you ticked.</div>
       </a>
     </div>
 
     <div class="stat-strip" style="margin-top:34px">
-      <div><div class="v">~500,000</div><div class="k">earthquakes detected worldwide every year</div></div>
-      <div><div class="v">90%</div><div class="k">of them occur along the Pacific Ring of Fire</div></div>
+      <div><div class="v">~500,000</div><div class="k">earthquakes detected worldwide every year; about 100,000 are felt</div></div>
+      <div><div class="v">90%</div><div class="k">of them occur around the Pacific Ring of Fire</div></div>
       <div><div class="v">×32</div><div class="k">more energy released per +1 magnitude step</div></div>
-      <div><div class="v">&lt; 90 s</div><div class="k">from origin to a published epicenter here</div></div>
+      <div><div class="v">2.97M</div><div class="k">events since 1900 in the catalogue behind this site</div></div>
     </div>
+
+    <div class="gd-note" style="margin-top:26px">Everything in this guide is written against the catalogues
+      the rest of the site reads — USGS ANSS ComCat, the ISC Bulletin and JMA. Where a number is disputed,
+      such as a historical death toll, the range is given rather than a single figure. See the
+      <a class="link" href="research.html#sources">data sources</a>.</div>
   </section>
 
   <!-- ================= BASICS ================= -->
@@ -121,61 +145,259 @@
         <h2 class="gd-title">What is an earthquake?</h2>
         <div class="rich-text">
           <p>An earthquake is the sudden slip of rock along a <b>fault</b> — a fracture in the Earth's
-            crust where stress has been building for years to centuries. When the stress exceeds the
-            strength of the rock, it releases in seconds as <b>seismic waves</b> that radiate outward
-            and shake the ground.</p>
-          <p>The rupture starts at the <b>hypocenter</b> (focus) at depth; the point on the surface
-            directly above it is the <b>epicenter</b> — the location shown on our live map.</p>
-          <p>Our network locates an event by comparing wave arrival times across many stations —
-            with enough stations, an epicenter can be published in under 90 seconds.</p>
+            crust where stress has been building for years to centuries. Tectonic plates keep moving;
+            friction keeps the fault locked. Strain accumulates in the rock on either side until it
+            exceeds what the fault can hold, and the two sides lurch past each other in seconds. The
+            stored elastic energy leaves as <b>seismic waves</b>.</p>
+          <p>That idea — rock deforming elastically, then snapping back — is called <b>elastic rebound</b>,
+            proposed by Harry Fielding Reid after the 1906 San Francisco earthquake, and it is still the
+            basic picture.</p>
+          <p>The rupture begins at the <b>hypocenter</b> (or focus) at depth and spreads across the fault
+            plane at roughly 2–3 km/s. The point on the surface directly above the hypocenter is the
+            <b>epicenter</b> — the position plotted on the <a class="link" href="map.html">live map</a>.</p>
         </div>
-        <div class="gd-note">Depth matters too: <b>shallow</b> quakes (&lt; 70 km) cause the strongest
-          local shaking, while <b>deep</b> ones (down to ~700 km) are felt widely but do less damage.</div>
+        <div class="gd-note">A rupture is not a point. The 2011 Tōhoku earthquake tore a patch of fault
+          roughly <b>500 km long and 200 km wide</b>, slipping up to 50 m in places, and took about three
+          minutes to finish. The "epicenter" is only where it started.</div>
       </div>
 
       <div class="card gd-card">
-        <h2 class="gd-title">P&nbsp;waves &amp; S&nbsp;waves</h2>
-        <p class="gd-desc"><b>P&nbsp;waves arrive first</b>, S&nbsp;waves follow with the stronger
-          shaking — the gap between them is what makes early warning possible.</p>
+        <h2 class="gd-title">How big is the slip?</h2>
+        <p class="gd-desc">Magnitude is really a statement about the size of the rupture. Three things set
+          it: how much fault area broke, how far it slipped, and how stiff the rock is.</p>
+        <div class="gd-formula">
+          M<sub>0</sub> &nbsp;=&nbsp; μ &nbsp;×&nbsp; A &nbsp;×&nbsp; D
+          <span>seismic moment = rigidity × rupture area × average slip</span>
+        </div>
+        <div class="gd-tablewrap">
+          <table class="eq-table gd-table tight">
+            <thead><tr><th>Magnitude</th><th>Typical rupture length</th><th class="right">Typical slip</th></tr></thead>
+            <tbody>
+              <tr><td class="mag">M 4</td><td>about 1 km</td><td class="right">a few cm</td></tr>
+              <tr><td class="mag">M 5</td><td>about 3 km</td><td class="right">~10 cm</td></tr>
+              <tr><td class="mag">M 6</td><td>about 10 km</td><td class="right">~30 cm</td></tr>
+              <tr><td class="mag">M 7</td><td>about 40 km</td><td class="right">~1 m</td></tr>
+              <tr><td class="mag">M 8</td><td>about 200 km</td><td class="right">~5 m</td></tr>
+              <tr><td class="mag big">M 9</td><td>500–1,500 km</td><td class="right">10–50 m</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="gd-figcap">Order-of-magnitude figures for a continental or subduction fault. Real ruptures
+          vary widely — the point is that each magnitude step means a rupture several times longer, which
+          is why the very largest earthquakes only happen where faults are long enough to host them.</p>
+      </div>
+    </div>
 
-        <div class="gd-wave">
-          <div class="gd-wave-info">
-            <div class="w-name p">P wave <span>(Primary)</span></div>
-            <div class="w-desc">Compressional push–pull wave. The fastest — travels through solids,
-              liquids, and gases.</div>
-          </div>
-          <svg viewBox="0 0 240 56" aria-hidden="true">
-            <g stroke="#0e9a8d" stroke-width="2.6" stroke-linecap="round">
-              <path d="M8 10v36M15 10v36M22 10v36M29 10v36"/>
-              <path d="M46 14v28M60 14v28"/>
-              <path d="M78 10v36M85 10v36M92 10v36M99 10v36"/>
-              <path d="M116 14v28M130 14v28"/>
-              <path d="M148 10v36M155 10v36M162 10v36M169 10v36"/>
-              <path d="M186 14v28M200 14v28"/>
+    <div class="card gd-card">
+      <h2 class="gd-title">Three ways a fault can move</h2>
+      <p class="gd-desc">Which way the two blocks move depends on how the crust is being squeezed or
+        stretched. The style of faulting predicts a great deal — whether the quake can be huge, whether it
+        can lift the seafloor and make a tsunami, and how deep it is likely to be.</p>
+      <div class="gd-fig">
+        <svg viewBox="0 0 720 210" role="img" aria-label="Normal, reverse and strike-slip faults">
+          <defs>
+            <marker id="fa" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M0 0 L8 4 L0 8 Z" fill="#1a6ef5"/>
+            </marker>
+          </defs>
+          <g font-family="Inter,sans-serif" text-anchor="middle">
+            <text x="115" y="20" font-size="13" font-weight="600" fill="#16294e">Normal</text>
+            <text x="115" y="37" font-size="11" fill="#7b8698">crust pulled apart</text>
+            <text x="360" y="20" font-size="13" font-weight="600" fill="#16294e">Reverse / Thrust</text>
+            <text x="360" y="37" font-size="11" fill="#7b8698">crust squeezed together</text>
+            <text x="605" y="20" font-size="13" font-weight="600" fill="#16294e">Strike-slip</text>
+            <text x="605" y="37" font-size="11" fill="#7b8698">blocks slide sideways</text>
+          </g>
+
+          <!-- normal -->
+          <path d="M20 80 L150 80 L210 175 L20 175 Z" fill="#e3ecf8" stroke="#9fb4d4" stroke-width="1.2"/>
+          <path d="M158 96 L215 96 L215 175 L218 175 Z" fill="#cfdff5" stroke="#9fb4d4" stroke-width="1.2"/>
+          <path d="M150 80 L210 175" stroke="#e8432d" stroke-width="2.2"/>
+          <path d="M60 66 h-32" stroke="#1a6ef5" stroke-width="2.2" marker-end="url(#fa)" fill="none"/>
+          <path d="M175 84 h32" stroke="#1a6ef5" stroke-width="2.2" marker-end="url(#fa)" fill="none"/>
+          <path d="M186 108 v26" stroke="#e8622d" stroke-width="2.2" marker-end="url(#fa)" fill="none"/>
+
+          <!-- reverse -->
+          <path d="M265 96 L395 96 L455 191 L265 191 Z" fill="#e3ecf8" stroke="#9fb4d4" stroke-width="1.2"/>
+          <path d="M403 70 L462 70 L462 191 L463 191 Z" fill="#cfdff5" stroke="#9fb4d4" stroke-width="1.2"/>
+          <path d="M395 96 L455 191" stroke="#e8432d" stroke-width="2.2"/>
+          <path d="M300 78 h32" stroke="#1a6ef5" stroke-width="2.2" marker-end="url(#fa)" fill="none"/>
+          <path d="M452 56 h-32" stroke="#1a6ef5" stroke-width="2.2" marker-end="url(#fa)" fill="none"/>
+          <path d="M430 106 v-26" stroke="#e8622d" stroke-width="2.2" marker-end="url(#fa)" fill="none"/>
+
+          <!-- strike-slip -->
+          <path d="M515 70 L700 70 L700 126 L515 126 Z" fill="#e3ecf8" stroke="#9fb4d4" stroke-width="1.2"/>
+          <path d="M515 130 L700 130 L700 186 L515 186 Z" fill="#cfdff5" stroke="#9fb4d4" stroke-width="1.2"/>
+          <path d="M515 128 H700" stroke="#e8432d" stroke-width="2.2" stroke-dasharray="6 4"/>
+          <path d="M560 98 h56" stroke="#1a6ef5" stroke-width="2.2" marker-end="url(#fa)" fill="none"/>
+          <path d="M656 158 h-56" stroke="#1a6ef5" stroke-width="2.2" marker-end="url(#fa)" fill="none"/>
+        </svg>
+      </div>
+      <table class="eq-table gd-table tight" style="margin-top:6px">
+        <thead><tr><th>Fault type</th><th>Stress</th><th>Where you find it</th><th>Largest it gets</th></tr></thead>
+        <tbody>
+          <tr><td class="mag">Normal</td><td>Extension</td><td>Mid-ocean ridges, rift valleys, Basin and Range</td><td>Rarely above M 7.5</td></tr>
+          <tr><td class="mag">Reverse / thrust</td><td>Compression</td><td>Subduction zones, mountain fronts (Himalaya, Andes)</td><td>Up to M 9+ — every M 9 on record</td></tr>
+          <tr><td class="mag">Strike-slip</td><td>Shear</td><td>Transform boundaries: San Andreas, North Anatolian</td><td>About M 8.0–8.3</td></tr>
+        </tbody>
+      </table>
+      <div class="gd-note" style="margin-top:16px">Only a shallow <b>thrust</b> fault under water displaces
+        enough seafloor to raise a large tsunami. A strike-slip quake of the same magnitude moves the ocean
+        floor sideways, which the water barely notices — which is why an M 7.8 on land or on a transform
+        fault and an M 7.8 on a subduction interface are very different events.</div>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">Four kinds of seismic wave</h2>
+      <p class="gd-desc">A single earthquake sends out several wave types that travel at different speeds
+        and shake the ground in different directions. They arrive in a fixed order, and that order is what
+        makes both early warning and epicenter location possible.</p>
+
+      <div class="gd-wave">
+        <div class="gd-wave-info">
+          <div class="w-name p">P wave <span>(Primary — body wave)</span></div>
+          <div class="w-desc">Compressional push–pull, like sound through rock. The fastest wave there is,
+            and the only one that crosses the liquid outer core.</div>
+        </div>
+        <svg viewBox="0 0 240 56" aria-hidden="true">
+          <g stroke="#0e9a8d" stroke-width="2.6" stroke-linecap="round">
+            <path d="M8 10v36M15 10v36M22 10v36M29 10v36"/>
+            <path d="M46 14v28M60 14v28"/>
+            <path d="M78 10v36M85 10v36M92 10v36M99 10v36"/>
+            <path d="M116 14v28M130 14v28"/>
+            <path d="M148 10v36M155 10v36M162 10v36M169 10v36"/>
+            <path d="M186 14v28M200 14v28"/>
+          </g>
+          <path d="M214 28h18M226 20l8 8-8 8" stroke="#0e9a8d" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="gd-wave">
+        <div class="gd-wave-info">
+          <div class="w-name s">S wave <span>(Secondary — body wave)</span></div>
+          <div class="w-desc">Shear motion, perpendicular to travel. Slower than P but shakes harder.
+            Cannot pass through liquid — which is how we know the outer core is molten.</div>
+        </div>
+        <svg viewBox="0 0 240 56" aria-hidden="true">
+          <g fill="none" stroke="#1a6ef5" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.1 5.5">
+            <path d="M6 22 Q22 2 38 22 T70 22 T102 22 T134 22 T166 22 T198 22"/>
+            <path d="M6 30 Q22 10 38 30 T70 30 T102 30 T134 30 T166 30 T198 30"/>
+            <path d="M6 38 Q22 18 38 38 T70 38 T102 38 T134 38 T166 38 T198 38"/>
+          </g>
+          <path d="M212 28h18M224 20l8 8-8 8" stroke="#1a6ef5" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="gd-wave">
+        <div class="gd-wave-info">
+          <div class="w-name love">Love wave <span>(surface)</span></div>
+          <div class="w-desc">Horizontal side-to-side shearing confined to the near-surface layers. Hard on
+            building foundations, and the first of the two surface waves to arrive.</div>
+        </div>
+        <svg viewBox="0 0 240 56" aria-hidden="true">
+          <g fill="none" stroke="#7c3aed" stroke-width="2.2" stroke-linecap="round">
+            <path d="M8 28 Q26 12 44 28 T80 28 T116 28 T152 28 T188 28"/>
+            <path d="M8 28 Q26 44 44 28 T80 28 T116 28 T152 28 T188 28" opacity=".45"/>
+          </g>
+          <g stroke="#7c3aed" stroke-width="1.6" opacity=".55">
+            <path d="M26 20v16M62 20v16M98 20v16M134 20v16M170 20v16"/>
+          </g>
+          <path d="M204 28h18M216 20l8 8-8 8" stroke="#7c3aed" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="gd-wave">
+        <div class="gd-wave-info">
+          <div class="w-name rayleigh">Rayleigh wave <span>(surface)</span></div>
+          <div class="w-desc">A rolling, elliptical motion like a swell crossing the ground. Slowest, longest
+            period, and usually the largest amplitude at distance — the "ground rolling" people describe.</div>
+        </div>
+        <svg viewBox="0 0 240 56" aria-hidden="true">
+          <path d="M6 34 Q24 12 42 34 T78 34 T114 34 T150 34 T186 34" fill="none" stroke="#e8622d" stroke-width="2.6" stroke-linecap="round"/>
+          <g fill="none" stroke="#e8622d" stroke-width="1.5" opacity=".6">
+            <ellipse cx="24" cy="30" rx="5" ry="8"/><ellipse cx="60" cy="30" rx="5" ry="8"/>
+            <ellipse cx="96" cy="30" rx="5" ry="8"/><ellipse cx="132" cy="30" rx="5" ry="8"/>
+            <ellipse cx="168" cy="30" rx="5" ry="8"/>
+          </g>
+          <path d="M204 28h18M216 20l8 8-8 8" stroke="#e8622d" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <table class="eq-table gd-table tight" style="margin-top:18px">
+        <thead><tr><th>Wave</th><th>Speed in the crust</th><th>Ground motion</th><th>Travels through</th><th>Damage</th></tr></thead>
+        <tbody>
+          <tr><td class="mag">P</td><td>5–8 km/s</td><td>Push–pull along the ray</td><td>Solid, liquid, gas</td><td>Low — often heard as a bang</td></tr>
+          <tr><td class="mag">S</td><td>3–4.5 km/s</td><td>Shear across the ray</td><td>Solid only</td><td>High</td></tr>
+          <tr><td class="mag">Love</td><td>2–4.4 km/s</td><td>Horizontal shearing</td><td>Surface layers</td><td>High, especially on soft soil</td></tr>
+          <tr><td class="mag">Rayleigh</td><td>2–4 km/s</td><td>Rolling ellipse</td><td>Surface layers</td><td>High at long period; hard on tall buildings</td></tr>
+        </tbody>
+      </table>
+      <p class="gd-figcap">Speeds are typical continental-crust values; they rise with depth. Surface waves
+        lose energy more slowly with distance than body waves, so far from a large earthquake they are what
+        is left — and why an M 8 can set tall buildings swaying a thousand kilometres away.</p>
+    </div>
+
+    <div class="gd-grid two">
+      <div class="card gd-card">
+        <h2 class="gd-title">Reading a seismogram</h2>
+        <p class="gd-desc">A single station's record answers "how far away?" before anyone knows where the
+          quake was. The gap between the P and S arrivals grows with distance, at a rate the rock sets.</p>
+        <div class="gd-fig">
+          <svg viewBox="0 0 560 190" role="img" aria-label="A seismogram showing P, S and surface wave arrivals">
+            <line x1="30" y1="110" x2="540" y2="110" stroke="#dbe3ee" stroke-width="1"/>
+            <path d="M30 110 h108" stroke="#94a3b8" stroke-width="1.6" fill="none"/>
+            <path d="M138 110 l3-16 3 26 3 -20 4 16 3 -12 4 12 3 -9 4 9 3 -7 4 8 3 -6 4 7 3 -5 4 6 3 -5 4 5 3 -4 4 5 3 -4 4 4"
+                  stroke="#0e9a8d" stroke-width="1.7" fill="none"/>
+            <path d="M240 110 l4 -34 4 52 4 -46 5 40 4 -32 5 30 4 -26 5 24 4 -20 5 19 4 -16 5 15 4 -13 5 12 4 -10"
+                  stroke="#1a6ef5" stroke-width="1.7" fill="none"/>
+            <path d="M340 110 q14 -44 28 0 t28 0 t28 0 t28 0 t28 0 t28 0 t28 0"
+                  stroke="#e8622d" stroke-width="1.9" fill="none"/>
+            <g stroke-dasharray="4 4" stroke-width="1.3">
+              <line x1="138" y1="30" x2="138" y2="170" stroke="#0e9a8d"/>
+              <line x1="240" y1="30" x2="240" y2="170" stroke="#1a6ef5"/>
+              <line x1="340" y1="30" x2="340" y2="170" stroke="#e8622d"/>
             </g>
-            <path d="M214 28h18M226 20l8 8-8 8" stroke="#0e9a8d" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <g font-family="Inter,sans-serif" font-size="11.5" font-weight="600">
+              <text x="142" y="26" fill="#0e9a8d">P</text>
+              <text x="244" y="26" fill="#1a6ef5">S</text>
+              <text x="344" y="26" fill="#e8622d">surface waves</text>
+            </g>
+            <path d="M138 178 H240" stroke="#16294e" stroke-width="1.4"/>
+            <path d="M138 174 v8 M240 174 v8" stroke="#16294e" stroke-width="1.4"/>
+            <text x="189" y="170" font-family="Inter,sans-serif" font-size="11" fill="#16294e" text-anchor="middle" font-weight="600">S–P interval</text>
+            <text x="30" y="186" font-family="Inter,sans-serif" font-size="10.5" fill="#7b8698">time →</text>
           </svg>
         </div>
+        <div class="gd-note">A rough field rule for regional distances: <b>distance in km ≈ S–P interval in
+          seconds × 8</b>. A 10-second gap puts the quake roughly 80 km away. Three stations with three
+          distances fix the epicenter — see <a class="link" href="#measuring">Measuring Quakes</a>.</div>
+      </div>
 
-        <div class="gd-wave">
-          <div class="gd-wave-info">
-            <div class="w-name s">S wave <span>(Secondary)</span></div>
-            <div class="w-desc">Shear wave, slower than P but shakes harder. Travels through solids only.</div>
-          </div>
-          <svg viewBox="0 0 240 56" aria-hidden="true">
-            <g fill="none" stroke="#1a6ef5" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.1 5.5">
-              <path d="M6 22 Q22 2 38 22 T70 22 T102 22 T134 22 T166 22 T198 22"/>
-              <path d="M6 30 Q22 10 38 30 T70 30 T102 30 T134 30 T166 30 T198 30"/>
-              <path d="M6 38 Q22 18 38 38 T70 38 T102 38 T134 38 T166 38 T198 38"/>
-            </g>
-            <path d="M212 28h18M224 20l8 8-8 8" stroke="#1a6ef5" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+      <div class="card gd-card">
+        <h2 class="gd-title">Shallow, intermediate, deep</h2>
+        <p class="gd-desc">Depth changes everything about how an earthquake is felt. The same magnitude at
+          15 km and at 300 km are not comparable events at the surface.</p>
+        <div class="gd-tablewrap">
+          <table class="eq-table gd-table tight">
+            <thead><tr><th>Class</th><th>Depth</th><th>Share of all quakes</th><th>Felt as</th></tr></thead>
+            <tbody>
+              <tr><td class="mag">Shallow</td><td>0–70 km</td><td>about 75%</td><td>Sharp, violent, locally concentrated</td></tr>
+              <tr><td class="mag">Intermediate</td><td>70–300 km</td><td>about 23%</td><td>Weaker but felt over a wider area</td></tr>
+              <tr><td class="mag">Deep</td><td>300–700 km</td><td>about 2%</td><td>Broad, gentle rolling; rarely damaging</td></tr>
+            </tbody>
+          </table>
         </div>
-
-        <div class="kb-facts one-col" style="margin-top:14px">
-          <div class="kb-fact"><div class="v">6–8 km/s</div><div class="k">speed of P waves through the crust — the first signal our stations record</div></div>
-          <div class="kb-fact"><div class="v">3–4 km/s</div><div class="k">speed of S waves — slower, but they carry most of the damaging shaking</div></div>
+        <div class="rich-text" style="margin-top:16px">
+          <p>Nearly all damaging earthquakes are shallow. Below about 70 km the rock is hot enough to
+            deform rather than snap, so deep earthquakes should not be possible at all — and outside
+            subduction zones they are not. They occur only inside slabs of cold oceanic plate sinking into
+            the mantle, which is why a map of deep events traces the world's subduction zones exactly.</p>
+          <p>The practical floor is around <b>700 km</b>. Below that the slab has warmed enough that brittle
+            failure stops.</p>
         </div>
+        <div class="gd-note">On the <a class="link" href="map.html">3D globe</a> the Japan view plots depth
+          downward inside a box — the sloping sheet of events under the islands <em>is</em> the Pacific
+          plate, seen edge-on.</div>
       </div>
     </div>
   </section>
@@ -187,10 +409,10 @@
       <div class="gd-cols">
         <div>
           <div class="rich-text">
-            <p>The Earth's outer shell is broken into a dozen large <b>tectonic plates</b> that move a
-              few centimeters per year — about as fast as fingernails grow. Nearly all earthquakes occur
+            <p>The Earth's outer shell is broken into about a dozen large <b>tectonic plates</b> that move a
+              few centimeters per year — roughly as fast as fingernails grow. Nearly all earthquakes occur
               on the boundaries where plates meet, which is why events on the live map trace such clear
-              lines.</p>
+              lines rather than scattering evenly.</p>
           </div>
           <svg class="gd-plates" viewBox="0 0 560 240" role="img" aria-label="Three types of plate boundaries">
             <g font-family="Inter,sans-serif" font-size="13" font-weight="600" fill="#16294e" text-anchor="middle">
@@ -228,13 +450,271 @@
             <li><i data-icon="check" data-size="17"></i><span><b>Convergent (subduction)</b> — plates collide and one dives beneath the other. Produces the planet's biggest quakes and tsunamis (Japan, Chile, Sumatra).</span></li>
             <li><i data-icon="check" data-size="17"></i><span><b>Divergent (ridges)</b> — plates pull apart at mid-ocean ridges. Frequent but mostly moderate, shallow events (Mid-Atlantic Ridge).</span></li>
             <li><i data-icon="check" data-size="17"></i><span><b>Transform (strike-slip)</b> — plates slide past each other. Shallow quakes that can be very damaging near cities (San Andreas, North Anatolian).</span></li>
+            <li><i data-icon="check" data-size="17"></i><span><b>Collision</b> — two continents meet and neither will sink. The crust thickens instead, raising the Himalaya and scattering large quakes far inland.</span></li>
           </ul>
           <div class="gd-note" style="margin-top:18px">The <b>Pacific Ring of Fire</b> — the chain of
-            subduction zones circling the Pacific — hosts about <b>90% of the world's earthquakes</b>,
-            including most of the largest in recorded history. Spot it on the
-            <a class="link" href="map.html">live map</a>.</div>
+            subduction zones circling the Pacific — hosts about <b>90% of the world's earthquakes</b> and
+            most of the largest in recorded history. Spot it on the
+            <a class="link" href="map.html">live map</a>: it is the bright loop.</div>
         </div>
       </div>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">The major plates</h2>
+      <p class="card-sub" style="margin-bottom:12px">Seven plates cover most of the surface; a handful of
+        smaller ones cause a disproportionate share of the damage.</p>
+      <div class="gd-tablewrap">
+        <table class="eq-table gd-table tight">
+          <thead><tr><th>Plate</th><th>Moves</th><th class="right">Rate</th><th>Its busiest boundary</th></tr></thead>
+          <tbody>
+            <tr><td class="mag">Pacific</td><td>North-west</td><td class="right">7–10 cm/yr</td><td>Subducting beneath Japan, Kamchatka and the Aleutians</td></tr>
+            <tr><td class="mag">Nazca</td><td>East</td><td class="right">6–8 cm/yr</td><td>Under South America — the Andes and Chile's great quakes</td></tr>
+            <tr><td class="mag">Australian</td><td>North / north-east</td><td class="right">~7 cm/yr</td><td>Collides with the Sunda arc at Indonesia</td></tr>
+            <tr><td class="mag">Philippine Sea</td><td>North-west</td><td class="right">6–8 cm/yr</td><td>Caught between the Pacific and Eurasia; Nankai Trough</td></tr>
+            <tr><td class="mag">Cocos</td><td>North-east</td><td class="right">~7 cm/yr</td><td>Under Central America and southern Mexico</td></tr>
+            <tr><td class="mag">Indian</td><td>North</td><td class="right">4–5 cm/yr</td><td>Ploughing into Eurasia — the Himalayan front</td></tr>
+            <tr><td class="mag">Arabian</td><td>North</td><td class="right">~2–3 cm/yr</td><td>Pushes Anatolia west along the North Anatolian Fault</td></tr>
+            <tr><td class="mag">African</td><td>North-east</td><td class="right">~2 cm/yr</td><td>Closing the Mediterranean; splitting at the East African Rift</td></tr>
+            <tr><td class="mag">North American</td><td>West</td><td class="right">1–2 cm/yr</td><td>Slides past the Pacific plate at the San Andreas Fault</td></tr>
+            <tr><td class="mag">South American</td><td>West</td><td class="right">1–2 cm/yr</td><td>Overrides the Nazca plate</td></tr>
+            <tr><td class="mag">Eurasian</td><td>East, slowly</td><td class="right">~1 cm/yr</td><td>Absorbs the Indian and Arabian collisions</td></tr>
+            <tr><td class="mag">Antarctic</td><td>Rotating slowly</td><td class="right">~1 cm/yr</td><td>Almost entirely ridges — quiet, mostly moderate quakes</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="gd-figcap">Rates are typical relative-motion values from space geodesy and vary along each
+        boundary. Fast convergence is the single best predictor of frequent large earthquakes, which is
+        why the Pacific and Nazca margins dominate any list of great events.</p>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">Inside a subduction zone</h2>
+      <p class="gd-desc">Everything that makes the largest earthquakes lives in one cross-section: a cold
+        plate bending down, a locked interface tens of thousands of square kilometres wide, and a sheet of
+        seismicity descending into the mantle.</p>
+      <div class="gd-fig">
+        <svg viewBox="0 0 720 330" role="img" aria-label="Cross-section of a subduction zone">
+          <!-- mantle behind everything -->
+          <rect x="0" y="92" width="720" height="238" fill="#f3e7d6"/>
+          <!-- ocean, left of the trench -->
+          <rect x="0" y="44" width="300" height="48" fill="#cfe6f7"/>
+          <path d="M0 44 H300" stroke="#7fb6dd" stroke-width="1.2"/>
+          <!-- overriding plate: trench on the left, arc on top, flat base -->
+          <path d="M300 100 L720 80 L720 172 L405 172 Z" fill="#e2eaf5" stroke="#9fb4d4" stroke-width="1.3"/>
+          <!-- subducting slab, entering at the trench and dipping into the mantle -->
+          <path d="M0 92 L300 100 L620 320 L578 320 L300 128 L0 118 Z"
+                fill="#d3dfee" stroke="#8fa6c4" stroke-width="1.3"/>
+          <!-- the locked interface: where the great earthquakes happen -->
+          <path d="M300 100 L392 163" stroke="#e8432d" stroke-width="5" stroke-linecap="round" opacity=".9"/>
+          <!-- earthquakes down the slab, shallow to deep -->
+          <g fill="#f0642f">
+            <circle cx="312" cy="108" r="3.6"/><circle cx="330" cy="121" r="4"/>
+            <circle cx="348" cy="133" r="4.2"/><circle cx="368" cy="147" r="3.8"/>
+          </g>
+          <g fill="#f5b73c">
+            <circle cx="390" cy="162" r="3.2"/><circle cx="412" cy="177" r="3.2"/>
+            <circle cx="434" cy="192" r="3"/><circle cx="456" cy="207" r="3"/>
+          </g>
+          <g fill="#3fb0e8">
+            <circle cx="482" cy="225" r="2.8"/><circle cx="508" cy="243" r="2.6"/>
+            <circle cx="534" cy="261" r="2.4"/><circle cx="560" cy="279" r="2.2"/>
+          </g>
+          <!-- volcanic arc on the overriding plate -->
+          <path d="M542 88 l18 -34 18 34 Z" fill="#8a6a4f"/>
+          <path d="M560 54 q-7 -18 3 -27" stroke="#b0a190" stroke-width="2" fill="none"/>
+          <!-- depth axis -->
+          <g stroke="#b9a68c" stroke-width="1.2">
+            <path d="M648 200 h14"/><path d="M648 292 h14"/>
+          </g>
+          <g font-family="Inter,sans-serif" font-size="10" fill="#8b7a63">
+            <text x="666" y="204">200 km</text><text x="666" y="296">500 km</text>
+          </g>
+          <!-- labels, all outside the artwork they point at -->
+          <g font-family="Inter,sans-serif" font-size="11.5" fill="#16294e">
+            <text x="70" y="26" font-weight="600">ocean</text>
+            <text x="300" y="26" font-weight="600" text-anchor="middle">trench</text>
+            <path d="M300 32 V96" stroke="#16294e" stroke-width="1" stroke-dasharray="3 3"/>
+            <text x="560" y="26" font-weight="600" text-anchor="middle">volcanic arc</text>
+            <path d="M560 32 V48" stroke="#16294e" stroke-width="1" stroke-dasharray="3 3"/>
+            <text x="470" y="120" font-weight="600" fill="#c0392b">locked interface</text>
+            <path d="M466 116 L400 143" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 3"/>
+            <text x="330" y="250" font-weight="600">Wadati&#8211;Benioff zone</text>
+            <text x="330" y="266" font-size="10" fill="#7b8698">earthquakes inside the sinking slab</text>
+            <path d="M436 246 L482 230" stroke="#16294e" stroke-width="1" stroke-dasharray="3 3"/>
+          </g>
+        </svg>
+      </div>
+      <p class="gd-figcap">Vertical scale is exaggerated: a real subduction interface dips at only about
+        10&#8211;25&#176; near the trench, far shallower than it can be drawn at this width.</p>
+      <div class="gd-grid two" style="margin-top:6px">
+        <div class="rich-text">
+          <p><b>The interface is the danger.</b> Where the two plates are stuck together, over a patch that
+            can be hundreds of kilometres long and a hundred wide, strain builds for centuries. When it
+            lets go, the whole patch moves at once — that is a magnitude 9.</p>
+          <p><b>The slab keeps its earthquakes.</b> Following the events down the dipping plane gives the
+            Wadati–Benioff zone, discovered independently by Kiyoo Wadati in the 1920s and Hugo Benioff in
+            the 1950s. It was among the first direct evidence that plates really do sink.</p>
+        </div>
+        <div class="rich-text">
+          <p><b>Water makes the volcanoes.</b> The descending plate carries seawater bound into its
+            minerals. Around 100 km depth that water is released, lowering the melting point of the mantle
+            above, and the melt rises to build the volcanic arc — Japan's, the Cascades, the Andes.</p>
+          <p><b>Tsunami risk is built in.</b> The interface is shallow and dips gently under water, so slip
+            lifts the seafloor over a huge area. That is precisely the geometry that displaces an ocean.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">Earthquakes far from any boundary</h2>
+      <div class="gd-grid two">
+        <div class="rich-text">
+          <p>About 5% of earthquakes happen in plate interiors, where no boundary explains them. They are
+            rarer, harder to anticipate, and often more damaging than their magnitude suggests, because
+            old, cold, unbroken crust carries the waves efficiently and because nobody builds for a quake
+            that has not happened in living memory.</p>
+          <p>The 1811–12 <b>New Madrid</b> sequence in the central United States was felt over most of the
+            continent. Australia, peninsular India and northern Europe all have intraplate seismicity.</p>
+        </div>
+        <div class="rich-text">
+          <p><b>Induced seismicity</b> is the modern addition to this category: fluid injection for
+            wastewater disposal or geothermal energy, and reservoir impoundment behind large dams, can
+            unclamp faults that were already close to failing. Parts of Oklahoma went from a couple of
+            M 3+ events a year to hundreds within a decade before injection rules changed.</p>
+          <p><b>Hotspots</b> such as Hawaii and Iceland sit over rising mantle plumes rather than plate
+            edges; their earthquakes are mostly volcanic and shallow.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MEASURING ================= -->
+  <section class="gd-sec" id="gd-measuring">
+    <div class="gd-grid two">
+      <div class="card gd-card">
+        <h2 class="gd-title">From ground motion to a record</h2>
+        <div class="rich-text">
+          <p>A <b>seismometer</b> solves one problem: how do you measure the motion of the ground while
+            standing on it? The answer is inertia. A suspended mass tends to stay put while its frame moves
+            with the earth, and the relative motion between the two is what gets recorded.</p>
+          <p>Modern broadband instruments hold the mass almost still with a feedback force and record how
+            much force that took — which gives a faithful signal from about 0.01 Hz to 50 Hz, five orders
+            of magnitude of period in one box. Next to them sit <b>strong-motion accelerometers</b>, which
+            are deliberately less sensitive so they do not clip when the shaking is violent.</p>
+          <p>Three components — north, east and vertical — are needed, because ground motion is a vector
+            and the wave types are told apart by which direction they move.</p>
+        </div>
+        <table class="eq-table gd-table tight" style="margin-top:14px">
+          <thead><tr><th>Instrument</th><th>Records</th><th>Good for</th></tr></thead>
+          <tbody>
+            <tr><td class="mag">Broadband seismometer</td><td>Velocity</td><td>Distant and small events; waveform modelling</td></tr>
+            <tr><td class="mag">Strong-motion accelerometer</td><td>Acceleration</td><td>Severe local shaking; building codes; ShakeMaps</td></tr>
+            <tr><td class="mag">Short-period sensor</td><td>Velocity, narrow band</td><td>Dense local networks; small quakes</td></tr>
+            <tr><td class="mag">GNSS / GPS station</td><td>Permanent displacement</td><td>Very large quakes, where seismometers saturate</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card gd-card">
+        <h2 class="gd-title">Finding the epicenter</h2>
+        <p class="gd-desc">One station gives a distance but no direction. Three give a point. This is the
+          classic construction, and although agencies now solve it numerically for hundreds of arrivals at
+          once, the logic is unchanged.</p>
+        <div class="gd-fig">
+          <svg viewBox="0 0 420 260" role="img" aria-label="Locating an epicenter by triangulation from three stations">
+            <rect x="10" y="10" width="400" height="240" rx="10" fill="#f7f9fc"/>
+            <g fill="none" stroke-width="1.6">
+              <circle cx="110" cy="80" r="115.7" stroke="#1a6ef5" stroke-dasharray="5 4" opacity=".75"/>
+              <circle cx="316" cy="108" r="117.3" stroke="#0e9a8d" stroke-dasharray="5 4" opacity=".75"/>
+              <circle cx="196" cy="216" r="70.6" stroke="#e8622d" stroke-dasharray="5 4" opacity=".75"/>
+            </g>
+            <g>
+              <path d="M104 74 h12 v12 h-12 Z" fill="#1a6ef5"/>
+              <path d="M310 102 h12 v12 h-12 Z" fill="#0e9a8d"/>
+              <path d="M190 210 h12 v12 h-12 Z" fill="#e8622d"/>
+            </g>
+            <circle cx="205" cy="146" r="7" fill="#e8432d"/>
+            <circle cx="205" cy="146" r="13" fill="none" stroke="#e8432d" stroke-width="1.6" opacity=".55"/>
+            <g font-family="Inter,sans-serif" font-size="11" font-weight="600">
+              <text x="80" y="66" fill="#1a6ef5">Station A</text>
+              <text x="288" y="94" fill="#0e9a8d">Station B</text>
+              <text x="168" y="238" fill="#e8622d">Station C</text>
+              <text x="219" y="143" fill="#16294e">epicenter</text>
+            </g>
+          </svg>
+        </div>
+        <div class="rich-text">
+          <p>Each station converts its S–P interval into a distance and draws a circle of that radius. Two
+            circles cross at two points; the third picks one. Depth then comes from how the arrival times
+            vary with distance, and the whole solution is refined until predicted and observed times
+            agree.</p>
+        </div>
+        <div class="gd-note">Depth is always the least certain number in an earthquake report — especially
+          offshore, where every station is on one side. A depth given as a round <b>10 km</b> usually means
+          it could not be resolved and was fixed at a default.</div>
+      </div>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">Which magnitude is it?</h2>
+      <p class="gd-desc">"Magnitude" is not one measurement. Several scales exist because different
+        instruments, distances and event sizes need different methods — and older scales stop responding
+        once an earthquake gets big enough, a problem called <b>saturation</b>.</p>
+      <div class="gd-tablewrap">
+        <table class="eq-table gd-table tight">
+          <thead><tr><th>Scale</th><th>Symbol</th><th>Measured from</th><th>Useful range</th><th>Saturates at</th></tr></thead>
+          <tbody>
+            <tr><td class="mag">Local (Richter)</td><td>M<sub>L</sub></td><td>Peak amplitude on a short-period record, within ~600 km</td><td>2–6</td><td>~6.5</td></tr>
+            <tr><td class="mag">Body wave</td><td>m<sub>b</sub></td><td>Amplitude of the first 1-second P waves</td><td>4–6.5</td><td>~6.5</td></tr>
+            <tr><td class="mag">Surface wave</td><td>M<sub>s</sub></td><td>Amplitude of 20-second surface waves</td><td>5–8</td><td>~8.3</td></tr>
+            <tr><td class="mag">Duration / coda</td><td>M<sub>d</sub></td><td>How long the signal lasts</td><td>1–4</td><td>—</td></tr>
+            <tr><td class="mag big">Moment</td><td>M<sub>w</sub></td><td>Seismic moment: rigidity × rupture area × slip</td><td>3.5 and up</td><td>Does not saturate</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="gd-grid two" style="margin-top:18px">
+        <div class="rich-text">
+          <p><b>Why saturation matters.</b> Charles Richter's 1935 scale reads the tallest wiggle at a
+            given period. Once a rupture lasts longer than that period, making it longer still does not
+            make the wiggle taller — so an M 8 and an M 9 can look nearly identical on M<sub>L</sub>. The
+            1960 Chile earthquake was M<sub>s</sub> 8.5 by the scales of the day; recomputed as moment
+            magnitude it is <b>M<sub>w</sub> 9.5</b>, more than thirty times the energy.</p>
+        </div>
+        <div class="rich-text">
+          <p><b>Why M<sub>w</sub> is the standard.</b> Moment magnitude is derived from the physical size
+            of the rupture rather than from a single amplitude, so it keeps working at any size and can be
+            compared across decades and agencies. Small events still get M<sub>L</sub> or M<sub>d</sub>,
+            because there is not enough long-period signal to compute a moment — which is why a catalogue
+            mixes magnitude types, and why this site records which type each event carries.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">Where this site's numbers come from</h2>
+      <p class="gd-desc">World Earthquake Labs does not operate seismometers. It reads the catalogues that
+        the monitoring agencies publish, merges them, and keeps the result current.</p>
+      <div class="ready-steps">
+        <div class="rs"><span class="rs-n">1</span>
+          <div><b>National and global networks record the event.</b> Thousands of stations run by
+            universities, geological surveys and meteorological agencies stream continuously to data
+            centres.</div></div>
+        <div class="rs"><span class="rs-n">2</span>
+          <div><b>An agency locates it and assigns a magnitude.</b> The USGS publishes an automatic
+            solution within minutes and revises it as more data arrives; the ISC re-reviews everything by
+            hand, which is thorough but runs about two years behind the present.</div></div>
+        <div class="rs"><span class="rs-n">3</span>
+          <div><b>We merge the catalogues.</b> USGS ANSS ComCat (M 2.0+) and the ISC Bulletin (M 3.0+) are
+            deduplicated into a single archive back to 1900 — 2,974,013 events at the last rebuild. Japan
+            additionally carries JMA, which lists events USGS never publishes.</div></div>
+        <div class="rs"><span class="rs-n">4</span>
+          <div><b>The recent window is refreshed every 45 minutes.</b> The last 14 days are re-fetched
+            rather than appended, so revised magnitudes and withdrawn events are corrected here too.</div></div>
+      </div>
+      <div class="gd-note" style="margin-top:16px">Early magnitudes get revised. An event that appears as
+        M 6.8 in the first minutes may settle at M 7.1 an hour later — not an error, just more stations
+        reporting. Treat anything within an hour of origin as provisional.</div>
     </div>
   </section>
 
@@ -266,26 +746,332 @@
         </div>
         <div class="gd-example">Example: the same <b>M 6.0</b> earthquake can shake at intensity <b>VII</b>
           near the epicenter, yet only <b>II–III</b> a few hundred kilometers away.</div>
-        <p class="gd-desc" style="margin:18px 0 0">We report <b>moment magnitude (Mw)</b>, today's standard
-          scale. It is <b>logarithmic</b>: each whole step means about 10× larger ground motion and ~32×
-          more energy — so an M&nbsp;7 releases roughly 1,000× the energy of an M&nbsp;5.</p>
+        <p class="gd-desc" style="margin:18px 0 0">We report <b>moment magnitude (Mw)</b> wherever the
+          agencies provide it. It is <b>logarithmic</b>: each whole step means about 10× larger ground
+          motion and ~32× more energy — so an M&nbsp;7 releases roughly 1,000× the energy of an M&nbsp;5.</p>
       </div>
 
       <div class="card gd-card">
         <h2 class="gd-title">The magnitude scale</h2>
         <p class="card-sub" style="margin-bottom:12px">Typical effects and how often each class occurs worldwide.</p>
-        <table class="eq-table gd-table">
-          <thead><tr><th>Class</th><th>M</th><th>Typical effects</th><th class="right">Per year</th></tr></thead>
+        <div class="gd-tablewrap">
+          <table class="eq-table gd-table">
+            <thead><tr><th>Class</th><th>M</th><th>Typical effects</th><th class="right">Per year</th></tr></thead>
+            <tbody>
+              <tr><td class="mag">Minor</td><td>2–3.9</td><td>Often felt, rarely causes damage</td><td class="right">&gt; 100,000</td></tr>
+              <tr><td class="mag">Light</td><td>4–4.9</td><td>Noticeable shaking, minor damage</td><td class="right">~ 13,000</td></tr>
+              <tr><td class="mag">Moderate</td><td>5–5.9</td><td>Damage to weak structures</td><td class="right">~ 1,300</td></tr>
+              <tr><td class="mag">Strong</td><td>6–6.9</td><td>Destructive near the epicenter</td><td class="right">~ 130</td></tr>
+              <tr><td class="mag">Major</td><td>7–7.9</td><td>Serious damage over wide areas</td><td class="right">~ 15</td></tr>
+              <tr><td class="mag big">Great</td><td>8+</td><td>Catastrophic; can trigger tsunamis</td><td class="right">~ 1</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="gd-figcap" style="margin-top:12px">Long-run averages. Any single year can differ sharply —
+          great earthquakes in particular arrive in clusters, and 2004–2011 produced far more than the
+          long-term rate would suggest.</p>
+      </div>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">What 32× actually means</h2>
+      <p class="gd-desc">Energy rises as 10<sup>1.5</sup> per magnitude step. Stated as a number of
+        kilotons of TNT the scale becomes easier to feel — and the gap between a damaging quake and a
+        catastrophic one becomes obvious.</p>
+      <div class="gd-tablewrap">
+        <table class="eq-table gd-table tight">
+          <thead><tr><th>Magnitude</th><th>Energy released</th><th>TNT equivalent</th><th>Comparable to</th></tr></thead>
           <tbody>
-            <tr><td class="mag">Minor</td><td>2–3.9</td><td>Often felt, rarely causes damage</td><td class="right">&gt; 100,000</td></tr>
-            <tr><td class="mag">Light</td><td>4–4.9</td><td>Noticeable shaking, minor damage</td><td class="right">~ 13,000</td></tr>
-            <tr><td class="mag">Moderate</td><td>5–5.9</td><td>Damage to weak structures</td><td class="right">~ 1,300</td></tr>
-            <tr><td class="mag">Strong</td><td>6–6.9</td><td>Destructive near the epicenter</td><td class="right">~ 130</td></tr>
-            <tr><td class="mag">Major</td><td>7–7.9</td><td>Serious damage over wide areas</td><td class="right">~ 15</td></tr>
-            <tr><td class="mag big">Great</td><td>8+</td><td>Catastrophic; can trigger tsunamis</td><td class="right">~ 1</td></tr>
+            <tr><td class="mag">M 4</td><td>6.3 × 10<sup>10</sup> J</td><td>15 tonnes</td><td>A large quarry blast</td></tr>
+            <tr><td class="mag">M 5</td><td>2.0 × 10<sup>12</sup> J</td><td>480 tonnes</td><td>A very large conventional explosion</td></tr>
+            <tr><td class="mag">M 6</td><td>6.3 × 10<sup>13</sup> J</td><td>15 kilotonnes</td><td>The Hiroshima bomb</td></tr>
+            <tr><td class="mag">M 7</td><td>2.0 × 10<sup>15</sup> J</td><td>480 kilotonnes</td><td>A large thermonuclear warhead</td></tr>
+            <tr><td class="mag">M 8</td><td>6.3 × 10<sup>16</sup> J</td><td>15 megatonnes</td><td>The largest weapons ever tested by the USA</td></tr>
+            <tr><td class="mag">M 9</td><td>2.0 × 10<sup>18</sup> J</td><td>480 megatonnes</td><td>All of the world's electricity for about a day</td></tr>
+            <tr><td class="mag big">M 9.5</td><td>1.1 × 10<sup>19</sup> J</td><td>2,700 megatonnes</td><td>The 1960 Chile earthquake, the largest ever recorded</td></tr>
           </tbody>
         </table>
       </div>
+      <p class="gd-figcap">From log<sub>10</sub>E ≈ 1.5M + 4.8, with E in joules. Only a small fraction of
+        this energy leaves as seismic waves — most goes into friction and heat on the fault, and into
+        fracturing rock. The comparisons are for scale, not for damage: a bomb releases its energy at a
+        point in microseconds, an earthquake over hundreds of kilometres and several minutes.</p>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">The intensity scale, I to XII</h2>
+      <p class="gd-desc">Intensity is what an earthquake did somewhere, graded from what people felt and
+        what broke. It predates instruments, still fills the gaps where instruments are sparse, and is what
+        actually matters for planning. This is the <b>Modified Mercalli</b> scale; Japan uses its own
+        <b>JMA shindo</b> scale of 0–7, and Europe the EMS-98, all broadly comparable.</p>
+      <div class="gd-tablewrap">
+        <table class="eq-table gd-table tight">
+          <thead><tr><th>MMI</th><th>Shaking</th><th>What people and buildings experience</th><th class="right">Peak ground acceleration</th></tr></thead>
+          <tbody>
+            <tr><td class="mag">I</td><td>Not felt</td><td>Detected only by instruments</td><td class="right">&lt; 0.1 %g</td></tr>
+            <tr><td class="mag">II–III</td><td>Weak</td><td>Felt by a few at rest, mostly upstairs; like a passing truck. Often not recognised as an earthquake</td><td class="right">0.1–1.4 %g</td></tr>
+            <tr><td class="mag">IV</td><td>Light</td><td>Felt indoors by many; dishes and windows rattle; parked cars rock</td><td class="right">1.4–3.9 %g</td></tr>
+            <tr><td class="mag">V</td><td>Moderate</td><td>Felt by nearly everyone; unstable objects overturn; some windows break; sleepers wake</td><td class="right">3.9–9.2 %g</td></tr>
+            <tr><td class="mag">VI</td><td>Strong</td><td>Felt by all, many frightened; plaster cracks, heavy furniture moves; slight damage</td><td class="right">9.2–18 %g</td></tr>
+            <tr><td class="mag">VII</td><td>Very strong</td><td>Hard to stand; negligible damage in well-built structures, considerable in poorly built ones</td><td class="right">18–34 %g</td></tr>
+            <tr><td class="mag">VIII</td><td>Severe</td><td>Considerable damage to ordinary buildings; chimneys and walls fall; partial collapse</td><td class="right">34–65 %g</td></tr>
+            <tr><td class="mag">IX</td><td>Violent</td><td>Damage even to earthquake-designed structures; buildings shifted off foundations; ground cracks</td><td class="right">65–124 %g</td></tr>
+            <tr><td class="mag big">X–XII</td><td>Extreme</td><td>Most masonry destroyed; rails bent; bridges down; at XII, total destruction and visible ground waves</td><td class="right">&gt; 124 %g</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="gd-note" style="margin-top:16px"><b>Soil decides a lot of this.</b> Soft sediment
+        amplifies shaking, sometimes by a factor of three or more, so two neighbourhoods the same distance
+        from the epicenter can differ by two full intensity grades. Mexico City's 1985 disaster is the
+        classic case: the worst damage was 350 km from the rupture, on an old lake bed whose natural period
+        happened to match that of its mid-rise buildings.</div>
+    </div>
+  </section>
+
+  <!-- ================= HAZARDS ================= -->
+  <section class="gd-sec" id="gd-hazards">
+    <div class="card gd-card">
+      <h2 class="gd-title">What actually causes the damage</h2>
+      <p class="gd-desc">Earthquakes rarely hurt people directly. Almost all loss comes from what the
+        shaking sets off — and which of these dominates depends far more on the ground and the buildings
+        than on the magnitude.</p>
+      <div class="gd-tablewrap">
+        <table class="eq-table gd-table tight">
+          <thead><tr><th>Hazard</th><th>What happens</th><th>Where it is worst</th><th class="right">Onset</th></tr></thead>
+          <tbody>
+            <tr><td class="mag">Ground shaking</td><td>Structures are driven back and forth until they fail</td><td>Soft soil, basins, unreinforced masonry</td><td class="right">Seconds</td></tr>
+            <tr><td class="mag">Liquefaction</td><td>Saturated sand loses strength and flows; buildings tilt and sink</td><td>Reclaimed land, river deltas, coastal fill</td><td class="right">Seconds to minutes</td></tr>
+            <tr><td class="mag">Landslide</td><td>Slopes fail, burying valleys and cutting roads</td><td>Steep terrain, especially after rain</td><td class="right">Seconds to days</td></tr>
+            <tr><td class="mag">Surface rupture</td><td>The fault breaks the ground surface, offsetting anything across it</td><td>Directly on the fault trace</td><td class="right">Seconds</td></tr>
+            <tr><td class="mag">Tsunami</td><td>Displaced seafloor sends waves across the ocean</td><td>Low-lying coasts near subduction zones</td><td class="right">Minutes to hours</td></tr>
+            <tr><td class="mag">Fire</td><td>Ruptured gas and damaged wiring ignite; broken mains stop firefighting</td><td>Dense cities</td><td class="right">Minutes to hours</td></tr>
+            <tr><td class="mag">Lifeline failure</td><td>Water, power, transport and hospitals go down together</td><td>Everywhere; drives the long recovery</td><td class="right">Hours to months</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="gd-grid two">
+      <div class="card gd-card">
+        <h2 class="gd-title">Liquefaction</h2>
+        <div class="rich-text">
+          <p>Loose, water-saturated sand is held up by grain-to-grain contact. Shaking rearranges the
+            grains; the water between them cannot escape fast enough, so pore pressure climbs until it
+            carries the whole load. At that moment the ground has no shear strength — it behaves like a
+            dense liquid.</p>
+          <p>Heavy buildings sink or tilt, buried tanks and pipes float upward, and sand and water erupt at
+            the surface as <b>sand boils</b>. On even a gentle slope the softened layer slides seaward,
+            tearing the ground above into fissures — <b>lateral spreading</b>, which is what destroys
+            harbours and bridge approaches.</p>
+          <p>Niigata in 1964 gave the phenomenon its modern textbook images: apartment blocks that toppled
+            over intact, without breaking. Christchurch in 2011 showed the cost when it happens under a
+            whole city, and it is a large part of why so much of that city was not rebuilt in place.</p>
+        </div>
+      </div>
+
+      <div class="card gd-card">
+        <h2 class="gd-title">Landslides and ground failure</h2>
+        <div class="rich-text">
+          <p>Strong shaking on steep ground triggers landslides in enormous numbers. The 2008 Wenchuan
+            earthquake set off tens of thousands of them; they killed a substantial fraction of the
+            victims, dammed rivers into unstable new lakes, and cut the roads rescuers needed.</p>
+          <p>The hazard does not end with the shaking. Slopes loosened by an earthquake keep failing for
+            years afterwards, especially in the first rainy season, and the debris raises flood risk far
+            downstream.</p>
+          <p><b>Surface rupture</b> is a narrower but absolute hazard: nothing built across an active fault
+            trace survives metres of offset. It is the reason fault-zoning laws exist, and why in
+            California a surveyed active trace legally restricts what can be built on it.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">Tsunami</h2>
+      <p class="gd-desc">When a shallow thrust earthquake lifts a wide patch of seafloor, it lifts the
+        entire water column above it. That displacement spreads outward as a wave that is almost invisible
+        in deep water and devastating at the coast.</p>
+      <div class="gd-fig">
+        <svg viewBox="0 0 720 250" role="img" aria-label="A tsunami crossing deep water and shoaling at the coast">
+          <!-- label band, kept clear of the water so nothing overlaps -->
+          <g font-family="Inter,sans-serif" text-anchor="middle">
+            <text x="170" y="16" font-size="11.5" font-weight="600" fill="#16294e">deep ocean</text>
+            <text x="170" y="32" font-size="10" fill="#5d7a9c">4 km deep · ~713 km/h · wave under 1 m</text>
+            <text x="600" y="16" font-size="11.5" font-weight="600" fill="#16294e">shoaling</text>
+            <text x="600" y="32" font-size="10" fill="#5d7a9c">slows, shortens, piles up</text>
+          </g>
+
+          <rect x="0" y="62" width="720" height="148" fill="#cfe6f7"/>
+          <path d="M0 210 L430 210 L560 146 L640 118 L720 118 L720 250 L0 250 Z" fill="#e8dcc8"/>
+          <path d="M0 210 L430 210 L560 146 L640 118 L720 118" fill="none" stroke="#c3b096" stroke-width="1.5"/>
+          <path d="M0 62 H720" stroke="#7fb6dd" stroke-width="1.2"/>
+
+          <!-- the same wave, three times: low and long far out, tall and short inshore -->
+          <path d="M96 62 q34 -14 68 0" fill="none" stroke="#1a6ef5" stroke-width="3"/>
+          <path d="M286 62 q30 -20 60 0" fill="none" stroke="#1a6ef5" stroke-width="3"/>
+          <path d="M470 62 q22 -30 44 0" fill="none" stroke="#1560d8" stroke-width="3.2"/>
+          <path d="M556 62 q16 -46 32 0" fill="none" stroke="#1560d8" stroke-width="3.6"/>
+
+          <g stroke="#1a6ef5" stroke-width="1.8" fill="none" opacity=".85">
+            <path d="M196 100 h44 M232 94 l8 6 -8 6"/>
+            <path d="M380 100 h44 M416 94 l8 6 -8 6"/>
+          </g>
+
+          <!-- the source: a patch of seafloor pushed up -->
+          <path d="M250 210 q40 -18 80 0" fill="none" stroke="#e8432d" stroke-width="3"/>
+          <g stroke="#e8432d" stroke-width="2.2" fill="none">
+            <path d="M276 206 v-18 M270 194 l6 -6 6 6"/>
+            <path d="M304 206 v-18 M298 194 l6 -6 6 6"/>
+          </g>
+          <text x="290" y="238" font-family="Inter,sans-serif" font-size="10.5" font-weight="600"
+                fill="#c0392b" text-anchor="middle">seafloor thrust lifts the water column</text>
+        </svg>
+      </div>
+      <div class="gd-grid two">
+        <div>
+          <div class="gd-tablewrap">
+            <table class="eq-table gd-table tight">
+              <thead><tr><th>Water depth</th><th class="right">Wave speed</th><th class="right">Crossing 1,000 km</th></tr></thead>
+              <tbody>
+                <tr><td>4,000 m</td><td class="right">~713 km/h</td><td class="right">1 h 24 min</td></tr>
+                <tr><td>2,000 m</td><td class="right">~504 km/h</td><td class="right">1 h 59 min</td></tr>
+                <tr><td>200 m</td><td class="right">~159 km/h</td><td class="right">6 h 16 min</td></tr>
+                <tr><td>50 m</td><td class="right">~80 km/h</td><td class="right">12 h 33 min</td></tr>
+                <tr><td>10 m</td><td class="right">~36 km/h</td><td class="right">28 h 03 min</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="gd-figcap">Speed is √(g × depth). In deep water a tsunami can cross an ocean in the time
+            of an airline flight while a ship above it feels nothing — the wave is a metre high but
+            hundreds of kilometres long. As it shoals it slows, and the energy that was spread over that
+            length has nowhere to go but up.</p>
+        </div>
+        <div>
+          <div class="gd-warn">
+            <div class="gd-warn-title">Natural warnings — act on these without waiting</div>
+            <ul class="ticks">
+              <li><i data-icon="check" data-size="17"></i><span><b>Strong or long shaking on the coast.</b> If it is hard to stand, or lasts more than about 20 seconds, go inland or uphill as soon as it stops.</span></li>
+              <li><i data-icon="check" data-size="17"></i><span><b>The sea withdraws</b>, exposing reef and seabed. This is the trough arriving first; the crest is minutes behind.</span></li>
+              <li><i data-icon="check" data-size="17"></i><span><b>A loud roar</b> from the sea, like a train.</span></li>
+            </ul>
+            <p class="gd-warn-note">A local tsunami can arrive in 10–20 minutes — sooner than any official
+              warning can reach you. Move to high ground or as far inland as possible, on foot if roads are
+              damaged, and stay there. Waves continue for hours and the first is often not the largest.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">Aftershocks</h2>
+      <div class="gd-grid two">
+        <div class="rich-text">
+          <p>A large earthquake redistributes stress onto the surrounding crust, and that adjustment plays
+            out as a long tail of smaller events. Their rate follows <b>Omori's law</b>: aftershocks decay
+            roughly as 1/t, so the day-two rate is about half the day-one rate, day ten about a tenth, and
+            the sequence never quite ends — it fades below the background.</p>
+          <p><b>Båth's law</b> adds a rule of thumb for the largest one: expect it to be about 1.2
+            magnitude units below the mainshock. An M 7.0 will typically be followed by something near
+            M 5.8.</p>
+        </div>
+        <div class="rich-text">
+          <p>Two consequences matter in practice. First, aftershocks hit buildings that the mainshock has
+            already weakened, so a smaller event can cause the collapse. Second, the labels are assigned in
+            hindsight: what is called a foreshock only earns the name once something bigger follows, which
+            is why "foreshock activity" is never a usable warning at the time.</p>
+          <p>Occasionally the second event is the larger one, and the sequence is renamed accordingly. The
+            2023 Türkiye–Syria sequence produced an M 7.8 and, nine hours later, an M 7.5 on a
+            different fault — large enough to count as its own earthquake.</p>
+        </div>
+      </div>
+      <div class="gd-note" style="margin-top:16px">The <a class="link" href="insights.html">Insights</a> page
+        plots event rate over time, where the Omori decay after a large event is visible directly in the
+        catalogue.</div>
+    </div>
+  </section>
+
+  <!-- ================= HISTORY ================= -->
+  <section class="gd-sec" id="gd-history">
+    <div class="card gd-card">
+      <h2 class="gd-title">The largest earthquakes ever recorded</h2>
+      <p class="card-sub" style="margin-bottom:12px">Instrumental era only — moment magnitude, from the
+        USGS list of great earthquakes. Every one of them is a subduction thrust.</p>
+      <div class="gd-tablewrap">
+        <table class="eq-table gd-table tight">
+          <thead><tr><th>Mw</th><th>Date</th><th>Location</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="mag big">9.5</td><td>22 May 1960</td><td>Valdivia, Chile</td><td>The largest ever measured; tsunami killed people in Japan and Hawaii a day later</td></tr>
+            <tr><td class="mag big">9.2</td><td>27 Mar 1964</td><td>Prince William Sound, Alaska</td><td>Four and a half minutes of shaking; the study of it confirmed subduction</td></tr>
+            <tr><td class="mag big">9.1</td><td>26 Dec 2004</td><td>Sumatra–Andaman</td><td>~1,300 km of rupture; the deadliest tsunami in recorded history</td></tr>
+            <tr><td class="mag big">9.1</td><td>11 Mar 2011</td><td>Tōhoku, Japan</td><td>Up to 50 m of slip; overtopped seawalls and caused the Fukushima accident</td></tr>
+            <tr><td class="mag big">9.0</td><td>4 Nov 1952</td><td>Kamchatka, Russia</td><td>Prompted the first Pacific-wide tsunami warning arrangements</td></tr>
+            <tr><td class="mag">8.8</td><td>27 Feb 2010</td><td>Maule, Chile</td><td>Modern building codes held; deaths in the hundreds, not the tens of thousands</td></tr>
+            <tr><td class="mag">8.8</td><td>31 Jan 1906</td><td>Ecuador–Colombia</td><td>Tsunami crossed the Pacific and was recorded in Japan</td></tr>
+            <tr><td class="mag">8.7</td><td>4 Feb 1965</td><td>Rat Islands, Alaska</td><td>Remote; little damage despite its size</td></tr>
+            <tr><td class="mag">8.6</td><td>28 Mar 2005</td><td>Northern Sumatra</td><td>Triggered on the segment adjacent to the 2004 rupture</td></tr>
+            <tr><td class="mag">8.6</td><td>15 Aug 1950</td><td>Assam–Tibet</td><td>The largest continental-collision earthquake on record</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="gd-figcap">Magnitudes before about 1960 are reassessments from limited instrumental data and
+        carry real uncertainty — often ±0.2 or more.</p>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">The deadliest</h2>
+      <p class="card-sub" style="margin-bottom:12px">Note how weakly this list correlates with the one
+        above. Deaths follow building stock, population density, time of day and terrain — not magnitude.</p>
+      <div class="gd-tablewrap">
+        <table class="eq-table gd-table tight">
+          <thead><tr><th>Deaths (estimated)</th><th>Date</th><th>Location</th><th>M</th><th>What drove the toll</th></tr></thead>
+          <tbody>
+            <tr><td class="mag">~830,000</td><td>23 Jan 1556</td><td>Shaanxi, China</td><td>~8</td><td>Millions lived in cave dwellings cut into soft loess, which collapsed</td></tr>
+            <tr><td class="mag">242,000–655,000</td><td>28 Jul 1976</td><td>Tangshan, China</td><td>7.6</td><td>Struck at 03:42 in an unreinforced industrial city; official and independent counts differ sharply</td></tr>
+            <tr><td class="mag">~227,900</td><td>26 Dec 2004</td><td>Sumatra–Andaman</td><td>9.1</td><td>Tsunami across fourteen countries with no Indian Ocean warning system in place</td></tr>
+            <tr><td class="mag">~200,000</td><td>16 Dec 1920</td><td>Haiyuan, China</td><td>7.8</td><td>Landslides in loess hill country buried entire villages</td></tr>
+            <tr><td class="mag">~100,000–316,000</td><td>12 Jan 2010</td><td>Haiti</td><td>7.0</td><td>A moderate quake directly beneath a capital city with almost no seismic construction</td></tr>
+            <tr><td class="mag">~142,800</td><td>1 Sep 1923</td><td>Kantō, Japan</td><td>7.9</td><td>Firestorms in Tokyo and Yokohama, ignited at the lunchtime cooking hour</td></tr>
+            <tr><td class="mag">~87,600</td><td>12 May 2008</td><td>Sichuan, China</td><td>7.9</td><td>School and hospital collapses; tens of thousands of landslides</td></tr>
+            <tr><td class="mag">~86,000</td><td>8 Oct 2005</td><td>Kashmir, Pakistan</td><td>7.6</td><td>Mountain villages, stone masonry, winter approaching</td></tr>
+            <tr><td class="mag">~59,000</td><td>6 Feb 2023</td><td>Türkiye and Syria</td><td>7.8 &amp; 7.5</td><td>Two large quakes nine hours apart; widespread non-compliant construction</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="gd-figcap">Historical tolls are estimates and some are actively disputed; ranges are given
+        where sources disagree materially. Figures follow USGS and national agency summaries.</p>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">What each disaster changed</h2>
+      <p class="gd-desc">Nearly every advance in earthquake safety was bought by a catastrophe. The pattern
+        is consistent enough to be worth stating plainly: the science improves, the codes follow, and the
+        next earthquake in that place kills far fewer people.</p>
+      <div class="ready-steps">
+        <div class="rs"><span class="rs-n">1906</span>
+          <div><b>San Francisco.</b> Reid's study of the offset fences and roads along the San Andreas gave
+            us elastic rebound — the first correct physical theory of what an earthquake is.</div></div>
+        <div class="rs"><span class="rs-n">1923</span>
+          <div><b>Kantō.</b> Japan introduced the world's first national seismic design requirement the
+            following year, beginning a century of code development.</div></div>
+        <div class="rs"><span class="rs-n">1960</span>
+          <div><b>Chile.</b> The tsunami killed people in Hawaii and Japan a day after the shaking, which
+            made a Pacific-wide warning system unarguable.</div></div>
+        <div class="rs"><span class="rs-n">1964</span>
+          <div><b>Alaska and Niigata.</b> Alaska's data helped confirm plate tectonics; Niigata, the same
+            year, made liquefaction a standard part of geotechnical engineering.</div></div>
+        <div class="rs"><span class="rs-n">1985</span>
+          <div><b>Mexico City.</b> Catastrophic damage 350 km from the rupture proved that local soil can
+            matter more than distance, and site amplification entered codes worldwide.</div></div>
+        <div class="rs"><span class="rs-n">2004</span>
+          <div><b>Indian Ocean.</b> An ocean with no warning system got one, along with sustained
+            investment in coastal evacuation planning and education.</div></div>
+        <div class="rs"><span class="rs-n">2011</span>
+          <div><b>Tōhoku.</b> Hazard models had not allowed for an M 9 on that margin. The lesson —
+            that the largest event in the historical record is not the largest possible — reshaped how
+            maximum credible earthquakes are estimated everywhere.</div></div>
+      </div>
+      <div class="gd-note" style="margin-top:16px">The 2010 Chile earthquake is the counter-example worth
+        remembering. At M 8.8 it released about 500 times the energy of Haiti's M 7.0 six weeks earlier,
+        and killed roughly a five-hundredth as many people. Construction standards, not luck.</div>
     </div>
   </section>
 
@@ -293,28 +1079,103 @@
   <section class="gd-sec" id="gd-terms">
     <div class="card gd-card">
       <h2 class="gd-title">Key Terms</h2>
-      <p class="card-sub" style="margin-bottom:10px">The vocabulary you'll meet on this platform and in the news.</p>
-      <div class="gd-terms cols2">
-        <div class="term"><span class="t-ic" style="background:#eef4ff;color:#1a6ef5"><i data-icon="target" data-size="16"></i></span>
-          <div><b>Epicenter</b><span>the point on the surface directly above the rupture</span></div></div>
-        <div class="term"><span class="t-ic" style="background:#fdecea;color:#c62828"><i data-icon="layers" data-size="16"></i></span>
-          <div><b>Hypocenter (focus)</b><span>the point at depth where the quake actually starts</span></div></div>
-        <div class="term"><span class="t-ic" style="background:#fff3e0;color:#e65100"><i data-icon="activity" data-size="16"></i></span>
-          <div><b>Aftershock</b><span>smaller quakes that follow the mainshock, sometimes for months</span></div></div>
-        <div class="term"><span class="t-ic" style="background:#fff3e0;color:#e65100"><i data-icon="up" data-size="16"></i></span>
-          <div><b>Foreshock</b><span>a quake that precedes a larger one — only clear in hindsight</span></div></div>
-        <div class="term"><span class="t-ic" style="background:#e9f7f0;color:#1d9e6e"><i data-icon="chartline" data-size="16"></i></span>
-          <div><b>Moment magnitude (Mw)</b><span>today's standard scale for an earthquake's size</span></div></div>
-        <div class="term"><span class="t-ic" style="background:#f3e8ff;color:#7c3aed"><i data-icon="bars" data-size="16"></i></span>
-          <div><b>Intensity (MMI)</b><span>shaking and damage at a location, graded I–XII</span></div></div>
-        <div class="term"><span class="t-ic" style="background:#eef4ff;color:#1a6ef5"><i data-icon="antenna" data-size="16"></i></span>
-          <div><b>Seismograph</b><span>the instrument that records ground motion — we stream 2,800+</span></div></div>
-        <div class="term"><span class="t-ic" style="background:#eef4ff;color:#1a6ef5"><i data-icon="globe" data-size="16"></i></span>
-          <div><b>Fault</b><span>a fracture in the crust where blocks of rock move past each other</span></div></div>
-        <div class="term"><span class="t-ic" style="background:#e9f7f0;color:#1d9e6e"><i data-icon="database" data-size="16"></i></span>
-          <div><b>Liquefaction</b><span>water-saturated soil behaving like a liquid during strong shaking</span></div></div>
-        <div class="term"><span class="t-ic" style="background:#fdecea;color:#c62828"><i data-icon="radio" data-size="16"></i></span>
-          <div><b>Tsunami</b><span>ocean waves generated when a large undersea quake moves the seafloor</span></div></div>
+      <p class="card-sub" style="margin-bottom:10px">The vocabulary you will meet on this platform and in
+        the news, grouped by what it describes.</p>
+
+      <div class="gd-terms-group">
+        <h3>The event</h3>
+        <div class="gd-terms cols2">
+          <div class="term"><span class="t-ic" style="background:#eef4ff;color:#1a6ef5"><i data-icon="target" data-size="16"></i></span>
+            <div><b>Epicenter</b><span>the point on the surface directly above where the rupture began</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#fdecea;color:#c62828"><i data-icon="layers" data-size="16"></i></span>
+            <div><b>Hypocenter (focus)</b><span>the point at depth where the rupture actually starts</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#eef4ff;color:#1a6ef5"><i data-icon="globe" data-size="16"></i></span>
+            <div><b>Fault</b><span>a fracture in the crust where blocks of rock move past each other</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#eef4ff;color:#1a6ef5"><i data-icon="branch" data-size="16"></i></span>
+            <div><b>Rupture</b><span>the patch of fault that actually slipped, often hundreds of km long</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#e9f7f0;color:#1d9e6e"><i data-icon="activity" data-size="16"></i></span>
+            <div><b>Elastic rebound</b><span>rock bends under strain, then snaps back — the basic mechanism</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#fff3e0;color:#e65100"><i data-icon="activity" data-size="16"></i></span>
+            <div><b>Aftershock</b><span>smaller quakes following the mainshock, decaying roughly as 1/time</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#fff3e0;color:#e65100"><i data-icon="up" data-size="16"></i></span>
+            <div><b>Foreshock</b><span>a quake preceding a larger one — only identifiable in hindsight</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#fff3e0;color:#e65100"><i data-icon="bars" data-size="16"></i></span>
+            <div><b>Swarm</b><span>many quakes of similar size with no clear mainshock, often volcanic</span></div></div>
+        </div>
+      </div>
+
+      <div class="gd-terms-group">
+        <h3>Waves and measurement</h3>
+        <div class="gd-terms cols2">
+          <div class="term"><span class="t-ic" style="background:#e9f7f0;color:#1d9e6e"><i data-icon="activity" data-size="16"></i></span>
+            <div><b>P wave</b><span>the fast compressional wave; arrives first, warns of what follows</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#eef4ff;color:#1a6ef5"><i data-icon="activity" data-size="16"></i></span>
+            <div><b>S wave</b><span>the slower shear wave; carries most of the damaging motion</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#f3e8ff;color:#7c3aed"><i data-icon="chartline" data-size="16"></i></span>
+            <div><b>Surface waves</b><span>Love and Rayleigh waves, slowest and largest at distance</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#e9f7f0;color:#1d9e6e"><i data-icon="chartline" data-size="16"></i></span>
+            <div><b>Moment magnitude (Mw)</b><span>the standard scale; from rupture area × slip × rigidity</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#e9f7f0;color:#1d9e6e"><i data-icon="chartline" data-size="16"></i></span>
+            <div><b>Seismic moment (M₀)</b><span>the physical size of the rupture, in newton-metres</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#f3e8ff;color:#7c3aed"><i data-icon="bars" data-size="16"></i></span>
+            <div><b>Intensity (MMI)</b><span>shaking and damage at one place, graded I–XII</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#f3e8ff;color:#7c3aed"><i data-icon="bars" data-size="16"></i></span>
+            <div><b>PGA</b><span>peak ground acceleration, as a percentage of gravity</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#eef4ff;color:#1a6ef5"><i data-icon="antenna" data-size="16"></i></span>
+            <div><b>Seismometer</b><span>the instrument that records ground motion, in three directions</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#eef4ff;color:#1a6ef5"><i data-icon="doc" data-size="16"></i></span>
+            <div><b>Seismogram</b><span>the recording itself — the trace P, S and surface waves leave</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#fdecea;color:#c62828"><i data-icon="chartline" data-size="16"></i></span>
+            <div><b>Saturation</b><span>an older scale ceasing to grow once the quake exceeds its range</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#e9f7f0;color:#1d9e6e"><i data-icon="target" data-size="16"></i></span>
+            <div><b>Focal mechanism</b><span>the "beachball" showing which way the fault moved</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#e9f7f0;color:#1d9e6e"><i data-icon="bars" data-size="16"></i></span>
+            <div><b>Gutenberg–Richter law</b><span>ten times more quakes for each magnitude step down</span></div></div>
+        </div>
+      </div>
+
+      <div class="gd-terms-group">
+        <h3>Tectonic setting</h3>
+        <div class="gd-terms cols2">
+          <div class="term"><span class="t-ic" style="background:#eef4ff;color:#1a6ef5"><i data-icon="globe" data-size="16"></i></span>
+            <div><b>Tectonic plate</b><span>a rigid slab of Earth's outer shell, moving cm per year</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#fdecea;color:#c62828"><i data-icon="layers" data-size="16"></i></span>
+            <div><b>Subduction zone</b><span>where one plate dives beneath another; home of every M 9</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#fdecea;color:#c62828"><i data-icon="layers" data-size="16"></i></span>
+            <div><b>Wadati–Benioff zone</b><span>the sloping sheet of quakes inside a sinking slab</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#eef4ff;color:#1a6ef5"><i data-icon="branch" data-size="16"></i></span>
+            <div><b>Transform fault</b><span>plates sliding past each other, as at the San Andreas</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#e9f7f0;color:#1d9e6e"><i data-icon="branch" data-size="16"></i></span>
+            <div><b>Mid-ocean ridge</b><span>where plates pull apart and new seafloor is made</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#fff3e0;color:#e65100"><i data-icon="target" data-size="16"></i></span>
+            <div><b>Intraplate earthquake</b><span>one far from any boundary, like New Madrid</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#fff3e0;color:#e65100"><i data-icon="tool" data-size="16"></i></span>
+            <div><b>Induced seismicity</b><span>quakes triggered by fluid injection, mining or reservoirs</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#fdecea;color:#c62828"><i data-icon="target" data-size="16"></i></span>
+            <div><b>Seismic gap</b><span>a stretch of active fault that has not slipped in a long time</span></div></div>
+        </div>
+      </div>
+
+      <div class="gd-terms-group">
+        <h3>Effects and response</h3>
+        <div class="gd-terms cols2">
+          <div class="term"><span class="t-ic" style="background:#e9f7f0;color:#1d9e6e"><i data-icon="database" data-size="16"></i></span>
+            <div><b>Liquefaction</b><span>saturated soil losing strength and behaving like a liquid</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#e9f7f0;color:#1d9e6e"><i data-icon="database" data-size="16"></i></span>
+            <div><b>Lateral spreading</b><span>liquefied ground sliding downslope, tearing what sits on it</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#fdecea;color:#c62828"><i data-icon="radio" data-size="16"></i></span>
+            <div><b>Tsunami</b><span>ocean waves raised when a large undersea quake moves the seafloor</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#fdecea;color:#c62828"><i data-icon="up" data-size="16"></i></span>
+            <div><b>Run-up</b><span>how high above sea level a tsunami reaches on land</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#eef4ff;color:#1a6ef5"><i data-icon="bell" data-size="16"></i></span>
+            <div><b>Earthquake early warning</b><span>alerting from the P wave, seconds before the S wave</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#f3e8ff;color:#7c3aed"><i data-icon="layers" data-size="16"></i></span>
+            <div><b>ShakeMap</b><span>a map of observed and estimated shaking, made within minutes</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#f3e8ff;color:#7c3aed"><i data-icon="shield" data-size="16"></i></span>
+            <div><b>Base isolation</b><span>mounting a building on bearings so the ground moves, not it</span></div></div>
+          <div class="term"><span class="t-ic" style="background:#f3e8ff;color:#7c3aed"><i data-icon="shield" data-size="16"></i></span>
+            <div><b>Retrofit</b><span>strengthening an existing building to a later seismic standard</span></div></div>
+        </div>
       </div>
     </div>
   </section>
@@ -332,33 +1193,85 @@
         </details>
         <details>
           <summary>Can earthquakes be predicted? <i data-icon="chevdown" data-size="16"></i></summary>
-          <p>No — no method reliably predicts the exact time, place, and size of a future quake. What
-            science <b>can</b> do is forecast probabilities (like aftershock forecasts) and issue early
-            warnings seconds before strong shaking arrives, using the fast P&nbsp;wave.</p>
+          <p>No. No method reliably gives the time, place and size of a future earthquake, and decades of
+            searching for reliable precursors — radon, animal behaviour, foreshock patterns, electrical
+            signals — have not produced one that works outside hindsight. What science <b>can</b> do is
+            three real things: long-term <b>hazard</b> maps that say how strongly a place should expect to
+            shake over 50 years; short-term <b>aftershock forecasts</b> in probabilities; and <b>early
+            warning</b>, which detects an earthquake already underway and buys seconds.</p>
         </details>
         <details>
           <summary>How do earthquake alerts work? <i data-icon="chevdown" data-size="16"></i></summary>
-          <p>Stations near the epicenter detect the first P&nbsp;waves, estimate location and magnitude
-            within seconds, and broadcast a warning that races ahead of the slower, damaging S&nbsp;waves —
-            giving seconds to tens of seconds of notice.</p>
+          <p>Stations near the epicenter detect the first P waves, estimate location and magnitude within
+            seconds, and broadcast a warning that races ahead of the slower, damaging S waves. The
+            radio signal travels at light speed; the shaking travels at 3–4 km/s. That gap gives seconds to
+            tens of seconds — enough to stop a train, open a firehouse door, or get under a table. Directly
+            above the epicenter there is a <b>blind zone</b> where the warning cannot arrive first, which
+            is the fundamental limit of the method.</p>
         </details>
         <details>
           <summary>How long do aftershocks last? <i data-icon="chevdown" data-size="16"></i></summary>
-          <p>Days to months — occasionally years after a very large mainshock. They become less frequent
-            with time, but a large aftershock can still damage buildings weakened by the mainshock, so
-            stay cautious around damaged structures.</p>
+          <p>Days to months, and occasionally years after a very large mainshock. The rate decays roughly
+            as 1 over elapsed time, so it drops fast at first and then slowly. Expect the largest aftershock
+            to be around 1.2 magnitude units below the mainshock, and remember that it strikes buildings
+            already weakened — stay out of damaged structures.</p>
         </details>
         <details>
           <summary>Do many small quakes prevent a big one? <i data-icon="chevdown" data-size="16"></i></summary>
-          <p>Unfortunately not. Magnitude is logarithmic: it takes about <b>32,000 M&nbsp;3 events</b> to
-            release the energy of a single M&nbsp;6. Small quakes barely relieve the stress that drives
-            large ones.</p>
+          <p>No. Magnitude is logarithmic: it takes about <b>32,000 M 3 events</b> to release the energy of
+            a single M 6, and roughly a million to match an M 7. The small quakes a region actually
+            produces barely dent the stress that drives large ones.</p>
+        </details>
+        <details>
+          <summary>Is there such a thing as "earthquake weather"? <i data-icon="chevdown" data-size="16"></i></summary>
+          <p>No. Earthquakes begin kilometres below the surface, where weather has no influence, and
+            statistical checks find no link to temperature, pressure or season. Very heavy rain can trigger
+            landslides and, over long periods, reservoir loading can influence nearby faults — but there is
+            no weather that precedes earthquakes.</p>
+        </details>
+        <details>
+          <summary>Can the Moon or planets trigger earthquakes? <i data-icon="chevdown" data-size="16"></i></summary>
+          <p>Tides do flex the crust slightly, and careful studies find a very small increase in the rate
+            of some quake types at particular tidal phases. The effect is far too weak and too general to
+            predict anything: it shifts the odds by a fraction of a percent on faults that were already
+            about to fail. Planetary alignments have no measurable effect at all.</p>
+        </details>
+        <details>
+          <summary>Why did I feel a small quake far away but not a big one nearby? <i data-icon="chevdown" data-size="16"></i></summary>
+          <p>Depth, geology and what you were doing. A shallow M 3 a few kilometres away can rattle windows
+            while a deep M 6 two hundred kilometres down arrives as a gentle roll. Soft sediment amplifies
+            shaking and hard bedrock dampens it, so two neighbourhoods can differ sharply. Sitting still on
+            an upper floor also makes you far more likely to notice.</p>
         </details>
         <details>
           <summary>Does earthquake-resistant design really work? <i data-icon="chevdown" data-size="16"></i></summary>
-          <p>Yes — it is the single most effective way to save lives. Modern seismic codes let buildings
-            flex and dissipate energy instead of collapsing, which is why similar quakes cause vastly
-            different damage in different countries.</p>
+          <p>Yes, and it is the single most effective way to save lives. Modern codes let a building flex
+            and dissipate energy rather than snap. Compare Chile in 2010 — M 8.8, about 500 times the
+            energy — with Haiti six weeks earlier at M 7.0: deaths in the hundreds versus the hundreds of
+            thousands. The difference was construction.</p>
+        </details>
+        <details>
+          <summary>Should I run outside when the shaking starts? <i data-icon="chevdown" data-size="16"></i></summary>
+          <p>No. Most injuries happen from falling objects and from people moving during the shaking, and
+            building façades and glass fall onto the street. Drop, cover and hold on where you are, and
+            leave only once the shaking has stopped. The old advice about doorways applies to old adobe
+            houses, not to modern buildings, where a doorway is no stronger than the rest of the frame.</p>
+        </details>
+        <details>
+          <summary>How is depth measured, and why is it often exactly 10 km? <i data-icon="chevdown" data-size="16"></i></summary>
+          <p>Depth comes from how arrival times vary across a network, and it is the hardest parameter to
+            resolve — especially offshore, where all the stations lie to one side. When the data cannot
+            constrain it, agencies fix depth at a default, commonly 10 km, and publish that. A round 10 km
+            usually means "shallow, not otherwise determined" rather than a measurement.</p>
+        </details>
+        <details>
+          <summary>Why do the numbers change after an earthquake is reported? <i data-icon="chevdown" data-size="16"></i></summary>
+          <p>The first solution comes from a handful of nearby stations within a minute or two. As distant
+            stations report and analysts review, location, depth and magnitude are all refined, and the
+            magnitude type often changes — an early m<sub>b</sub> is replaced by a computed M<sub>w</sub>.
+            Revisions of 0.2–0.3 magnitude units in the first hour are routine. This site re-fetches the
+            last 14 days every 45 minutes for exactly that reason, so corrections and withdrawals follow
+            through.</p>
         </details>
       </div>
     </div>
@@ -387,7 +1300,7 @@
             <div class="sc-step"><span>3</span>Hold on</div>
           </div>
           <p class="sc-note">Get under a sturdy table, protect your head, and hold on until the shaking
-            stops. Stay away from windows.</p>
+            stops. Stay away from windows. Do not run outside.</p>
         </div>
 
         <div class="card sc-card">
@@ -434,6 +1347,36 @@
           <p class="sc-note">Press every floor button, exit at the first floor that opens, and use the
             stairs — never an elevator — to evacuate.</p>
         </div>
+
+        <div class="card sc-card">
+          <div class="sc-visual" style="background:linear-gradient(135deg,#e6f6fb,#d8eff8)">🌊</div>
+          <div class="sc-title">If you're on the coast</div>
+          <div class="sc-sub">shaking is the warning</div>
+          <div class="sc-steps">
+            <div class="sc-step"><span>1</span>Shaking stops</div>
+            <div class="sc-arrow">›</div>
+            <div class="sc-step"><span>2</span>Go high</div>
+            <div class="sc-arrow">›</div>
+            <div class="sc-step"><span>3</span>Stay hours</div>
+          </div>
+          <p class="sc-note">Long or strong shaking near the sea means move inland or uphill at once — a
+            local tsunami can arrive before any official alert. Never go to watch.</p>
+        </div>
+
+        <div class="card sc-card">
+          <div class="sc-visual" style="background:linear-gradient(135deg,#fdeef0,#fbe2e6)">🛏️</div>
+          <div class="sc-title">If you're in bed</div>
+          <div class="sc-sub">stay where you are</div>
+          <div class="sc-steps">
+            <div class="sc-step"><span>1</span>Stay down</div>
+            <div class="sc-arrow">›</div>
+            <div class="sc-step"><span>2</span>Cover head</div>
+            <div class="sc-arrow">›</div>
+            <div class="sc-step"><span>3</span>Hold on</div>
+          </div>
+          <p class="sc-note">Turn face-down and protect your head and neck with a pillow. Walking across a
+            dark room over broken glass is the greater risk.</p>
+        </div>
       </div>
 
       <div class="gd-grid split-62" style="margin-top:22px">
@@ -475,6 +1418,24 @@
               <div><b>Know your shut-offs.</b> Learn where and how to turn off gas, electricity, and
                 water. After strong shaking, check for leaks before using any flame.</div></div>
           </div>
+        </div>
+      </div>
+
+      <div class="card gd-card">
+        <h2 class="gd-title">After the shaking stops</h2>
+        <p class="gd-desc">The first hour decides a great deal. Work through this in order — and expect
+          aftershocks throughout.</p>
+        <div class="gd-tablewrap">
+          <table class="eq-table gd-table tight">
+            <thead><tr><th>When</th><th>Do</th><th>Do not</th></tr></thead>
+            <tbody>
+              <tr><td class="mag">First minutes</td><td>Check yourself, then others, for injuries. Put on sturdy shoes before walking anywhere — broken glass is everywhere.</td><td>Do not use a lighter or match until you are sure there is no gas leak.</td></tr>
+              <tr><td class="mag">First hour</td><td>If you smell gas or hear hissing, shut off the supply and open windows. Shut off water if pipes are damaged. Extinguish small fires.</td><td>Do not turn utilities back on yourself once shut off — gas in particular needs a professional.</td></tr>
+              <tr><td class="mag">First hour</td><td>Text rather than call. Networks stay usable for data long after voice calls jam.</td><td>Do not drive unless it is an emergency; keep roads clear.</td></tr>
+              <tr><td class="mag">First day</td><td>Listen to official information on radio or an agency app. Check on neighbours, especially older ones.</td><td>Do not enter damaged buildings, and do not go to the coast to look at the sea.</td></tr>
+              <tr><td class="mag">First week</td><td>Photograph damage before clearing it, for insurance. Expect aftershocks and treat weakened structures as unsafe.</td><td>Do not assume the largest shock has passed — sequences sometimes escalate.</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
 

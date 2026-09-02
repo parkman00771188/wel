@@ -882,14 +882,28 @@ class App {
    * and disables the control, rather than leaving a switch that does nothing.
    */
   applyAdditive() {
-    // The checkbox decides, in either palette. Locking it under the light one
-    // was defensible -- additive only ever brightens, so dense clusters wash
-    // out against a pale backdrop -- but that is a judgement about how the map
-    // looks, and it belongs to whoever is looking at it. The theme still turns
-    // switching palettes leaves it exactly as you set it.
+    // The checkbox decides, in either palette -- it is never locked. What the
+    // palette does instead is set a sensible default when you switch; see
+    // suggestAdditive.
+    this.quakes.setAdditive($('ck-additive').checked);
+  }
+
+  /**
+   * Additive blending only ever brightens, so over a pale backdrop dense
+   * clusters saturate to white and the map is lost. Turning the light palette
+   * on therefore turns the glow off -- but as a default, not a rule: the
+   * control stays live, and going back to dark restores whatever was set
+   * there. Only a deliberate toggle triggers this, so a saved combination
+   * survives a reload untouched.
+   */
+  suggestAdditive(light) {
     const box = $('ck-additive');
-    box.disabled = false;
-    this.quakes.setAdditive(box.checked);
+    if (light) {
+      this.additiveInDark = box.checked;
+      box.checked = false;
+    } else if (this.additiveInDark != null) {
+      box.checked = this.additiveInDark;
+    }
   }
 
   /**
@@ -1413,7 +1427,7 @@ class App {
       this.dirty = true;
     }, String(s.colorMode));
     check('ck-additive', () => { this.applyAdditive(); this.dirty = true; });
-    check('ck-light', (on) => this.applyTheme(on));
+    check('ck-light', (on) => { this.suggestAdditive(on); this.applyTheme(on); });
     check('ck-coast', (on) => {
       this.ref.setCoastVisible(on);
       this.globe?.setCoastVisible(on);

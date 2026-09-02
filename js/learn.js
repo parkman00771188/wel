@@ -4,7 +4,8 @@
 
   /* ---------- section tabs ---------- */
 
-  var SECTIONS = ["overview", "basics", "plates", "magnitude", "terms", "faq", "safety"];
+  var SECTIONS = ["overview", "basics", "plates", "measuring", "magnitude",
+                  "hazards", "history", "terms", "faq", "safety"];
   var nav = document.getElementById("gdNav");
 
   function activate(name, fromHash) {

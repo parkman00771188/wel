@@ -1233,7 +1233,73 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 .w-name.p { color: #0e9a8d; }
 .w-name.s { color: #1a6ef5; }
 .w-name span { font-weight: 500; font-size: 12.5px; color: var(--faint); }
+.w-name.love { color: #7c3aed; }
+.w-name.rayleigh { color: #e8622d; }
 .w-desc { font-size: 13px; color: var(--muted); margin-top: 4px; line-height: 1.6; }
+
+/* Figures. A diagram carries the explanation here, so it gets room to breathe
+   and a caption that says what to notice rather than repeating the heading. */
+.gd-fig { margin: 20px 0 10px; }
+.gd-fig svg { display: block; width: 100%; height: auto; }
+.gd-figcap {
+  font-size: 12.5px; line-height: 1.65; color: var(--faint); margin: 10px 0 0;
+}
+
+/* Denser table for the reference material -- the guide's tables are read a row
+   at a time, not scanned, so they can afford to be tighter than a data grid. */
+.gd-table.tight td, .gd-table.tight th { padding: 8px 11px !important; font-size: 12.8px; }
+.gd-table sub, .gd-table sup { font-size: .78em; }
+
+/* The one equation on the page. Set apart because the terms are defined under
+   it, which does not work inline. */
+.gd-formula {
+  background: var(--bg-soft); border: 1px solid var(--line); border-radius: 12px;
+  padding: 16px 18px; margin: 4px 0 18px; text-align: center;
+  font-size: 19px; font-weight: 600; color: var(--navy-800); letter-spacing: .01em;
+}
+.gd-formula span {
+  display: block; margin-top: 8px; font-size: 12.5px; font-weight: 500;
+  letter-spacing: 0; color: var(--muted);
+}
+
+/* Glossary groups. Thirty terms in one list is a wall; four labelled groups of
+   eight can be skimmed for the one you came for. */
+.gd-terms-group { margin-top: 26px; }
+.gd-terms-group:first-of-type { margin-top: 8px; }
+.gd-terms-group > h3 {
+  font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 12px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+/* Reference tables. Four or five columns at 390px do not wrap gracefully --
+   every cell becomes a six-line paragraph and a ten-row table runs to three
+   screens. Let them keep their shape and scroll sideways instead, breaking out
+   of the card's padding so the full width is usable. */
+@media (max-width: 760px) {
+  .gd-tablewrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -16px;
+    padding: 0 16px;
+  }
+  .gd-tablewrap > table { min-width: 540px; }
+}
+
+/* Life-safety instructions, marked as such. Amber rather than red: this is
+   "act on this", not "something has gone wrong". */
+.gd-warn {
+  background: #fff8ec; border: 1px solid #f6e2bd; border-left: 4px solid #e89b2d;
+  border-radius: 12px; padding: 18px 20px;
+}
+.gd-warn-title {
+  font-size: 14px; font-weight: 700; color: #8a5a12; margin-bottom: 12px;
+}
+.gd-warn .ticks li { align-items: flex-start; }
+.gd-warn .ticks svg { color: #d98b1f; }
+.gd-warn-note {
+  font-size: 12.8px; line-height: 1.65; color: #8a6a3a; margin: 12px 0 0;
+}
 
 /* magnitude vs intensity */
 .gd-compare {
