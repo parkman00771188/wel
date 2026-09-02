@@ -205,7 +205,10 @@ h1, h2, h3, h4 { margin: 0; color: var(--navy-800); }
   color: var(--muted);
 }
 
-.page-actions { display: flex; gap: 12px; align-items: center; }
+/* Wraps at every width. Without it the chips are squeezed instead: they carry
+   min-width: 0 further down, so the row shrinks them past their own contents
+   rather than moving one to the next line. */
+.page-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 
 /* ---------------- Cards ---------------- */
 
@@ -300,18 +303,18 @@ h1, h2, h3, h4 { margin: 0; color: var(--navy-800); }
 .select-chip {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   border: 1px solid #dfe6f0;
   border-radius: 10px;
   background: #fff;
-  padding: 10px 14px;
+  padding: 10px 12px;
   font-size: 14px;
   box-shadow: var(--card-shadow);
 }
 
 .select-chip .lbl { color: var(--muted); font-size: 13.5px; }
 
-.date-chip { gap: 7px; }
+.date-chip { gap: 6px; }
 .date-chip input[type="date"] {
   border: none;
   background: none;
@@ -322,12 +325,21 @@ h1, h2, h3, h4 { margin: 0; color: var(--navy-800); }
   outline: none;
   cursor: pointer;
   padding: 0;
-  width: 118px;
+  /* Flexible rather than a fixed 118px: the chip around it may shrink, and a
+     fixed width here is what used to hang out past the chip's border. */
+  flex: 1 1 auto;
+  /* A date needs about this much to read as one; below it the native control
+     truncates rather than scaling. */
+  min-width: 92px;
+  width: auto;
 }
+
+#mapPeriod { max-width: 74px; }
 
 .select-chip select {
   border: none;
   background: none;
+  min-width: 0;
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -1338,6 +1350,11 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
   max-width: 860px;
   margin: 20px auto 10px;
 }
+/* The image and the badges, and nothing else -- so a badge's percentage
+   position resolves against the picture even in legend mode, where the figure
+   itself grows to hold the list of labels. */
+.gp-stage { position: relative; display: block; }
+
 .gd-photo img {
   display: block;
   width: 100%;
@@ -1420,6 +1437,31 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 .gp-lab.on-dark i { color: rgba(255, 255, 255, .88); }
 .gp-lab.alert { color: #c0392b; }
 
+/* A number pinned to the spot a label describes. Drawn only in legend mode:
+   where the label is overlaid it already sits beside the thing it names, and a
+   number there would be one more thing on the picture. White with a dark rule,
+   so it reads on the artwork and on the blank band alike. */
+.gp-pin {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  transform: translate(-50%, -50%);
+  display: none;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1.5px solid var(--navy-800);
+  box-shadow: 0 1px 4px rgba(11, 26, 51, .28);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 11.5px;
+  line-height: 1;
+  color: var(--navy-800);
+  pointer-events: none;
+}
+
 /* Phones only. Down to tablet width the labels still fit over the artwork, but
    on a 390 px screen the figure is barely 350 px across and a legible label
    would cover the thing it names. The picture stands on its own instead and the
@@ -1443,7 +1485,34 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
   .gp-lab b, .gp-lab i { display: inline; font-size: 12.5px; }
   .gp-lab i { color: var(--faint); }
   .gp-lab i::before { content: " \2014 "; }
-  .gd-photo img { margin-bottom: 4px; }
+  .gd-photo img { margin-bottom: 6px; }
+
+  /* The badges appear, and each row is prefixed with the number of the badge it
+     belongs to, so the list still points at the picture. */
+  .gp-pin { display: grid; }
+  .gp-lab {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+    gap: 9px;
+    align-items: start;
+  }
+  .gp-lab::before {
+    content: attr(data-n);
+    grid-row: 1 / span 2;
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--navy-800);
+    color: #fff;
+    font-weight: 700;
+    font-size: 11.5px;
+    line-height: 1;
+  }
+  /* Title and caption share the second column, the caption running on from the
+     title as it does in the overlay. */
+  .gp-lab b, .gp-lab i { grid-column: 2; }
 }
 
 /* Denser table for the reference material -- the guide's tables are read a row
@@ -1530,9 +1599,13 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 /* magnitude vs intensity */
 .gd-compare {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 16px;
-  align-items: stretch;
+  /* One column, deliberately. The two boxes side by side needed a card wider
+     than 620px, and this one lives in the narrow half of a split row -- it gets
+     there at a viewport of about 1540px and never below. Stacked, each box has
+     the whole card to itself and its bullets read on one line. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  justify-items: stretch;
   margin-top: 14px;
 }
 
@@ -1540,10 +1613,12 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 .cmp-mag { background: #fdf3f1; border: 1px solid #f6ddd8; }
 .cmp-int { background: #eef8f2; border: 1px solid #d9eee1; }
 
-.cmp-head { font-size: 15.5px; font-weight: 700; color: #c62828; }
+/* The icon is in the corner with nothing holding a place for it, so the
+   heading has to leave the room itself. */
+.cmp-head { font-size: 15.5px; font-weight: 700; color: #c62828; padding-inline-end: 44px; }
 .cmp-head.green { color: #1d9e6e; }
 .cmp-head span { display: block; font-size: 12px; font-weight: 500; color: var(--faint); margin-top: 3px; }
-.cmp-icon { position: absolute; top: 16px; right: 20px; font-size: 28px; }
+.cmp-icon { position: absolute; top: 16px; inset-inline-end: 20px; font-size: 28px; line-height: 1; }
 
 .cmp-box ul { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
 .cmp-box li { display: flex; gap: 9px; align-items: flex-start; font-size: 13.2px; color: var(--ink); line-height: 1.55; }
@@ -1551,7 +1626,7 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 .cmp-mag li svg { color: #c62828; }
 
 .cmp-vs {
-  align-self: center;
+  justify-self: center;
   width: 46px; height: 46px;
   border-radius: 50%;
   background: #fff;
@@ -1754,9 +1829,7 @@ a.news-row:hover .nt { color: var(--blue-600); }
      one of these columns stretches the track past the screen and takes the
      whole page's horizontal scroll with it. The multi-column rules above
      already guard against this; the stacked fallback did not. */
-  .gd-grid.two, .gd-grid.split-62, .gd-faq, .gd-cols, .gd-terms.cols2 { grid-template-columns: minmax(0, 1fr); }
-  .gd-compare { grid-template-columns: 1fr; }
-  .cmp-vs { justify-self: center; }
+  .gd-grid.two, .gd-grid.split-62, .gd-grid.split-26, .gd-faq, .gd-cols, .gd-terms.cols2 { grid-template-columns: minmax(0, 1fr); }
   .gd-scenarios { grid-template-columns: repeat(2, 1fr); }
   .gd-wave { flex-direction: column; align-items: flex-start; }
   .gd-wave svg { width: 100%; }
@@ -3548,6 +3621,8 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   .range-chips { flex-wrap: wrap; }
   .range-chips button { padding: 7px 11px; font-size: 12.5px; }
   .select-chip { flex: 1 1 145px; justify-content: space-between; }
+  /* Two dates and a separator will not read at 145px; the range takes a row. */
+  .date-chip { flex-basis: 100%; }
   .content-head .controls, .insight-view-controls { width: 100%; }
 
   /* A dropdown anchored to its button cannot work here. Filters is 400px wide
