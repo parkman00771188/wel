@@ -1255,6 +1255,8 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 .gd-grid { display: grid; gap: 22px; margin-bottom: 22px; }
 .gd-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .gd-grid.split-62 { grid-template-columns: 1.35fr 1fr; }
+/* The mirror of split-62, for a pair whose table is on the right. */
+.gd-grid.split-26 { grid-template-columns: 1fr 1.35fr; }
 
 .gd-card { padding: 26px 28px; margin-bottom: 22px; }
 .gd-grid .gd-card { margin-bottom: 0; }
@@ -1331,9 +1333,19 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
    need (width:1% collapses to content once something else can absorb the
    slack), and everything left over goes to the prose column, which is the only
    one that can use it. */
-.gd-table th:first-child, .gd-table td:first-child { width: 1%; white-space: nowrap; }
+.gd-table th:first-child, .gd-table td:first-child { width: 1%; }
 .gd-table th.right, .gd-table td.right { width: 1%; white-space: nowrap; }
 .gd-table th { white-space: normal; }
+
+/* Which column absorbs the leftover width is not something the auto algorithm
+   can be trusted to work out: in the console it handed "Moves" 1,251px of a
+   1,546px table and left the sentence column 78, narrow enough to break words
+   down the middle. So each table names its prose column. A share rather than
+   "all of it": at 100% the short columns were squeezed until they wrapped too,
+   which is the same fault in the other direction. */
+.gd-table th.wide, .gd-table td.wide { width: 60%; }
+/* A short column the layout keeps squeezing until its two words stack. */
+.gd-table th.nw, .gd-table td.nw { width: 1%; white-space: nowrap; }
 
 /* A table of nothing but short figures has no prose column to give the slack
    to, so it would stretch to full width and read as mostly air. */
@@ -3078,7 +3090,12 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   background: #fff;
 }
 
-.embed .eq-table thead th {
+/* Scoped to the recent-events list, not to .eq-table at large. These are
+   column widths for one specific four-column table -- magnitude, location,
+   time, depth -- and the Earthquake Guide's tables share the .eq-table class.
+   Unscoped, the !important widths pinned the guide's prose column to 64px in
+   the console, narrow enough to break words down the middle. */
+.embed .eq-table-wrap .eq-table thead th {
   position: sticky;
   top: 0;
   z-index: 5;
@@ -3088,12 +3105,12 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   font-size: 12px;
 }
 
-.embed .eq-table td { padding: 11px 12px; font-size: 13px; }
-.embed .eq-table td:nth-child(3) { white-space: nowrap; }
-.embed .eq-table th:nth-child(1) { width: 76px !important; }
-.embed .eq-table th:nth-child(3) { width: 108px !important; }
-.embed .eq-table th:nth-child(4) { width: 64px !important; }
-.embed .eq-table tr:last-child td { border-bottom: none; }
+.embed .eq-table-wrap .eq-table td { padding: 11px 12px; font-size: 13px; }
+.embed .eq-table-wrap .eq-table td:nth-child(3) { white-space: nowrap; }
+.embed .eq-table-wrap .eq-table th:nth-child(1) { width: 76px !important; }
+.embed .eq-table-wrap .eq-table th:nth-child(3) { width: 108px !important; }
+.embed .eq-table-wrap .eq-table th:nth-child(4) { width: 64px !important; }
+.embed .eq-table-wrap .eq-table tr:last-child td { border-bottom: none; }
 
 .embed .view-all-row { margin-top: 14px; }
 .embed .view-all-row .btn { width: 100%; }
