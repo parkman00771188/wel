@@ -5,9 +5,6 @@
  */
 WEL_I18N.load({
   /* earthquake guide */
-  "Measuring Quakes": "Deprem Ölçümü",
-  "Hazards & Effects": "Tehlikeler & Etkiler",
-  "Notable Earthquakes": "Önemli Depremler",
   "From the physics of a fault to what to keep in a kit — nine topics, in the order they build on each other.": "Bir fayın fiziğinden acil durum çantasında ne bulunacağına kadar — birbirinin üzerine kurulan sırayla dokuz konu.",
   "Faults, the four kinds of seismic wave, depth, and how to read a seismogram.": "Faylar, dört sismik dalga türü, derinlik ve bir sismogramın nasıl okunacağı.",
   "Why quakes cluster in lines — boundary types, the major plates, subduction.": "Depremler neden çizgiler boyunca kümelenir — sınır türleri, büyük levhalar, dalma-batma.",

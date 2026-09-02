@@ -5,9 +5,6 @@
  */
 WEL_I18N.load({
   /* earthquake guide */
-  "Measuring Quakes": "Pagsukat sa Lindol",
-  "Hazards & Effects": "Panganib & Epekto",
-  "Notable Earthquakes": "Mga Kilalang Lindol",
   "From the physics of a fault to what to keep in a kit — nine topics, in the order they build on each other.": "Mula sa pisika ng isang fault hanggang sa kung ano ang dapat laman ng kit — siyam na paksa, sa pagkakasunod ng pagbuo sa isa't isa.",
   "Faults, the four kinds of seismic wave, depth, and how to read a seismogram.": "Mga fault, ang apat na uri ng seismic wave, lalim, at kung paano basahin ang seismogram.",
   "Why quakes cluster in lines — boundary types, the major plates, subduction.": "Bakit nagkukumpol sa mga linya ang mga lindol — mga uri ng hangganan, ang malalaking plaka, subduction.",

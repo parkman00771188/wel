@@ -5,9 +5,6 @@
  */
 WEL_I18N.load({
   /* earthquake guide */
-  "Measuring Quakes": "قياس الزلازل",
-  "Hazards & Effects": "المخاطر & الآثار",
-  "Notable Earthquakes": "زلازل بارزة",
   "From the physics of a fault to what to keep in a kit — nine topics, in the order they build on each other.": "من فيزياء الصدع إلى ما ينبغي وضعه في حقيبة الطوارئ — تسعة موضوعات، مرتّبة بحيث يبني كل منها على سابقه.",
   "Faults, the four kinds of seismic wave, depth, and how to read a seismogram.": "الصدوع، وأنواع الموجات الزلزالية الأربعة، والعمق، وكيفية قراءة السجل الزلزالي.",
   "Why quakes cluster in lines — boundary types, the major plates, subduction.": "لماذا تتجمع الزلازل في خطوط — أنواع الحدود، والصفائح الكبرى، والاندساس.",

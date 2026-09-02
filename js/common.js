@@ -85,8 +85,17 @@
     var active = document.body.dataset.nav || "";
     var cta = CTA[document.body.dataset.cta || "dashboard"];
 
+    /* Every nav target is a section of the home page. Written as
+       "index.html#platform" they are a full navigation even when the reader is
+       already on the home page: the browser reloads to the top, the host
+       redirects index.html to the clean URL, and only then does it scroll down
+       -- the visible jump to the top and back. On the home page the same
+       targets are plain fragments, which scroll without leaving the document. */
+    var onHome = /(^|\/)(index\.html)?$/.test(location.pathname);
+
     var links = NAV.map(function (n) {
-      return '<a href="' + n.href + '"' + (n.id === active ? ' class="active"' : "") + ">" + n.label + "</a>";
+      var href = onHome ? n.href.slice(n.href.indexOf("#")) : n.href;
+      return '<a href="' + href + '"' + (n.id === active ? ' class="active"' : "") + ">" + n.label + "</a>";
     }).join("");
 
     mount.outerHTML =
@@ -107,8 +116,15 @@
       "</div></div></header>";
 
     var burger = document.getElementById("navBurger");
+    var nav = document.getElementById("mainNav");
     if (burger) burger.addEventListener("click", function () {
-      document.getElementById("mainNav").classList.toggle("open");
+      nav.classList.toggle("open");
+    });
+    /* On the home page the links now scroll instead of navigating, so nothing
+       reloads the header and the open dropdown would sit over the section the
+       reader just asked for. */
+    if (nav) nav.addEventListener("click", function (ev) {
+      if (ev.target.closest("a")) nav.classList.remove("open");
     });
   }
 

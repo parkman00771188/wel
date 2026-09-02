@@ -5,9 +5,6 @@
  */
 WEL_I18N.load({
   /* earthquake guide */
-  "Measuring Quakes": "Medir los sismos",
-  "Hazards & Effects": "Amenazas & efectos",
-  "Notable Earthquakes": "Sismos notables",
   "From the physics of a fault to what to keep in a kit — nine topics, in the order they build on each other.": "De la física de una falla a qué guardar en un kit — nueve temas, en el orden en que se apoyan unos en otros.",
   "Faults, the four kinds of seismic wave, depth, and how to read a seismogram.": "Fallas, los cuatro tipos de onda sísmica, la profundidad y cómo leer un sismograma.",
   "Why quakes cluster in lines — boundary types, the major plates, subduction.": "Por qué los sismos se agrupan en líneas — tipos de límite, las placas principales, la subducción.",

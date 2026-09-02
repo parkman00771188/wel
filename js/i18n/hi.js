@@ -560,6 +560,11 @@ WEL_I18N.load({
   "10 min": "10 मिनट",
   "Local time ({t})": "स्थानीय समय ($1)",
 
+  /* guide sections, also links in the console sidebar */
+  "Measuring Quakes": "भूकंप मापन",
+  "Hazards & Effects": "आपदाएँ & प्रभाव",
+  "Notable Earthquakes": "उल्लेखनीय भूकंप",
+
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
      languages can translate it in isolation: seven have no articles at all,

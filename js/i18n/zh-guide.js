@@ -5,9 +5,6 @@
  */
 WEL_I18N.load({
   /* earthquake guide */
-  "Measuring Quakes": "测量地震",
-  "Hazards & Effects": "灾害 & 影响",
-  "Notable Earthquakes": "著名地震",
   "From the physics of a fault to what to keep in a kit — nine topics, in the order they build on each other.": "从断层的物理机制到应急包里该装什么 — 九个主题，按层层递进的顺序排列。",
   "Faults, the four kinds of seismic wave, depth, and how to read a seismogram.": "断层、四种地震波、深度，以及如何读懂地震图。",
   "Why quakes cluster in lines — boundary types, the major plates, subduction.": "地震为何呈带状集中 — 边界类型、主要板块与俯冲。",

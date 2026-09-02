@@ -5,9 +5,6 @@
  */
 WEL_I18N.load({
   /* earthquake guide */
-  "Measuring Quakes": "지진 측정",
-  "Hazards & Effects": "재해와 영향",
-  "Notable Earthquakes": "주요 지진",
   "From the physics of a fault to what to keep in a kit — nine topics, in the order they build on each other.": "단층의 물리에서 비상용품 목록까지 — 서로 이어지는 순서로 배열한 아홉 가지 주제.",
   "Faults, the four kinds of seismic wave, depth, and how to read a seismogram.": "단층, 네 가지 지진파, 깊이, 그리고 지진 기록을 읽는 법.",
   "Why quakes cluster in lines — boundary types, the major plates, subduction.": "지진이 선을 이루며 모이는 이유 — 경계의 종류, 주요 판, 섭입.",

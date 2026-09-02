@@ -5,9 +5,6 @@
  */
 WEL_I18N.load({
   /* earthquake guide */
-  "Measuring Quakes": "भूकंप मापन",
-  "Hazards & Effects": "आपदाएँ & प्रभाव",
-  "Notable Earthquakes": "उल्लेखनीय भूकंप",
   "From the physics of a fault to what to keep in a kit — nine topics, in the order they build on each other.": "भ्रंश की भौतिकी से लेकर आपात किट में क्या रखें तक — नौ विषय, उसी क्रम में जिसमें वे एक-दूसरे पर टिके हैं।",
   "Faults, the four kinds of seismic wave, depth, and how to read a seismogram.": "भ्रंश, भूकंपीय तरंग के चार प्रकार, गहराई, और भूकंपलेख कैसे पढ़ें।",
   "Why quakes cluster in lines — boundary types, the major plates, subduction.": "भूकंप रेखाओं में क्यों जमा होते हैं — सीमाओं के प्रकार, प्रमुख प्लेटें, सबडक्शन।",

@@ -560,6 +560,11 @@ WEL_I18N.load({
   "10 min": "10분",
   "Local time ({t})": "현지 시간 ($1)",
 
+  /* guide sections, also links in the console sidebar */
+  "Measuring Quakes": "지진 측정",
+  "Hazards & Effects": "재해와 영향",
+  "Notable Earthquakes": "주요 지진",
+
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
      languages can translate it in isolation: seven have no articles at all,

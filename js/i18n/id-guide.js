@@ -5,9 +5,6 @@
  */
 WEL_I18N.load({
   /* earthquake guide */
-  "Measuring Quakes": "Mengukur Gempa",
-  "Hazards & Effects": "Bahaya & Dampak",
-  "Notable Earthquakes": "Gempa Penting",
   "From the physics of a fault to what to keep in a kit — nine topics, in the order they build on each other.": "Dari fisika sesar hingga isi tas siaga — sembilan topik, dalam urutan yang saling membangun.",
   "Faults, the four kinds of seismic wave, depth, and how to read a seismogram.": "Sesar, empat jenis gelombang seismik, kedalaman, dan cara membaca seismogram.",
   "Why quakes cluster in lines — boundary types, the major plates, subduction.": "Mengapa gempa mengelompok membentuk garis — jenis batas, lempeng-lempeng utama, subduksi.",
