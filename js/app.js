@@ -62,6 +62,25 @@
   var current = null;
   var currentSub = {};
 
+  /* Loaded views stay mounted so returning to them is instant. Tell each child
+     whether it is actually on screen, because display:none does not make a
+     same-origin iframe's document hidden and expensive render loops otherwise
+     keep running behind the active view. */
+  function reportViewActive(frame) {
+    if (!frame.getAttribute("src") || !frame.contentWindow) return;
+    frame.contentWindow.postMessage({
+      wel: "view-active",
+      view: frame.id.slice("frame-".length),
+      active: frame.classList.contains("active")
+    }, "*");
+  }
+
+  document.querySelectorAll(".app-frame").forEach(function (frame) {
+    // Re-send after the child has installed its listeners. This also covers a
+    // quick navigation away while the iframe is still loading.
+    frame.addEventListener("load", function () { reportViewActive(frame); });
+  });
+
   /* ---------- phone sidebar drawer ----------
      Below 760px the sidebar leaves the grid and slides in over the content:
      a 66px icon rail is a sixth of a phone screen, and the console has no
@@ -145,6 +164,7 @@
           if (frame.contentWindow.location.hash !== "#" + sub) frame.contentWindow.location.hash = sub;
         } catch (e) { /* same-origin iframe is expected */ }
       }
+      reportViewActive(frame);
     });
 
     var nextHash = routeHash(view, sub);

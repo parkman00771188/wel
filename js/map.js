@@ -2,6 +2,21 @@
 (function () {
   "use strict";
 
+  // The console keeps this page mounted while another section is visible.
+  // Start embedded pages inactive and let the shell's load notification wake
+  // them; standalone map.html is always active.
+  var hostPageActive = window.parent === window;
+  var sync3dSuspension = function () {};
+
+  window.addEventListener("message", function (ev) {
+    if (window.parent === window || ev.source !== window.parent) return;
+    if (location.origin !== "null" && ev.origin !== location.origin) return;
+    var msg = ev.data;
+    if (!msg || msg.wel !== "view-active" || msg.view !== "map") return;
+    hostPageActive = msg.active === true;
+    sync3dSuspension();
+  });
+
   /* A page and its scripts can disagree for as long as a browser holds an old
      copy of one of them -- which is how a removed control took the whole
      Overview down: getElementById returned null, the throw killed the rest of
@@ -88,6 +103,16 @@
 
   var frame3d = null;
 
+  function update3dSuspension() {
+    try {
+      var app3d = frame3d && frame3d.contentWindow && frame3d.contentWindow.__app;
+      if (!app3d) return;
+      var showing3d = document.getElementById("mapShell").classList.contains("mode-3d");
+      app3d.suspendedByHost = !hostPageActive || !showing3d;
+    } catch (err) { /* same-origin access is expected */ }
+  }
+  sync3dSuspension = update3dSuspension;
+
   function ensure3d() {
     if (frame3d) return;
     try {
@@ -129,8 +154,7 @@
         // A Japan-mode reload may finish after the fixed post-load timers.
         // Reapply the host period and filters at the authoritative ready point.
         if (frame3d.contentWindow && frame3d.contentWindow.__app) {
-          frame3d.contentWindow.__app.suspendedByHost =
-            !document.getElementById("mapShell").classList.contains("mode-3d");
+          update3dSuspension();
           sync3dDates();
           push3dShared();
           primeRecentTable(want === "japan" ? "japan" : "global");
@@ -204,11 +228,8 @@
     toggle.querySelectorAll("button").forEach(function (x) { x.classList.toggle("active", x === b); });
     var is3d = b.dataset.dim === "3d";
     if (is3d) { ensure3d(); sync3dView(true); map.closePopup(); }
-    try {
-      var app3d = frame3d && frame3d.contentWindow && frame3d.contentWindow.__app;
-      if (app3d) app3d.suspendedByHost = !is3d;
-    } catch (err) { /* same-origin access is expected */ }
     document.getElementById("mapShell").classList.toggle("mode-3d", is3d);
+    update3dSuspension();
     if (is3d) setFast(false);
     if (is3d) { sync3dDates(); push3dShared(); }
     syncFilterSections();
