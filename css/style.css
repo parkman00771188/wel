@@ -1421,7 +1421,10 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 .term div span { display: block; font-size: 12.5px; color: var(--faint); margin-top: 2px; line-height: 1.5; }
 
 /* faq */
-.gd-faq { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; margin-top: 16px; }
+/* One column, not two. In a grid, opening an answer stretches its row and
+   leaves a hole beside it in the other column -- and a question the reader has
+   to hunt for across two columns is worse than a list they can run down. */
+.gd-faq { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; max-width: 900px; }
 
 .gd-faq details {
   border: 1px solid var(--line);

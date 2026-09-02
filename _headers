@@ -5,9 +5,15 @@
 # browser serves the old file. There is no build step here and so no content
 # hash in the filenames; revalidating is the only way to keep a page and its
 # scripts in step.
+#
+# These rules match -- a marker header on the same rule came through -- but the
+# Cache-Control is currently discarded, because the zone's Browser Cache TTL is
+# set to 4 hours and acts as a floor: /resource/* raising the value to a week
+# passes, lowering it to zero does not. Set Caching -> Configuration -> Browser
+# Cache TTL to "Respect Existing Headers" in the Cloudflare dashboard and these
+# take effect with no further change here.
 /js/*
   Cache-Control: public, max-age=0, must-revalidate
-  X-Wel-Rule: js
 
 /css/*
   Cache-Control: public, max-age=0, must-revalidate
