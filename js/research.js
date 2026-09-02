@@ -18,7 +18,7 @@
   var SOURCES = [
     { name: "USGS ANSS ComCat", tag: "Earthquake catalogue",
       url: "https://earthquake.usgs.gov/earthquakes/search/",
-      note: "Worldwide, M2.0+. Also the live overlay: the last 14 days are refetched every 45 minutes so revised magnitudes and withdrawn events land here too.",
+      note: "Worldwide, M2.0+. Also the live overlay: the last 14 days are refetched every 10 minutes so revised magnitudes and withdrawn events land here too.",
       countKey: "usgs" },
     { name: "ISC Bulletin", tag: "Earthquake catalogue",
       url: "https://www.isc.ac.uk/iscbulletin/",

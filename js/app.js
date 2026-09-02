@@ -194,7 +194,7 @@
       .catch(function () { return 0; }); // offline — keep the last value
   }
 
-  /* The live overlay is republished every 45 minutes, the archive only on a
+  /* The live overlay is republished every 10 minutes, the archive only on a
      full rebuild, so the newer of the two is what "updated" actually means. */
   function fetchMeta() {
     Promise.all([

@@ -1,7 +1,7 @@
 # Earthquake data platform
 
 정적 HTML/CSS/JS 지진 데이터 사이트. 1900년부터의 지진 카탈로그를 3D 지구본과
-2D 지도로 보여주고, 최근 14일치는 45분마다 USGS 에서 다시 받아온다.
+2D 지도로 보여주고, 최근 14일치는 10분마다 USGS 에서 다시 받아온다.
 
 ## 페이지 구성
 
@@ -61,14 +61,14 @@ node serve.js        # http://localhost:8642
 python scripts/split_bins.py
 ```
 
-## 자동 업데이트 (45분 주기, 로컬 PC)
+## 자동 업데이트 (10분 주기, 로컬 PC)
 
-수백만 행짜리 바이너리를 45분마다 다시 올릴 수는 없으므로 **최근 14일치만**
+수백만 행짜리 바이너리를 10분마다 다시 올릴 수는 없으므로 **최근 14일치만**
 갱신한다. 이 PC 의 작업 스케줄러가 돌린다.
 
 | 파일 | 역할 |
 |---|---|
-| `auto_update_start.bat` | 45분 주기 예약 작업 등록 + 첫 사이클 즉시 실행 |
+| `auto_update_start.bat` | 10분 주기 예약 작업 등록 + 첫 사이클 즉시 실행 |
 | `auto_update_stop.bat` | 예약 작업 해제 |
 | `auto_update_run.bat` | 한 사이클 수동 실행 |
 | `scripts/run_hidden.vbs` | 창이 뜨지 않게 감싸는 실행기 |
@@ -199,5 +199,5 @@ js/research.js    논문 목록
 3d/js/chunks.js   25 MiB 초과 파일 조각 이어붙이기
 3d/js/live.js     최근 14일 오버레이 로더
 scripts/          자동 업데이트 · 콘텐츠 수집 · 파일 분할 · 배포 스크립트
-data/             news.json, papers.json (45분마다 누적)
+data/             news.json, papers.json (10분마다 누적)
 ```

@@ -1641,7 +1641,7 @@ class App {
     this.refreshUpdatedAgo();
     // Keep the "updated N min ago" pill honest while the tab stays open.
     this.agoTimer ??= setInterval(() => this.refreshUpdatedAgo(), 30000);
-    // The site republishes itself every 45 minutes; a page that stays open
+    // The site republishes itself every 10 minutes; a page that stays open
     // should say so instead of silently counting the old payload's age up.
     this.freshTimer ??= setInterval(() => this.checkForNewData(), 300000);
     $('head-sub').textContent = isc

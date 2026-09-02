@@ -924,7 +924,7 @@
       });
 
   /* Refresh in place. Two cadences, because two things can change: the
-     overlay is republished every 45 minutes by the "Update earthquake data"
+     overlay is republished every 10 minutes by the "Update earthquake data"
      action, the archive only when it is rebuilt offline. */
   var POLL_MS = 5 * 60e3;
   var polling = false;

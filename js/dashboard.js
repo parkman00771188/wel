@@ -340,7 +340,7 @@
     renderMeta();
   }
 
-  // The overlay is refreshed every 45 minutes; redraw when it lands.
+  // The overlay is refreshed every 10 minutes; redraw when it lands.
   EQ.onLive(function () { renderAll(); });
 
   renderAll();
