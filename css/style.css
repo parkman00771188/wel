@@ -1166,6 +1166,21 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 
 .gd-sec { display: none; animation: kbIn .18s ease; padding-top: 6px; }
 .gd-sec.active { display: block; }
+
+/* Every tab used to open on the edge of a card, which tells the reader nothing
+   about what they have arrived at or how long it runs. One line of orientation
+   before the content costs a screen inch and saves the scroll. */
+.gd-lead { padding: 30px 0 22px; max-width: 760px; }
+.gd-lead-kicker {
+  display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--blue-600); margin-bottom: 10px;
+}
+.gd-lead h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 3.1vw, 34px);
+  line-height: 1.18; color: var(--navy-800); margin: 0 0 12px; font-weight: 600;
+}
+.gd-lead p { font-size: 15.5px; line-height: 1.7; color: var(--muted); margin: 0; }
 @keyframes kbIn { from { opacity: 0; transform: translateY(4px); } }
 
 .gd-cols {
@@ -1272,8 +1287,24 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 
 /* Figures. A diagram carries the explanation here, so it gets room to breathe
    and a caption that says what to notice rather than repeating the heading. */
+/* A pair of definitions pulled out of a paragraph, where the two terms are the
+   point and burying them in prose is what causes them to be confused. */
+.gd-defs { margin: 18px 0 0; display: grid; gap: 12px; }
+.gd-defs > div {
+  display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 14px;
+  align-items: baseline; padding: 11px 0; border-top: 1px solid var(--line-soft);
+}
+.gd-defs dt { font-size: 13.5px; font-weight: 700; color: var(--navy-800); }
+.gd-defs dd { margin: 0; font-size: 13.8px; line-height: 1.65; color: var(--muted); }
+@media (max-width: 620px) {
+  .gd-defs > div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+}
+
+/* Diagrams do not benefit from being 1,200px wide -- the strokes thin out, the
+   labels float apart, and the figure swamps the paragraph it illustrates. */
 .gd-fig { margin: 20px 0 10px; }
-.gd-fig svg { display: block; width: 100%; height: auto; }
+.gd-fig svg { display: block; width: 100%; max-width: 860px; height: auto; margin: 0 auto; }
+.gd-fig + .gd-figcap { text-align: center; max-width: 860px; margin-left: auto; margin-right: auto; }
 .gd-figcap {
   font-size: 12.5px; line-height: 1.65; color: var(--faint); margin: 10px 0 0;
 }
@@ -2584,7 +2615,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   align-items: start;
 }
 
-.rich-text p { font-size: 15px; line-height: 1.8; color: #52627c; margin: 0 0 16px; }
+.rich-text p { font-size: 15px; line-height: 1.8; color: #52627c; margin: 0 0 16px; max-width: 72ch; }
 .rich-text p:last-child { margin-bottom: 0; }
 
 .ticks { list-style: none; margin: 26px 0 0; padding: 0; display: flex; flex-direction: column; gap: 15px; }

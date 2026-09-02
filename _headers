@@ -1,5 +1,23 @@
 # Cloudflare Pages header rules.
 #
+# Code first, and deliberately: the host's default for js and css is
+# max-age=14400, so a deployed fix can sit invisible for four hours while the
+# browser serves the old file. There is no build step here and so no content
+# hash in the filenames; revalidating is the only way to keep a page and its
+# scripts in step.
+/js/*
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Wel-Rule: js
+
+/css/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/3d/js/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/3d/css/*
+  Cache-Control: public, max-age=0, must-revalidate
+
 # All matching rules are combined and duplicate headers are joined with a
 # comma, so the patterns below are written not to overlap. In particular
 # nothing here matches 3d/data/live/*.json or data/*.json: those are rewritten
@@ -28,22 +46,3 @@
 /resource/*
   Cache-Control: public, max-age=604800
 
-# Code. The host's default is max-age=14400, so a fix could sit deployed for
-# four hours while the browser kept serving the old file -- and since the HTML
-# always revalidates, the page and its scripts could disagree about what the
-# site is. There is no build step here and therefore no content hash in the
-# filenames, so the only way to keep them in step is to revalidate both. The
-# cost is one conditional request per file, answered with a 304 when nothing
-# changed.
-/js/*
-  Cache-Control: public, max-age=0, must-revalidate
-  X-Wel-Rule: js
-
-/css/*
-  Cache-Control: public, max-age=0, must-revalidate
-
-/3d/js/*
-  Cache-Control: public, max-age=0, must-revalidate
-
-/3d/css/*
-  Cache-Control: public, max-age=0, must-revalidate
