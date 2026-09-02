@@ -137,27 +137,32 @@
   </div>
 
   <!-- ============ System status ============ -->
+  <!-- Was a "System Status" panel with four tiles reading Operational: data
+       ingestion, processing, alerting, station network. None of that exists --
+       this site runs no pipeline and no stations. What it does have is a set of
+       sources and a refresh time, which is the honest version of the same
+       reassurance. -->
   <div class="card" style="margin-top:20px">
     <div class="card-head">
-      <div class="card-title">System Status</div>
-      <a class="link" href="news.html">View all updates</a>
+      <div class="card-title">Where this data comes from</div>
+      <a class="link" href="research.html#sources">All sources</a>
     </div>
     <div class="status-grid">
       <div class="status-tile">
-        <div class="status-icon"><i data-icon="inbox" data-size="20"></i></div>
-        <div><div class="name">Data Ingestion</div><div class="state">Operational</div></div>
+        <div class="status-icon"><i data-icon="database" data-size="20"></i></div>
+        <div><div class="name">USGS ANSS ComCat</div><div class="state">Worldwide, M 2.0+</div></div>
       </div>
       <div class="status-tile">
-        <div class="status-icon"><i data-icon="server" data-size="20"></i></div>
-        <div><div class="name">Processing</div><div class="state">Operational</div></div>
+        <div class="status-icon"><i data-icon="doc" data-size="20"></i></div>
+        <div><div class="name">ISC Bulletin</div><div class="state">Reviewed, M 3.0+, from 1900</div></div>
       </div>
       <div class="status-tile">
-        <div class="status-icon"><i data-icon="bell" data-size="20"></i></div>
-        <div><div class="name">Alerting</div><div class="state">Operational</div></div>
+        <div class="status-icon"><i data-icon="target" data-size="20"></i></div>
+        <div><div class="name">JMA</div><div class="state">Japan, below M 2.0</div></div>
       </div>
       <div class="status-tile">
-        <div class="status-icon"><i data-icon="antenna" data-size="20"></i></div>
-        <div><div class="name">Station Network</div><div class="state">Operational</div></div>
+        <div class="status-icon"><i data-icon="clock" data-size="20"></i></div>
+        <div><div class="name">Recent window</div><div class="state" id="refreshState">refreshed every 10 minutes</div></div>
       </div>
     </div>
   </div>

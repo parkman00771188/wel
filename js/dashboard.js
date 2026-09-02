@@ -85,6 +85,11 @@
     var suffix = state.days === 1 ? "vs yesterday" : "vs previous period";
     var largest = s.top5[0] || null;
 
+    var strong = (s.events || []).filter(function (e) { return e.m >= 5; }).length;
+    var archive = EQ.meta && EQ.meta.count
+      ? (EQ.meta.count / 1e6).toFixed(2) + "M"
+      : "—";
+
     var locParts = largest ? largest.loc.split(", ") : ["—"];
     var locLine = locParts.length > 1
       ? locParts.slice(0, -1).join(", ") + ",<br>" + locParts[locParts.length - 1]
@@ -103,13 +108,17 @@
       '<div class="stat-value red">' + (largest ? "M " + largest.m.toFixed(1) : "—") + "</div>" +
       '<div class="stat-sub">' + (largest ? locLine : "") + "</div></div>" +
 
-      '<div class="stat-card"><div class="stat-label">Stations Online</div>' +
-      '<div class="stat-value">2,846</div>' +
-      '<div class="stat-sub">96% uptime</div></div>' +
+      // These two used to read "Stations Online 2,846 / 96% uptime" and
+      // "Active Alerts 3". This site runs no stations and issues no alerts; both
+      // numbers were fixed strings. What can honestly go here is the size of the
+      // archive and a count of the events large enough to be felt.
+      '<div class="stat-card"><div class="stat-label">Damaging range (M 5+)</div>' +
+      '<div class="stat-value">' + strong.toLocaleString() + "</div>" +
+      '<div class="stat-sub">' + lbl + "</div></div>" +
 
-      '<div class="stat-card"><div class="stat-label">Active Alerts</div>' +
-      '<div class="stat-value red">3</div>' +
-      '<div class="stat-sub">1 Watch &nbsp;&bull;&nbsp; 2 Advisory</div></div>';
+      '<div class="stat-card"><div class="stat-label">Archive</div>' +
+      '<div class="stat-value">' + archive + "</div>" +
+      '<div class="stat-sub">events since 1900</div></div>';
   }
 
   /* ---------------- histogram ---------------- */
