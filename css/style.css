@@ -3184,20 +3184,6 @@ a.pub:hover .pub-title { color: var(--blue-600); }
 }
 .app-frame.active { display: block; }
 
-/* Tablet only. Phones get the drawer further down instead, and letting this
-   rail also apply there would mean undoing every rule in it. */
-@media (min-width: 761px) and (max-width: 860px) {
-  .app-body { grid-template-columns: 66px minmax(0, 1fr); }
-  .app-side { padding: 14px 9px; align-items: center; }
-  .app-side .brand img { height: 38px; width: 38px; object-fit: cover; object-position: left; }
-  .app-nav a span, .app-back span, .app-status span { display: none; }
-  .app-nav .app-subnav { display: none !important; }
-  .app-nav-caret { display: none; }
-  .ad-slot { display: none; }
-  .app-nav a, .app-back { justify-content: center; padding: 12px; }
-  .app-status { justify-content: center; padding: 11px; }
-  .app-clock { display: none; }
-}
 
 /* ---------------- Embedded page tweaks (inside console iframe) ---------------- */
 
@@ -3709,6 +3695,23 @@ a.pub:hover .pub-title { color: var(--blue-600); }
 
   .footer-top { flex-direction: column; align-items: flex-start; gap: 18px; }
 
+  /* --- pages inside the console iframe --- */
+  .embed .container { padding-inline-start: 16px; padding-inline-end: 16px; }
+  .embed .side-content { padding: 20px 16px 48px; }
+  .embed .side-nav { padding: 10px 16px; }
+  .embed .page-head { padding-top: 20px; }
+  /* Taller than it looks like it needs: the map is the page here, and the
+     3D view's first-run gesture guide has to fit inside this frame. */
+  .embed .map-shell { height: 72vh; min-height: 420px; }
+  .embed .eq-table-wrap { max-height: 60vh; }
+}
+
+/* Tablets and phones both get the console as a drawer. The 66px icon rail
+   this replaces could not show a submenu, which left the guide's ten
+   sections reachable only from its own tab row; the drawer carries the whole
+   sidebar, and the content gets the full width rather than what is left
+   beside a rail. */
+@media (max-width: 860px) {
   /* --- console: sidebar becomes a drawer --- */
   .app-body {
     grid-template-columns: minmax(0, 1fr);
@@ -3754,15 +3757,10 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   .app-lang { padding: 0 6px 0 9px; }
   .app-lang select { padding: 11px 0; font-size: 12.5px; }
 
-  /* --- pages inside the console iframe --- */
-  .embed .container { padding-inline-start: 16px; padding-inline-end: 16px; }
-  .embed .side-content { padding: 20px 16px 48px; }
-  .embed .side-nav { padding: 10px 16px; }
-  .embed .page-head { padding-top: 20px; }
-  /* Taller than it looks like it needs: the map is the page here, and the
-     3D view's first-run gesture guide has to fit inside this frame. */
-  .embed .map-shell { height: 72vh; min-height: 420px; }
-  .embed .eq-table-wrap { max-height: 60vh; }
+  /* Inside the console this row duplicates the sidebar's guide submenu, and
+     costs height a small screen does not have to spare. The standalone guide
+     page keeps it: there is no sidebar there. */
+  .embed .gd-navwrap { display: none; }
 }
 
 /* Narrow phones: 360px and below can no longer carry the LIVE pill next to
