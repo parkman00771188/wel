@@ -2,6 +2,17 @@
 (function () {
   "use strict";
 
+  /* A page and its scripts can disagree for as long as a browser holds an old
+     copy of one of them -- which is how a removed control took the whole
+     Overview down: getElementById returned null, the throw killed the rest of
+     the module, and nothing rendered. Binding through here degrades that to a
+     control that does not respond. */
+  function on(id, type, fn) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener(type, fn);
+    return el;
+  }
+
   EQ.ready.then(function () {
 
   var state = {
@@ -49,7 +60,7 @@
   };
   state.mapRegion = "global";
 
-  document.getElementById("mapRegion").addEventListener("change", function () {
+  on("mapRegion", "change", function () {
     state.mapRegion = this.value;
     var v = REGION_VIEWS[state.mapRegion];
     if (!document.getElementById("mapShell").classList.contains("mode-3d")) {
@@ -316,7 +327,7 @@
     });
   }
 
-  document.getElementById("dimToggle").addEventListener("click", function (ev) {
+  on("dimToggle", "click", function (ev) {
     var b = ev.target.closest("button");
     if (!b) return;
     requestedDim = b.dataset.dim;
@@ -462,7 +473,7 @@
     });
   }
 
-  document.getElementById("filtersBtn").addEventListener("click", syncFilterSections);
+  on("filtersBtn", "click", syncFilterSections);
 
   /* ---------------- reset a panel to its defaults ---------------- */
 
@@ -517,13 +528,13 @@
     return document.getElementById("mapShell").classList.contains("mode-3d");
   }
 
-  document.getElementById("filtersReset").addEventListener("click", function (ev) {
+  on("filtersReset", "click", function (ev) {
     ev.stopPropagation();
     resetOwnControls(document.getElementById("filtersShared"));
     if (in3d()) resetInApp([".sec-anim", ".sec-visual"]);
   });
 
-  document.getElementById("layersReset").addEventListener("click", function (ev) {
+  on("layersReset", "click", function (ev) {
     ev.stopPropagation();
     if (in3d()) resetInApp([".sec-map"]);
     else resetOwnControls(document.getElementById("layers2d"));
@@ -550,7 +561,7 @@
     legendToggle.setAttribute("aria-expanded", open ? "true" : "false");
   });
 
-  document.getElementById("layersBtn").addEventListener("click", function (ev) {
+  on("layersBtn", "click", function (ev) {
     ev.stopPropagation();
     layersPanel.hidden = !layersPanel.hidden;
     if (!layersPanel.hidden) syncLayerSections();
@@ -558,7 +569,7 @@
   layersPanel.addEventListener("click", function (ev) { ev.stopPropagation(); });
   document.addEventListener("click", function () { layersPanel.hidden = true; });
 
-  document.getElementById("layers2d").addEventListener("click", function (ev) {
+  on("layers2d", "click", function (ev) {
     var b = ev.target.closest("[data-base]");
     if (!b) return;
     this.querySelectorAll("[data-base]").forEach(function (x) { x.classList.toggle("on", x === b); });
@@ -576,7 +587,7 @@
   wire2dOverlay("ck2dFaults", "faults");
   wire2dOverlay("ck2dVolcanoes", "volcanoes");
 
-  document.getElementById("ck2dTint").addEventListener("change", function () {
+  on("ck2dTint", "change", function () {
     if (this.checked) { if (!map.hasLayer(tintRect)) tintRect.addTo(map); }
     else if (map.hasLayer(tintRect)) map.removeLayer(tintRect);
   });
@@ -1267,7 +1278,7 @@
     document.getElementById("dmClose").onclick = function () { back.classList.remove("open"); };
   }
 
-  document.getElementById("detailBack").addEventListener("click", function (ev) {
+  on("detailBack", "click", function (ev) {
     if (ev.target === this) this.classList.remove("open");
   });
 
@@ -1534,7 +1545,7 @@
     setRange(Date.now() - days * EQ.D, Date.now(), live);
   }
 
-  document.getElementById("mapPeriod").addEventListener("change", function () {
+  on("mapPeriod", "change", function () {
     if (this.value === "custom") return;
     if (this.value === "all") {
       setRange(Date.parse("1900-01-01T00:00:00Z"), Date.now(), false);
@@ -1553,8 +1564,8 @@
     if (isNaN(s) || isNaN(e) || e <= s) return;
     setRange(s, Math.min(e, Date.now()), false);
   }
-  document.getElementById("dateFrom").addEventListener("change", onDateInput);
-  document.getElementById("dateTo").addEventListener("change", onDateInput);
+  on("dateFrom", "change", onDateInput);
+  on("dateTo", "change", onDateInput);
 
   nowBtn.addEventListener("click", function () { setPresetDays(1, true); });
 
@@ -1603,8 +1614,8 @@
 
   /* ---------------- zoom ---------------- */
 
-  document.getElementById("zoomIn").addEventListener("click", function () { map.zoomIn(); });
-  document.getElementById("zoomOut").addEventListener("click", function () { map.zoomOut(); });
+  on("zoomIn", "click", function () { map.zoomIn(); });
+  on("zoomOut", "click", function () { map.zoomOut(); });
 
   /* ---------------- dropdowns ---------------- */
 
@@ -1700,14 +1711,14 @@
     });
   });
 
-  document.getElementById("fBands").addEventListener("change", function (ev) {
+  on("fBands", "change", function (ev) {
     var ck = ev.target.closest("[data-band]");
     if (!ck) return;
     state.bands[+ck.dataset.band] = ck.checked;
     applyShared();
   });
 
-  document.getElementById("fDepthPresets").addEventListener("click", function (ev) {
+  on("fDepthPresets", "click", function (ev) {
     var b = ev.target.closest("[data-lo]");
     if (!b) return;
     this.querySelectorAll(".pchip").forEach(function (x) { x.classList.toggle("on", x === b); });

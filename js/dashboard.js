@@ -2,6 +2,17 @@
 (function () {
   "use strict";
 
+  /* A page and its scripts can disagree for as long as a browser holds an old
+     copy of one of them -- which is how a removed control took the whole
+     Overview down: getElementById returned null, the throw killed the rest of
+     the module, and nothing rendered. Binding through here degrades that to a
+     control that does not respond. */
+  function on(id, type, fn) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener(type, fn);
+    return el;
+  }
+
   EQ.ready.then(function () {
 
   Chart.defaults.font.family = "Inter, sans-serif";
@@ -302,7 +313,7 @@
 
   /* ---------------- controls ---------------- */
 
-  document.getElementById("periodSelect").addEventListener("change", function () {
+  on("periodSelect", "change", function () {
     state.days = this.value === "all" ? ALL_DAYS : +this.value;
     var regionSel = document.getElementById("regionSelect");
     var isLong = state.days > 120;
@@ -311,7 +322,7 @@
     renderAll();
   });
 
-  document.getElementById("regionSelect").addEventListener("change", function () {
+  on("regionSelect", "change", function () {
     state.region = this.value;
     renderAll();
   });

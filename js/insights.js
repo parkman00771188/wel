@@ -2,6 +2,17 @@
 (function () {
   "use strict";
 
+  /* A page and its scripts can disagree for as long as a browser holds an old
+     copy of one of them -- which is how a removed control took the whole
+     Overview down: getElementById returned null, the throw killed the rest of
+     the module, and nothing rendered. Binding through here degrades that to a
+     control that does not respond. */
+  function on(id, type, fn) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener(type, fn);
+    return el;
+  }
+
   EQ.ready.then(function () {
 
   Chart.defaults.font.family = "Inter, sans-serif";
@@ -665,12 +676,12 @@
     });
   });
 
-  document.getElementById("insightCharts").addEventListener("click", function (ev) {
+  on("insightCharts", "click", function (ev) {
     var row = ev.target.closest("tr[data-event-key]");
     if (row) openEventModal(eventLookup[row.dataset.eventKey]);
   });
 
-  document.getElementById("insightCharts").addEventListener("keydown", function (ev) {
+  on("insightCharts", "keydown", function (ev) {
     var row = ev.target.closest("tr[data-event-key]");
     if (row && (ev.key === "Enter" || ev.key === " ")) {
       ev.preventDefault();
@@ -686,35 +697,35 @@
     if (ev.key === "Escape") closeEventModal();
   });
 
-  document.getElementById("historySearch").addEventListener("input", function () {
+  on("historySearch", "input", function () {
     historyState.query = this.value;
     historyState.page = 0;
     renderHistory();
   });
 
-  document.getElementById("historySort").addEventListener("change", function () {
+  on("historySort", "change", function () {
     historyState.sort = this.value;
     historyState.page = 0;
     renderHistory();
   });
 
-  document.getElementById("historyPrev").addEventListener("click", function () {
+  on("historyPrev", "click", function () {
     historyState.page = Math.max(0, historyState.page - 1);
     renderHistory();
   });
 
-  document.getElementById("historyNext").addEventListener("click", function () {
+  on("historyNext", "click", function () {
     historyState.page++;
     renderHistory();
   });
 
-  document.getElementById("rangeSelect").addEventListener("change", function () {
+  on("rangeSelect", "change", function () {
     state.days = this.value === "all" ? ALL_DAYS : +this.value;
     historyState.page = 0;
     renderAll();
   });
 
-  document.getElementById("regionSelect").addEventListener("change", function () {
+  on("regionSelect", "change", function () {
     state.region = this.value;
     historyState.page = 0;
     renderAll();
