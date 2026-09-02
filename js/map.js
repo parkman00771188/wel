@@ -1098,6 +1098,16 @@
   }
 
   var activePopup = null;
+  var activeEvent = null;
+  var sheet = document.getElementById("quakeSheet");
+
+  function phoneSheet() {
+    return !!sheet && window.matchMedia("(max-width: 760px)").matches;
+  }
+
+  function hideSheet() {
+    if (sheet && !sheet.hidden) { sheet.hidden = true; sheet.innerHTML = ""; }
+  }
 
   function select(e, pan) {
     state.selectedId = e.id;
@@ -1112,6 +1122,23 @@
       '<div class="qc-row"><span class="k">Status</span><span>' + (e.status || "Automatic") + "</span></div>" +
       '<button class="btn btn-primary btn-block" id="qcDetails" type="button">View Details</button>';
 
+    activeEvent = e;
+
+    // Phones get a sheet instead. A popup has to be placed relative to its
+    // point, and at that width there is often nowhere legal to put it: the
+    // card is 280px tall, the sticky site header covers the top of the map,
+    // the scrubber covers the bottom, and maxBounds means the map frequently
+    // refuses to pan out of the way. A sheet has none of those problems.
+    if (phoneSheet()) {
+      if (activePopup) { map.closePopup(activePopup); activePopup = null; }
+      sheet.innerHTML = html;
+      sheet.hidden = false;
+      setPulse(e);
+      if (pan) map.panTo([e.lat, e.lng], { animate: true });
+      return;
+    }
+    hideSheet();
+
     if (activePopup) map.closePopup(activePopup);
     activePopup = L.popup({
       className: "quake-pop",
@@ -1122,15 +1149,99 @@
       maxWidth: 320
     }).setLatLng([e.lat, e.lng]).setContent(html).openOn(map);
 
-    document.getElementById("qcClose").onclick = function () { map.closePopup(activePopup); };
-    document.getElementById("qcDetails").onclick = function () { openDetail(e); };
     setPulse(e);
-    if (pan) map.panTo([e.lat, e.lng], { animate: true });
+    if (pan) {
+      map.panTo([e.lat, e.lng], { animate: true });
+      map.once("moveend", keepPopupInside);
+    } else {
+      requestAnimationFrame(keepPopupInside);
+    }
   }
+
+  /* Placing the card is fiddlier than it looks. It opens above its point, and
+     near the top of the map that puts it outside the container, which clips it
+     -- so Close is not awkward to hit, it is not there to hit. Leaflet's autoPan
+     is meant to prevent that and cannot here, because the map sets maxBounds and
+     at high latitude the view is already against the northern limit, so the pan
+     it asks for is simply refused. And "inside the container" is not sufficient
+     either: the scrubber, the legend and the zoom cluster all paint above the
+     popup pane, so a card that reaches them has its buttons behind furniture.
+     Hence: work out the genuinely usable rectangle, try to pan into it, and if
+     the map will not move, flip the card to the other side of its point. */
+  var POP_PAD = 14;
+  var FURNITURE = ".map-timebar, .zoom-ctl, .map-legend, .map-layers-btn";
+
+  function usableBox(popRect) {
+    var box = map.getContainer().getBoundingClientRect();
+    var u = { left: box.left + POP_PAD, right: box.right - POP_PAD,
+              top: box.top + POP_PAD, bottom: box.bottom - POP_PAD };
+    var shell = map.getContainer().parentElement;
+    if (!shell) return u;
+    // Only furniture the card actually runs into counts -- the legend sits
+    // bottom-left and the zoom cluster bottom-right, and a centred card often
+    // passes between them.
+    shell.querySelectorAll(FURNITURE).forEach(function (n) {
+      var r = n.getBoundingClientRect();
+      if (!r.height || r.right <= popRect.left || r.left >= popRect.right) return;
+      if (r.top > box.top + box.height / 2) u.bottom = Math.min(u.bottom, r.top - 8);
+      else u.top = Math.max(u.top, r.bottom + 8);
+    });
+    return u;
+  }
+
+  function fits(r, u) { return r.top >= u.top && r.bottom <= u.bottom; }
+
+  function keepPopupInside() {
+    var el = activePopup && activePopup.getElement();
+    if (!el) return;
+    var pop = el.getBoundingClientRect();
+    var u = usableBox(pop);
+
+    var dx = 0;
+    if (pop.left < u.left) dx = pop.left - u.left;
+    else if (pop.right > u.right) dx = Math.min(pop.right - u.right, pop.left - u.left);
+    if (dx) { map.panBy([dx, 0], { animate: false }); pop = el.getBoundingClientRect(); }
+    if (fits(pop, u)) return;
+
+    var dy = pop.top < u.top ? pop.top - u.top
+                             : Math.min(pop.bottom - u.bottom, pop.top - u.top);
+    if (dy) { map.panBy([0, dy], { animate: false }); pop = el.getBoundingClientRect(); }
+    if (fits(pop, u)) return;
+
+    // The pan was refused or was not enough. Try the other side of the point.
+    var wasAbove = !el.classList.contains("pop-below");
+    activePopup.options.offset = wasAbove ? L.point(0, pop.height + 18) : L.point(0, -4);
+    el.classList.toggle("pop-below", wasAbove);
+    activePopup.update();
+    if (!fits(el.getBoundingClientRect(), u)) {
+      // Neither side clears it; keep the original placement rather than a
+      // flipped card that is just as clipped.
+      activePopup.options.offset = wasAbove ? L.point(0, -4) : L.point(0, pop.height + 18);
+      el.classList.toggle("pop-below", !wasAbove);
+      activePopup.update();
+    }
+  }
+
+  /* Delegated, not bound to the buttons themselves: Leaflet rebuilds a popup's
+     content node whenever the popup is re-rendered -- which is exactly what
+     flipping the card below its point does -- and a handler assigned to the old
+     button goes with it. The container outlives every card. */
+  document.addEventListener("click", function (ev) {
+    var t = ev.target;
+    if (!t || !t.closest) return;
+    if (t.closest("#qcClose")) {
+      hideSheet();
+      if (activePopup) map.closePopup(activePopup);
+      else { activeEvent = null; state.selectedId = null; setPulse(null); }
+      return;
+    }
+    if (t.closest("#qcDetails") && activeEvent) openDetail(activeEvent);
+  });
 
   map.on("popupclose", function (ev) {
     if (ev.popup === activePopup) {
       activePopup = null;
+      activeEvent = null;
       state.selectedId = null;
       setPulse(null);
     }

@@ -348,6 +348,11 @@
 <div id="site-footer"></div>
 
 <!-- event detail modal -->
+<!-- Phone-sized screens get the quake card as a sheet rather than a map
+     popup: see the note in js/map.js on why a popup cannot be placed
+     reliably at that width. -->
+<div class="quake-sheet" id="quakeSheet" hidden></div>
+
 <div class="modal-back" id="detailBack">
   <div class="modal" id="detailModal"></div>
 </div>

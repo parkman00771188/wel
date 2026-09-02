@@ -959,6 +959,39 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 }
 
 .quake-pop .leaflet-popup-tip { box-shadow: 0 6px 16px rgba(5, 16, 45, .2); }
+/* The phone card. Same content as the map popup, but anchored to the viewport
+   instead of to a point on the map -- at this width there is frequently nowhere
+   legal to put a popup, and a card whose Close button is under the site header
+   is worse than one that does not follow the epicentre. */
+.quake-sheet {
+  position: fixed;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  z-index: 1200;
+  background: #fff;
+  border: 1px solid rgba(17, 43, 84, .08);
+  border-radius: 16px;
+  box-shadow: 0 14px 36px rgba(5, 16, 45, .28);
+  padding: 20px 22px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink);
+  max-height: 62dvh;
+  overflow-y: auto;
+}
+.quake-sheet[hidden] { display: none; }
+@media (min-width: 761px) { .quake-sheet { display: none !important; } }
+
+/* Card flipped below its point, because there was no room above and the map
+   would not pan. The tip has to turn over with it or it points at nothing. */
+.quake-pop.pop-below .leaflet-popup-tip-container {
+  position: absolute;
+  top: -19px;
+  bottom: auto;
+  left: 50%;
+  transform: rotate(180deg);
+}
 
 /* quake pulse marker */
 
@@ -1773,6 +1806,35 @@ a.news-row:hover .nt { color: var(--blue-600); }
 .analysis-table tbody tr:last-child td { border-bottom: 0; }
 .analysis-table .right { text-align: right; }
 .analysis-table .mag { color: #e64b35; font-family: var(--font-serif); font-size: 16px; font-weight: 700; }
+
+/* Magnitude, coloured by the nine steps the map legend uses. A solid chip
+   rather than tinted text: the low bands are pale yellows that no amount of
+   contrast fixing makes readable as type on white, and a filled chip is what
+   the reader is already matching against on the globe. Text flips to white
+   from M 6, where the fills stop being light enough to read dark type on. */
+.mag-pill {
+  display: inline-block;
+  min-width: 58px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+  letter-spacing: .01em;
+  color: #3b2a06;
+  white-space: nowrap;
+}
+.mag-pill.mag-b1 { background: #ffe082; }
+.mag-pill.mag-b2 { background: #ffd54f; }
+.mag-pill.mag-b3 { background: #ffb300; }
+.mag-pill.mag-b4 { background: #fb8c00; }
+.mag-pill.mag-b5 { background: #f4511e; color: #fff4ef; }
+.mag-pill.mag-b6 { background: #e53935; color: #fff; }
+.mag-pill.mag-b7 { background: #c62828; color: #fff; }
+.mag-pill.mag-b8 { background: #8e24aa; color: #fff; }
+.mag-pill.mag-b9 { background: #4a148c; color: #fff; }
 .analysis-table .location { color: var(--navy-800); font-weight: 600; }
 .analysis-table .muted { color: var(--muted); }
 .analysis-empty { padding: 30px 14px !important; color: var(--muted); text-align: center !important; cursor: default; }

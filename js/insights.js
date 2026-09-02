@@ -41,6 +41,15 @@
   }
 
   function fmtMagnitude(m) { return Number(m || 0).toFixed(1); }
+  /* The magnitude cell, coloured by the same nine steps the map legend uses --
+     a table of numbers gives no sense of which rows matter, and the reader
+     already knows this palette from the globe. The band is the integer part,
+     so M 5.0 and M 5.9 share a colour exactly as they do on the map. */
+  function magCell(m, extraClass) {
+    var band = Math.max(1, Math.min(9, Math.floor(Number(m) || 0)));
+    return '<td class="mag' + (extraClass ? " " + extraClass : "") + '">'
+      + '<span class="mag-pill mag-b' + band + '">M ' + fmtMagnitude(m) + "</span></td>";
+  }
   function fmtDepth(depth) { return Math.round(Number(depth || 0)).toLocaleString() + " km"; }
   function fmtCoord(value, positive, negative) {
     var n = Number(value || 0);
@@ -436,12 +445,12 @@
     var evs = windowEvents();
     var top = evs.slice().sort(function (a, b) { return b.m - a.m || b.t - a.t; }).slice(0, 10);
     document.getElementById("topEventsBody").innerHTML = top.length ? top.map(function (e, i) {
-      return eventRow(e, ['<td class="muted">' + (i + 1) + "</td>", '<td class="mag">M ' + fmtMagnitude(e.m) + "</td>", '<td class="location">' + escapeHTML(e.loc || e.region || "Unknown location") + "</td>", '<td class="muted">' + escapeHTML(EQ.fmtUTC(e.t, true)) + "</td>", '<td class="right">' + escapeHTML(fmtDepth(e.depth)) + "</td>"]);
+      return eventRow(e, ['<td class="muted">' + (i + 1) + "</td>", magCell(e.m), '<td class="location">' + escapeHTML(e.loc || e.region || "Unknown location") + "</td>", '<td class="muted">' + escapeHTML(EQ.fmtUTC(e.t, true)) + "</td>", '<td class="right">' + escapeHTML(fmtDepth(e.depth)) + "</td>"]);
     }).join("") : emptyRow(5, "No earthquakes match this selection.");
 
     var deep = evs.slice().sort(function (a, b) { return b.depth - a.depth || b.m - a.m; }).slice(0, 10);
     document.getElementById("deepEventsBody").innerHTML = deep.length ? deep.map(function (e, i) {
-      return eventRow(e, ['<td class="muted">' + (i + 1) + "</td>", '<td><strong>' + escapeHTML(fmtDepth(e.depth)) + "</strong></td>", '<td class="mag">M ' + fmtMagnitude(e.m) + "</td>", '<td class="location">' + escapeHTML(e.loc || e.region || "Unknown location") + "</td>", '<td class="muted">' + escapeHTML(EQ.fmtUTC(e.t, true)) + "</td>"]);
+      return eventRow(e, ['<td class="muted">' + (i + 1) + "</td>", '<td><strong>' + escapeHTML(fmtDepth(e.depth)) + "</strong></td>", magCell(e.m), '<td class="location">' + escapeHTML(e.loc || e.region || "Unknown location") + "</td>", '<td class="muted">' + escapeHTML(EQ.fmtUTC(e.t, true)) + "</td>"]);
     }).join("") : emptyRow(5, "No earthquakes match this selection.");
 
     var strongest = top.length ? top[0].m : 0;
@@ -452,7 +461,7 @@
     document.getElementById("energyEventsBody").innerHTML = energyTop.length ? energyTop.map(function (item, i) {
       var e = item.event;
       var share = item.weight / totalWeight * 100;
-      return eventRow(e, ['<td class="muted">' + (i + 1) + "</td>", '<td class="mag">M ' + fmtMagnitude(e.m) + "</td>", '<td class="location">' + escapeHTML(e.loc || e.region || "Unknown location") + "</td>", "<td><strong>" + (share < .1 ? "&lt;0.1" : share.toFixed(1)) + "%</strong></td>", '<td class="muted">' + escapeHTML(EQ.fmtUTC(e.t, true)) + "</td>"]);
+      return eventRow(e, ['<td class="muted">' + (i + 1) + "</td>", magCell(e.m), '<td class="location">' + escapeHTML(e.loc || e.region || "Unknown location") + "</td>", "<td><strong>" + (share < .1 ? "&lt;0.1" : share.toFixed(1)) + "%</strong></td>", '<td class="muted">' + escapeHTML(EQ.fmtUTC(e.t, true)) + "</td>"]);
     }).join("") : emptyRow(5, "No earthquakes match this selection.");
   }
 
@@ -470,7 +479,7 @@
     var start = historyState.page * historyState.size;
     var page = evs.slice(start, start + historyState.size);
     document.getElementById("historyBody").innerHTML = page.length ? page.map(function (e) {
-      return eventRow(e, ['<td class="mag">M ' + fmtMagnitude(e.m) + "</td>", '<td class="location">' + escapeHTML(e.loc || e.region || "Unknown location") + "</td>", '<td class="muted">' + escapeHTML(EQ.fmtUTC(e.t, true)) + "</td>", '<td class="right">' + escapeHTML(fmtDepth(e.depth)) + "</td>"]);
+      return eventRow(e, [magCell(e.m), '<td class="location">' + escapeHTML(e.loc || e.region || "Unknown location") + "</td>", '<td class="muted">' + escapeHTML(EQ.fmtUTC(e.t, true)) + "</td>", '<td class="right">' + escapeHTML(fmtDepth(e.depth)) + "</td>"]);
     }).join("") : emptyRow(4, "No earthquakes match your search.");
     document.getElementById("historyCount").textContent = evs.length ? (start + 1).toLocaleString() + "–" + Math.min(start + historyState.size, evs.length).toLocaleString() + " of " + evs.length.toLocaleString() : "0 events";
     document.getElementById("historyPrev").disabled = historyState.page === 0;
