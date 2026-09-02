@@ -210,54 +210,23 @@
       <p class="gd-desc">Which way the two blocks move depends on how the crust is being squeezed or
         stretched. The style of faulting predicts a great deal — whether the quake can be huge, whether it
         can lift the seafloor and make a tsunami, and how deep it is likely to be.</p>
-      <div class="gd-fig">
-        <svg viewBox="0 0 720 210" role="img" aria-label="Normal, reverse and strike-slip faults">
-          <defs>
-            <marker id="fa" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-              <path d="M0 0 L8 4 L0 8 Z" fill="#1a6ef5"/>
-            </marker>
-          </defs>
-          <g font-family="Inter,sans-serif" text-anchor="middle">
-            <text x="115" y="20" font-size="13" font-weight="600" fill="#16294e">Normal</text>
-            <text x="115" y="37" font-size="11" fill="#7b8698">crust pulled apart</text>
-            <text x="360" y="20" font-size="13" font-weight="600" fill="#16294e">Reverse / Thrust</text>
-            <text x="360" y="37" font-size="11" fill="#7b8698">crust squeezed together</text>
-            <text x="605" y="20" font-size="13" font-weight="600" fill="#16294e">Strike-slip</text>
-            <text x="605" y="37" font-size="11" fill="#7b8698">blocks slide sideways</text>
-          </g>
-
-          <!-- normal -->
-          <path d="M20 80 L150 80 L210 175 L20 175 Z" fill="#e3ecf8" stroke="#9fb4d4" stroke-width="1.2"/>
-          <path d="M158 96 L215 96 L215 175 L218 175 Z" fill="#cfdff5" stroke="#9fb4d4" stroke-width="1.2"/>
-          <path d="M150 80 L210 175" stroke="#e8432d" stroke-width="2.2"/>
-          <path d="M60 66 h-32" stroke="#1a6ef5" stroke-width="2.2" marker-end="url(#fa)" fill="none"/>
-          <path d="M175 84 h32" stroke="#1a6ef5" stroke-width="2.2" marker-end="url(#fa)" fill="none"/>
-          <path d="M186 108 v26" stroke="#e8622d" stroke-width="2.2" marker-end="url(#fa)" fill="none"/>
-
-          <!-- reverse -->
-          <path d="M265 96 L395 96 L455 191 L265 191 Z" fill="#e3ecf8" stroke="#9fb4d4" stroke-width="1.2"/>
-          <path d="M403 70 L462 70 L462 191 L463 191 Z" fill="#cfdff5" stroke="#9fb4d4" stroke-width="1.2"/>
-          <path d="M395 96 L455 191" stroke="#e8432d" stroke-width="2.2"/>
-          <path d="M300 78 h32" stroke="#1a6ef5" stroke-width="2.2" marker-end="url(#fa)" fill="none"/>
-          <path d="M452 56 h-32" stroke="#1a6ef5" stroke-width="2.2" marker-end="url(#fa)" fill="none"/>
-          <path d="M430 106 v-26" stroke="#e8622d" stroke-width="2.2" marker-end="url(#fa)" fill="none"/>
-
-          <!-- strike-slip -->
-          <path d="M515 70 L700 70 L700 126 L515 126 Z" fill="#e3ecf8" stroke="#9fb4d4" stroke-width="1.2"/>
-          <path d="M515 130 L700 130 L700 186 L515 186 Z" fill="#cfdff5" stroke="#9fb4d4" stroke-width="1.2"/>
-          <path d="M515 128 H700" stroke="#e8432d" stroke-width="2.2" stroke-dasharray="6 4"/>
-          <path d="M560 98 h56" stroke="#1a6ef5" stroke-width="2.2" marker-end="url(#fa)" fill="none"/>
-          <path d="M656 158 h-56" stroke="#1a6ef5" stroke-width="2.2" marker-end="url(#fa)" fill="none"/>
-        </svg>
+      <div class="gd-fig gd-photo wide-labels">
+        <img src="resource/img/guide-fault-styles.webp" width="1720" height="635" loading="lazy"
+             alt="Three blocks of layered crust cut open to show a normal fault, a reverse or thrust fault, and a strike-slip fault">
+        <span class="gp-lab" style="--x:18.7%;--y:12%"><b>Normal</b><i>crust pulled apart</i></span>
+        <span class="gp-lab" style="--x:50%;--y:12%"><b>Reverse / Thrust</b><i>crust squeezed together</i></span>
+        <span class="gp-lab" style="--x:82.9%;--y:12%"><b>Strike-slip</b><i>blocks slide sideways</i></span>
       </div>
-      <table class="eq-table gd-table tight" style="margin-top:6px">
-        <thead><tr><th>Fault type</th><th>Stress</th><th class="wide">Where you find it</th><th>Largest it gets</th></tr></thead>
-        <tbody>
-          <tr><td class="mag">Normal</td><td>Extension</td><td>Mid-ocean ridges, rift valleys, Basin and Range</td><td>Rarely above M 7.5</td></tr>
-          <tr><td class="mag">Reverse / thrust</td><td>Compression</td><td>Subduction zones, mountain fronts (Himalaya, Andes)</td><td>Up to M 9+ — every M 9 on record</td></tr>
-          <tr><td class="mag">Strike-slip</td><td>Shear</td><td>Transform boundaries: San Andreas, North Anatolian</td><td>About M 8.0–8.3</td></tr>
-        </tbody>
-      </table>
+      <div class="gd-tablewrap">
+        <table class="eq-table gd-table tight" style="margin-top:6px">
+          <thead><tr><th>Fault type</th><th>Stress</th><th class="wide">Where you find it</th><th>Largest it gets</th></tr></thead>
+          <tbody>
+            <tr><td class="mag">Normal</td><td>Extension</td><td>Mid-ocean ridges, rift valleys, Basin and Range</td><td>Rarely above M 7.5</td></tr>
+            <tr><td class="mag">Reverse / thrust</td><td>Compression</td><td>Subduction zones, mountain fronts (Himalaya, Andes)</td><td>Up to M 9+ — every M 9 on record</td></tr>
+            <tr><td class="mag">Strike-slip</td><td>Shear</td><td>Transform boundaries: San Andreas, North Anatolian</td><td>About M 8.0–8.3</td></tr>
+          </tbody>
+        </table>
+      </div>
       <div class="gd-note" style="margin-top:16px">Only a shallow <b>thrust</b> fault under water displaces
         enough seafloor to raise a large tsunami. A strike-slip quake of the same magnitude moves the ocean
         floor sideways, which the water barely notices — which is why an M 7.8 on land or on a transform
@@ -340,15 +309,17 @@
         </svg>
       </div>
 
-      <table class="eq-table gd-table tight" style="margin-top:18px">
-        <thead><tr><th>Wave</th><th>Speed in the crust</th><th>Ground motion</th><th>Travels through</th><th class="wide">Damage</th></tr></thead>
-        <tbody>
-          <tr><td class="mag">P</td><td>5–8 km/s</td><td>Push–pull along the ray</td><td>Solid, liquid, gas</td><td>Low — often heard as a bang</td></tr>
-          <tr><td class="mag">S</td><td>3–4.5 km/s</td><td>Shear across the ray</td><td>Solid only</td><td>High</td></tr>
-          <tr><td class="mag">Love</td><td>2–4.4 km/s</td><td>Horizontal shearing</td><td>Surface layers</td><td>High, especially on soft soil</td></tr>
-          <tr><td class="mag">Rayleigh</td><td>2–4 km/s</td><td>Rolling ellipse</td><td>Surface layers</td><td>High at long period; hard on tall buildings</td></tr>
-        </tbody>
-      </table>
+      <div class="gd-tablewrap">
+        <table class="eq-table gd-table tight" style="margin-top:18px">
+          <thead><tr><th>Wave</th><th>Speed in the crust</th><th>Ground motion</th><th>Travels through</th><th class="wide">Damage</th></tr></thead>
+          <tbody>
+            <tr><td class="mag">P</td><td>5–8 km/s</td><td>Push–pull along the ray</td><td>Solid, liquid, gas</td><td>Low — often heard as a bang</td></tr>
+            <tr><td class="mag">S</td><td>3–4.5 km/s</td><td>Shear across the ray</td><td>Solid only</td><td>High</td></tr>
+            <tr><td class="mag">Love</td><td>2–4.4 km/s</td><td>Horizontal shearing</td><td>Surface layers</td><td>High, especially on soft soil</td></tr>
+            <tr><td class="mag">Rayleigh</td><td>2–4 km/s</td><td>Rolling ellipse</td><td>Surface layers</td><td>High at long period; hard on tall buildings</td></tr>
+          </tbody>
+        </table>
+      </div>
       <p class="gd-figcap">Speeds are typical continental-crust values; they rise with depth. Surface waves
         lose energy more slowly with distance than body waves, so far from a large earthquake they are what
         is left — and why an M 8 can set tall buildings swaying a thousand kilometres away.</p>
@@ -436,36 +407,13 @@
               on the boundaries where plates meet, which is why events on the live map trace such clear
               lines rather than scattering evenly.</p>
           </div>
-          <svg class="gd-plates" viewBox="0 0 560 240" role="img" aria-label="Three types of plate boundaries">
-            <g font-family="Inter,sans-serif" font-size="13" font-weight="600" fill="#16294e" text-anchor="middle">
-              <text x="100" y="22">Convergent</text><text x="290" y="22">Divergent</text><text x="470" y="22">Transform</text>
-            </g>
-            <g font-family="Inter,sans-serif" font-size="11" fill="#7b8698" text-anchor="middle">
-              <text x="100" y="38">plates collide</text><text x="290" y="38">plates pull apart</text><text x="470" y="38">plates slide past</text>
-            </g>
-            <rect x="10" y="150" width="540" height="70" rx="8" fill="#fbe3cf"/>
-            <path d="M20 118 L95 118 L150 175 L150 220 L20 220 Z" fill="#e3ecf8" stroke="#9fb4d4" stroke-width="1.2"/>
-            <path d="M95 118 L180 118 L180 150 L128 150 Z" fill="#cfdff5" stroke="#9fb4d4" stroke-width="1.2"/>
-            <path d="M60 118 Q80 96 100 112 Q118 96 138 118 Z" fill="#b9cfec"/>
-            <path d="M45 106 h34" stroke="#1a6ef5" stroke-width="2.4" marker-end="url(#gar)"/>
-            <path d="M172 106 h-34" stroke="#1a6ef5" stroke-width="2.4" marker-end="url(#gar)"/>
-            <path d="M215 130 L275 130 L275 220 L215 220 Z" fill="#e3ecf8" stroke="#9fb4d4" stroke-width="1.2"/>
-            <path d="M305 130 L365 130 L365 220 L305 220 Z" fill="#e3ecf8" stroke="#9fb4d4" stroke-width="1.2"/>
-            <path d="M275 220 L305 220 L305 168 Q290 150 275 168 Z" fill="#f4a83a"/>
-            <path d="M290 205 V172 M283 182 L290 172 L297 182" stroke="#e8622d" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-            <path d="M262 118 h-34" stroke="#1a6ef5" stroke-width="2.4" marker-end="url(#gar)"/>
-            <path d="M318 118 h34" stroke="#1a6ef5" stroke-width="2.4" marker-end="url(#gar)"/>
-            <path d="M400 130 L470 130 L470 220 L400 220 Z" fill="#e3ecf8" stroke="#9fb4d4" stroke-width="1.2"/>
-            <path d="M474 130 L544 130 L544 220 L474 220 Z" fill="#cfdff5" stroke="#9fb4d4" stroke-width="1.2"/>
-            <path d="M472 132 V218" stroke="#e8432d" stroke-width="2" stroke-dasharray="5 4"/>
-            <path d="M412 118 h44" stroke="#1a6ef5" stroke-width="2.4" marker-end="url(#gar)"/>
-            <path d="M532 232 h-44" stroke="#1a6ef5" stroke-width="2.4" marker-end="url(#gar)"/>
-            <defs>
-              <marker id="gar" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
-                <path d="M0 0 L7 3.5 L0 7 Z" fill="#1a6ef5"/>
-              </marker>
-            </defs>
-          </svg>
+          <div class="gd-photo tight wide-labels">
+            <img src="resource/img/guide-plate-boundaries.webp" width="1672" height="941" loading="lazy"
+                 alt="Three cutaway blocks of crust and mantle showing a convergent, a divergent and a transform plate boundary">
+            <span class="gp-lab" style="--x:17.1%;--y:10.5%"><b>Convergent</b><i>plates collide</i></span>
+            <span class="gp-lab" style="--x:49.7%;--y:10.5%"><b>Divergent</b><i>plates pull apart</i></span>
+            <span class="gp-lab" style="--x:82.4%;--y:10.5%"><b>Transform</b><i>plates slide past</i></span>
+          </div>
         </div>
         <div>
           <ul class="ticks" style="margin-top:4px">
@@ -515,57 +463,14 @@
       <p class="gd-desc">Everything that makes the largest earthquakes lives in one cross-section: a cold
         plate bending down, a locked interface tens of thousands of square kilometres wide, and a sheet of
         seismicity descending into the mantle.</p>
-      <div class="gd-fig">
-        <svg viewBox="0 0 720 330" role="img" aria-label="Cross-section of a subduction zone">
-          <!-- mantle behind everything -->
-          <rect x="0" y="92" width="720" height="238" fill="#f3e7d6"/>
-          <!-- ocean, left of the trench -->
-          <rect x="0" y="44" width="300" height="48" fill="#cfe6f7"/>
-          <path d="M0 44 H300" stroke="#7fb6dd" stroke-width="1.2"/>
-          <!-- overriding plate: trench on the left, arc on top, flat base -->
-          <path d="M300 100 L720 80 L720 172 L405 172 Z" fill="#e2eaf5" stroke="#9fb4d4" stroke-width="1.3"/>
-          <!-- subducting slab, entering at the trench and dipping into the mantle -->
-          <path d="M0 92 L300 100 L620 320 L578 320 L300 128 L0 118 Z"
-                fill="#d3dfee" stroke="#8fa6c4" stroke-width="1.3"/>
-          <!-- the locked interface: where the great earthquakes happen -->
-          <path d="M300 100 L392 163" stroke="#e8432d" stroke-width="5" stroke-linecap="round" opacity=".9"/>
-          <!-- earthquakes down the slab, shallow to deep -->
-          <g fill="#f0642f">
-            <circle cx="312" cy="108" r="3.6"/><circle cx="330" cy="121" r="4"/>
-            <circle cx="348" cy="133" r="4.2"/><circle cx="368" cy="147" r="3.8"/>
-          </g>
-          <g fill="#f5b73c">
-            <circle cx="390" cy="162" r="3.2"/><circle cx="412" cy="177" r="3.2"/>
-            <circle cx="434" cy="192" r="3"/><circle cx="456" cy="207" r="3"/>
-          </g>
-          <g fill="#3fb0e8">
-            <circle cx="482" cy="225" r="2.8"/><circle cx="508" cy="243" r="2.6"/>
-            <circle cx="534" cy="261" r="2.4"/><circle cx="560" cy="279" r="2.2"/>
-          </g>
-          <!-- volcanic arc on the overriding plate -->
-          <path d="M542 88 l18 -34 18 34 Z" fill="#8a6a4f"/>
-          <path d="M560 54 q-7 -18 3 -27" stroke="#b0a190" stroke-width="2" fill="none"/>
-          <!-- depth axis -->
-          <g stroke="#b9a68c" stroke-width="1.2">
-            <path d="M648 200 h14"/><path d="M648 292 h14"/>
-          </g>
-          <g font-family="Inter,sans-serif" font-size="10" fill="#8b7a63">
-            <text x="666" y="204">200 km</text><text x="666" y="296">500 km</text>
-          </g>
-          <!-- labels, all outside the artwork they point at -->
-          <g font-family="Inter,sans-serif" font-size="11.5" fill="#16294e">
-            <text x="70" y="26" font-weight="600">ocean</text>
-            <text x="300" y="26" font-weight="600" text-anchor="middle">trench</text>
-            <path d="M300 32 V96" stroke="#16294e" stroke-width="1" stroke-dasharray="3 3"/>
-            <text x="560" y="26" font-weight="600" text-anchor="middle">volcanic arc</text>
-            <path d="M560 32 V48" stroke="#16294e" stroke-width="1" stroke-dasharray="3 3"/>
-            <text x="470" y="120" font-weight="600" fill="#c0392b">locked interface</text>
-            <path d="M466 116 L400 143" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 3"/>
-            <text x="330" y="250" font-weight="600">Wadati&#8211;Benioff zone</text>
-            <text x="330" y="266" font-size="10" fill="#7b8698">earthquakes inside the sinking slab</text>
-            <path d="M436 246 L482 230" stroke="#16294e" stroke-width="1" stroke-dasharray="3 3"/>
-          </g>
-        </svg>
+      <div class="gd-fig gd-photo wide-labels">
+        <img src="resource/img/guide-subduction-zone.webp" width="1642" height="868" loading="lazy"
+             alt="Cross-section of a subduction zone: an oceanic plate bending down at a trench and descending into the mantle beneath a volcanic arc, with earthquakes marked along the sinking slab">
+        <span class="gp-lab" style="--x:16.7%;--y:5.2%"><b>ocean</b></span>
+        <span class="gp-lab" style="--x:46.4%;--y:5.2%"><b>trench</b></span>
+        <span class="gp-lab" style="--x:76.6%;--y:6.8%"><b>volcanic arc</b></span>
+        <span class="gp-lab alert at-start at-middle" style="--x:66.6%;--y:42.6%"><b>locked interface</b></span>
+        <span class="gp-lab on-dark at-end at-middle" style="--x:57%;--y:75.6%"><b>Wadati&#8211;Benioff zone</b><i>earthquakes inside the sinking slab</i></span>
       </div>
       <p class="gd-figcap">Vertical scale is exaggerated: a real subduction interface dips at only about
         10&#8211;25&#176; near the trench, far shallower than it can be drawn at this width.</p>
@@ -632,15 +537,17 @@
           <p>Three components — north, east and vertical — are needed, because ground motion is a vector
             and the wave types are told apart by which direction they move.</p>
         </div>
-        <table class="eq-table gd-table tight" style="margin-top:14px">
-          <thead><tr><th>Instrument</th><th class="nw">Records</th><th class="wide">Good for</th></tr></thead>
-          <tbody>
-            <tr><td class="mag">Broadband seismometer</td><td class="nw">Velocity</td><td>Distant and small events; waveform modelling</td></tr>
-            <tr><td class="mag">Strong-motion accelerometer</td><td class="nw">Acceleration</td><td>Severe local shaking; building codes; ShakeMaps</td></tr>
-            <tr><td class="mag">Short-period sensor</td><td class="nw">Velocity, narrow band</td><td>Dense local networks; small quakes</td></tr>
-            <tr><td class="mag">GNSS / GPS station</td><td class="nw">Permanent displacement</td><td>Very large quakes, where seismometers saturate</td></tr>
-          </tbody>
-        </table>
+        <div class="gd-tablewrap">
+          <table class="eq-table gd-table tight" style="margin-top:14px">
+            <thead><tr><th>Instrument</th><th class="nw">Records</th><th class="wide">Good for</th></tr></thead>
+            <tbody>
+              <tr><td class="mag">Broadband seismometer</td><td class="nw">Velocity</td><td>Distant and small events; waveform modelling</td></tr>
+              <tr><td class="mag">Strong-motion accelerometer</td><td class="nw">Acceleration</td><td>Severe local shaking; building codes; ShakeMaps</td></tr>
+              <tr><td class="mag">Short-period sensor</td><td class="nw">Velocity, narrow band</td><td>Dense local networks; small quakes</td></tr>
+              <tr><td class="mag">GNSS / GPS station</td><td class="nw">Permanent displacement</td><td>Very large quakes, where seismometers saturate</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div class="card gd-card">
@@ -927,41 +834,15 @@
       <p class="gd-desc">When a shallow thrust earthquake lifts a wide patch of seafloor, it lifts the
         entire water column above it. That displacement spreads outward as a wave that is almost invisible
         in deep water and devastating at the coast.</p>
-      <div class="gd-fig">
-        <svg viewBox="0 0 720 250" role="img" aria-label="A tsunami crossing deep water and shoaling at the coast">
-          <!-- label band, kept clear of the water so nothing overlaps -->
-          <g font-family="Inter,sans-serif" text-anchor="middle">
-            <text x="170" y="16" font-size="11.5" font-weight="600" fill="#16294e">deep ocean</text>
-            <text x="170" y="32" font-size="10" fill="#5d7a9c">4 km deep · ~713 km/h · wave under 1 m</text>
-            <text x="600" y="16" font-size="11.5" font-weight="600" fill="#16294e">shoaling</text>
-            <text x="600" y="32" font-size="10" fill="#5d7a9c">slows, shortens, piles up</text>
-          </g>
-
-          <rect x="0" y="62" width="720" height="148" fill="#cfe6f7"/>
-          <path d="M0 210 L430 210 L560 146 L640 118 L720 118 L720 250 L0 250 Z" fill="#e8dcc8"/>
-          <path d="M0 210 L430 210 L560 146 L640 118 L720 118" fill="none" stroke="#c3b096" stroke-width="1.5"/>
-          <path d="M0 62 H720" stroke="#7fb6dd" stroke-width="1.2"/>
-
-          <!-- the same wave, three times: low and long far out, tall and short inshore -->
-          <path d="M96 62 q34 -14 68 0" fill="none" stroke="#1a6ef5" stroke-width="3"/>
-          <path d="M286 62 q30 -20 60 0" fill="none" stroke="#1a6ef5" stroke-width="3"/>
-          <path d="M470 62 q22 -30 44 0" fill="none" stroke="#1560d8" stroke-width="3.2"/>
-          <path d="M556 62 q16 -46 32 0" fill="none" stroke="#1560d8" stroke-width="3.6"/>
-
-          <g stroke="#1a6ef5" stroke-width="1.8" fill="none" opacity=".85">
-            <path d="M196 100 h44 M232 94 l8 6 -8 6"/>
-            <path d="M380 100 h44 M416 94 l8 6 -8 6"/>
-          </g>
-
-          <!-- the source: a patch of seafloor pushed up -->
-          <path d="M250 210 q40 -18 80 0" fill="none" stroke="#e8432d" stroke-width="3"/>
-          <g stroke="#e8432d" stroke-width="2.2" fill="none">
-            <path d="M276 206 v-18 M270 194 l6 -6 6 6"/>
-            <path d="M304 206 v-18 M298 194 l6 -6 6 6"/>
-          </g>
-          <text x="290" y="238" font-family="Inter,sans-serif" font-size="10.5" font-weight="600"
-                fill="#c0392b" text-anchor="middle">seafloor thrust lifts the water column</text>
-        </svg>
+      <div class="gd-fig gd-photo steps">
+        <img src="resource/img/guide-tsunami.webp" width="1672" height="941" loading="lazy"
+             alt="Cross-section of a tsunami in four steps: a rupture on the seafloor, the water column lifted above it, the wave crossing deep water, and the wave rising and flooding a shore">
+        <span class="gp-lab" style="--x:10.5%;--y:11.6%"><b>Undersea earthquake</b></span>
+        <span class="gp-lab" style="--x:33.7%;--y:11.6%"><b>The seafloor is lifted</b><i>the water above is pushed up</i></span>
+        <span class="gp-lab" style="--x:59.6%;--y:11.6%"><b>Racing across deep water</b><i>low waves, energy spread wide</i></span>
+        <span class="gp-lab" style="--x:83.3%;--y:11.6%"><b>Rising and flooding the coast</b><i>shallower water, higher waves</i></span>
+        <span class="gp-lab on-dark" style="--x:7.1%;--y:55.8%"><b>oceanic plate</b></span>
+        <span class="gp-lab on-dark" style="--x:37.8%;--y:66.2%"><b>continental plate</b></span>
       </div>
       <div class="gd-grid two">
         <div>

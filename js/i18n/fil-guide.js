@@ -733,5 +733,16 @@ WEL_I18N.load({
   "Do not enter damaged buildings, and do not go to the coast to look at the sea.": "Huwag pumasok sa mga nasirang gusali, at huwag pumunta sa baybayin upang tingnan ang dagat.",
   "First week": "Unang linggo",
   "Photograph damage before clearing it, for insurance. Expect aftershocks and treat weakened structures as unsafe.": "Kunan ng litrato ang pinsala bago ito linisin, para sa insurance. Umasa ng mga aftershock at ituring na hindi ligtas ang mga huminang istruktura.",
-  "Do not assume the largest shock has passed — sequences sometimes escalate.": "Huwag ipagpalagay na lumipas na ang pinakamalaking pagyanig — minsan ay lumalala ang mga sequence."
+  "Do not assume the largest shock has passed — sequences sometimes escalate.": "Huwag ipagpalagay na lumipas na ang pinakamalaking pagyanig — minsan ay lumalala ang mga sequence.",
+
+  /* labels on the rendered tsunami figure */
+  "Undersea earthquake": "Lindol sa ilalim ng dagat",
+  "The seafloor is lifted": "Umaangat ang sahig-dagat",
+  "the water above is pushed up": "itinataas ang hanay ng tubig",
+  "Racing across deep water": "Humahagibis sa malalim na tubig",
+  "low waves, energy spread wide": "mababang alon, nakakalat ang enerhiya",
+  "Rising and flooding the coast": "Tumataas at binabaha ang baybayin",
+  "shallower water, higher waves": "mas mababaw, mas mataas na alon",
+  "oceanic plate": "oceanic plate",
+  "continental plate": "continental plate"
 });

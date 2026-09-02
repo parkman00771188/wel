@@ -733,5 +733,16 @@ WEL_I18N.load({
   "Do not enter damaged buildings, and do not go to the coast to look at the sea.": "손상된 건물에 들어가지 않고, 바다를 보러 해안에 가지 않습니다.",
   "First week": "첫 주",
   "Photograph damage before clearing it, for insurance. Expect aftershocks and treat weakened structures as unsafe.": "보험을 위해 치우기 전에 피해를 사진으로 남깁니다. 여진을 예상하고 약해진 구조물은 안전하지 않다고 봅니다.",
-  "Do not assume the largest shock has passed — sequences sometimes escalate.": "가장 큰 지진이 지나갔다고 단정하지 않습니다 — 연쇄가 더 커지는 경우도 있습니다."
+  "Do not assume the largest shock has passed — sequences sometimes escalate.": "가장 큰 지진이 지나갔다고 단정하지 않습니다 — 연쇄가 더 커지는 경우도 있습니다.",
+
+  /* labels on the rendered tsunami figure */
+  "Undersea earthquake": "해저 지진",
+  "The seafloor is lifted": "해저가 들어 올려짐",
+  "the water above is pushed up": "위의 물기둥이 밀려 올라감",
+  "Racing across deep water": "깊은 바다를 빠르게 건넘",
+  "low waves, energy spread wide": "파고는 낮고, 에너지는 넓게 퍼짐",
+  "Rising and flooding the coast": "높아져 해안을 덮침",
+  "shallower water, higher waves": "물이 얕아지고, 파고는 높아짐",
+  "oceanic plate": "해양판",
+  "continental plate": "대륙판"
 });

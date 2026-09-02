@@ -14,3 +14,9 @@ node_modules/
 
 # R2 자격증명. 이 저장소는 공개이므로 절대 커밋되면 안 된다.
 scripts/r2.json
+
+# The delivered guide illustrations, 16 MB of PNG across eight files. What
+# ships is resource/img/guide-*.webp -- the "without description" halves,
+# resized and recompressed, with their labels reproduced as HTML in learn.html
+# so they translate. The originals stay local as the thing to re-export from.
+resource/img/*description).png

@@ -733,5 +733,16 @@ WEL_I18N.load({
   "Do not enter damaged buildings, and do not go to the coast to look at the sea.": "損傷した建物に入らないでください。海を見に海岸へ行かないでください。",
   "First week": "最初の 1 週間",
   "Photograph damage before clearing it, for insurance. Expect aftershocks and treat weakened structures as unsafe.": "片づける前に、保険のために被害を写真に撮ってください。余震があると考え、弱った構造物は危険なものとして扱ってください。",
-  "Do not assume the largest shock has passed — sequences sometimes escalate.": "最大の地震がもう過ぎたと決めつけないでください — 系列がさらに大きくなることもあります。"
+  "Do not assume the largest shock has passed — sequences sometimes escalate.": "最大の地震がもう過ぎたと決めつけないでください — 系列がさらに大きくなることもあります。",
+
+  /* labels on the rendered tsunami figure */
+  "Undersea earthquake": "海底地震",
+  "The seafloor is lifted": "海底が持ち上がる",
+  "the water above is pushed up": "上の水柱が押し上げられる",
+  "Racing across deep water": "深い海を高速で進む",
+  "low waves, energy spread wide": "波は低く、エネルギーは広く分散",
+  "Rising and flooding the coast": "高くなり海岸を浸水させる",
+  "shallower water, higher waves": "水深が浅くなり、波は高くなる",
+  "oceanic plate": "海洋プレート",
+  "continental plate": "大陸プレート"
 });

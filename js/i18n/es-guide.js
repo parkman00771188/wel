@@ -733,5 +733,16 @@ WEL_I18N.load({
   "Do not enter damaged buildings, and do not go to the coast to look at the sea.": "No entre en edificios dañados y no vaya a la costa a mirar el mar.",
   "First week": "Primera semana",
   "Photograph damage before clearing it, for insurance. Expect aftershocks and treat weakened structures as unsafe.": "Fotografíe los daños antes de retirarlos, para el seguro. Cuente con réplicas y trate las estructuras debilitadas como inseguras.",
-  "Do not assume the largest shock has passed — sequences sometimes escalate.": "No dé por hecho que ya pasó el sismo más grande — a veces las secuencias van a más."
+  "Do not assume the largest shock has passed — sequences sometimes escalate.": "No dé por hecho que ya pasó el sismo más grande — a veces las secuencias van a más.",
+
+  /* labels on the rendered tsunami figure */
+  "Undersea earthquake": "Sismo submarino",
+  "The seafloor is lifted": "El fondo marino se levanta",
+  "the water above is pushed up": "sube toda la columna de agua",
+  "Racing across deep water": "Cruza rápido las aguas profundas",
+  "low waves, energy spread wide": "olas bajas, energía muy repartida",
+  "Rising and flooding the coast": "Crece e inunda la costa",
+  "shallower water, higher waves": "aguas más someras, olas más altas",
+  "oceanic plate": "placa oceánica",
+  "continental plate": "placa continental"
 });

@@ -733,5 +733,16 @@ WEL_I18N.load({
   "Do not enter damaged buildings, and do not go to the coast to look at the sea.": "Jangan memasuki bangunan yang rusak, dan jangan pergi ke pesisir untuk melihat laut.",
   "First week": "Minggu pertama",
   "Photograph damage before clearing it, for insurance. Expect aftershocks and treat weakened structures as unsafe.": "Foto kerusakan sebelum dibersihkan, untuk keperluan asuransi. Bersiaplah menghadapi gempa susulan dan anggap bangunan yang sudah melemah sebagai tidak aman.",
-  "Do not assume the largest shock has passed — sequences sometimes escalate.": "Jangan menganggap guncangan terbesar sudah berlalu — rangkaian gempa kadang justru meningkat."
+  "Do not assume the largest shock has passed — sequences sometimes escalate.": "Jangan menganggap guncangan terbesar sudah berlalu — rangkaian gempa kadang justru meningkat.",
+
+  /* labels on the rendered tsunami figure */
+  "Undersea earthquake": "Gempa bawah laut",
+  "The seafloor is lifted": "Dasar laut terangkat",
+  "the water above is pushed up": "air di atasnya terdorong naik",
+  "Racing across deep water": "Melaju di laut dalam",
+  "low waves, energy spread wide": "gelombang rendah, energi tersebar luas",
+  "Rising and flooding the coast": "Meninggi dan menggenangi pesisir",
+  "shallower water, higher waves": "makin dangkal, gelombang makin tinggi",
+  "oceanic plate": "lempeng samudra",
+  "continental plate": "lempeng benua"
 });

@@ -733,5 +733,16 @@ WEL_I18N.load({
   "Do not enter damaged buildings, and do not go to the coast to look at the sea.": "لا تدخل المباني المتضررة، ولا تذهب إلى الساحل لمشاهدة البحر.",
   "First week": "الأسبوع الأول",
   "Photograph damage before clearing it, for insurance. Expect aftershocks and treat weakened structures as unsafe.": "صوّر الأضرار قبل إزالتها، لأغراض التأمين. وتوقّع هزات ارتدادية، وعامل المنشآت الضعيفة على أنها غير آمنة.",
-  "Do not assume the largest shock has passed — sequences sometimes escalate.": "لا تفترض أن أكبر هزة قد مضت — فالسلاسل تتصاعد أحياناً."
+  "Do not assume the largest shock has passed — sequences sometimes escalate.": "لا تفترض أن أكبر هزة قد مضت — فالسلاسل تتصاعد أحياناً.",
+
+  /* labels on the rendered tsunami figure */
+  "Undersea earthquake": "زلزال بحري",
+  "The seafloor is lifted": "يرتفع قاع البحر",
+  "the water above is pushed up": "يُدفع عمود الماء إلى أعلى",
+  "Racing across deep water": "عبور سريع للمياه العميقة",
+  "low waves, energy spread wide": "أمواج منخفضة، طاقة واسعة الانتشار",
+  "Rising and flooding the coast": "تعلو وتغمر الساحل",
+  "shallower water, higher waves": "مياه أقل عمقاً، أمواج أعلى",
+  "oceanic plate": "الصفيحة المحيطية",
+  "continental plate": "الصفيحة القارية"
 });

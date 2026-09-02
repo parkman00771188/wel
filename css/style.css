@@ -1322,6 +1322,130 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
   font-size: 12.5px; line-height: 1.65; color: var(--faint); margin: 10px 0 0;
 }
 
+/* ---------- photographic figures ----------
+   Some of the guide's diagrams are rendered illustrations rather than drawn
+   SVG. Their labels are HTML sitting on top of the picture, not pixels baked
+   into it, so they translate with the rest of the page and stay selectable and
+   searchable. Each label carries its position as a percentage of the image box,
+   which keeps it on its feature at any width.
+
+   Type scales with the figure rather than the viewport -- a label two thirds
+   the height of a mountain would be absurd -- so the sizes are in container
+   query units, with a pixel value first for anything that lacks them. */
+.gd-photo {
+  position: relative;
+  container-type: inline-size;
+  max-width: 860px;
+  margin: 20px auto 10px;
+}
+.gd-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+/* Inside a two-column block the figure follows a paragraph rather than opening
+   a section, so it needs less air above it. */
+.gd-photo.tight { margin: 8px 0 0; }
+
+.gp-lab {
+  --tx: -50%;
+  --ty: 0;
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  transform: translate(var(--tx), var(--ty));
+  text-align: center;
+  line-height: 1.3;
+  /* Capped at roughly a quarter of the figure so a label can never reach its
+     neighbour, and allowed to wrap when it hits that cap. The alternative --
+     keeping every label on one line -- means the longest translation decides
+     whether the figure works, and there are nine of them to go wrong. Wrapping
+     grows downward into the blank band above the artwork, which every one of
+     these renders leaves clear. */
+  /* max-content, not the default shrink-to-fit: an absolutely positioned box
+     with only `left` set may use the space from there to the container's edge
+     and no more, so a label at 83% got squeezed into the last 17% and wrapped
+     regardless of the cap. The translateX afterwards is what actually centres
+     it, so it is free to size to its text first. */
+  width: max-content;
+  max-width: 200px;
+  max-width: var(--maxw, 21cqw);
+  white-space: normal;
+  pointer-events: none;
+  color: var(--navy-800);
+  /* Invisible on the white band these labels normally sit in, and what keeps
+     them readable where one reaches over pale foam or rock. */
+  text-shadow: 0 1px 3px rgba(255, 255, 255, .95), 0 0 2px rgba(255, 255, 255, .9);
+}
+/* Tracks the figure's width, but with a floor and a ceiling: left to scale
+   freely a label is fourteen pixels on a desktop and eight on a tablet, and the
+   floor is what keeps the tablet readable without letting a wide screen blow
+   the label up out of proportion to the artwork. */
+.gp-lab b {
+  display: block;
+  font-weight: 700;
+  font-size: 13px;
+  font-size: clamp(10.5px, var(--fs, 1.5cqw), 14px);
+}
+.gp-lab i {
+  display: block;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11px;
+  font-size: clamp(9.5px, var(--fsc, 1.27cqw), 12px);
+  color: var(--faint);
+}
+
+/* The default cap is set by the tightest case: four columns across the tsunami
+   figure, whose centres are 23% apart, so a label may be 21% wide and still
+   leave a gap. Three columns, or labels scattered over a cross-section, have
+   more room between them and would rather stay on one line. */
+.gd-photo.wide-labels { --maxw: 32cqw; }
+
+/* The four-step tsunami render leaves its labels a band 105px to 194px deep --
+   below that a wave crest rises into the right-hand column. Two lines have to
+   fit in it, in every language, so the type is a shade smaller here and the cap
+   a shade wider, which is what keeps the longest title on one line. */
+.gd-photo.steps { --maxw: 22cqw; --fs: 1.35cqw; --fsc: 1.15cqw; }
+
+/* Where the label hangs off the end of a leader line rather than sitting over
+   the thing it names. */
+.gp-lab.at-start { --tx: 0; text-align: start; }
+.gp-lab.at-end { --tx: -100%; text-align: end; }
+.gp-lab.at-middle { --ty: -50%; }
+
+/* Over the artwork instead of the white margin. */
+.gp-lab.on-dark { color: #fff; text-shadow: 0 1px 4px rgba(0, 0, 0, .6); }
+.gp-lab.on-dark i { color: rgba(255, 255, 255, .88); }
+.gp-lab.alert { color: #c0392b; }
+
+/* Phones only. Down to tablet width the labels still fit over the artwork, but
+   on a 390 px screen the figure is barely 350 px across and a legible label
+   would cover the thing it names. The picture stands on its own instead and the
+   labels fall underneath as a legend -- which is only possible because they are
+   text rather than pixels. The panels read left to right in the same order the
+   labels are written, so the legend still tracks the picture. */
+@media (max-width: 680px) {
+  .gp-lab {
+    position: static;
+    transform: none;
+    display: block;
+    width: auto;
+    max-width: none;
+    white-space: normal;
+    text-align: start;
+    padding: 7px 2px;
+    border-top: 1px solid var(--line-soft);
+    color: var(--navy-800);
+    text-shadow: none;
+  }
+  .gp-lab b, .gp-lab i { display: inline; font-size: 12.5px; }
+  .gp-lab i { color: var(--faint); }
+  .gp-lab i::before { content: " \2014 "; }
+  .gd-photo img { margin-bottom: 4px; }
+}
+
 /* Denser table for the reference material -- the guide's tables are read a row
    at a time, not scanned, so they can afford to be tighter than a data grid. */
 .gd-table.tight td, .gd-table.tight th { padding: 8px 11px !important; font-size: 12.8px; }
@@ -1625,7 +1749,12 @@ a.news-row:hover .nt { color: var(--blue-600); }
   .gd-hero { grid-template-columns: 1fr; padding: 28px; }
   .gd-hero-img { order: -1; }
   .gd-hero-img img { max-width: 380px; }
-  .gd-grid.two, .gd-grid.split-62, .gd-faq, .gd-cols, .gd-terms.cols2 { grid-template-columns: 1fr; }
+  /* minmax(0, 1fr) rather than a bare 1fr: a bare 1fr is minmax(auto, 1fr),
+     whose floor is the item's min-content width, so a single wide table inside
+     one of these columns stretches the track past the screen and takes the
+     whole page's horizontal scroll with it. The multi-column rules above
+     already guard against this; the stacked fallback did not. */
+  .gd-grid.two, .gd-grid.split-62, .gd-faq, .gd-cols, .gd-terms.cols2 { grid-template-columns: minmax(0, 1fr); }
   .gd-compare { grid-template-columns: 1fr; }
   .cmp-vs { justify-self: center; }
   .gd-scenarios { grid-template-columns: repeat(2, 1fr); }
@@ -3004,6 +3133,21 @@ a.pub:hover .pub-title { color: var(--blue-600); }
     border-color: var(--line-soft);
   }
   .nav-lang select { flex: 1; font-size: 13.5px; }
+}
+
+/* Between the dropdown breakpoint and a full desktop there is a band -- a small
+   laptop, a tablet in landscape -- where the bar has to carry the wordmark, six
+   links, the picker and the call to action all at once. At 1024px that came to
+   27px more than the viewport. Tightening the gaps and dropping the type a
+   little buys back four times that, and none of it is visible at these sizes. */
+@media (min-width: 961px) and (max-width: 1180px) {
+  .header-inner { gap: 14px; }
+  .main-nav { gap: 22px; }
+  .main-nav a { font-size: 13.5px; }
+  .header-actions { gap: 8px; }
+  .header-actions .header-lang { padding: 4px 5px 4px 9px; }
+  .header-actions .header-lang select { font-size: 12px; }
+  .header-actions .btn { padding: 9px 15px; font-size: 13.5px; }
 }
 
 .app-lang {

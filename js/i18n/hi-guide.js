@@ -733,5 +733,16 @@ WEL_I18N.load({
   "Do not enter damaged buildings, and do not go to the coast to look at the sea.": "क्षतिग्रस्त इमारतों में न घुसें, और समुद्र देखने तट पर न जाएँ।",
   "First week": "पहला सप्ताह",
   "Photograph damage before clearing it, for insurance. Expect aftershocks and treat weakened structures as unsafe.": "बीमा के लिए मलबा हटाने से पहले नुकसान की तस्वीरें ले लें। पश्चातकंपों की उम्मीद रखें और कमज़ोर हो चुके ढाँचों को असुरक्षित ही मानें।",
-  "Do not assume the largest shock has passed — sequences sometimes escalate.": "यह न मान लें कि सबसे बड़ा झटका बीत चुका है — अनुक्रम कभी-कभी और बढ़ भी जाते हैं।"
+  "Do not assume the largest shock has passed — sequences sometimes escalate.": "यह न मान लें कि सबसे बड़ा झटका बीत चुका है — अनुक्रम कभी-कभी और बढ़ भी जाते हैं।",
+
+  /* labels on the rendered tsunami figure */
+  "Undersea earthquake": "समुद्र के नीचे भूकंप",
+  "The seafloor is lifted": "समुद्र तल ऊपर उठता है",
+  "the water above is pushed up": "ऊपर का जल स्तंभ उठ जाता है",
+  "Racing across deep water": "गहरे पानी में तेज़ रफ़्तार",
+  "low waves, energy spread wide": "लहरें नीची, ऊर्जा दूर तक फैली",
+  "Rising and flooding the coast": "उठकर तट को डुबोती है",
+  "shallower water, higher waves": "पानी उथला, लहरें ऊँची",
+  "oceanic plate": "महासागरीय प्लेट",
+  "continental plate": "महाद्वीपीय प्लेट"
 });

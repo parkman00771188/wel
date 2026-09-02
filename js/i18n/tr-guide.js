@@ -733,5 +733,16 @@ WEL_I18N.load({
   "Do not enter damaged buildings, and do not go to the coast to look at the sea.": "Hasarlı binalara girmeyin ve denizi görmek için kıyıya gitmeyin.",
   "First week": "İlk hafta",
   "Photograph damage before clearing it, for insurance. Expect aftershocks and treat weakened structures as unsafe.": "Sigorta için hasarı temizlemeden önce fotoğraflayın. Artçı sarsıntıları bekleyin ve zayıflamış yapıları güvensiz kabul edin.",
-  "Do not assume the largest shock has passed — sequences sometimes escalate.": "En büyük sarsıntının geçtiğini varsaymayın — diziler bazen tırmanır."
+  "Do not assume the largest shock has passed — sequences sometimes escalate.": "En büyük sarsıntının geçtiğini varsaymayın — diziler bazen tırmanır.",
+
+  /* labels on the rendered tsunami figure */
+  "Undersea earthquake": "Deniz altı depremi",
+  "The seafloor is lifted": "Deniz tabanı yükselir",
+  "the water above is pushed up": "üstündeki su yukarı itilir",
+  "Racing across deep water": "Derin suda hızla ilerler",
+  "low waves, energy spread wide": "alçak dalga, geniş enerji yayılımı",
+  "Rising and flooding the coast": "Yükselir ve kıyıyı basar",
+  "shallower water, higher waves": "daha sığ su, daha yüksek dalgalar",
+  "oceanic plate": "okyanusal levha",
+  "continental plate": "kıtasal levha"
 });
