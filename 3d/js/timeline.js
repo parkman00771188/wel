@@ -6,7 +6,13 @@
 
 const DAY_MS = 86400000;
 
-export const MIN_SPAN_DAYS = 7;
+/* The narrowest window the scrubber will hold open. Six hours, not a week:
+   everything downstream was already built for short spans -- the axis switches
+   to hourly ticks under three days, the playback speeds to minutes under two --
+   and a floor of a week quietly widened the Live Map's own 24h preset to seven
+   days, so the count, the feed and the timeline all disagreed with the control
+   that set them. */
+export const MIN_SPAN_DAYS = 0.25;
 
 export class Timeline {
   constructor({ track, canvas, head, gripA, gripB, meta, epochMs, totalDays,
@@ -65,23 +71,30 @@ export class Timeline {
         push(m === 0 ? String(y) : MONS[m], Date.UTC(y, m, 1));
         m++; if (m === 12) { m = 0; y++; }
       }
-    } else if (span >= 3) {
-      const stepD = span >= 21 ? 7 : 1;
+    } else if (span >= 21) {
       let d = Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate());
       const endMs = end.getTime();
       while (d <= endMs) {
         const dd = new Date(d);
         push((dd.getUTCMonth() + 1) + '/' + dd.getUTCDate(), d);
-        d += stepD * DAY_MS;
+        d += 7 * DAY_MS;
       }
     } else {
-      const stepH = span >= 1 ? 6 : 1;
-      let ms = Math.ceil((this.epochMs + this.d0 * DAY_MS) / (stepH * 3600e3)) * (stepH * 3600e3);
+      // Short windows get an hour grid, not just a row of dates: over three
+      // days "9/1, 9/2, 9/3" says nothing about where inside a day the playhead
+      // is, which is the whole point of scrubbing a window this narrow. Midnight
+      // keeps the date so the day is never ambiguous, and the step widens as the
+      // window does so the labels never collide.
+      const stepH = span >= 10 ? 24 : span >= 5 ? 12 : span >= 2 ? 6 : span >= 0.75 ? 3 : 1;
+      const step = stepH * 3600e3;
       const endMs = this.epochMs + this.d1 * DAY_MS;
+      let ms = Math.ceil((this.epochMs + this.d0 * DAY_MS) / step) * step;
       while (ms <= endMs) {
         const dd = new Date(ms);
-        push(String(dd.getUTCHours()).padStart(2, '0') + ':00', ms);
-        ms += stepH * 3600e3;
+        const h = dd.getUTCHours();
+        push(h === 0 ? (dd.getUTCMonth() + 1) + '/' + dd.getUTCDate()
+                     : String(h).padStart(2, '0') + ':00', ms);
+        ms += step;
       }
     }
     this.years = t;

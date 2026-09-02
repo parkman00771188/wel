@@ -14,7 +14,7 @@
     playing: false,
     cursor: null,
     selectedId: null,
-    expandedTable: false
+    tableShown: 0
   };
 
   function spanDays() { return (state.endMs - state.startMs) / EQ.D; }
@@ -1273,7 +1273,24 @@
 
   /* ---------------- table ---------------- */
 
-  function renderTable() {
+  /* The list holds every event in the selected period, a page at a time. Asking
+     the reader to choose between five rows and all of them was the wrong
+     question -- a month of M2+ is tens of thousands of rows, which no one wants
+     rendered at once, and five is not enough to read. So it grows as you reach
+     the bottom of it, and resets whenever the query behind it changes. */
+  var TABLE_PAGE = 25;
+  var tableExhausted = false;
+  var lastTableKey = "";
+
+  function tableBase() { return window.WEL && WEL.embed ? 14 : 5; }
+
+  function tableKey() {
+    var bands = Object.keys(state.bands).filter(function (b) { return state.bands[b]; }).join(",");
+    return [state.mapRegion, Math.round(state.startMs), Math.round(state.endMs),
+            state.magLo, state.magHi, state.depthLo, state.depthHi, bands].join("|");
+  }
+
+  function renderTable(keepGrowth) {
     var body = document.getElementById("eqTableBody");
     if (!EQ.loaded || EQ.catalogRegion !== state.mapRegion) {
       lastTableRows = [];
@@ -1281,8 +1298,14 @@
         (state.mapRegion === "japan" ? "Japan" : "global") + ' earthquakes…</td></tr>';
       return;
     }
-    var baseCount = window.WEL && WEL.embed ? 14 : 5;
-    var want = state.expandedTable ? (baseCount === 5 ? 25 : 40) : baseCount;
+    var baseCount = tableBase();
+    var key = tableKey();
+    if (!keepGrowth || key !== lastTableKey || !state.tableShown) {
+      state.tableShown = baseCount;
+      tableExhausted = false;
+    }
+    lastTableKey = key;
+    var want = state.tableShown;
     var rows;
     if (objectCacheCovers()) {
       // recent window: the events cache already carries full M2+ detail
@@ -1295,6 +1318,9 @@
       });
     }
     lastTableRows = rows;
+    tableExhausted = rows.length < want;
+    updateTableMore(rows.length);
+    requestAnimationFrame(autofillTable);
     body.innerHTML = rows.map(function (e) {
       var timeStr = window.WEL && WEL.embed ? EQ.fmtList(e.t) : EQ.fmtShort(e.t);
       return "<tr data-id=\"" + e.id + "\" style=\"cursor:pointer\">" +
@@ -1318,11 +1344,62 @@
     });
   }
 
-  document.getElementById("viewAllBtn").addEventListener("click", function () {
-    state.expandedTable = !state.expandedTable;
-    this.textContent = state.expandedTable ? "Show Fewer" : "View All Earthquakes";
-    renderTable();
-  });
+  var moreBtn = document.getElementById("viewAllBtn");
+  var tableWrap = document.querySelector(".eq-table-wrap");
+
+  function updateTableMore(shown) {
+    if (!moreBtn) return;
+    moreBtn.hidden = tableExhausted;
+    moreBtn.textContent = "Show " + TABLE_PAGE + " more"
+      + (shown ? " · " + shown.toLocaleString() + " listed" : "");
+  }
+
+  function growTable() {
+    if (tableExhausted) return;
+    state.tableShown += TABLE_PAGE;
+    renderTable(true);
+  }
+
+  /* Two ways to reach the bottom: inside the console the list is its own scroll
+     box, on the standalone page it grows with the document. Watch whichever one
+     is actually scrolling. */
+  function nearBottom() {
+    if (!tableWrap) return false;
+    if (tableWrap.scrollHeight > tableWrap.clientHeight + 4) {
+      return tableWrap.scrollTop + tableWrap.clientHeight >= tableWrap.scrollHeight - 160;
+    }
+    return tableWrap.getBoundingClientRect().bottom <= window.innerHeight + 160;
+  }
+
+  /* Inside the console the list is a flex-sized scroll box, and fourteen rows
+     do not reach the bottom of it -- so there is nothing to scroll, and paging
+     on scroll never starts. Fill the box first; after that the reader's own
+     scrolling takes over. Only in the console: on the standalone page the list
+     sits in the document and the window scroll drives it. */
+  var AUTOFILL_CAP = 400;
+
+  function autofillTable() {
+    if (!tableWrap || tableExhausted) return;
+    if (!(window.WEL && WEL.embed)) return;
+    if (state.tableShown >= AUTOFILL_CAP) return;
+    if (tableWrap.clientHeight < 40) return;                       // not laid out yet
+    if (tableWrap.scrollHeight > tableWrap.clientHeight + 4) return;  // it scrolls now
+    growTable();
+  }
+
+  var growQueued = false;
+  function onTableScroll() {
+    if (growQueued || tableExhausted) return;
+    growQueued = true;
+    requestAnimationFrame(function () {
+      growQueued = false;
+      if (nearBottom()) growTable();
+    });
+  }
+
+  if (moreBtn) moreBtn.addEventListener("click", growTable);
+  if (tableWrap) tableWrap.addEventListener("scroll", onTableScroll, { passive: true });
+  window.addEventListener("scroll", onTableScroll, { passive: true });
 
   /* ---------------- time bar ---------------- */
 
