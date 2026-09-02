@@ -81,8 +81,8 @@ h1, h2, h3, h4 { margin: 0; color: var(--navy-800); }
 .main-nav {
   display: flex;
   gap: 36px;
-  margin-left: auto;
-  margin-right: 40px;
+  margin-inline-start: auto;
+  margin-inline-end: 40px;
 }
 
 .main-nav a {
@@ -341,7 +341,7 @@ h1, h2, h3, h4 { margin: 0; color: var(--navy-800); }
 .eq-table { width: 100%; border-collapse: collapse; font-size: 14px; }
 
 .eq-table thead th {
-  text-align: left;
+  text-align: start;
   font-size: 13px;
   font-weight: 600;
   color: var(--muted);
@@ -363,7 +363,7 @@ h1, h2, h3, h4 { margin: 0; color: var(--navy-800); }
 
 .eq-table td.mag { font-weight: 700; color: var(--navy-800); white-space: nowrap; }
 .eq-table td.mag.big { color: var(--red-500); }
-.eq-table td.right, .eq-table th.right { text-align: right; }
+.eq-table td.right, .eq-table th.right { text-align: end; }
 .eq-table .eq-loading td {
   height: 92px;
   color: var(--faint);
@@ -664,7 +664,7 @@ h1, h2, h3, h4 { margin: 0; color: var(--navy-800); }
 .prow { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--body); margin: 6px 0; }
 .prow > span { min-width: 108px; flex-shrink: 0; color: var(--muted); }
 .prow input[type="range"] { flex: 1; min-width: 0; }
-.prow output { min-width: 44px; text-align: right; font-weight: 700; color: var(--navy-800); font-size: 12px; white-space: nowrap; }
+.prow output { min-width: 44px; text-align: end; font-weight: 700; color: var(--navy-800); font-size: 12px; white-space: nowrap; }
 
 .prow.dates { gap: 8px; }
 .prow.dates > span { min-width: auto; }
@@ -718,7 +718,7 @@ h1, h2, h3, h4 { margin: 0; color: var(--navy-800); }
 .drop-panel h4 { font-size: 13px; font-weight: 700; color: var(--navy-800); margin: 0 0 10px; }
 .drop-panel .row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--body); padding: 5px 0; }
 
-.legend-dot { display: inline-block; border-radius: 50%; margin-right: 10px; vertical-align: middle; }
+.legend-dot { display: inline-block; border-radius: 50%; margin-inline-end: 10px; vertical-align: middle; }
 
 .legend-item { display: flex; align-items: center; font-size: 13px; color: var(--body); padding: 4px 0; }
 .legend-item .grow { flex: 1; }
@@ -726,7 +726,7 @@ h1, h2, h3, h4 { margin: 0; color: var(--navy-800); }
   display: inline-block;
   width: 26px; height: 0;
   border-top: 2px dashed #ff6b35;
-  margin-right: 10px;
+  margin-inline-end: 10px;
 }
 .legend-line.coast { border-top: 2px solid #7f9ebb; }
 .legend-line.fault { border-top: 2px solid #e0566e; }
@@ -933,7 +933,7 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
   font-size: 15px;
   line-height: 1.35;
   margin: 8px 0 13px;
-  padding-right: 24px;
+  padding-inline-end: 24px;
 }
 .quake-pop .qc-row {
   gap: 16px;
@@ -1262,7 +1262,7 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 .gd-grid .gd-card { margin-bottom: 0; }
 
 .gd-title { font-size: 18px; font-weight: 700; color: var(--navy-800); margin: 0 0 10px; }
-.gd-title .gd-sub { font-size: 13px; font-weight: 500; color: var(--faint); margin-left: 8px; }
+.gd-title .gd-sub { font-size: 13px; font-weight: 500; color: var(--faint); margin-inline-start: 8px; }
 
 .gd-desc { font-size: 14px; line-height: 1.7; color: var(--muted); margin: 0 0 18px; }
 
@@ -1317,7 +1317,7 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
    labels float apart, and the figure swamps the paragraph it illustrates. */
 .gd-fig { margin: 20px 0 10px; }
 .gd-fig svg { display: block; width: 100%; max-width: 860px; height: auto; margin: 0 auto; }
-.gd-fig + .gd-figcap { text-align: center; max-width: 860px; margin-left: auto; margin-right: auto; }
+.gd-fig + .gd-figcap { text-align: center; max-width: 860px; margin-inline-start: auto; margin-inline-end: auto; }
 .gd-figcap {
   font-size: 12.5px; line-height: 1.65; color: var(--faint); margin: 10px 0 0;
 }
@@ -1391,7 +1391,7 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 /* Life-safety instructions, marked as such. Amber rather than red: this is
    "act on this", not "something has gone wrong". */
 .gd-warn {
-  background: #fff8ec; border: 1px solid #f6e2bd; border-left: 4px solid #e89b2d;
+  background: #fff8ec; border: 1px solid #f6e2bd; border-inline-start: 4px solid #e89b2d;
   border-radius: 12px; padding: 18px 20px;
 }
 .gd-warn-title {
@@ -1484,7 +1484,7 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
   color: var(--navy-800);
 }
 .gd-faq summary::-webkit-details-marker { display: none; }
-.gd-faq summary span[style] { margin-left: auto; }
+.gd-faq summary span[style] { margin-inline-start: auto; }
 .gd-faq summary svg { color: var(--faint); transition: transform .18s; flex-shrink: 0; }
 .gd-faq details[open] summary svg { transform: rotate(180deg); }
 .gd-faq details p { margin: 0 0 16px; font-size: 13.5px; line-height: 1.7; color: var(--muted); }
@@ -1523,7 +1523,7 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
   color: var(--muted);
   line-height: 1.6;
   margin: auto 0 0;
-  text-align: left;
+  text-align: start;
   background: var(--bg-soft);
   padding: 10px 12px;
   border-radius: 9px;
@@ -1647,7 +1647,7 @@ a.news-row:hover .nt { color: var(--blue-600); }
 }
 
 .side-nav {
-  border-right: 1px solid var(--line-soft);
+  border-inline-end: 1px solid var(--line-soft);
   padding: 30px 18px 40px;
   position: sticky;
   top: 78px;
@@ -1860,7 +1860,7 @@ a.news-row:hover .nt { color: var(--blue-600); }
 .analysis-table td {
   padding: 11px 13px;
   border-bottom: 1px solid var(--line-soft);
-  text-align: left;
+  text-align: start;
   font-size: 12.5px;
   vertical-align: middle;
 }
@@ -1876,7 +1876,7 @@ a.news-row:hover .nt { color: var(--blue-600); }
 .analysis-table tbody tr:hover { background: #f4f8ff; }
 .analysis-table tbody tr:focus { outline: 2px solid #8bb4fa; outline-offset: -2px; }
 .analysis-table tbody tr:last-child td { border-bottom: 0; }
-.analysis-table .right { text-align: right; }
+.analysis-table .right { text-align: end; }
 .analysis-table .mag { color: #e64b35; font-family: var(--font-serif); font-size: 16px; font-weight: 700; }
 
 /* Magnitude, coloured by the nine steps the map legend uses. A solid chip
@@ -1995,7 +1995,7 @@ a.news-row:hover .nt { color: var(--blue-600); }
   overflow: hidden;
 }
 .insight-modal-grid > div { padding: 13px 14px; border-bottom: 1px solid var(--line-soft); }
-.insight-modal-grid > div:nth-child(odd) { border-right: 1px solid var(--line-soft); }
+.insight-modal-grid > div:nth-child(odd) { border-inline-end: 1px solid var(--line-soft); }
 .insight-modal-grid > div:nth-last-child(-n + 2) { border-bottom: 0; }
 .insight-modal-grid dt { color: var(--faint); font-size: 10.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
 .insight-modal-grid dd { margin: 4px 0 0; color: var(--navy-800); font-size: 13px; font-weight: 600; }
@@ -2043,7 +2043,7 @@ body.insight-modal-open { overflow: hidden; }
   .insight-modal-grid { grid-template-columns: 1fr; }
   .insight-modal-grid > div,
   .insight-modal-grid > div:nth-child(odd),
-  .insight-modal-grid > div:nth-last-child(-n + 2) { border-right: 0; border-bottom: 1px solid var(--line-soft); }
+  .insight-modal-grid > div:nth-last-child(-n + 2) { border-inline-end: 0; border-bottom: 1px solid var(--line-soft); }
   .insight-modal-grid > div:last-child { border-bottom: 0; }
 }
 
@@ -2177,7 +2177,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
 .pub-cites { background: var(--bg-soft); color: var(--muted); }
 .pub-oa { background: var(--green-050); color: var(--green-500); }
 
-.pub-source { font-size: 12px; color: var(--faint); text-align: right; }
+.pub-source { font-size: 12px; color: var(--faint); text-align: end; }
 .pub-sort { flex-shrink: 0; }
 .pub-sort .lbl { font-size: 12.5px; }
 
@@ -2207,7 +2207,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   flex-direction: column;
   align-items: flex-end;
   gap: 5px;
-  text-align: right;
+  text-align: end;
 }
 .src-tag {
   font-size: 11px;
@@ -2501,7 +2501,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
 .footer-tagline .l2 { font-size: 13px; color: rgba(255, 255, 255, .68); margin-top: 3px; }
 
 .footer-links {
-  margin-left: auto;
+  margin-inline-start: auto;
   display: flex;
   gap: 30px;
   flex-wrap: wrap;
@@ -2716,7 +2716,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
 .sec-cta .btn { padding: 12px 24px; }
 
 .resources-grid.landing { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 0; }
-.resources-grid.landing .resource-tile { text-align: left; padding: 26px 24px; }
+.resources-grid.landing .resource-tile { text-align: start; padding: 26px 24px; }
 .resources-grid.landing .ic { margin: 0; }
 .resources-grid.landing .t { font-size: 15px; margin: 15px 0 7px; }
 .resources-grid.landing .d { font-size: 13.3px; line-height: 1.65; }
@@ -2737,7 +2737,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   grid-area: side;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--line-soft);
+  border-inline-end: 1px solid var(--line-soft);
   padding: 20px 14px 18px;
   min-height: 0;
   overflow-y: auto;
@@ -2760,8 +2760,8 @@ a.pub:hover .pub-title { color: var(--blue-600); }
 .app-nav-caret {
   width: 7px;
   height: 7px;
-  margin-left: auto;
-  border-right: 1.5px solid currentColor;
+  margin-inline-start: auto;
+  border-inline-end: 1.5px solid currentColor;
   border-bottom: 1.5px solid currentColor;
   opacity: .55;
   transform: rotate(45deg) translate(-1px, 1px);
@@ -2777,8 +2777,8 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   display: none;
   gap: 1px;
   margin: 3px 0 8px 27px;
-  padding-left: 10px;
-  border-left: 1px solid #dce5f1;
+  padding-inline-start: 10px;
+  border-inline-start: 1px solid #dce5f1;
 }
 
 .app-nav-group.open > .app-subnav { display: grid; }
@@ -2960,11 +2960,11 @@ a.pub:hover .pub-title { color: var(--blue-600); }
 }
 .app-updated::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #35c08e; }
 
-.app-clock { margin-left: auto; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.app-clock { margin-inline-start: auto; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 
 /* The time-zone picker sits beside the language one and is built from the same
    parts, in the console's top bar and in the site header alike. */
-.app-tz, .header-tz {
+.app-tz, .header-tz, .header-lang {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -2974,7 +2974,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   color: var(--muted);
   background: #fff;
 }
-.app-tz select, .header-tz select {
+.app-tz select, .header-tz select, .header-lang select {
   border: none;
   background: none;
   font-family: inherit;
@@ -2984,11 +2984,27 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   outline: none;
   cursor: pointer;
 }
-.header-tz { padding: 5px 6px 5px 11px; }
-.header-tz select { font-size: 12.5px; }
+.header-tz, .header-lang { padding: 5px 6px 5px 11px; }
+.header-tz select, .header-lang select { font-size: 12.5px; }
 /* On a phone the header is brand + burger; the picker would crowd them out,
    and inside the console it is already in the top bar. */
 @media (max-width: 860px) { .header-tz { display: none; } }
+/* Unlike the time zone, language must stay reachable on a phone -- but not in
+   the bar, which the wordmark, the call to action and the burger already fill.
+   Below the breakpoint the copy inside the nav dropdown takes over, sitting
+   under the links as a full-width row. */
+.nav-lang { display: none; }
+@media (max-width: 960px) {
+  .header-actions .header-lang { display: none; }
+  .nav-lang {
+    display: flex;
+    width: 100%;
+    margin-top: 8px;
+    padding: 8px 10px;
+    border-color: var(--line-soft);
+  }
+  .nav-lang select { flex: 1; font-size: 13.5px; }
+}
 
 .app-lang {
   display: inline-flex;
@@ -3148,7 +3164,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   max-height: none;
   background: rgba(255, 255, 255, .96);
   backdrop-filter: blur(8px);
-  border-right: none;
+  border-inline-end: none;
   border-bottom: 1px solid var(--line-soft);
   padding: 12px 26px;
   scrollbar-width: thin;
@@ -3252,7 +3268,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   /* The nav leaves the flex row when it becomes a dropdown, and it was the
      thing holding the actions over on the right. Without this the CTA ends up
      pressed against the wordmark with the whole right half of the bar empty. */
-  .header-actions { margin-left: auto; }
+  .header-actions { margin-inline-start: auto; }
   .main-nav a { padding: 10px 14px; border-radius: 8px; }
   .main-nav a:hover { background: var(--bg-soft); }
   .nav-burger { display: grid; }
@@ -3278,7 +3294,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
     display: flex;
     gap: 6px;
     overflow-x: auto;
-    border-right: none;
+    border-inline-end: none;
     border-bottom: 1px solid var(--line-soft);
     padding: 14px 20px;
     align-items: center;
@@ -3298,7 +3314,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
     width: min(258px, calc(100vw - 80px)) !important;
     margin: 19px 21px 20px;
   }
-  .footer-links { margin-left: 0; gap: 18px; }
+  .footer-links { margin-inline-start: 0; gap: 18px; }
   .trust-row { justify-content: center; }
   .trust-label.center {
     gap: 10px;
@@ -3369,7 +3385,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
      Horizontal only: several sections are `class="container hero"` and the
      like, and the shorthand would wipe out their vertical rhythm too -- which
      is how the hero's last button ended up flush against the next section. */
-  .container { padding-left: 16px; padding-right: 16px; }
+  .container { padding-inline-start: 16px; padding-inline-end: 16px; }
   .header-inner { height: 62px; gap: 12px; }
   .brand img { height: 44px; }
   .header-actions { gap: 8px; }
@@ -3437,8 +3453,8 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   /* The tag and the count read fine under the name on a narrow screen; beside
      it they squeeze the note to three words a line. */
   .src-row { flex-direction: column; gap: 8px; }
-  .src-side { flex-direction: row; align-items: center; text-align: left; }
-  .pub-source { text-align: left; }
+  .src-side { flex-direction: row; align-items: center; text-align: start; }
+  .pub-source { text-align: start; }
 
   /* 4px between two tap targets is not enough to hit reliably. */
   .range-chips { gap: 6px; padding: 5px; }
@@ -3521,7 +3537,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
     content: "";
     width: 6px;
     height: 6px;
-    border-right: 1.6px solid currentColor;
+    border-inline-end: 1.6px solid currentColor;
     border-bottom: 1.6px solid currentColor;
     transform: rotate(-135deg) translate(-1px, -1px);
     transition: transform .16s ease;
@@ -3536,7 +3552,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   }
   .map-legend .ml-title { grid-column: 1 / -1; }
   .map-legend .legend-item { font-size: 11.5px; padding: 2px 0; }
-  .map-legend .legend-dot { margin-right: 7px; }
+  .map-legend .legend-dot { margin-inline-end: 7px; }
 
   /* The donut and its nine-row key cannot share a 360px line. Stack them and
      let the label side shrink, so "M 4 - 4.9 ... 362 (62%)" stays on one row
@@ -3565,7 +3581,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
     width: min(84vw, 300px);
     padding: 16px 14px 20px;
     background: #fff;
-    border-right: 1px solid var(--line);
+    border-inline-end: 1px solid var(--line);
     box-shadow: var(--pop-shadow);
     transform: translateX(-100%);
     transition: transform .22s ease;
@@ -3595,7 +3611,7 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   .app-lang select { padding: 11px 0; font-size: 12.5px; }
 
   /* --- pages inside the console iframe --- */
-  .embed .container { padding-left: 16px; padding-right: 16px; }
+  .embed .container { padding-inline-start: 16px; padding-inline-end: 16px; }
   .embed .side-content { padding: 20px 16px 48px; }
   .embed .side-nav { padding: 10px 16px; }
   .embed .page-head { padding-top: 20px; }

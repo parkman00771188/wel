@@ -110,7 +110,7 @@
     var labels = [], keys = [];
     var showMonthYear = state.days <= 400;
     while (y < now.getUTCFullYear() || (y === now.getUTCFullYear() && mo <= now.getUTCMonth())) {
-      labels.push(showMonthYear ? MON[mo] + " '" + String(y).slice(-2) : (mo === 0 ? String(y) : ""));
+      labels.push(showMonthYear ? EQ.axisMon(mo) + " '" + String(y).slice(-2) : (mo === 0 ? String(y) : ""));
       keys.push(y * 12 + mo);
       mo++; if (mo === 12) { mo = 0; y++; }
     }

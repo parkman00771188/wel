@@ -92,9 +92,14 @@
     mount.outerHTML =
       '<header class="site-header"><div class="container header-inner">' +
       '<a class="brand" href="index.html"><img src="resource/img/logo_new.png" alt="World Earthquake Labs"></a>' +
-      '<nav class="main-nav" id="mainNav">' + links + "</nav>" +
+      /* The picker is emitted twice and the stylesheet shows one of them: on a
+         phone the bar is only wide enough for the wordmark, the call to action
+         and the burger, so the picker moves inside the dropdown, which has the
+         room. Both selects carry the same delegated handler, so whichever one
+         is visible works. */
+      '<nav class="main-nav" id="mainNav">' + links + langControlHTML("header-lang nav-lang") + "</nav>" +
       '<div class="header-actions">' +
-      tzControlHTML("header-tz") +
+      langControlHTML("header-lang") +
       '<a class="btn btn-primary" href="' + cta.href + '"' +
       (cta.id ? ' id="' + cta.id + '"' : "") +
       (cta.target ? ' target="' + cta.target + '" rel="noopener"' : "") + ">" + cta.label + "</a>" +
@@ -122,7 +127,7 @@
       '<a href="#" aria-label="LinkedIn">' + icon("social_in", 17) + "</a>" +
       '<a href="#" aria-label="YouTube">' + icon("social_yt", 17) + "</a>" +
       "</div></div>" +
-      '<div class="footer-bottom"><div class="container">&copy; ' + new Date().getFullYear() +
+      '<div class="footer-bottom"><div class="container">\u00a9 ' + new Date().getFullYear() +
       " World Earthquake Labs. All rights reserved.</div></div></footer>";
   }
 
@@ -386,6 +391,49 @@
   }
   window.addEventListener("wel:tz", paintTzHeads);
 
+  /* ---------- language ---------- */
+
+  /* The standalone pages had no way to change language at all: the picker lived
+     only in the console's top bar. It goes in the site header now, in the spot
+     the time-zone control briefly held -- of the two, language is the one a
+     first-time visitor needs before anything else, and the time zone keeps its
+     sensible default (the visitor's own clock) with the control still available
+     in the console. Same persistence as the console's picker: one localStorage
+     key, then a reload so every script boots in the new language. */
+  var LANG_KEY = "wel-lang";
+
+  // js/i18n.js owns the list of languages and the choice between them. It runs
+  // after this file, so both are read at call time rather than captured here;
+  // the fallbacks cover a page that somehow ships without it.
+  function langs() { return (window.WEL_I18N && WEL_I18N.langs) || [["en", "English"]]; }
+
+  function currentLang() {
+    if (window.WEL_I18N && WEL_I18N.lang) return WEL_I18N.lang;
+    var q = new URLSearchParams(location.search).get("lang");
+    if (q) return q;
+    try { return localStorage.getItem(LANG_KEY) || "en"; } catch (e) { return "en"; }
+  }
+
+  function langControlHTML(cls) {
+    var cur = currentLang();
+    return '<label class="' + cls + '" title="Language">'
+      + icon("globe", 15)
+      + '<select data-lang-select aria-label="Language">'
+      + langs().map(function (l) {
+          return '<option value="' + l[0] + '"' + (l[0] === cur ? " selected" : "") + ">" + l[1] + "</option>";
+        }).join("")
+      + "</select></label>";
+  }
+
+  document.addEventListener("change", function (ev) {
+    var sel = ev.target.closest ? ev.target.closest("[data-lang-select]") : null;
+    if (!sel) return;
+    try { localStorage.setItem(LANG_KEY, sel.value); } catch (e) { /* ignore */ }
+    // A ?lang= in the URL would win over the stored choice, so drop it.
+    if (location.search) location.replace(location.pathname + location.hash);
+    else location.reload();
+  });
+
   /* The control itself. Same markup in the console's top bar and in the site
      header, so one handler covers both. */
   function tzControlHTML(cls) {
@@ -403,9 +451,39 @@
     if (sel) TZ.set(sel.value);
   });
 
+  /* ---------- archive figures ----------
+     The catalogue is rebuilt regularly, so any headline count written into the
+     markup starts going stale the day it is written. Elements carrying
+     data-meta hold last known good value as their text, and this replaces it
+     with the live one from the build's own manifest. If the fetch fails the
+     page still shows a real number, just an older one. */
+  function paintMetaFigures() {
+    var nodes = document.querySelectorAll("[data-meta]");
+    if (!nodes.length) return;
+    fetch("3d/data/global/meta.json", { cache: "no-cache" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (meta) {
+        if (!meta) return;
+        var vals = {
+          count: meta.count,
+          usgs_rows: meta.sources && meta.sources.usgs_rows,
+          isc_rows: meta.sources && meta.sources.isc_rows,
+          duplicates_removed: meta.sources && meta.sources.duplicates_removed
+        };
+        Array.prototype.forEach.call(nodes, function (el) {
+          var v = vals[el.dataset.meta];
+          if (typeof v !== "number" || !isFinite(v)) return;
+          el.textContent = el.dataset.metaFmt === "compact"
+            ? (v / 1e6).toFixed(2) + "M"
+            : v.toLocaleString("en-US");
+        });
+      })
+      .catch(function () {});
+  }
+
   window.WEL = {
     icon: icon, renderIcons: renderIcons, toast: toast, embed: EMBED,
-    AD: AD, mountAd: mountAd, tz: TZ, tzControlHTML: tzControlHTML
+    AD: AD, mountAd: mountAd, tz: TZ, tzControlHTML: tzControlHTML, langControlHTML: langControlHTML
   };
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -419,6 +497,7 @@
     var tzHost = document.getElementById("appTz");
     if (tzHost) tzHost.outerHTML = tzControlHTML("app-tz");
     paintTzHeads();
+    paintMetaFigures();
     renderIcons(document);
     initSideNav();
     mountAnchor();

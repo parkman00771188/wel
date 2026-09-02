@@ -276,8 +276,26 @@
   function magRadius(m) { return Math.max(2.4, 1.6 + (m - 1.6) * 1.9); }
 
   /* ---------- formatting ---------- */
-  var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  /* Month names are formatting, not copy, so they come from Intl in whichever
+     language the site is set to. The English literal is the fallback for a
+     browser that cannot do it. */
+  var MON = (function () {
+    var en = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var lang = (window.WEL_I18N && WEL_I18N.lang) || "en";
+    var locale = { en: "en-US", zh: "zh-CN", fil: "fil-PH" }[lang] || lang;
+    try {
+      var f = new Intl.DateTimeFormat(locale, { month: "short", timeZone: "UTC" });
+      return en.map(function (_, i) { return f.format(Date.UTC(2020, i, 15)); });
+    } catch (e) { return en; }
+  })();
   function p2(x) { return (x < 10 ? "0" : "") + x; }
+
+  /* A month as a chart axis wants it: the abbreviated name where that is short
+     enough to sit under a tick without colliding with its neighbour, and the
+     month number where it is not. */
+  var MON_FITS = MON.every(function (m) { return m.length <= 4; });
+  function axisMon(i) { return MON_FITS ? MON[i] : String(i + 1); }
+
 
   function fmtUTC(t, seconds) {
     var d = new Date(t);
@@ -352,7 +370,7 @@
     var windowStart = Date.now() - days * D;
     for (var i = 0; i < days; i++) {
       var dd = new Date(windowStart + (i + 0.5) * D);
-      labels.push(MON[dd.getUTCMonth()] + " " + dd.getUTCDate() + " '" + String(dd.getUTCFullYear()).slice(2));
+      labels.push(axisMon(dd.getUTCMonth()) + " " + dd.getUTCDate() + " '" + String(dd.getUTCFullYear()).slice(2));
       out.push(0);
     }
     list.forEach(function (e) {
@@ -426,6 +444,7 @@
     magColor: magColor, miniColor: miniColor, magRadius: magRadius,
     fmtUTC: fmtUTC, fmtShort: fmtShort, fmtList: fmtList,
     fmtTime: fmtTime, fmtTimeShort: fmtTimeShort, fmtTimeBoth: fmtTimeBoth, tzLabel: tzLabel,
+    axisMon: axisMon,
     inWindow: inWindow, byRegion: byRegion, magBuckets: magBuckets,
     dailyCounts: dailyCounts, movingAvg: movingAvg, depthBins: depthBins,
     energySeries: energySeries, hotspots: hotspots, onLive: onLive,
@@ -754,7 +773,7 @@
       var nBins = Math.max(1, Math.round(days));
       for (var bi = 0; bi < nBins; bi++) {
         var dd = new Date(windowStartMs + (bi + 0.5) * D);
-        labels.push(MON[dd.getUTCMonth()] + " " + dd.getUTCDate());
+        labels.push(axisMon(dd.getUTCMonth()) + " " + dd.getUTCDate());
         series.push(0);
       }
     }

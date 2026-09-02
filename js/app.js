@@ -13,10 +13,11 @@
     return el;
   }
 
-  var LANG = new URLSearchParams(location.search).get("lang") || (function () {
-    try { return localStorage.getItem("wel-lang") || "en"; } catch (e) { return "en"; }
-  })();
-  if (["en", "ja", "ko"].indexOf(LANG) === -1) LANG = "en";
+  // js/i18n.js has already resolved and validated this against the list of
+  // languages that actually ship; duplicating that list here is how the two
+  // drift apart.
+  var LANG = (window.WEL_I18N && WEL_I18N.lang) || "en";
+  var LOCALE = { en: "en-US", zh: "zh-CN", fil: "fil-PH" }[LANG] || LANG;
 
   var VIEWS = {
     overview: { title: "Dashboard Overview", src: "dashboard.html?embed=1" },
@@ -45,6 +46,12 @@
 
   /* language switcher — pages inside the console load with the same language */
   var langSel = document.getElementById("langSelect");
+  ((window.WEL_I18N && WEL_I18N.langs) || [["en", "English"]]).forEach(function (l) {
+    var o = document.createElement("option");
+    o.value = l[0];
+    o.textContent = l[1];
+    langSel.appendChild(o);
+  });
   langSel.value = LANG;
   langSel.addEventListener("change", function () {
     try { localStorage.setItem("wel-lang", this.value); } catch (e) { /* ignore */ }
@@ -193,8 +200,8 @@
 
   function agoText(ms) {
     var m = Math.max(1, Math.round((Date.now() - ms) / 60e3));
-    if (LANG === "ko") return m < 60 ? m + "분 전 갱신" : Math.round(m / 60) + "시간 전 갱신";
-    if (LANG === "ja") return m < 60 ? m + "分前更新" : Math.round(m / 60) + "時間前更新";
+    // Ordinary UI copy: the dictionary translates it into every language,
+    // where an inline branch only ever covered two.
     return "Updated " + (m < 60 ? m + " min ago" : Math.round(m / 60) + " h ago");
   }
 
@@ -229,6 +236,17 @@
 
   /* ---------- UTC clock ---------- */
   var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  // Intl knows how ten languages write a date; a lookup table here would only
+  // know two. The literal below is the fallback for a browser without it.
+  var DFMT = (function () {
+    try {
+      return new Intl.DateTimeFormat(LOCALE, { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
+    } catch (e) { return null; }
+  })();
+  function dateFmt(Y, M, D) {
+    if (DFMT) { try { return DFMT.format(Date.UTC(Y, M, D)); } catch (e) { /* fall through */ } }
+    return MON[M] + " " + D + ", " + Y;
+  }
   function p2(x) { return (x < 10 ? "0" : "") + x; }
   function tick() {
     // The clock reads whichever zone the header is set to, like every other
@@ -243,15 +261,7 @@
       + p2(utc ? d.getUTCMinutes() : d.getMinutes()) + ":"
       + p2(utc ? d.getUTCSeconds() : d.getSeconds());
     var zone = (window.WEL && WEL.tz) ? WEL.tz.label() : "UTC";
-    var out;
-    if (LANG === "ko") {
-      out = Y + "년 " + (M + 1) + "월 " + D + "일 " + hms + " " + zone;
-    } else if (LANG === "ja") {
-      out = Y + "年" + (M + 1) + "月" + D + "日 " + hms + " " + zone;
-    } else {
-      out = MON[M] + " " + D + ", " + Y + " " + hms + " " + zone;
-    }
-    document.getElementById("appClock").textContent = out;
+    document.getElementById("appClock").textContent = dateFmt(Y, M, D) + " " + hms + " " + zone;
   }
   setInterval(tick, 1000);
   window.addEventListener("wel:tz", tick);

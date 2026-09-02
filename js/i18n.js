@@ -1,409 +1,150 @@
-/* World Earthquake Labs — lightweight UI translation (en / ja / ko)
-   Exact text-node matches + a few pattern rules; long-form articles stay in English. */
+/* World Earthquake Labs — UI translation.
+ *
+ * The engine only. Each language's strings live in js/i18n/<code>.js and are
+ * fetched on demand, so an English visitor downloads nothing extra and a Turkish
+ * one downloads Turkish and nothing else. English is the source language: its
+ * "translation" is the markup itself, so there is no en.js.
+ *
+ * Matching is on text nodes rather than on tagged elements. That is unusual, and
+ * it is deliberate: the markup is hand-written across nine pages and a console
+ * that injects most of its own strings from script, so tagging every one of them
+ * would be a large edit that goes stale the moment somebody writes a new line of
+ * copy. Text-node matching means a string is translated wherever it appears, and
+ * an untranslated string simply stays in English instead of breaking.
+ *
+ * Long-form article copy — the Earthquake Guide's explanations — stays in
+ * English in every language. Its headings and controls are translated.
+ */
 (function () {
   "use strict";
+
+  /* Roughly by number of speakers, which is also the order people scan a list
+     like this for their own language. */
+  var LANGS = [
+    ["en",  "English"],
+    ["zh",  "中文（简体）"],
+    ["es",  "Español"],
+    ["hi",  "हिन्दी"],
+    ["id",  "Bahasa Indonesia"],
+    ["ar",  "العربية"],
+    ["ja",  "日本語"],
+    ["fil", "Filipino"],
+    ["tr",  "Türkçe"],
+    ["ko",  "한국어"]
+  ];
+  var CODES = LANGS.map(function (l) { return l[0]; });
+  var RTL = { ar: 1 };
 
   var params = new URLSearchParams(location.search);
   var lang = params.get("lang") || (function () {
     try { return localStorage.getItem("wel-lang"); } catch (e) { return null; }
   })() || "en";
-  if (["en", "ja", "ko"].indexOf(lang) === -1) lang = "en";
+  if (CODES.indexOf(lang) === -1) lang = "en";
 
-  window.WEL_I18N = { lang: lang };
+  window.WEL_I18N = { lang: lang, langs: LANGS, rtl: !!RTL[lang] };
+
+  document.documentElement.lang = lang;
+  if (RTL[lang]) document.documentElement.dir = "rtl";
+
   if (lang === "en") return;
 
-  var IX = lang === "ko" ? 0 : 1;
+  /* ---------- dictionary ---------- */
 
-  /* "English": ["한국어", "日本語"] */
-  var DICT = {
-    /* console shell */
-    "Overview": ["개요", "概要"],
-    "Live Map": ["실시간 지도", "ライブマップ"],
-    "3D Globe": ["3D 지구본", "3D地球儀"],
-    "2D Map": ["2D 지도", "2Dマップ"],
-    "Earthquake Guide": ["지진 가이드", "地震ガイド"],
-    "Seismic Insights": ["지진 분석", "地震インサイト"],
-    "Research Hub": ["연구 허브", "研究ハブ"],
-    "News & Updates": ["뉴스 및 업데이트", "ニュース＆更新情報"],
-    "All Systems Operational": ["모든 시스템 정상", "全システム正常稼働"],
-    "Dashboard Overview": ["대시보드 개요", "ダッシュボード概要"],
+  var DICT = {};
 
-    /* site header (standalone pages) */
-    "Platform": ["플랫폼", "プラットフォーム"],
-    "Research": ["연구", "研究"],
-    "Data": ["데이터", "データ"],
-    "About": ["소개", "会社概要"],
-    "Resources": ["리소스", "リソース"],
-    "Get Started": ["시작하기", "はじめる"],
-    "Insights": ["인사이트", "インサイト"],
-    "All Updates": ["전체 업데이트", "すべての更新"],
-    "FAQ": ["자주 묻는 질문", "よくある質問"],
-    "News": ["뉴스", "ニュース"],
-    "Built on open data from": ["오픈 데이터 출처", "オープンデータ提供元"],
-    "Dashboard": ["대시보드", "ダッシュボード"],
+  /* Strings that carry a number or a fragment the dictionary cannot enumerate.
+     A key may contain {n} for a number and {t} for a run of text; the
+     translation refers back to them as $1, $2 … in order of appearance. So
+     "{n} events" -> "$1건" turns "1,204 events" into "1,204건", while
+     "Cataloged events" is left alone because {n} only matches digits. */
+  var PATTERNS = [];
 
-    /* dashboard */
-    "A real-time snapshot of global seismic activity and key insights.": ["전 세계 지진 활동과 핵심 인사이트를 실시간으로 요약합니다.", "世界の地震活動と主要インサイトをリアルタイムで一望できます。"],
-    "Earthquakes (24h)": ["지진 횟수 (24시간)", "地震回数（24時間）"],
-    "vs previous period": ["전 기간 대비", "前期間比"],
-    "Period": ["기간", "期間"],
-    "No events in this window.": ["이 기간에 해당하는 지진이 없습니다.", "この期間に該当する地震はありません。"],
-    "Total Magnitude": ["규모 합계", "マグニチュード合計"],
-    "Damaging range (M 5+)": ["피해 규모대 (M 5+)", "被害規模帯 (M 5+)"],
-    "events since 1900": ["1900년 이후 지진", "1900年以降の地震"],
-    "Where this data comes from": ["이 데이터의 출처", "このデータの出典"],
-    "All sources": ["전체 출처", "すべての出典"],
-    "Recent window": ["최근 구간", "直近ウィンドウ"],
-    "Archive": ["아카이브", "アーカイブ"],
-    "Largest Event": ["최대 지진", "最大イベント"],
-    "96% uptime": ["가동률 96%", "稼働率 96%"],
-    "vs yesterday": ["전일 대비", "前日比"],
-    "Earthquakes Over Time": ["시간대별 지진 발생", "時間別の地震発生"],
-    "All detected events, including micro-earthquakes": ["미소지진을 포함한 전체 관측 이벤트", "微小地震を含む全検出イベント"],
-    "Worldwide M 4.0+ events · USGS + ISC": ["전 세계 M 4.0+ 지진 · USGS + ISC", "世界のM4.0以上の地震・USGS + ISC"],
-    "Full catalog since 1900 (M 4+) · USGS + ISC": ["1900년 이후 전체 카탈로그 (M 4+) · USGS + ISC", "1900年以降の全カタログ（M4+）・USGS + ISC"],
-    "Other regions": ["기타 지역", "その他の地域"],
-    "Magnitude Distribution": ["규모 분포", "マグニチュード分布"],
-    "Recent Significant Earthquakes": ["최근 주요 지진", "最近の主要地震"],
-    "View all events": ["전체 이벤트 보기", "すべてのイベントを見る"],
-    "Global Seismic Activity": ["전 세계 지진 활동", "世界の地震活動"],
-    "(Live)": ["(실시간)", "（ライブ）"],
-    "View full map": ["전체 지도 보기", "フルマップを見る"],
-    "View all updates": ["전체 업데이트 보기", "すべての更新を見る"],
-    "Understand earthquakes, and you're already safer.": ["지진을 이해하면, 이미 더 안전해진 것입니다.", "地震を理解すれば、それだけで安全に近づきます。"],
-    "Basics, magnitude and intensity, plate tectonics, and a practical safety guide — explained simply.": ["기초 지식, 규모와 진도, 판구조론, 실전 안전 가이드까지 — 쉽게 설명합니다.", "基礎知識、マグニチュードと震度、プレートテクトニクス、実践的な安全ガイドまで、わかりやすく解説します。"],
-    "Open the Earthquake Guide": ["지진 가이드 열기", "地震ガイドを開く"],
-    "Local time": ["현지 시간", "現地時間"],
-    "All Regions": ["전체 지역", "すべての地域"],
-    "Pacific Ring of Fire": ["환태평양 조산대", "環太平洋火山帯"],
-    "Indonesia": ["인도네시아", "インドネシア"],
-    "South America": ["남미", "南米"],
-    "Japan Region": ["일본 지역", "日本周辺"],
-    "Alaska Region": ["알래스카 지역", "アラスカ周辺"],
+  function compile(key) {
+    var out = "", i = 0;
+    while (i < key.length) {
+      var ch = key[i];
+      if (ch === "{" && key.slice(i, i + 3) === "{n}") { out += "([\\d.,]+)"; i += 3; continue; }
+      if (ch === "{" && key.slice(i, i + 3) === "{t}") { out += "(.+?)"; i += 3; continue; }
+      out += ch.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      i++;
+    }
+    return new RegExp("^" + out + "$");
+  }
 
-    /* live map */
-    "Live Earthquake Map": ["실시간 지진 지도", "ライブ地震マップ"],
-    "Real-time global seismic activity.": ["전 세계 지진 활동을 실시간으로 표시합니다.", "世界の地震活動をリアルタイムで表示します。"],
-    "Region": ["지역", "地域"],
-    "Global": ["전 세계", "全世界"],
-    "Japan": ["일본", "日本"],
-    "Filters": ["필터", "フィルター"],
-    "Legend": ["범례", "凡例"],
-    "Minimum magnitude": ["최소 규모", "最小マグニチュード"],
-    "Depth": ["깊이", "深さ"],
-    "Shallow (< 70 km)": ["천발 (< 70 km)", "浅発（< 70 km）"],
-    "Intermediate (70–300 km)": ["중발 (70–300 km)", "やや深発（70–300 km）"],
-    "Deep (> 300 km)": ["심발 (> 300 km)", "深発（> 300 km）"],
-    "Magnitude": ["규모", "マグニチュード"],
-    "Map layers": ["지도 레이어", "地図レイヤー"],
-    "Plate boundaries": ["판 경계", "プレート境界"],
-    "Recent Earthquakes": ["최근 지진", "最近の地震"],
-    "Location": ["위치", "場所"],
-    "Time (UTC)": ["시간 (UTC)", "時刻（UTC）"],
-    "View All Earthquakes": ["전체 지진 보기", "すべての地震を見る"],
-    "Show Fewer": ["접기", "表示を減らす"],
-    "Now": ["현재", "現在"],
-    "Live": ["라이브", "ライブ"],
-    "View Details": ["상세 보기", "詳細を見る"],
-    "Type": ["유형", "種別"],
-    "Status": ["상태", "状態"],
-    "Earthquake": ["지진", "地震"],
-    "Reviewed": ["검토됨", "検証済み"],
-    "Automatic": ["자동", "自動"],
-    "Origin time": ["발생 시각", "発生時刻"],
-    "Epicenter": ["진앙", "震央"],
-    "Event ID": ["이벤트 ID", "イベントID"],
-    "Review status": ["검토 상태", "検証状態"],
-    "Display mode": ["표시 방식", "表示方式"],
-    "Window length": ["구간 길이", "期間の長さ"],
-    "Older quakes opacity": ["과거 지진 진하기", "過去の地震の濃さ"],
-    "Recent highlight": ["최근 강조 기간", "直近ハイライト"],
-    "Start": ["시작", "開始"],
-    "End": ["끝", "終了"],
-    "Turning a band off removes it (e.g. M3 = M3.0–3.9) from the globe, list, and stats.": ["밴드를 끄면 해당 규모대(예: M3 = M3.0–3.9)가 지도·목록·통계에서 제외됩니다.", "帯をオフにすると、その規模帯（例: M3 = M3.0–3.9）が地図・一覧・統計から除外されます。"],
-    "Min (km)": ["최소 (km)", "最小 (km)"],
-    "Max (km)": ["최대 (km)", "最大 (km)"],
-    "Visual": ["시각", "表示効果"],
-    "Depth exaggeration": ["깊이 과장", "深さ強調"],
-    "Dot size": ["점 크기", "点サイズ"],
-    "Master scale": ["전체 배율", "全体スケール"],
-    "Per-magnitude dot size": ["규모별 점 크기", "規模別の点サイズ"],
-    "Reset to defaults": ["기본값으로", "初期値に戻す"],
-    "Sharpness": ["선명도", "シャープネス"],
-    "Opacity": ["불투명도", "不透明度"],
-    "Additive glow": ["발광 합성", "加算発光"],
-    "Map": ["지도", "地図"],
-    "Map opacity": ["지도 불투명도", "地図の不透明度"],
-    "Basemap": ["배경 지도", "ベースマップ"],
-    "Light Gray": ["밝은 회색", "ライトグレー"],
-    "Topographic": ["지형도", "地形図"],
-    "Ocean": ["해양", "海洋"],
-    "Streets": ["거리 지도", "道路地図"],
-    "Overlays": ["오버레이", "オーバーレイ"],
-    "Night tint": ["야간 톤", "ナイトトーン"],
-    "Range M": ["규모 범위", "規模範囲"],
-    "Range km": ["깊이 범위 km", "深さ範囲 km"],
-    "Admin boundaries": ["행정 경계", "行政界"],
-    "Depth box & grid": ["깊이 상자·격자", "深さボックス・グリッド"],
-    "Plate line width": ["판 경계 굵기", "プレート境界の太さ"],
-    "Fault line width": ["활성 단층 굵기", "活断層の太さ"],
-    "Admin line width": ["행정 경계 굵기", "行政界の太さ"],
-    "Volcano size": ["화산 크기", "火山サイズ"],
-    "Camera": ["시점", "視点"],
-    "Isometric": ["입체", "立体"],
-    "Top (map)": ["위 (지도)", "上（地図）"],
-    "S→N section": ["남→북 단면", "南→北断面"],
-    "E→W section": ["동→서 단면", "東→西断面"],
-    "Japan Trench": ["일본해구", "日本海溝"],
-    "Accumulate": ["누적", "累積"],
-    "Moving window": ["이동 구간", "移動ウィンドウ"],
-    "Period": ["기간", "期間"],
-    "10 y": ["10년", "10年"],
-    "1 y": ["1년", "1年"],
-    "30 d": ["30일", "30日"],
-    "7 d": ["7일", "7日"],
-    "Min": ["최소", "最小"],
-    "Max": ["최대", "最大"],
-    "Shallow": ["천발", "浅発"],
-    "Intermediate": ["중발", "やや深発"],
-    "Deep": ["심발", "深発"],
-    "Color by": ["색상 기준", "色の基準"],
-    "Time": ["시간", "時間"],
-    "Density": ["밀도", "密度"],
-    "Map style": ["지도 스타일", "地図スタイル"],
-    "None": ["없음", "なし"],
-    "Fill": ["면 채우기", "塗りつぶし"],
-    "Satellite": ["위성사진", "衛星写真"],
-    "Layers": ["레이어", "レイヤー"],
-    "Coastlines": ["해안선", "海岸線"],
-    "Active faults": ["활성 단층", "活断層"],
-    "Volcanoes": ["화산", "火山"],
-    "Ocean floor": ["해저 지형", "海底地形"],
-    "Auto-rotate": ["자동 회전", "自動回転"],
-    "Solution by the World Earthquake Labs global network. Magnitudes are moment magnitude (Mw) unless otherwise noted.": ["World Earthquake Labs 글로벌 관측망의 분석 결과입니다. 별도 표기가 없으면 모멘트 규모(Mw)입니다.", "World Earthquake Labs グローバル観測網による解析結果です。特記がない限りモーメントマグニチュード（Mw）です。"],
+  function load(more) {
+    for (var k in more) {
+      if (!Object.prototype.hasOwnProperty.call(more, k)) continue;
+      if (k.indexOf("{n}") !== -1 || k.indexOf("{t}") !== -1) {
+        PATTERNS.push([compile(k), more[k]]);
+      } else {
+        DICT[k] = more[k];
+      }
+    }
+    if (document.body) walk(document.body);
+  }
+  window.WEL_I18N.load = load;
 
-    /* insights */
-    "Explore trend patterns, key forecasts across time and space.": ["시간과 공간에 걸친 추세 패턴과 주요 예측을 살펴보세요.", "時間と空間にわたる傾向と主要な予測を探索します。"],
-    "Time Range": ["기간", "期間"],
-    "7 Days": ["7일", "7日間"],
-    "30 Days": ["30일", "30日間"],
-    "90 Days": ["90일", "90日間"],
-    "Export CSV": ["CSV 내보내기", "CSVエクスポート"],
-    "Magnitude Frequency Distribution": ["규모-빈도 분포", "マグニチュード頻度分布"],
-    "Number of events vs magnitude": ["규모별 이벤트 수", "マグニチュード別イベント数"],
-    "Depth Distribution": ["깊이 분포", "深さ分布"],
-    "Distribution of earthquake depths": ["지진 깊이의 분포", "地震の深さの分布"],
-    "Seismic Energy Release": ["지진 에너지 방출", "地震エネルギー放出"],
-    "Relative seismic energy release over time": ["시간에 따른 상대적 에너지 방출량", "時間に伴う相対エネルギー放出量"],
-    "Regional Hotspots": ["지역별 핫스팟", "地域別ホットスポット"],
-    "Top regions by event count": ["발생 건수 상위 지역", "発生数上位の地域"],
-    "View all": ["전체 보기", "すべて見る"],
-    "Model Performance": ["모델 성능", "モデル性能"],
-    "Skill scores vs observed": ["관측 대비 스킬 스코어", "観測値に対するスキルスコア"],
-    "Skill Score": ["스킬 스코어", "スキルスコア"],
-    "Short-term (24h) forecast": ["단기(24시간) 예측", "短期（24時間）予測"],
-    "Long-term (30d) forecast": ["장기(30일) 예측", "長期（30日）予測"],
-    "Statistics": ["통계", "統計"],
-    "Magnitude Analysis": ["규모 분석", "マグニチュード分析"],
-    "Depth Analysis": ["깊이 분석", "深さ分析"],
-    "Regional Insights": ["지역 인사이트", "地域インサイト"],
-    "Energy Analysis": ["에너지 분석", "エネルギー分析"],
-    "Station Performance": ["관측소 성능", "観測点性能"],
-    "Forecast Models": ["예측 모델", "予測モデル"],
-    "Custom Analysis": ["사용자 분석", "カスタム分析"],
-    "The seismic record, connected": ["지진 기록을 하나의 흐름으로", "地震記録を一つの流れで"],
-    "Compare event frequency, magnitude, depth, energy, regional concentration, and model performance in one view.": ["발생 빈도, 규모, 깊이, 에너지, 지역 집중도와 모델 성능을 한 화면에서 비교합니다.", "発生頻度、マグニチュード、深さ、エネルギー、地域集中度、モデル性能を一画面で比較します。"],
-    "How earthquake activity changes over time and depth": ["시간과 깊이에 따라 달라지는 지진 활동", "時間と深さで変化する地震活動"],
-    "Track event counts and the smoothed trend, then compare how much of the selected catalog is shallow, intermediate, or deep.": ["발생 건수와 완화된 추세를 확인하고 선택한 카탈로그에서 천발·중발·심발 지진의 비중을 비교합니다.", "発生数と平滑化した傾向を確認し、選択したカタログにおける浅発・中深発・深発地震の割合を比較します。"],
-    "Frequency falls as seismic energy rises": ["발생 빈도는 줄고 지진 에너지는 커집니다", "頻度が下がるほど地震エネルギーは増大します"],
-    "Use the frequency distribution to see how quickly large earthquakes become rarer, and the energy chart to see why those rare events dominate release.": ["빈도 분포로 대규모 지진이 얼마나 빠르게 드물어지는지 확인하고, 에너지 그래프로 그 드문 사건이 방출량을 지배하는 이유를 살펴봅니다.", "頻度分布で大地震がどれほど急速に少なくなるかを確認し、エネルギー図でその稀な事象が放出量を支配する理由を見ます。"],
-    "Where earthquakes begin below the surface": ["지진이 지하 어디에서 시작되는가", "地震は地下のどこで始まるか"],
-    "Compare the proportion of events across depth bands to distinguish shallow crustal activity from deeper subduction-zone seismicity.": ["깊이 구간별 발생 비중을 비교해 얕은 지각 활동과 더 깊은 섭입대 지진 활동을 구분합니다.", "深さ帯ごとの発生割合を比較し、浅い地殻活動とより深い沈み込み帯の地震活動を区別します。"],
-    "Where seismic activity is concentrating": ["지진 활동이 집중되는 곳", "地震活動が集中する場所"],
-    "Review the busiest seismic regions and use the time series to see whether activity is sustained or driven by a short sequence.": ["활동이 가장 많은 지역을 확인하고 시계열을 통해 지속적인 활동인지 단기 연속 지진인지 살펴봅니다.", "活動が最も多い地域を確認し、時系列から継続的な活動か短期的な連続地震かを見分けます。"],
-    "A few large events can dominate the signal": ["소수의 큰 지진이 전체 신호를 지배할 수 있습니다", "少数の大地震が信号全体を支配します"],
-    "Relative seismic energy grows exponentially with magnitude, so peaks often represent one major earthquake rather than many small events.": ["상대적 지진 에너지는 규모에 따라 지수적으로 증가하므로, 피크는 여러 작은 지진보다 하나의 큰 지진을 나타내는 경우가 많습니다.", "相対的な地震エネルギーはマグニチュードに応じて指数的に増えるため、ピークは多数の小地震より一つの大地震を示すことが多くあります。"],
-    "Compare model skill with observed outcomes": ["모델 성능을 실제 관측 결과와 비교", "モデル性能を観測結果と比較"],
-    "Skill scores summarize how much predictive value a model adds at short and longer horizons when tested against observations.": ["스킬 스코어는 관측 자료로 검증했을 때 모델이 단기·장기 예측에 더하는 가치를 요약합니다.", "スキルスコアは、観測データで検証した際にモデルが短期・長期予測へ加える価値を要約します。"],
-    "Build your own comparison": ["나만의 비교 구성", "独自の比較を作成"],
-    "Choose a time range and region above, then compare every analysis panel using the same selection.": ["위에서 기간과 지역을 선택한 뒤 동일한 조건으로 모든 분석 패널을 비교합니다.", "上で期間と地域を選び、同じ条件ですべての分析パネルを比較します。"],
-    "Event totals and a smoothed average across the selected time range and region.": ["선택한 기간과 지역의 발생 건수 및 완화된 평균입니다.", "選択した期間と地域の発生数と平滑化平均です。"],
-    "Full catalog since 1900 (M 2+) · 0.2-magnitude bins on a logarithmic scale.": ["1900년 이후 전체 카탈로그(M 2+) · 로그 척도의 0.2 규모 구간입니다.", "1900年以降の全カタログ（M2+）・対数目盛の0.2マグニチュード区間です。"],
-    "Share of shallow, intermediate, and deep earthquakes in the selected data.": ["선택한 데이터에서 천발·중발·심발 지진이 차지하는 비중입니다.", "選択データにおける浅発・中深発・深発地震の割合です。"],
-    "Relative energy through time; large-magnitude events dominate this logarithmic measure.": ["시간에 따른 상대 에너지이며 큰 규모의 지진이 이 로그 지표를 지배합니다.", "時間に伴う相対エネルギーで、大規模地震がこの対数指標を支配します。"],
-    "Regions with the most cataloged events in the selected time range.": ["선택한 기간에 기록된 지진이 가장 많은 지역입니다.", "選択期間に記録された地震が最も多い地域です。"],
-    "Forecast skill scores compared with the observed earthquake record.": ["관측된 지진 기록과 비교한 예측 스킬 스코어입니다.", "観測された地震記録と比較した予測スキルスコアです。"],
-    "Activity Anomaly Monitor": ["지진 활동 이상도 모니터", "地震活動異常度モニター"],
-    "Observed event counts compared with a rolling baseline. This is a statistical signal, not an earthquake prediction.": ["관측 발생 건수를 이동 기준선과 비교합니다. 통계적 신호이며 지진 예측이 아닙니다.", "観測発生数を移動基準線と比較します。統計的なシグナルであり、地震予測ではありません。"],
-    "Selected Period Summary": ["선택 기간 요약", "選択期間の概要"],
-    "Core statistics calculated from the active time range and region.": ["현재 선택한 기간과 지역을 기준으로 계산한 핵심 통계입니다.", "選択中の期間と地域から算出した主要統計です。"],
-    "Magnitude Composition": ["규모 구성", "マグニチュード構成"],
-    "Share of selected earthquakes in each magnitude band.": ["선택한 지진의 규모 구간별 비중입니다.", "選択した地震のマグニチュード帯別割合です。"],
-    "Magnitude vs Depth": ["규모와 깊이", "マグニチュードと深さ"],
-    "Each point is an earthquake. Select a point to inspect the event.": ["각 점은 하나의 지진입니다. 점을 선택하면 상세 정보를 볼 수 있습니다.", "各点は一つの地震です。点を選択すると詳細を確認できます。"],
-    "Spatial Density Heatmap": ["공간 밀도 히트맵", "空間密度ヒートマップ"],
-    "Event density in 10° latitude–longitude cells for the selected data.": ["선택한 데이터를 위·경도 10° 격자별 밀도로 표시합니다.", "選択データを緯度・経度10度グリッド別の密度で表示します。"],
-    "Top 10 Largest Earthquakes": ["최대 규모 지진 Top 10", "最大規模地震トップ10"],
-    "Largest events in the selected period and region. Select a row for details.": ["선택한 기간과 지역의 최대 규모 지진입니다. 행을 선택하면 상세 정보를 볼 수 있습니다.", "選択した期間と地域の最大規模地震です。行を選択すると詳細を確認できます。"],
-    "Deepest Earthquakes": ["가장 깊은 지진", "最も深い地震"],
-    "Events with the greatest hypocentral depth in the selected data.": ["선택한 데이터에서 진원 깊이가 가장 깊은 지진입니다.", "選択データで震源が最も深い地震です。"],
-    "Top Energy Contributors": ["에너지 기여 상위 지진", "エネルギー寄与上位の地震"],
-    "Events contributing the largest share of relative seismic energy in the selected data.": ["선택한 데이터의 상대 지진 에너지에 가장 크게 기여한 지진입니다.", "選択データの相対地震エネルギーへの寄与が大きい地震です。"],
-    "Earthquake History": ["지진 발생 이력", "地震発生履歴"],
-    "Search and sort events within the selected time range and region.": ["선택한 기간과 지역의 지진을 검색하고 정렬합니다.", "選択した期間と地域の地震を検索・並べ替えできます。"],
-    "Latest first": ["최신순", "新しい順"],
-    "Largest first": ["규모순", "規模の大きい順"],
-    "Deepest first": ["깊이순", "深い順"],
-    "Previous": ["이전", "前へ"],
-    "Next": ["다음", "次へ"],
-    "Close": ["닫기", "閉じる"],
-    "Coordinates": ["좌표", "座標"],
-    "Relative share": ["상대 비중", "相対割合"],
-    "Cataloged events": ["기록된 지진", "記録された地震"],
-    "Strongest": ["최대 규모", "最大規模"],
-    "Average per day": ["일평균 발생", "1日平均"],
-    "Average depth": ["평균 깊이", "平均深さ"],
-    "Shallow share": ["천발 지진 비중", "浅発地震の割合"],
-    "Monitor departures from the activity baseline": ["평상시 지진 활동에서 벗어난 변화를 확인", "通常の地震活動からの変化を確認"],
-    "The anomaly chart compares observed counts with a rolling baseline. It highlights unusual activity but is not a deterministic earthquake prediction.": ["이상도 차트는 관측 건수를 이동 기준선과 비교합니다. 이례적인 활동을 보여주지만 결정론적 지진 예측은 아닙니다.", "異常度チャートは観測数を移動基準線と比較します。通常と異なる活動を示しますが、決定論的な地震予測ではありません。"],
-    "Review key statistics, temporal patterns, depth composition, and the complete searchable history for the current selection.": ["현재 선택 조건의 핵심 통계, 시간 패턴, 깊이 구성과 검색 가능한 전체 이력을 확인합니다.", "現在の選択条件の主要統計、時間パターン、深さ構成、検索可能な全履歴を確認します。"],
-    "Compare magnitude frequency and composition, then inspect the ten largest events and their details.": ["규모 빈도와 구성을 비교하고 최대 규모 지진 10건의 상세 정보를 확인합니다.", "マグニチュード頻度と構成を比較し、最大規模の地震10件の詳細を確認します。"],
-    "Compare depth bands, explore magnitude–depth relationships, and inspect the deepest events in the selected catalog.": ["깊이 구간과 규모-깊이 관계를 비교하고 선택한 데이터에서 가장 깊은 지진을 확인합니다.", "深さ帯とマグニチュード・深さの関係を比較し、選択データで最も深い地震を確認します。"],
-    "Use hotspot rankings and a global density grid to find concentrations, then search the underlying event history.": ["핫스팟 순위와 밀도 격자로 집중 지역을 찾고 관련 지진 이력을 검색합니다.", "ホットスポット順位と密度グリッドで集中地域を見つけ、関連する地震履歴を検索します。"],
-    "Track relative energy through time and identify the individual earthquakes contributing most of the selected total.": ["시간에 따른 상대 에너지를 추적하고 선택 범위의 에너지에 가장 크게 기여한 지진을 확인합니다.", "時間に伴う相対エネルギーを追跡し、選択範囲のエネルギーに最も寄与した地震を確認します。"],
-    "Insights": ["인사이트", "インサイト"],
-    "Tonga–Kermadec": ["통가-케르마덱", "トンガ・ケルマデック"],
-    "Mediterranean": ["지중해", "地中海"],
-    "Central America": ["중미", "中米"],
-    "Philippines": ["필리핀", "フィリピン"],
-    "New Zealand": ["뉴질랜드", "ニュージーランド"],
-    "North America": ["북미", "北米"],
+  /* ---------- matching ---------- */
 
-    /* research hub */
-    "Explore our research, data, and resources.": ["연구, 데이터, 리소스를 살펴보세요.", "研究・データ・リソースを探索します。"],
-    "Publications": ["논문", "論文"],
-    "Datasets": ["데이터셋", "データセット"],
-    "Tools & Software": ["도구 및 소프트웨어", "ツール＆ソフトウェア"],
-    "Active Projects": ["진행 중인 프로젝트", "進行中のプロジェクト"],
-    "Featured Publications": ["주요 논문", "注目の論文"],
-    "View all publications": ["전체 논문 보기", "すべての論文を見る"],
-    "Latest Datasets": ["최신 데이터셋", "最新データセット"],
-    "View all datasets": ["전체 데이터셋 보기", "すべてのデータセットを見る"],
-    "Explore Resources": ["리소스 살펴보기", "リソースを探索"],
-    "Data Library": ["데이터 라이브러리", "データライブラリ"],
-    "Learning Resources": ["학습 자료", "学習リソース"],
-    "Collaborate": ["협업", "コラボレーション"],
-    "Submit Your Work": ["연구 성과 제출", "成果を投稿"],
-    "Stay Informed": ["소식 받기", "最新情報を受け取る"],
-    "Projects": ["프로젝트", "プロジェクト"],
-    "Partners": ["파트너", "パートナー"],
-    "RESEARCH ARTICLE": ["연구 논문", "研究論文"],
-    "TECHNICAL REPORT": ["기술 보고서", "技術レポート"],
+  /* Match on the text with its internal whitespace collapsed: source paragraphs
+     are wrapped across several lines, so the raw node carries newlines and runs
+     of indentation that no dictionary key could sensibly reproduce. The leading
+     and trailing whitespace is put back around the translation so the layout is
+     not disturbed. */
+  var WS = /\s+/g;
+  var EDGES = /^(\s*)([\s\S]*?)(\s*)$/;
 
-    /* news */
-    "Event reports, advisories, and platform announcements.": ["이벤트 리포트, 경보, 플랫폼 공지를 한곳에서 확인하세요.", "イベントレポート、注意情報、プラットフォームのお知らせ。"],
-    "All": ["전체", "すべて"],
-    "Events & Advisories": ["이벤트·경보", "イベント＆注意情報"],
-    "Network": ["네트워크", "ネットワーク"],
-    "ADVISORY": ["경보", "注意情報"],
-    "EVENT REPORT": ["이벤트 리포트", "イベントレポート"],
-    "NEWS": ["뉴스", "ニュース"],
-    "NETWORK": ["네트워크", "ネットワーク"],
-    "DATA RELEASE": ["데이터 릴리스", "データリリース"],
-    "RESEARCH": ["연구", "研究"],
-    "No image": ["이미지 없음", "画像なし"],
-    "No updates in this category.": ["이 카테고리에는 업데이트가 없습니다.", "このカテゴリーに更新はありません。"],
+  /* Whether the whitespace the source had at a fragment's edge should survive
+     into the translation.
+   *
+   * A sentence broken by a <b> or an <a> arrives as three text nodes, and in
+   * English the spaces around the emphasised word belong there. In Japanese and
+   * Chinese they do not: those languages set no space between words, so
+   * re-attaching one puts a visible gap around every bold term. In Korean the
+   * answer depends on what the fragment starts with -- a particle binds to the
+   * preceding word and takes no space, an ordinary word does.
+   *
+   * The test is on the translation's own edge character, so a fragment that
+   * begins with a Latin name keeps its space in every language. */
+  var CJK = /[　-〿぀-ヿ㐀-䶿一-鿿豈-﫿＀-￯]/;
+  var HANGUL = /[가-힣]/;
+  /* Korean particles, as whole tokens: 는 can only be a particle, but 도 also
+     starts 도시, so the match has to end at a boundary. */
+  var PARTICLE = /^(?:은|는|이|가|을|를|와|과|의|에|도|만|로|으로|에서|에게|부터|까지|보다|처럼|이다|입니다|이며|이자|이라는|라는|이라고|라고)(?![가-힣])/;
+  var TIGHT = lang === "ja" || lang === "zh";
 
-    /* guide */
-    "Earthquakes strike without warning — pick a topic above, or start with the safety guide.": ["지진은 예고 없이 찾아옵니다 — 위 메뉴에서 주제를 고르거나 안전 가이드부터 시작하세요.", "地震は突然やってきます。上のメニューからトピックを選ぶか、安全ガイドから始めましょう。"],
-    "See the Safety Guide": ["안전 가이드 보기", "安全ガイドを見る"],
-    "Browse the guide": ["가이드 둘러보기", "ガイドを見る"],
-    "Basics": ["기초", "基礎"],
-    "Plate Tectonics": ["판구조론", "プレートテクトニクス"],
-    "Magnitude & Intensity": ["규모와 진도", "マグニチュードと震度"],
-    "Key Terms": ["핵심 용어", "主要用語"],
-    "Safety Guide": ["안전 가이드", "安全ガイド"],
-    "What is an earthquake?": ["지진이란 무엇인가요?", "地震とは？"],
-    "Where earthquakes happen": ["지진은 어디서 발생하나요", "地震はどこで起こるのか"],
-    "How magnitude works": ["규모는 어떻게 정해지나요", "マグニチュードの仕組み"],
-    "The magnitude scale": ["규모 등급표", "マグニチュード階級"],
-    "Frequently Asked Questions": ["자주 묻는 질문", "よくある質問"],
-    "Small habits now build big safety later.": ["지금의 작은 습관이 큰 안전을 만듭니다.", "今の小さな習慣が、大きな安全をつくります。"],
-    "If you're indoors": ["실내에 있을 때", "屋内にいるとき"],
-    "If you're outdoors": ["실외에 있을 때", "屋外にいるとき"],
-    "If you're driving": ["운전 중일 때", "運転中のとき"],
-    "If you're in an elevator": ["엘리베이터에 있을 때", "エレベーターにいるとき"],
-    "when the shaking starts": ["흔들림이 시작되면", "揺れが始まったら"],
-    "away from buildings and wires": ["건물과 전선에서 떨어지기", "建物や電線から離れる"],
-    "pull over safely, stay inside": ["안전하게 정차 후 차 안에서 대기", "安全に停車し車内で待機"],
-    "get out at the first chance": ["가장 먼저 열리는 층에서 내리기", "最初に開いた階で降りる"],
-    "Drop": ["엎드리기", "伏せる"],
-    "Cover": ["가리기", "隠れる"],
-    "Hold on": ["잡기", "つかまる"],
-    "Watch above": ["낙하물 주의", "落下物に注意"],
-    "Open ground": ["넓은 곳으로", "広い場所へ"],
-    "Stay put": ["침착하게 대기", "その場で待機"],
-    "Slow down": ["서서히 감속", "ゆっくり減速"],
-    "Hazards on": ["비상등 켜기", "ハザード点灯"],
-    "Wait inside": ["차 안 대기", "車内で待機"],
-    "All buttons": ["모든 층 누르기", "全階ボタン"],
-    "First stop": ["첫 정차 층 하차", "最初の階で降車"],
-    "Take stairs": ["계단으로 대피", "階段で避難"],
-    "Emergency Kit Checklist": ["비상용품 체크리스트", "非常用品チェックリスト"],
-    "Prepare it together with your family — check what you already have.": ["가족과 함께 준비하고, 이미 있는 물품을 체크해 보세요.", "家族と一緒に準備し、すでにある物をチェックしましょう。"],
-    "ESSENTIAL": ["필수", "必須"],
-    "RECOMMENDED": ["권장", "推奨"],
-    "Water — 3 L per person per day, 3+ days": ["생수 — 1인 1일 3L, 3일 이상", "水 — 1人1日3L、3日分以上"],
-    "Non-perishable food for 3+ days": ["3일 이상의 비상식량", "3日分以上の非常食"],
-    "First-aid kit & personal medications": ["구급상자 및 상비약", "救急セットと常備薬"],
-    "Flashlight & spare batteries": ["손전등과 여분 배터리", "懐中電灯と予備電池"],
-    "Portable radio": ["휴대용 라디오", "携帯ラジオ"],
-    "Power bank for phones": ["휴대폰 보조배터리", "モバイルバッテリー"],
-    "Dust masks & sanitation supplies": ["마스크 및 위생용품", "マスクと衛生用品"],
-    "Blanket or warm clothing": ["담요 또는 보온용품", "毛布や防寒着"],
-    "Whistle to signal for help": ["구조 요청용 호루라기", "救助を求める笛"],
-    "Copies of ID documents & some cash": ["신분증 사본과 현금", "身分証のコピーと現金"],
-    "Sturdy shoes & work gloves": ["튼튼한 신발과 장갑", "丈夫な靴と軍手"],
-    "Family contact card & meeting point": ["가족 연락 카드와 집결 장소", "家族の連絡カードと集合場所"],
-    "Is your home ready?": ["우리 집은 준비됐나요?", "あなたの家は大丈夫？"],
-    "Three things to check this week.": ["이번 주에 확인할 세 가지.", "今週確認したい3つのこと。"],
-    "Remember!": ["기억하세요!", "覚えておこう！"],
-    "Drop, Cover, Hold On": ["엎드리고, 가리고, 잡으세요", "伏せて、隠れて、つかまる"],
-    "keep the safe position until the shaking stops": ["흔들림이 멈출 때까지 안전한 자세 유지", "揺れが収まるまで安全な姿勢を保つ"],
-    "Agree on a family plan": ["가족 대피 계획 정하기", "家族で防災計画を決める"],
-    "an out-of-area contact and a meeting point": ["비상 연락처와 집결 장소를 미리 정해두세요", "遠方の連絡先と集合場所を決めておく"],
-    "Review your kit twice a year": ["비상용품은 1년에 두 번 점검", "備蓄品は年2回点検"],
-    "check expiry dates, batteries, and storage spots": ["유통기한, 배터리, 보관 위치 확인", "賞味期限・電池・保管場所を確認"]
-  };
-
-  /* pattern rules for strings with numbers */
-  var RULES = [
-    [/^(\d+)\s*min ago$/, function (m) { return IX === 0 ? m[1] + "분 전" : m[1] + "分前"; }],
-    [/^(\d+)\s*h ago$/, function (m) { return IX === 0 ? m[1] + "시간 전" : m[1] + "時間前"; }],
-    [/^(\d+)\s*d ago$/, function (m) { return IX === 0 ? m[1] + "일 전" : m[1] + "日前"; }],
-    [/^(\d+) events$/, function (m) { return IX === 0 ? m[1] + "건" : m[1] + "件"; }],
-    [/^\((\d+) Days\)$/, function (m) { return IX === 0 ? "(" + m[1] + "일)" : "（" + m[1] + "日間）"; }],
-    [/^(\d+) \/ (\d+) done$/, function (m) { return IX === 0 ? m[1] + " / " + m[2] + " 완료" : m[1] + " / " + m[2] + " 完了"; }],
-    [/^Selected catalog: M ([245])\+ events · (.+) · (.+)$/, function (m) { return IX === 0 ? "선택 데이터: M " + m[1] + "+ · " + m[2] + " · " + m[3] : "選択データ：M" + m[1] + "以上・" + m[2] + "・" + m[3]; }],
-    [/^Selected-period M ([245])\+ event counts in 0\.2-magnitude bins on a logarithmic scale\.$/, function (m) { return IX === 0 ? "선택 기간의 M " + m[1] + "+ 지진을 0.2 규모 구간과 로그 척도로 표시합니다." : "選択期間のM" + m[1] + "以上の地震を0.2マグニチュード区間と対数目盛で表示します。"; }],
-    [/^M ([245])\+ selection$/, function (m) { return IX === 0 ? "M " + m[1] + "+ 선택 데이터" : "M" + m[1] + "以上の選択データ"; }],
-    [/^Peak cell ([\d,]+) events$/, function (m) { return IX === 0 ? "최고 밀도 격자 " + m[1] + "건" : "最高密度グリッド " + m[1] + "件"; }],
-    [/^([\d,]+)–([\d,]+) of ([\d,]+)$/, function (m) { return IX === 0 ? "전체 " + m[3] + "건 중 " + m[1] + "–" + m[2] : "全" + m[3] + "件中 " + m[1] + "–" + m[2]; }],
-    [/^1 Watch\s+•\s+2 Advisory$/, function () { return IX === 0 ? "관심 1 · 주의 2" : "警戒 1 ・ 注意 2"; }],
-    [/^Earthquakes \((24h|7d|30d|90d|1y|3y|5y|10y)\)$/, function (m) { return (IX === 0 ? "지진 횟수 (" : "地震回数（") + m[1] + (IX === 0 ? ")" : "）"); }]
-  ];
+  function edge(ws, out, trailing) {
+    if (!ws || !out) return ws;
+    var ch = trailing ? out.charAt(out.length - 1) : out.charAt(0);
+    if (TIGHT && CJK.test(ch)) return "";
+    if (lang === "ko" && !trailing && HANGUL.test(ch) && PARTICLE.test(out)) return "";
+    return ws;
+  }
 
   function translate(text) {
-    var key = text.trim();
+    var m = text.match(EDGES);
+    var key = m[2].replace(WS, " ");
     if (!key) return null;
-    var hit = DICT[key];
-    if (hit) return text.replace(key, hit[IX]);
-    for (var i = 0; i < RULES.length; i++) {
-      var m = key.match(RULES[i][0]);
-      if (m) return text.replace(key, RULES[i][1](m));
+
+    var out = DICT[key];
+    if (out === undefined) {
+      for (var i = 0; i < PATTERNS.length; i++) {
+        var hit = key.match(PATTERNS[i][0]);
+        if (hit) {
+          out = PATTERNS[i][1].replace(/\$(\d)/g, function (_, d) { return hit[+d] || ""; });
+          break;
+        }
+      }
     }
-    return null;
+    /* An empty translation is a real answer, not a missing one: it is how a
+       language that has no articles drops a stray "The" left stranded outside
+       a <b> or an <a>. Only the dictionary can produce one -- the generator
+       writes a comment, not an empty string, for a key nobody translated. */
+    if (out === undefined || out === null) return null;
+    return edge(m[1], out, 0) + out + edge(m[3], out, 1);
   }
+
+  /* ---------- applying ---------- */
 
   var applying = false;
 
@@ -421,20 +162,54 @@
     applying = false;
   }
 
+  function retranslate(node) {
+    if (node.nodeType === 3) {
+      var o = translate(node.nodeValue);
+      if (o !== null) { applying = true; node.nodeValue = o; applying = false; }
+    } else if (node.nodeType === 1) {
+      walk(node);
+    }
+  }
+
   function boot() {
     walk(document.body);
+    /* Most of the console's text is written by script after load, and the map
+       and charts rewrite theirs continuously, so translation cannot be a
+       one-off pass. */
     new MutationObserver(function (muts) {
       if (applying) return;
       muts.forEach(function (mu) {
-        if (mu.type === "characterData") { var o = translate(mu.target.nodeValue); if (o !== null) { applying = true; mu.target.nodeValue = o; applying = false; } return; }
-        Array.prototype.forEach.call(mu.addedNodes, function (node) {
-          if (node.nodeType === 3) { var o2 = translate(node.nodeValue); if (o2 !== null) { applying = true; node.nodeValue = o2; applying = false; } }
-          else if (node.nodeType === 1) walk(node);
-        });
+        if (mu.type === "characterData") { retranslate(mu.target); return; }
+        Array.prototype.forEach.call(mu.addedNodes, retranslate);
       });
     }).observe(document.body, { childList: true, subtree: true, characterData: true });
   }
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
-  else boot();
+  /* ---------- fetch this language ---------- */
+
+  /* Injected rather than listed in every page's markup: a page should not have
+     to know which languages exist. A page with a lot of copy of its own — the
+     Earthquake Guide — asks for an extra pack with data-i18n-pack, so the other
+     eight pages are not carrying the guide's prose. */
+  var packs = ["js/i18n/" + lang + ".js"];
+  var extra = document.body && document.body.dataset.i18nPack;
+  if (extra) extra.split(/\s+/).forEach(function (p) {
+    if (p) packs.push("js/i18n/" + lang + "-" + p + ".js");
+  });
+
+  var pending = packs.length;
+  function done() {
+    if (--pending) return;
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+    else boot();
+  }
+  packs.forEach(function (src) {
+    var s = document.createElement("script");
+    s.src = src;
+    s.async = false;
+    s.onload = done;
+    /* A pack that is missing is not an error: those strings stay in English. */
+    s.onerror = done;
+    document.head.appendChild(s);
+  });
 })();

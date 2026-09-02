@@ -1,7 +1,7 @@
 /* World Earthquake Labs — research hub
 
    Two things live here and both are real. The publications come from
-   OpenAlex, pulled by scripts/update_content.py on the same 45-minute cycle
+   OpenAlex, pulled by scripts/update_content.py on the same 10-minute cycle
    as the earthquake data and widened a page at a time, so the list grows on
    its own. The data sources are the catalogues and feeds the rest of the site
    actually reads — counts included, taken from the archive metadata rather

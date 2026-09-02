@@ -90,8 +90,13 @@
 
   function ensure3d() {
     if (frame3d) return;
-    try { // boot the 4D app in the console's language
+    try {
+      // Boot the 4D app in the console's language. It ships only three, and it
+      // falls back to browser and time-zone detection for a code it does not
+      // know -- which would put a Turkish reader in front of a Korean globe.
+      // So anything outside its list is pinned to English here.
       var lang = (window.WEL_I18N && WEL_I18N.lang) || "en";
+      if (["en", "ja", "ko"].indexOf(lang) === -1) lang = "en";
       localStorage.setItem("jq4d.lang", lang);
     } catch (e) { /* ignore */ }
     frame3d = document.createElement("iframe");
@@ -1361,8 +1366,11 @@
   function updateTableMore(shown) {
     if (!moreBtn) return;
     moreBtn.hidden = tableExhausted;
-    moreBtn.textContent = "Show " + TABLE_PAGE + " more"
-      + (shown ? " · " + shown.toLocaleString() + " listed" : "");
+    // Two whole sentences rather than a stem plus a suffix: languages do not
+    // agree on where the count goes, and a concatenation cannot be reordered.
+    moreBtn.textContent = shown
+      ? "Show " + TABLE_PAGE + " more · " + shown.toLocaleString() + " listed"
+      : "Show " + TABLE_PAGE + " more";
   }
 
   function growTable() {
