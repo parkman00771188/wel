@@ -1134,17 +1134,28 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 }
 .embed .gd-navwrap { top: 0; }
 
+/* Ten tabs need 1,614px and the container is 1,240 -- as a single scrolling
+   row that put Key Terms, FAQ and the Safety Guide off the right edge, where
+   nobody found them and the menu read as broken. It wraps instead. The scroller
+   survives only on phones, where wrapping ten chips would push the content
+   most of a screen down. */
 .gd-nav {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 6px;
-  overflow-x: auto;
   padding-top: 12px;
   padding-bottom: 12px;
-  scrollbar-width: thin;
 }
-.gd-nav::-webkit-scrollbar { height: 5px; }
-.gd-nav::-webkit-scrollbar-thumb { background: #d9e1ec; border-radius: 3px; }
+/* Phones wrap too. A scroller hid eight of the ten sections behind a gesture
+   nobody makes, which is indistinguishable from the menu being broken -- so
+   shrink the chips and drop their icons instead, and let every section be
+   visible at once. */
+@media (max-width: 860px) {
+  .gd-nav { gap: 5px; padding-top: 9px; padding-bottom: 9px; }
+  .gd-nav a { padding: 6px 10px; font-size: 12.5px; gap: 0; }
+  .gd-nav a svg { display: none; }
+}
 
 .gd-nav a {
   display: inline-flex;
@@ -1312,6 +1323,21 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 /* Denser table for the reference material -- the guide's tables are read a row
    at a time, not scanned, so they can afford to be tighter than a data grid. */
 .gd-table.tight td, .gd-table.tight th { padding: 8px 11px !important; font-size: 12.8px; }
+
+/* Column widths. Left to itself the browser handed a three-character magnitude
+   column 137px while the sentence beside it got five pixels per character and
+   wrapped onto two lines -- the widths tracked the headings, not the content.
+   The label column and any right-aligned figures now take exactly what they
+   need (width:1% collapses to content once something else can absorb the
+   slack), and everything left over goes to the prose column, which is the only
+   one that can use it. */
+.gd-table th:first-child, .gd-table td:first-child { width: 1%; white-space: nowrap; }
+.gd-table th.right, .gd-table td.right { width: 1%; white-space: nowrap; }
+.gd-table th { white-space: normal; }
+
+/* A table of nothing but short figures has no prose column to give the slack
+   to, so it would stretch to full width and read as mostly air. */
+.gd-table.narrow { width: auto; }
 .gd-table sub, .gd-table sup { font-size: .78em; }
 
 /* The one equation on the page. Set apart because the terms are defined under
