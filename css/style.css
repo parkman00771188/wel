@@ -2890,6 +2890,34 @@ a.pub:hover .pub-title { color: var(--blue-600); }
 
 .app-clock { margin-left: auto; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 
+/* The time-zone picker sits beside the language one and is built from the same
+   parts, in the console's top bar and in the site header alike. */
+.app-tz, .header-tz {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 6px 8px 6px 12px;
+  color: var(--muted);
+  background: #fff;
+}
+.app-tz select, .header-tz select {
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy-800);
+  outline: none;
+  cursor: pointer;
+}
+.header-tz { padding: 5px 6px 5px 11px; }
+.header-tz select { font-size: 12.5px; }
+/* On a phone the header is brand + burger; the picker would crowd them out,
+   and inside the console it is already in the top bar. */
+@media (max-width: 860px) { .header-tz { display: none; } }
+
 .app-lang {
   display: inline-flex;
   align-items: center;

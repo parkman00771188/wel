@@ -21,6 +21,7 @@
     users: '<circle cx="9" cy="8" r="3.2" ' + S + '/><path d="M3.5 19.5c.6-3 2.8-4.7 5.5-4.7s4.9 1.7 5.5 4.7" ' + S + '/><circle cx="16.8" cy="9" r="2.5" ' + S + '/><path d="M16.5 14.6c2.2.2 3.7 1.7 4.2 4" ' + S + '/>',
     radio: '<circle cx="12" cy="12" r="2" ' + S + '/><path d="M8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7M6 18a9 9 0 0 1 0-12M18 6a9 9 0 0 1 0 12" ' + S + '/>',
     target: '<circle cx="12" cy="12" r="8.5" ' + S + '/><circle cx="12" cy="12" r="4.8" ' + S + '/><circle cx="12" cy="12" r="1.4" fill="currentColor"/>',
+    clock: '<circle cx="12" cy="12" r="8.5" ' + S + '/><path d="M12 7.2V12l3.2 1.9" ' + S + '/>',
     chartline: '<path d="M3.5 4v15.5a1 1 0 0 0 1 1H21" ' + S + '/><path d="m7 14 3.5-4 3 2.5L18.5 7" ' + S + '/><circle cx="18.5" cy="7" r="1.3" fill="currentColor"/>',
     inbox: '<path d="M4 4.5h16v15H4z" rx="2" ' + S + '/><path d="M4 13h4.5l1.5 2.5h4L15.5 13H20" ' + S + '/><path d="M4 4.5h16v15a0 0 0 0 1 0 0H4a0 0 0 0 1 0 0v-15z" ' + S + '/>',
     server: '<rect x="3.5" y="4" width="17" height="6.5" rx="1.5" ' + S + '/><rect x="3.5" y="13.5" width="17" height="6.5" rx="1.5" ' + S + '/><path d="M7 7.2h.01M7 16.8h.01" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>',
@@ -93,6 +94,7 @@
       '<a class="brand" href="index.html"><img src="resource/img/logo_new.png" alt="World Earthquake Labs"></a>' +
       '<nav class="main-nav" id="mainNav">' + links + "</nav>" +
       '<div class="header-actions">' +
+      tzControlHTML("header-tz") +
       '<a class="btn btn-primary" href="' + cta.href + '"' +
       (cta.id ? ' id="' + cta.id + '"' : "") +
       (cta.target ? ' target="' + cta.target + '" rel="noopener"' : "") + ">" + cta.label + "</a>" +
@@ -294,9 +296,116 @@
     }
   }
 
+  /* ---------- time zone ---------- */
+
+  /* Every earthquake time on the site is one instant shown two ways. The
+     agencies publish UTC and that is what a seismologist wants; everyone else
+     wants to know what time it was where they are. So the site keeps one
+     setting, defaulting to the visitor's own clock, and every page reads it.
+     Detail views print both, because on a card there is room to be unambiguous.
+
+     The console runs its pages in iframes, and a localStorage write does not
+     raise a storage event in the tab that made it -- so the change is announced
+     directly, up to the parent and down to every frame, and each document
+     re-renders off one custom event. */
+
+  var TZ_KEY = "wel-tz";
+
+  var tzMode = (function () {
+    try {
+      var v = localStorage.getItem(TZ_KEY);
+      if (v === "utc" || v === "local") return v;
+    } catch (e) { /* private mode: fall through */ }
+    return "local";
+  })();
+
+  // Intl's short name for most Asian zones is just "GMT+9". These are the
+  // household abbreviations for the audiences this site actually has; the same
+  // table lives in the 3D engine, which has no access to this file.
+  var TZ_ABBR = {
+    "Asia/Seoul": "KST", "Asia/Tokyo": "JST", "Asia/Shanghai": "CST",
+    "Asia/Taipei": "CST", "Asia/Hong_Kong": "HKT", "Asia/Singapore": "SGT",
+    UTC: "UTC", "Etc/UTC": "UTC"
+  };
+
+  var LOCAL_ABBR = (function () {
+    var zone = "";
+    try { zone = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) { /* ignore */ }
+    if (TZ_ABBR[zone]) return TZ_ABBR[zone];
+    try {
+      var part = new Intl.DateTimeFormat("en-US", { timeZoneName: "short" })
+        .formatToParts(new Date())
+        .filter(function (x) { return x.type === "timeZoneName"; })[0];
+      return part ? part.value.replace(/^GMT/, "UTC") : "Local";
+    } catch (e) { return "Local"; }
+  })();
+
+  function tzBroadcast(mode) {
+    var msg = { wel: "tz", mode: mode };
+    try { if (window.parent !== window) window.parent.postMessage(msg, "*"); } catch (e) { /* ignore */ }
+    var frames = document.querySelectorAll("iframe");
+    for (var i = 0; i < frames.length; i++) {
+      try { frames[i].contentWindow.postMessage(msg, "*"); } catch (e) { /* cross-origin ad frames */ }
+    }
+  }
+
+  /* Always relay, in both directions. The console nests the 3D engine inside
+     the map page, so a change made in the top bar has two hops to travel; a
+     document that swallowed the message would strand everything below it. The
+     early return above is what stops the relay looping back on itself. */
+  function tzApply(mode) {
+    mode = mode === "utc" ? "utc" : "local";
+    if (mode === tzMode) return;
+    tzMode = mode;
+    try { localStorage.setItem(TZ_KEY, mode); } catch (e) { /* ignore */ }
+    document.querySelectorAll("[data-tz-select]").forEach(function (sel) { sel.value = mode; });
+    window.dispatchEvent(new CustomEvent("wel:tz", { detail: mode }));
+    tzBroadcast(mode);
+  }
+
+  var TZ = {
+    get mode() { return tzMode; },
+    get isLocal() { return tzMode === "local"; },
+    label: function () { return tzMode === "utc" ? "UTC" : LOCAL_ABBR; },
+    localLabel: function () { return LOCAL_ABBR; },
+    set: function (mode) { tzApply(mode); }
+  };
+
+  window.addEventListener("message", function (ev) {
+    if (ev.data && ev.data.wel === "tz") tzApply(ev.data.mode);
+  });
+
+  /* A column of times needs the zone named once, in its heading, rather than
+     repeated on every row. Mark the heading and it keeps itself right. */
+  function paintTzHeads() {
+    document.querySelectorAll("[data-tz-head]").forEach(function (th) {
+      var base = th.dataset.tzHead || th.textContent.replace(/\s*\([^)]*\)\s*$/, "").trim();
+      th.dataset.tzHead = base;
+      th.textContent = base + " (" + TZ.label() + ")";
+    });
+  }
+  window.addEventListener("wel:tz", paintTzHeads);
+
+  /* The control itself. Same markup in the console's top bar and in the site
+     header, so one handler covers both. */
+  function tzControlHTML(cls) {
+    return '<label class="' + cls + '" title="Time zone">'
+      + icon("clock", 15)
+      + '<select data-tz-select aria-label="Time zone">'
+      + '<option value="local"' + (tzMode === "local" ? " selected" : "") + ">"
+      + "Local time (" + LOCAL_ABBR + ")</option>"
+      + '<option value="utc"' + (tzMode === "utc" ? " selected" : "") + ">UTC</option>"
+      + "</select></label>";
+  }
+
+  document.addEventListener("change", function (ev) {
+    var sel = ev.target.closest ? ev.target.closest("[data-tz-select]") : null;
+    if (sel) TZ.set(sel.value);
+  });
+
   window.WEL = {
     icon: icon, renderIcons: renderIcons, toast: toast, embed: EMBED,
-    AD: AD, mountAd: mountAd
+    AD: AD, mountAd: mountAd, tz: TZ, tzControlHTML: tzControlHTML
   };
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -306,6 +415,10 @@
       buildHeader();
       buildFooter();
     }
+    // The console builds its own top bar in markup; give it the same control.
+    var tzHost = document.getElementById("appTz");
+    if (tzHost) tzHost.outerHTML = tzControlHTML("app-tz");
+    paintTzHeads();
     renderIcons(document);
     initSideNav();
     mountAnchor();

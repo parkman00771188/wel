@@ -410,18 +410,42 @@ export function tzAbbr(d = new Date()) {
 }
 
 // sv-SE is the one locale whose default pattern is already "YYYY-MM-DD HH:MM".
-const LOCAL_FMT = (() => {
+const stampFmt = (zone) => {
   try {
     return new Intl.DateTimeFormat('sv-SE', {
-      timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit',
+      timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit',
       hour: '2-digit', minute: '2-digit', hour12: false,
     });
   } catch { return null; }
+};
+
+const LOCAL_FMT = stampFmt(TZ);
+const UTC_FMT = stampFmt('UTC');
+
+/**
+ * Which clock the engine prints. The rest of the site keeps this choice in
+ * localStorage under `wel-tz` and announces changes by postMessage; the engine
+ * runs in an iframe there, so it reads the same key at boot and follows the
+ * message afterwards. Standalone, it just uses the viewer's own zone.
+ */
+let utcMode = (() => {
+  try { return localStorage.getItem('wel-tz') === 'utc'; } catch { return false; }
 })();
 
-/** "YYYY-MM-DD HH:MM" in the viewer's time zone. */
+export function setUtcMode(on) {
+  const next = !!on;
+  if (next === utcMode) return false;
+  utcMode = next;
+  return true;
+}
+
+/** Short label for whichever clock is in use: "KST", "PDT", "UTC". */
+export function zoneLabel() { return utcMode ? 'UTC' : tzAbbr(); }
+
+/** "YYYY-MM-DD HH:MM" in the clock the viewer has chosen. */
 export function fmtLocal(d) {
-  return LOCAL_FMT ? LOCAL_FMT.format(d) : d.toISOString().slice(0, 16).replace('T', ' ');
+  const f = utcMode ? UTC_FMT : LOCAL_FMT;
+  return f ? f.format(d) : d.toISOString().slice(0, 16).replace('T', ' ');
 }
 
 /** Locale-aware long date, e.g. 2026년 7월 30일 / 2026年7月30日 / Jul 30, 2026. */

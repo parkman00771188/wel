@@ -27,3 +27,22 @@
 # Logo, banner and the social card: same file for the life of the design.
 /resource/*
   Cache-Control: public, max-age=604800
+
+# Code. The host's default is max-age=14400, so a fix could sit deployed for
+# four hours while the browser kept serving the old file -- and since the HTML
+# always revalidates, the page and its scripts could disagree about what the
+# site is. There is no build step here and therefore no content hash in the
+# filenames, so the only way to keep them in step is to revalidate both. The
+# cost is one conditional request per file, answered with a 304 when nothing
+# changed.
+/js/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/css/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/3d/js/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/3d/css/*
+  Cache-Control: public, max-age=0, must-revalidate

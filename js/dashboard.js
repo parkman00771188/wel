@@ -13,7 +13,7 @@
   var SIGNIFICANT_MIN_MAG = 4;
   function periodLbl() { return PERIOD_LBL[state.days] || "All"; }
 
-  var state = { region: "All Regions", tz: "utc", days: 7 };
+  var state = { region: "All Regions", days: 7 };
 
   function regionEvents() {
     return EQ.byRegion(EQ.events, state.region);
@@ -220,7 +220,7 @@
       return '<div class="sig-row">' +
         '<div class="sig-mag' + (e.m >= 6 ? " big" : "") + '">M&nbsp;&nbsp;' + e.m.toFixed(1) + "</div>" +
         '<div class="sig-loc"><div class="l1">' + e.loc + '</div><div class="l2">' +
-        EQ.fmtList(e.t, state.tz === "local") + (state.tz === "local" ? "" : " UTC") + "</div></div>" +
+        EQ.fmtTimeShort(e.t) + " " + EQ.tzLabel() + "</div></div>" +
         '<div class="sig-depth">' + e.depth + " km</div></div>";
     }).join("") || '<p style="color:var(--faint);font-size:13.5px">No events in this window.</p>';
   }
@@ -316,10 +316,8 @@
     renderAll();
   });
 
-  document.getElementById("tzSelect").addEventListener("change", function () {
-    state.tz = this.value;
-    renderAll();
-  });
+  // The zone lives in the header now, and every page listens for the change.
+  window.addEventListener("wel:tz", function () { renderAll(); });
 
   /* "updated" is the live overlay's timestamp when one is spliced in — the
      archive's own build date can be weeks old while the last 14 days are half
@@ -329,7 +327,7 @@
     var stamp = Date.parse(EQ.meta.updated || EQ.meta.generated);
     document.getElementById("dataMeta").textContent =
       "Catalog: USGS ANSS ComCat + ISC Bulletin · " + EQ.meta.count.toLocaleString() +
-      " events since 1900 · updated " + (isFinite(stamp) ? EQ.fmtUTC(stamp) : "—");
+      " events since 1900 · updated " + (isFinite(stamp) ? EQ.fmtTime(stamp) : "—");
   }
 
   function renderAll() {

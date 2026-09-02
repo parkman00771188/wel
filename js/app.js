@@ -213,19 +213,30 @@
   var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   function p2(x) { return (x < 10 ? "0" : "") + x; }
   function tick() {
+    // The clock reads whichever zone the header is set to, like every other
+    // time on the site -- a UTC clock beside a local-time table is the exact
+    // confusion the setting exists to remove.
+    var utc = !(window.WEL && WEL.tz) || !WEL.tz.isLocal;
     var d = new Date();
-    var hms = p2(d.getUTCHours()) + ":" + p2(d.getUTCMinutes()) + ":" + p2(d.getUTCSeconds());
+    var Y = utc ? d.getUTCFullYear() : d.getFullYear();
+    var M = utc ? d.getUTCMonth() : d.getMonth();
+    var D = utc ? d.getUTCDate() : d.getDate();
+    var hms = p2(utc ? d.getUTCHours() : d.getHours()) + ":"
+      + p2(utc ? d.getUTCMinutes() : d.getMinutes()) + ":"
+      + p2(utc ? d.getUTCSeconds() : d.getSeconds());
+    var zone = (window.WEL && WEL.tz) ? WEL.tz.label() : "UTC";
     var out;
     if (LANG === "ko") {
-      out = d.getUTCFullYear() + "년 " + (d.getUTCMonth() + 1) + "월 " + d.getUTCDate() + "일 " + hms + " UTC";
+      out = Y + "년 " + (M + 1) + "월 " + D + "일 " + hms + " " + zone;
     } else if (LANG === "ja") {
-      out = d.getUTCFullYear() + "年" + (d.getUTCMonth() + 1) + "月" + d.getUTCDate() + "日 " + hms + " UTC";
+      out = Y + "年" + (M + 1) + "月" + D + "日 " + hms + " " + zone;
     } else {
-      out = MON[d.getUTCMonth()] + " " + d.getUTCDate() + ", " + d.getUTCFullYear() + " " + hms + " UTC";
+      out = MON[M] + " " + D + ", " + Y + " " + hms + " " + zone;
     }
     document.getElementById("appClock").textContent = out;
   }
   setInterval(tick, 1000);
+  window.addEventListener("wel:tz", tick);
   tick();
 
   var initialRoute = parseRoute();

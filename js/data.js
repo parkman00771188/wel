@@ -295,6 +295,32 @@
     return MON[d.getUTCMonth()] + " " + d.getUTCDate() + ", " + p2(d.getUTCHours()) + ":" + p2(d.getUTCMinutes());
   }
 
+  /* The three above are explicit about which clock they use. These follow the
+     site-wide setting instead, and are what pages should call for anything the
+     reader is meant to act on -- see WEL.tz in common.js. The zone is always
+     named: an unlabelled timestamp is the thing that causes the confusion. */
+  function tzLocal() { return !(window.WEL && WEL.tz) || WEL.tz.isLocal; }
+  function tzLabel() { return (window.WEL && WEL.tz) ? WEL.tz.label() : "UTC"; }
+
+  function fmtTime(t, seconds) {
+    if (!tzLocal()) return fmtUTC(t, seconds);
+    var d = new Date(t);
+    return MON[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear() + " " +
+      p2(d.getHours()) + ":" + p2(d.getMinutes()) +
+      (seconds ? ":" + p2(d.getSeconds()) : "") + " " + tzLabel();
+  }
+
+  /** Compact, for table cells and rolling lists. No zone suffix -- the column
+   *  header carries it once instead of every row. */
+  function fmtTimeShort(t) {
+    return fmtList(t, tzLocal());
+  }
+
+  /** Both clocks, for detail cards where there is room to remove all doubt. */
+  function fmtTimeBoth(t) {
+    return tzLocal() ? fmtTime(t, true) + "  ·  " + fmtUTC(t, true) : fmtUTC(t, true);
+  }
+
   /* ---------- queries / aggregations (operate on the recent-events window) ---------- */
   function inWindow(ms, list) {
     var from = Date.now() - ms;
@@ -399,6 +425,7 @@
     H: H, D: D,
     magColor: magColor, miniColor: miniColor, magRadius: magRadius,
     fmtUTC: fmtUTC, fmtShort: fmtShort, fmtList: fmtList,
+    fmtTime: fmtTime, fmtTimeShort: fmtTimeShort, fmtTimeBoth: fmtTimeBoth, tzLabel: tzLabel,
     inWindow: inWindow, byRegion: byRegion, magBuckets: magBuckets,
     dailyCounts: dailyCounts, movingAvg: movingAvg, depthBins: depthBins,
     energySeries: energySeries, hotspots: hotspots, onLive: onLive,

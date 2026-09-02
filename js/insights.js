@@ -445,12 +445,12 @@
     var evs = windowEvents();
     var top = evs.slice().sort(function (a, b) { return b.m - a.m || b.t - a.t; }).slice(0, 10);
     document.getElementById("topEventsBody").innerHTML = top.length ? top.map(function (e, i) {
-      return eventRow(e, ['<td class="muted">' + (i + 1) + "</td>", magCell(e.m), '<td class="location">' + escapeHTML(e.loc || e.region || "Unknown location") + "</td>", '<td class="muted">' + escapeHTML(EQ.fmtUTC(e.t, true)) + "</td>", '<td class="right">' + escapeHTML(fmtDepth(e.depth)) + "</td>"]);
+      return eventRow(e, ['<td class="muted">' + (i + 1) + "</td>", magCell(e.m), '<td class="location">' + escapeHTML(e.loc || e.region || "Unknown location") + "</td>", '<td class="muted">' + escapeHTML(EQ.fmtTime(e.t, true)) + "</td>", '<td class="right">' + escapeHTML(fmtDepth(e.depth)) + "</td>"]);
     }).join("") : emptyRow(5, "No earthquakes match this selection.");
 
     var deep = evs.slice().sort(function (a, b) { return b.depth - a.depth || b.m - a.m; }).slice(0, 10);
     document.getElementById("deepEventsBody").innerHTML = deep.length ? deep.map(function (e, i) {
-      return eventRow(e, ['<td class="muted">' + (i + 1) + "</td>", '<td><strong>' + escapeHTML(fmtDepth(e.depth)) + "</strong></td>", magCell(e.m), '<td class="location">' + escapeHTML(e.loc || e.region || "Unknown location") + "</td>", '<td class="muted">' + escapeHTML(EQ.fmtUTC(e.t, true)) + "</td>"]);
+      return eventRow(e, ['<td class="muted">' + (i + 1) + "</td>", '<td><strong>' + escapeHTML(fmtDepth(e.depth)) + "</strong></td>", magCell(e.m), '<td class="location">' + escapeHTML(e.loc || e.region || "Unknown location") + "</td>", '<td class="muted">' + escapeHTML(EQ.fmtTime(e.t, true)) + "</td>"]);
     }).join("") : emptyRow(5, "No earthquakes match this selection.");
 
     var strongest = top.length ? top[0].m : 0;
@@ -461,7 +461,7 @@
     document.getElementById("energyEventsBody").innerHTML = energyTop.length ? energyTop.map(function (item, i) {
       var e = item.event;
       var share = item.weight / totalWeight * 100;
-      return eventRow(e, ['<td class="muted">' + (i + 1) + "</td>", magCell(e.m), '<td class="location">' + escapeHTML(e.loc || e.region || "Unknown location") + "</td>", "<td><strong>" + (share < .1 ? "&lt;0.1" : share.toFixed(1)) + "%</strong></td>", '<td class="muted">' + escapeHTML(EQ.fmtUTC(e.t, true)) + "</td>"]);
+      return eventRow(e, ['<td class="muted">' + (i + 1) + "</td>", magCell(e.m), '<td class="location">' + escapeHTML(e.loc || e.region || "Unknown location") + "</td>", "<td><strong>" + (share < .1 ? "&lt;0.1" : share.toFixed(1)) + "%</strong></td>", '<td class="muted">' + escapeHTML(EQ.fmtTime(e.t, true)) + "</td>"]);
     }).join("") : emptyRow(5, "No earthquakes match this selection.");
   }
 
@@ -479,7 +479,7 @@
     var start = historyState.page * historyState.size;
     var page = evs.slice(start, start + historyState.size);
     document.getElementById("historyBody").innerHTML = page.length ? page.map(function (e) {
-      return eventRow(e, [magCell(e.m), '<td class="location">' + escapeHTML(e.loc || e.region || "Unknown location") + "</td>", '<td class="muted">' + escapeHTML(EQ.fmtUTC(e.t, true)) + "</td>", '<td class="right">' + escapeHTML(fmtDepth(e.depth)) + "</td>"]);
+      return eventRow(e, [magCell(e.m), '<td class="location">' + escapeHTML(e.loc || e.region || "Unknown location") + "</td>", '<td class="muted">' + escapeHTML(EQ.fmtTime(e.t, true)) + "</td>", '<td class="right">' + escapeHTML(fmtDepth(e.depth)) + "</td>"]);
     }).join("") : emptyRow(4, "No earthquakes match your search.");
     document.getElementById("historyCount").textContent = evs.length ? (start + 1).toLocaleString() + "–" + Math.min(start + historyState.size, evs.length).toLocaleString() + " of " + evs.length.toLocaleString() : "0 events";
     document.getElementById("historyPrev").disabled = historyState.page === 0;
@@ -549,7 +549,7 @@
     lastModalTrigger = document.activeElement;
     document.getElementById("eventModalMag").textContent = "M " + fmtMagnitude(e.m);
     document.getElementById("eventModalTitle").textContent = e.loc || e.region || "Unknown location";
-    document.getElementById("eventModalTime").textContent = EQ.fmtUTC(e.t, true);
+    document.getElementById("eventModalTime").textContent = EQ.fmtTimeBoth(e.t);
     document.getElementById("eventModalCoords").textContent = fmtCoord(e.lat, "N", "S") + "  " + fmtCoord(e.lng, "E", "W");
     document.getElementById("eventModalDepth").textContent = fmtDepth(e.depth);
     document.getElementById("eventModalRegion").textContent = e.region || e.group || "—";
@@ -719,6 +719,8 @@
     historyState.page = 0;
     renderAll();
   });
+
+  window.addEventListener("wel:tz", function () { renderAll(); });
 
   function renderAll() {
     eventLookup = {};

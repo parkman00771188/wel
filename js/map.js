@@ -1115,7 +1115,7 @@
       '<button class="qc-close" id="qcClose" type="button" aria-label="Close earthquake details">' + WEL.icon("x", 16) + "</button>" +
       '<div class="qc-mag">M ' + e.m.toFixed(1) + "</div>" +
       '<div class="qc-title">' + e.loc + "</div>" +
-      '<div class="qc-row"><span>' + EQ.fmtUTC(e.t, true) + "</span></div>" +
+      '<div class="qc-row"><span>' + EQ.fmtTime(e.t, true) + "</span></div>" +
       '<div class="qc-row"><span>' + coordStr(e) + "</span></div>" +
       '<div class="qc-row"><span class="k">Depth</span><span>' + e.depth + " km</span></div>" +
       '<div class="qc-div"></div>' +
@@ -1254,7 +1254,7 @@
       '<div class="qc-mag" style="font-size:40px">M ' + e.m.toFixed(1) + "</div>" +
       "<h3>" + e.loc + "</h3>" +
       '<div class="qc-div"></div>' +
-      '<div class="qc-row"><span class="k">Origin time</span><span>' + EQ.fmtUTC(e.t, true) + "</span></div>" +
+      '<div class="qc-row"><span class="k">Origin time</span><span>' + EQ.fmtTimeBoth(e.t) + "</span></div>" +
       '<div class="qc-row"><span class="k">Epicenter</span><span>' + coordStr(e) + "</span></div>" +
       '<div class="qc-row"><span class="k">Depth</span><span>' + e.depth + " km</span></div>" +
       '<div class="qc-row"><span class="k">Region</span><span>' + (e.region || e.group) + "</span></div>" +
@@ -1322,7 +1322,7 @@
     updateTableMore(rows.length);
     requestAnimationFrame(autofillTable);
     body.innerHTML = rows.map(function (e) {
-      var timeStr = window.WEL && WEL.embed ? EQ.fmtList(e.t) : EQ.fmtShort(e.t);
+      var timeStr = EQ.fmtTimeShort(e.t);
       return "<tr data-id=\"" + e.id + "\" style=\"cursor:pointer\">" +
         '<td class="mag' + (e.m >= 6 ? " big" : "") + '">M&nbsp;&nbsp;' + e.m.toFixed(1) + "</td>" +
         "<td>" + e.loc + "</td>" +
@@ -1397,6 +1397,14 @@
     });
   }
 
+  /* Switching zone changes every timestamp on the page but nothing else, so
+     redraw the list and the readout and leave the map alone. */
+  window.addEventListener("wel:tz", function () {
+    renderTable(true);
+    if (activeEvent) select(activeEvent, false);
+    tickReadout();
+  });
+
   if (moreBtn) moreBtn.addEventListener("click", growTable);
   if (tableWrap) tableWrap.addEventListener("scroll", onTableScroll, { passive: true });
   window.addEventListener("scroll", onTableScroll, { passive: true });
@@ -1415,11 +1423,11 @@
 
   function tickReadout() {
     if (state.cursor != null) {
-      readout.textContent = EQ.fmtUTC(state.cursor, true);
+      readout.textContent = EQ.fmtTime(state.cursor, true);
     } else if (state.live) {
-      readout.textContent = EQ.fmtUTC(Date.now(), true);
+      readout.textContent = EQ.fmtTime(Date.now(), true);
     } else {
-      readout.textContent = EQ.fmtUTC(state.startMs) + "  —  " + EQ.fmtUTC(state.endMs);
+      readout.textContent = EQ.fmtTime(state.startMs) + "  —  " + EQ.fmtTime(state.endMs);
     }
   }
   setInterval(tickReadout, 1000);

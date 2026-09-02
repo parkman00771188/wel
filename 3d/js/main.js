@@ -24,8 +24,8 @@ import {
   DEPTH_STOPS, MAG_STOPS, TIME_STOPS, cssGradient, rampColor,
 } from './palette.js';
 import {
-  LANGS, applyI18n, count, detectLang, fmtDate, fmtDays, fmtLocal, getLang, numFmt,
-  setLang, t, tzAbbr,
+  LANGS, applyI18n, count, detectLang, fmtDate, fmtDays, fmtLocal, getLang, numFmt, setUtcMode, zoneLabel,
+  setLang, t,
 } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
@@ -75,6 +75,17 @@ async function boot() {
   }
   const app = new App(data);
   window.__app = app;                     // console/debug access
+
+  // The host page owns the UTC / local choice for the whole site; when it
+  // changes, redraw everything whose text carries a timestamp.
+  window.addEventListener('message', (ev) => {
+    if (!ev.data || ev.data.wel !== 'tz') return;
+    if (setUtcMode(ev.data.mode === 'utc')) {
+      app.refreshTexts();
+      app.feed?.render(true);
+      app.changeFeed?.render?.(true);
+    }
+  });
   app.start();
 }
 
@@ -593,7 +604,7 @@ class App {
     // The rolling lists read in the visitor's clock; say which one, once.
     for (const id of ['feed-tz', 'mcards-tz', 'ma-tz']) {
       const el = $(id);
-      if (el) el.textContent = tzAbbr();
+      if (el) el.textContent = zoneLabel();
     }
     // Bounce the controls that own dynamic labels through their handlers.
     for (const id of ['in-window', 'in-glow']) {
