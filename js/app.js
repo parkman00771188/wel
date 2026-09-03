@@ -110,6 +110,9 @@
   function drawerOpen() { return document.body.classList.contains("app-drawer-open"); }
 
   function setDrawer(open) {
+    // A disclosure opened without choosing a child is temporary. Each time the
+    // drawer returns, show the group that owns the page currently on screen.
+    if (open) restoreCurrentDisclosure();
     document.body.classList.toggle("app-drawer-open", open);
     side.classList.toggle("open", open);
     scrim.hidden = !open;
@@ -144,16 +147,31 @@
     return "#" + view + (validSubview(view, sub) ? "/" + sub : "");
   }
 
+  function setOpenGroup(target) {
+    document.querySelectorAll("#appNav .app-nav-group.has-subnav").forEach(function (group) {
+      var open = group === target;
+      group.classList.toggle("open", open);
+      var main = group.querySelector("a[data-view]");
+      if (main) main.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  }
+
+  function restoreCurrentDisclosure() {
+    var group = current && document.querySelector('#appNav .app-nav-group[data-nav-group="' + current + '"]');
+    setOpenGroup(group && group.classList.contains("has-subnav") ? group : null);
+  }
+
   function paintNav(view, sub) {
+    var activeGroup = null;
     document.querySelectorAll("#appNav .app-nav-group").forEach(function (group) {
       var on = group.dataset.navGroup === view;
-      group.classList.toggle("open", on && group.classList.contains("has-subnav"));
+      if (on && group.classList.contains("has-subnav")) activeGroup = group;
       var main = group.querySelector("a[data-view]");
       if (main) {
         main.classList.toggle("active", on);
-        if (main.hasAttribute("aria-expanded")) main.setAttribute("aria-expanded", on ? "true" : "false");
       }
     });
+    setOpenGroup(activeGroup);
     document.querySelectorAll("#appNav a[data-subview]").forEach(function (a) {
       a.classList.toggle("active", a.dataset.parentView === view && a.dataset.subview === sub);
     });
@@ -214,8 +232,7 @@
     // Parent rows disclose their choices; only a child choice changes the view.
     if (group && group.classList.contains("has-subnav")) {
       var open = !group.classList.contains("open");
-      group.classList.toggle("open", open);
-      a.setAttribute("aria-expanded", open ? "true" : "false");
+      setOpenGroup(open ? group : null);
       return;
     }
     activate(a.dataset.view, true, currentSub[a.dataset.view] || DEFAULT_SUBVIEW[a.dataset.view]);
