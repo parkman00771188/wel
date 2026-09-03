@@ -619,6 +619,13 @@ WEL_I18N.load({
   "Live overlay refreshed:": "लाइव ओवरले ताज़ा:",
   "Catalogue rebuilt:": "कैटलॉग पुनर्निर्मित:",
 
+  /* insights floor */
+  "M {n}+ only": "केवल M $1+",
+  "{n} events analysed": "$1 घटनाएँ विश्लेषित",
+  "of {n} in the catalogue": "कैटलॉग की $1 में से",
+  "Include M {n}+ (slower)": "M $1+ शामिल करें (धीमा)",
+  "Computing…": "गणना हो रही है…",
+
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
      languages can translate it in isolation: seven have no articles at all,

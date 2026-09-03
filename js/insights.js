@@ -24,19 +24,46 @@
   var PERIOD_LBL = { 1: "24h", 7: "7d", 30: "30d", 90: "90d", 365: "1y", 1095: "3y", 1826: "5y", 3652: "10y", 7305: "20y", 10958: "30y", 18263: "50y" };
   var ALL_DAYS = Math.ceil((Date.now() - Date.parse("1900-01-01T00:00:00Z")) / 86400e3);
   function periodLbl() { return PERIOD_LBL[state.days] || "All"; }
-  var state = { days: 7305, region: "Global" };   // two decades, the same default as the map
+  var state = { days: 7305, region: "Global", detail: false };   // two decades, the same default as the map
   var charts = {};
   var eventLookup = {};
   var historyState = { page: 0, size: 20, query: "", sort: "latest" };
   var lastModalTrigger = null;
 
-  function analysisFloor() {
+  /* Short windows analyse every event the recent cache holds. Long ones would
+     mean hundreds of thousands of objects for the charts, so they take a
+     magnitude floor -- M 4+ up to twenty years, M 5+ beyond -- and the reader
+     may lower it one step with the toggle, at the cost of a wait. */
+  function defaultFloor() {
     if (state.days <= 120) return 2;
     return state.days > 7300 ? 5 : 4;
   }
+  function analysisFloor() {
+    var f = defaultFloor();
+    return f > 2 && state.detail ? f - 1 : f;
+  }
+  function fmtN(n) { return Number(n || 0).toLocaleString("en-US"); }
 
-  function scopeText(eventCount) {
-    return "Selected catalog: M " + analysisFloor() + "+ · " + periodLbl() + " · " + state.region + " · " + eventCount.toLocaleString() + " events";
+  /* Each phrase is its own element so the dictionary can translate it alone. */
+  function scopeHTML(eventCount) {
+    var floor = analysisFloor();
+    var total = EQ.meta && EQ.meta.count;
+    var parts = [];
+    parts.push("<b>" + (floor > 2 ? "M " + floor + "+ only" : "M " + floor + "+") + "</b>");
+    parts.push("<span>" + escapeHTML(periodLbl()) + "</span>");
+    parts.push("<span>" + escapeHTML(state.region) + "</span>");
+    parts.push("<span>" + fmtN(eventCount) + " events analysed</span>");
+    if (floor > 2 && total) parts.push("<span>of " + fmtN(total) + " in the catalogue</span>");
+    return parts.join(" \u00b7 ");
+  }
+
+  function syncFloorChip() {
+    var chip = document.getElementById("floorChip"), box = document.getElementById("floorToggle"), lbl = document.getElementById("floorLabel");
+    if (!chip) return;
+    var base = defaultFloor();
+    chip.hidden = base <= 2;
+    if (box) box.checked = state.detail;
+    if (lbl) lbl.textContent = "Include M " + (base - 1) + "+ (slower)";
   }
 
   function escapeHTML(value) {
@@ -87,9 +114,9 @@
 
   function baseEvents() {
     if (state.days <= 120) return EQ.inWindow(state.days * EQ.D);
-    if (longCache.key !== state.days) {
-      var floor = state.days > 7300 ? 5 : 4; // full catalog stays tractable at M5+
-      longCache = { key: state.days, list: EQ.buildWindow(state.days, floor) };
+    var floor = analysisFloor();
+    if (longCache.key !== state.days + "|" + floor) {
+      longCache = { key: state.days + "|" + floor, list: EQ.buildWindow(state.days, floor) };
     }
     return longCache.list;
   }
@@ -748,13 +775,22 @@
     renderAll();
   });
 
+  on("floorToggle", "change", function () {
+    state.detail = this.checked;
+    historyState.page = 0;
+    // Half a million objects take a moment; say so before the page freezes.
+    document.getElementById("analysisScope").textContent = "Computing\u2026";
+    setTimeout(renderAll, 30);
+  });
+
   window.addEventListener("wel:tz", function () { renderAll(); });
 
   function renderAll() {
     eventLookup = {};
     selectedCache.key = null;
     var selectedEvents = windowEvents();
-    document.getElementById("analysisScope").textContent = scopeText(selectedEvents.length);
+    document.getElementById("analysisScope").innerHTML = scopeHTML(selectedEvents.length);
+    syncFloorChip();
     renderCardMeta(selectedEvents.length);
     document.getElementById("magDataNote").textContent = "Selected-period M " + analysisFloor() + "+ event counts in 0.2-magnitude bins on a logarithmic scale.";
     renderTime();

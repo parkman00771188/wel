@@ -74,7 +74,7 @@
         <div class="insight-view-kicker" id="insightViewKicker">Overview</div>
         <h2 id="insightViewTitle">The seismic record, connected</h2>
         <p id="insightViewCopy">Compare event frequency, magnitude, depth, energy, regional concentration, and model performance in one view.</p>
-        <p class="insight-data-scope" id="analysisScope">Selected catalog: M 2+ events</p>
+        <p class="insight-data-scope" id="analysisScope"></p>
       </div>
       <div class="controls insight-view-controls">
         <label class="select-chip insight-range-chip"><span class="lbl">Time Range</span>
@@ -92,6 +92,12 @@
             <option value="18263">50y</option>
             <option value="all">All</option>
           </select>
+        </label>
+        <!-- Long windows analyse M 4+ or M 5+ only, so the page stays fast; this
+             lowers the floor one step for a reader who wants the detail. -->
+        <label class="select-chip insight-floor-chip" id="floorChip" hidden>
+          <input type="checkbox" id="floorToggle">
+          <span class="lbl" id="floorLabel">Include M 4+ (slower)</span>
         </label>
         <label class="select-chip insight-region-chip"><span class="lbl">Region</span>
           <select id="regionSelect">

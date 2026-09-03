@@ -313,6 +313,10 @@ h1, h2, h3, h4 { margin: 0; color: var(--navy-800); }
 }
 
 .select-chip .lbl { color: var(--muted); font-size: 13.5px; }
+.select-chip input[type="checkbox"] { width: 16px; height: 16px; margin: 0; accent-color: var(--blue-600); cursor: pointer; }
+.insight-floor-chip { cursor: pointer; }
+.insight-floor-chip .lbl { color: var(--body); }
+.insight-data-scope b { color: var(--navy-800); font-weight: 700; }
 
 .date-chip { gap: 6px; }
 .date-chip input[type="date"] {

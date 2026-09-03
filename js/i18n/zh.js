@@ -619,6 +619,13 @@ WEL_I18N.load({
   "Live overlay refreshed:": "实时叠加层刷新：",
   "Catalogue rebuilt:": "目录重建：",
 
+  /* insights floor */
+  "M {n}+ only": "仅 M $1+",
+  "{n} events analysed": "分析 $1 次事件",
+  "of {n} in the catalogue": "目录共 $1 次",
+  "Include M {n}+ (slower)": "包含 M $1+（较慢）",
+  "Computing…": "计算中…",
+
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
      languages can translate it in isolation: seven have no articles at all,
