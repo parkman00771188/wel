@@ -1866,8 +1866,9 @@
     // The 2D view is still settling its own initial view when a request
     // arrives at boot; a flight started under that is cancelled by it.
     var who = EQ.regionFor(lat, lng);
-    setTimeout(function () { map.flyTo([lat, lng], 5, { duration: 1.2 }); }, 700);
     setTimeout(function () {
+      map.invalidateSize();
+      map.setView([lat, lng], 5, { animate: false });
       select({
         id: q.id || "hit", m: Math.round((+q.m || 0) * 10) / 10,
         lat: Math.round(lat * 1000) / 1000, lng: Math.round(lng * 1000) / 1000,
