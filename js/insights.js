@@ -35,8 +35,8 @@
     return state.days > 7300 ? 5 : 4;
   }
 
-  function scopeText() {
-    return "Selected catalog: M " + analysisFloor() + "+ events · " + periodLbl() + " · " + state.region;
+  function scopeText(eventCount) {
+    return "Selected catalog: M " + analysisFloor() + "+ · " + periodLbl() + " · " + state.region + " · " + eventCount.toLocaleString() + " events";
   }
 
   function escapeHTML(value) {
@@ -99,6 +99,23 @@
     var key = state.days + "|" + state.region + "|" + source.length;
     if (selectedCache.key !== key) selectedCache = { key: key, list: EQ.byRegion(source, state.region) };
     return selectedCache.list;
+  }
+
+  function renderCardMeta(eventCount) {
+    var period = periodLbl();
+    document.querySelectorAll("#insightCharts > .card").forEach(function (card) {
+      var meta = card.querySelector(".insight-card-meta");
+      if (!meta) {
+        var subtitle = card.querySelector(".card-sub");
+        if (!subtitle) return;
+        meta = document.createElement("div");
+        meta.className = "insight-card-meta";
+        subtitle.insertAdjacentElement("afterend", meta);
+      }
+      meta.setAttribute("aria-label", period + " period, " + eventCount.toLocaleString() + " events analyzed");
+      meta.innerHTML = '<span><span class="meta-label">Period</span><strong>' + escapeHTML(period) + '</strong></span>' +
+        '<span><span class="meta-label">Events</span><strong>' + eventCount.toLocaleString() + "</strong></span>";
+    });
   }
 
   /* Month bins for long charts. A one-year view needs month + year context;
@@ -736,7 +753,9 @@
   function renderAll() {
     eventLookup = {};
     selectedCache.key = null;
-    document.getElementById("analysisScope").textContent = scopeText();
+    var selectedEvents = windowEvents();
+    document.getElementById("analysisScope").textContent = scopeText(selectedEvents.length);
+    renderCardMeta(selectedEvents.length);
     document.getElementById("magDataNote").textContent = "Selected-period M " + analysisFloor() + "+ event counts in 0.2-magnitude bins on a logarithmic scale.";
     renderTime();
     renderMag();
