@@ -178,9 +178,20 @@
         "#panel{display:none!important}" +
         "#panel-toggle{display:none!important}" +
         "#mfabs{display:none!important}" +
-        "#mcards{display:none!important}" +
         "#m-edit-period{display:none!important}" + // dates are set from our header
-        "#m-update{display:none!important}";       // shown in the console top bar instead
+        "#m-update{display:none!important}" +      // shown in the console top bar instead
+        // #mcards -- the app's collapsible "recent events" strip -- stays: on a
+        // phone nothing on the host replaces it, our table being below the map.
+        // The app only shows it under 700px, so this costs desktop nothing.
+        // On those phones the app's header goes too: the title, the period line
+        // and the info/menu buttons all duplicate what the host now provides,
+        // and the strip takes the slot the header held.
+        "@media (max-width:700px){" +
+          "#head h1,#head #m-span,#head .head-actions{display:none!important}" +
+          // The host bar (region, 2D/3D, layers) spans the shell 12px from the top,
+          // 38px tall; the strip goes under it rather than into it.
+          "#mcards{top:58px!important}" +
+        "}";
       doc.head.appendChild(st);
     } catch (e) { /* ignore */ }
   }
