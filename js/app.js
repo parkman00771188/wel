@@ -298,14 +298,19 @@
       .catch(function () { return 0; }); // offline — keep the last value
   }
 
-  /* The live overlay is republished every 10 minutes, the archive only on a
-     full rebuild, so the newer of the two is what "updated" actually means. */
+  /* Every file the ten-minute cycle can write, not just the catalogue. The
+     live overlay is only rewritten when USGS has something new, so on a quiet
+     morning its stamp sits hours old while the news and paper feeds -- which
+     refetch every cycle -- were written minutes ago. The newest of the four
+     is what "the site last updated" actually means. */
   function fetchMeta() {
     Promise.all([
       fetchStamp("3d/data/live/global.json"),
-      fetchStamp("3d/data/global/meta.json")
+      fetchStamp("3d/data/global/meta.json"),
+      fetchStamp("data/news.json"),
+      fetchStamp("data/papers.json")
     ]).then(function (stamps) {
-      var newest = Math.max(stamps[0], stamps[1]);
+      var newest = Math.max.apply(null, stamps);
       if (newest) { updatedAt = newest; renderUpdated(); }
     });
   }

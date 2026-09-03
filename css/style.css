@@ -799,11 +799,50 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 
 /* in-map layers control */
 
-.map-layers-btn {
+/* The map's own control bar: Region, 2D/3D, and the layers/filters button,
+   top-right of the shell. These used to live in the head bar above the map;
+   on a phone that bar wrapped to three rows before the map began, and the
+   Filters dropdown -- 400px wide, anchored to a button at the right of a
+   wrapped toolbar -- opened off the edge of the screen. */
+.map-ctl {
   position: absolute;
   top: 20px;
   right: 22px;
   z-index: 940;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.map-ctl .mc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 42px;
+  padding: 0 12px 0 11px;
+  border: none;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--navy-800);
+  box-shadow: 0 8px 30px rgba(6, 18, 48, .32);
+}
+.map-ctl .mc-chip svg { color: var(--muted); flex-shrink: 0; }
+.map-ctl .mc-chip select {
+  border: none; background: none; font-family: inherit;
+  font-size: 13.5px; font-weight: 600; color: var(--navy-800); outline: none; cursor: pointer;
+  padding: 0; min-width: 0;
+}
+.map-ctl .range-chips.mc-dim {
+  height: 42px;
+  align-items: center;
+  border: none;
+  padding: 4px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(6, 18, 48, .32);
+}
+.map-ctl .range-chips.mc-dim button { padding: 7px 12px; }
+
+.map-layers-btn {
+  position: relative;
   width: 42px;
   height: 42px;
   border: none;
@@ -821,7 +860,7 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
   top: 72px;
   right: 22px;
   z-index: 960;
-  width: 292px;
+  width: 372px;
   max-height: calc(100% - 100px);
   overflow-y: auto;
   background: #fff;
@@ -852,8 +891,32 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
   cursor: pointer; transition: background .12s, border-color .12s, color .12s;
 }
 .panel-reset:hover { border-color: #b9c8de; color: var(--blue-600); }
-.map-layers-panel .panel-head + #layers2d h4:first-child,
-.map-layers-panel .panel-head + #layers3d h4:first-child { margin-top: 0; }
+.map-layers-panel .mlp-pane > div > h4:first-child,
+.map-layers-panel .mlp-pane > h4:first-child { margin-top: 0; }
+
+.mlp-tabs { display: flex; gap: 4px; }
+.mlp-tab {
+  border: none; background: none; padding: 5px 10px; border-radius: 8px;
+  font-family: inherit; font-size: 12.5px; font-weight: 700; color: var(--muted);
+  cursor: pointer; transition: background .12s, color .12s;
+}
+.mlp-tab:hover { color: var(--navy-800); }
+.mlp-tab.on { color: var(--blue-600); background: #f3f8ff; }
+
+/* Active-filter count on the button, so it shows while the panel is closed. */
+.map-layers-btn .badge {
+  position: absolute; top: -5px; right: -5px;
+  min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px;
+  background: var(--blue-600); color: #fff; font-size: 11px; font-weight: 700;
+  display: grid; place-items: center; border: 2px solid #fff;
+}
+
+/* The dual-handle sliders and band chips were styled for the dropdown; the
+   same rules apply inside the map panel. */
+.map-layers-panel .prow { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--body); padding: 4px 0; }
+.map-layers-panel .prow .grow { flex: 1; }
+.map-layers-panel .phint { font-size: 11.5px; color: var(--faint); margin: 6px 0 0; line-height: 1.5; }
+.map-layers-panel .row { display: flex; justify-content: space-between; font-size: 13px; color: var(--body); }
 
 /* A proxy control the 3D app has locked -- additive glow under the light
    palette. Say so visually instead of letting a dead box look clickable. */
@@ -3870,7 +3933,12 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   .zoom-ctl { right: 12px; bottom: var(--map-tb-space); }
   .quake-card { left: 12px; right: 12px; width: auto; }
 
-  .map-layers-btn { top: 12px; right: 12px; width: 38px; height: 38px; }
+  .map-ctl { top: 12px; right: 12px; left: 12px; justify-content: flex-end; gap: 6px; }
+  .map-ctl .mc-chip { height: 38px; padding: 0 9px; }
+  .map-ctl .mc-chip select { font-size: 12.5px; }
+  .map-ctl .range-chips.mc-dim { height: 38px; padding: 3px; }
+  .map-ctl .range-chips.mc-dim button { padding: 6px 10px; font-size: 12px; }
+  .map-layers-btn { width: 38px; height: 38px; }
   /* This one cannot become a viewport sheet like the Filters panel: it lives
      inside .map-shell, which sets perspective and will-change and so becomes
      the containing block for anything fixed. Anchored to the shell it can

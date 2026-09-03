@@ -89,123 +89,6 @@
           <option value="custom" hidden>Custom</option>
         </select>
       </label>
-      <label class="select-chip map-region-chip"><span class="lbl">Region</span>
-        <select id="mapRegion">
-          <option value="global" selected>Global</option>
-          <option value="japan">Japan</option>
-        </select>
-      </label>
-      <div class="range-chips" id="dimToggle">
-        <button data-dim="2d">2D</button>
-        <button data-dim="3d" class="active">3D</button>
-      </div>
-      <div class="drop-wrap">
-        <button class="btn-chip" id="filtersBtn">
-          <i data-icon="filter" data-size="17"></i> Filters <span class="badge" id="filterBadge" hidden>1</span>
-        </button>
-        <div class="drop-panel lg" id="filtersPanel">
-          <div class="panel-head">
-            <span>Filters</span>
-            <button type="button" class="panel-reset" id="filtersReset"
-                    title="Put these filters back to their defaults">Reset</button>
-          </div>
-
-          <!-- shared filters: drive the 2D map, the event table, and the 4D globe -->
-          <div id="filtersShared">
-            <h4>Magnitude</h4>
-            <div class="prow"><span>Range M</span><span class="grow"></span>
-              <output id="fMagOut" style="min-width:70px">1.0 – 9.5</output></div>
-            <div class="dualwrap" id="fMagWrap">
-              <div class="dual-fill"></div>
-              <input type="range" id="fMagLo" min="1" max="9.5" step="0.1" value="1">
-              <input type="range" id="fMagHi" min="1" max="9.5" step="0.1" value="9.5">
-            </div>
-            <div class="chip-row bands" id="fBands">
-              <label class="bchip"><input type="checkbox" data-band="1" checked>M1</label>
-              <label class="bchip"><input type="checkbox" data-band="2" checked>M2</label>
-              <label class="bchip"><input type="checkbox" data-band="3" checked>M3</label>
-              <label class="bchip"><input type="checkbox" data-band="4" checked>M4</label>
-              <label class="bchip"><input type="checkbox" data-band="5" checked>M5</label>
-              <label class="bchip"><input type="checkbox" data-band="6" checked>M6</label>
-              <label class="bchip"><input type="checkbox" data-band="7" checked>M7</label>
-              <label class="bchip"><input type="checkbox" data-band="8" checked>M8</label>
-              <label class="bchip"><input type="checkbox" data-band="9" checked>M9</label>
-              <label class="bchip"><input type="checkbox" data-band="10" checked>M10</label>
-            </div>
-            <p class="phint">Turning a band off removes it (e.g. M3 = M3.0–3.9) from the map, the list, and the globe.</p>
-
-            <h4>Depth</h4>
-            <div class="prow"><span>Range km</span><span class="grow"></span>
-              <output id="fDepthOut" style="min-width:70px">0 – 700</output></div>
-            <div class="dualwrap" id="fDepthWrap">
-              <div class="dual-fill"></div>
-              <input type="range" id="fDepthLo" min="0" max="700" step="5" value="0">
-              <input type="range" id="fDepthHi" min="0" max="700" step="5" value="700">
-            </div>
-            <div class="chip-row" id="fDepthPresets">
-              <button class="pchip on" data-lo="0" data-hi="700">All</button>
-              <button class="pchip" data-lo="0" data-hi="70">Shallow</button>
-              <button class="pchip" data-lo="70" data-hi="300">Intermediate</button>
-              <button class="pchip" data-lo="300" data-hi="700">Deep</button>
-            </div>
-
-            <div class="row" style="margin-top:12px"><span>Events shown</span><span id="filterCount"></span></div>
-          </div>
-
-          <!-- 3D-only display settings (the shared filters above apply there too) -->
-          <div id="filters3dOnly" class="x3dscope" hidden>
-            <h4>Display mode</h4>
-            <div class="chip-row">
-              <button class="pchip" data-x3d="#seg-mode [data-v='accumulate']">Accumulate</button>
-              <button class="pchip" data-x3d="#seg-mode [data-v='window']">Moving window</button>
-            </div>
-            <label class="prow" id="p3dWindowRow" hidden><span>Window length</span>
-              <input type="range" min="0" max="10" step="1" value="6" data-x3d-range="#in-window">
-              <output data-x3d-out="#out-window">1 y</output></label>
-
-            <h4>Visual</h4>
-            <label class="prow"><span>Depth exaggeration</span>
-              <input type="range" min="0.5" max="8" step="0.1" value="1.6" data-x3d-range="#in-exag">
-              <output data-x3d-out="#out-exag">1.6×</output></label>
-            <label class="prow"><span>Dot size</span>
-              <input type="range" min="0.01" max="3" step="0.01" value="0.31" data-x3d-range="#in-size">
-              <output data-x3d-out="#out-size">0.31×</output></label>
-            <label class="prow"><span>Master scale</span>
-              <input type="range" min="0.01" max="2" step="0.01" value="0.7" data-x3d-range="#in-msize-all">
-              <output data-x3d-out="#out-msize-all">0.70×</output></label>
-            <details class="p3d-details">
-              <summary>Per-magnitude dot size</summary>
-              <label class="prow"><span>M1</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-1"><output data-x3d-out="#out-msize-1"></output></label>
-              <label class="prow"><span>M2</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-2"><output data-x3d-out="#out-msize-2"></output></label>
-              <label class="prow"><span>M3</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-3"><output data-x3d-out="#out-msize-3"></output></label>
-              <label class="prow"><span>M4</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-4"><output data-x3d-out="#out-msize-4"></output></label>
-              <label class="prow"><span>M5</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-5"><output data-x3d-out="#out-msize-5"></output></label>
-              <label class="prow"><span>M6</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-6"><output data-x3d-out="#out-msize-6"></output></label>
-              <label class="prow"><span>M7</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-7"><output data-x3d-out="#out-msize-7"></output></label>
-              <label class="prow"><span>M8</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-8"><output data-x3d-out="#out-msize-8"></output></label>
-              <label class="prow"><span>M9</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-9"><output data-x3d-out="#out-msize-9"></output></label>
-              <label class="prow"><span>M10</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-10"><output data-x3d-out="#out-msize-10"></output></label>
-              <button class="pchip" data-x3d="#btn-msize-reset" style="margin-top:6px">Reset to defaults</button>
-            </details>
-            <label class="prow"><span>Sharpness</span>
-              <input type="range" min="0" max="100" step="5" value="50" data-x3d-range="#in-sharp">
-              <output data-x3d-out="#out-sharp">50%</output></label>
-            <label class="prow"><span>Opacity</span>
-              <input type="range" min="10" max="100" step="2" value="92" data-x3d-range="#in-opacity">
-              <output data-x3d-out="#out-opacity">92%</output></label>
-
-            <h4>Color by</h4>
-            <div class="chip-row">
-              <button class="pchip" data-x3d="#seg-color [data-v='0']">Depth</button>
-              <button class="pchip" data-x3d="#seg-color [data-v='1']">Magnitude</button>
-              <button class="pchip" data-x3d="#seg-color [data-v='2']">Time</button>
-              <button class="pchip" data-x3d="#seg-color [data-v='3']">Density</button>
-            </div>
-            <label class="check"><input type="checkbox" data-x3d-check="#ck-additive" checked> Additive glow</label>
-            <label class="check"><input type="checkbox" data-x3d-check="#ck-spin"> Auto-rotate</label>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -251,15 +134,33 @@
       </div>
     </div>
 
-    <!-- in-map layer settings (2D basemaps / 3D map layers) -->
-    <button class="map-layers-btn" id="layersBtn" aria-label="Map layers"><i data-icon="layers" data-size="19"></i></button>
+    <!-- in-map controls: region, 2D/3D, and the layers + filters panel. They
+         used to sit in the head bar above the map; on a phone that bar wrapped
+         to three rows before the map even started. -->
+    <div class="map-ctl" id="mapCtl">
+      <label class="mc-chip mc-region" title="Region"><i data-icon="globe" data-size="15"></i>
+        <select id="mapRegion">
+          <option value="global" selected>Global</option>
+          <option value="japan">Japan</option>
+        </select>
+      </label>
+      <div class="range-chips mc-dim" id="dimToggle">
+        <button data-dim="2d">2D</button>
+        <button data-dim="3d" class="active">3D</button>
+      </div>
+      <button class="map-layers-btn" id="layersBtn" aria-label="Layers &amp; filters" aria-expanded="false" aria-controls="layersPanel"><i data-icon="layers" data-size="19"></i><span class="badge" id="filterBadge" hidden>1</span></button>
+    </div>
     <div class="map-layers-panel" id="layersPanel" hidden>
       <div class="panel-head">
-        <span>Map layers</span>
+        <div class="mlp-tabs" role="tablist">
+          <button type="button" class="mlp-tab on" data-tab="layers" role="tab" aria-selected="true">Layers</button>
+          <button type="button" class="mlp-tab" data-tab="filters" role="tab" aria-selected="false">Filters</button>
+        </div>
         <button type="button" class="panel-reset" id="layersReset"
-                title="Put these layers back to their defaults">Reset</button>
+                title="Put this tab back to its defaults">Reset</button>
       </div>
 
+      <div class="mlp-pane" data-pane="layers">
       <div id="layers2d">
         <h4>Basemap</h4>
         <div class="chip-row">
@@ -321,6 +222,104 @@
           <input type="range" min="0.25" max="2.5" step="0.25" value="1" data-x3d-range="#in-vsize">
           <output data-x3d-out="#out-vsize">1</output></label>
       </div>
+      </div><!-- /pane layers -->
+
+      <div class="mlp-pane" data-pane="filters" hidden>
+        <!-- shared filters: drive the 2D map, the event table, and the 4D globe -->
+        <div id="filtersShared">
+          <h4>Magnitude</h4>
+          <div class="prow"><span>Range M</span><span class="grow"></span>
+            <output id="fMagOut" style="min-width:70px">1.0 – 9.5</output></div>
+          <div class="dualwrap" id="fMagWrap">
+            <div class="dual-fill"></div>
+            <input type="range" id="fMagLo" min="1" max="9.5" step="0.1" value="1">
+            <input type="range" id="fMagHi" min="1" max="9.5" step="0.1" value="9.5">
+          </div>
+          <div class="chip-row bands" id="fBands">
+            <label class="bchip"><input type="checkbox" data-band="1" checked>M1</label>
+            <label class="bchip"><input type="checkbox" data-band="2" checked>M2</label>
+            <label class="bchip"><input type="checkbox" data-band="3" checked>M3</label>
+            <label class="bchip"><input type="checkbox" data-band="4" checked>M4</label>
+            <label class="bchip"><input type="checkbox" data-band="5" checked>M5</label>
+            <label class="bchip"><input type="checkbox" data-band="6" checked>M6</label>
+            <label class="bchip"><input type="checkbox" data-band="7" checked>M7</label>
+            <label class="bchip"><input type="checkbox" data-band="8" checked>M8</label>
+            <label class="bchip"><input type="checkbox" data-band="9" checked>M9</label>
+            <label class="bchip"><input type="checkbox" data-band="10" checked>M10</label>
+          </div>
+          <p class="phint">Turning a band off removes it (e.g. M3 = M3.0–3.9) from the map, the list, and the globe.</p>
+
+          <h4>Depth</h4>
+          <div class="prow"><span>Range km</span><span class="grow"></span>
+            <output id="fDepthOut" style="min-width:70px">0 – 700</output></div>
+          <div class="dualwrap" id="fDepthWrap">
+            <div class="dual-fill"></div>
+            <input type="range" id="fDepthLo" min="0" max="700" step="5" value="0">
+            <input type="range" id="fDepthHi" min="0" max="700" step="5" value="700">
+          </div>
+          <div class="chip-row" id="fDepthPresets">
+            <button class="pchip on" data-lo="0" data-hi="700">All</button>
+            <button class="pchip" data-lo="0" data-hi="70">Shallow</button>
+            <button class="pchip" data-lo="70" data-hi="300">Intermediate</button>
+            <button class="pchip" data-lo="300" data-hi="700">Deep</button>
+          </div>
+
+          <div class="row" style="margin-top:12px"><span>Events shown</span><span id="filterCount"></span></div>
+        </div>
+
+        <!-- 3D-only display settings (the shared filters above apply there too) -->
+        <div id="filters3dOnly" class="x3dscope" hidden>
+          <h4>Display mode</h4>
+          <div class="chip-row">
+            <button class="pchip" data-x3d="#seg-mode [data-v='accumulate']">Accumulate</button>
+            <button class="pchip" data-x3d="#seg-mode [data-v='window']">Moving window</button>
+          </div>
+          <label class="prow" id="p3dWindowRow" hidden><span>Window length</span>
+            <input type="range" min="0" max="10" step="1" value="6" data-x3d-range="#in-window">
+            <output data-x3d-out="#out-window">1 y</output></label>
+
+          <h4>Visual</h4>
+          <label class="prow"><span>Depth exaggeration</span>
+            <input type="range" min="0.5" max="8" step="0.1" value="1.6" data-x3d-range="#in-exag">
+            <output data-x3d-out="#out-exag">1.6×</output></label>
+          <label class="prow"><span>Dot size</span>
+            <input type="range" min="0.01" max="3" step="0.01" value="0.31" data-x3d-range="#in-size">
+            <output data-x3d-out="#out-size">0.31×</output></label>
+          <label class="prow"><span>Master scale</span>
+            <input type="range" min="0.01" max="2" step="0.01" value="0.7" data-x3d-range="#in-msize-all">
+            <output data-x3d-out="#out-msize-all">0.70×</output></label>
+          <details class="p3d-details">
+            <summary>Per-magnitude dot size</summary>
+            <label class="prow"><span>M1</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-1"><output data-x3d-out="#out-msize-1"></output></label>
+            <label class="prow"><span>M2</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-2"><output data-x3d-out="#out-msize-2"></output></label>
+            <label class="prow"><span>M3</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-3"><output data-x3d-out="#out-msize-3"></output></label>
+            <label class="prow"><span>M4</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-4"><output data-x3d-out="#out-msize-4"></output></label>
+            <label class="prow"><span>M5</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-5"><output data-x3d-out="#out-msize-5"></output></label>
+            <label class="prow"><span>M6</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-6"><output data-x3d-out="#out-msize-6"></output></label>
+            <label class="prow"><span>M7</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-7"><output data-x3d-out="#out-msize-7"></output></label>
+            <label class="prow"><span>M8</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-8"><output data-x3d-out="#out-msize-8"></output></label>
+            <label class="prow"><span>M9</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-9"><output data-x3d-out="#out-msize-9"></output></label>
+            <label class="prow"><span>M10</span><input type="range" min="0.001" max="120" step="0.001" data-x3d-range="#in-msize-10"><output data-x3d-out="#out-msize-10"></output></label>
+            <button class="pchip" data-x3d="#btn-msize-reset" style="margin-top:6px">Reset to defaults</button>
+          </details>
+          <label class="prow"><span>Sharpness</span>
+            <input type="range" min="0" max="100" step="5" value="50" data-x3d-range="#in-sharp">
+            <output data-x3d-out="#out-sharp">50%</output></label>
+          <label class="prow"><span>Opacity</span>
+            <input type="range" min="10" max="100" step="2" value="92" data-x3d-range="#in-opacity">
+            <output data-x3d-out="#out-opacity">92%</output></label>
+
+          <h4>Color by</h4>
+          <div class="chip-row">
+            <button class="pchip" data-x3d="#seg-color [data-v='0']">Depth</button>
+            <button class="pchip" data-x3d="#seg-color [data-v='1']">Magnitude</button>
+            <button class="pchip" data-x3d="#seg-color [data-v='2']">Time</button>
+            <button class="pchip" data-x3d="#seg-color [data-v='3']">Density</button>
+          </div>
+          <label class="check"><input type="checkbox" data-x3d-check="#ck-additive" checked> Additive glow</label>
+          <label class="check"><input type="checkbox" data-x3d-check="#ck-spin"> Auto-rotate</label>
+        </div>
+      </div><!-- /pane filters -->
     </div>
   </div>
 

@@ -499,7 +499,6 @@
     });
   }
 
-  on("filtersBtn", "click", syncFilterSections);
 
   /* ---------------- reset a panel to its defaults ---------------- */
 
@@ -554,14 +553,14 @@
     return document.getElementById("mapShell").classList.contains("mode-3d");
   }
 
-  on("filtersReset", "click", function (ev) {
-    ev.stopPropagation();
-    resetOwnControls(document.getElementById("filtersShared"));
-    if (in3d()) resetInApp([".sec-anim", ".sec-visual"]);
-  });
-
+  /* One Reset for the panel; it acts on whichever tab is showing. */
   on("layersReset", "click", function (ev) {
     ev.stopPropagation();
+    if (activeTab() === "filters") {
+      resetOwnControls(document.getElementById("filtersShared"));
+      if (in3d()) resetInApp([".sec-anim", ".sec-visual"]);
+      return;
+    }
     if (in3d()) resetInApp([".sec-map"]);
     else resetOwnControls(document.getElementById("layers2d"));
   });
@@ -587,13 +586,46 @@
     legendToggle.setAttribute("aria-expanded", open ? "true" : "false");
   });
 
+  /* Layers and Filters share the panel as two tabs. The Filters half used to
+     be a dropdown in the head bar; inside the map it sits with the other map
+     controls, and on a phone it no longer competes with the title for width. */
+  function activeTab() {
+    var t = layersPanel.querySelector(".mlp-tab.on");
+    return t ? t.dataset.tab : "layers";
+  }
+
+  function showTab(name) {
+    layersPanel.querySelectorAll(".mlp-tab").forEach(function (t) {
+      var on = t.dataset.tab === name;
+      t.classList.toggle("on", on);
+      t.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    layersPanel.querySelectorAll(".mlp-pane").forEach(function (p) {
+      p.hidden = p.dataset.pane !== name;
+    });
+    if (name === "filters") syncFilterSections(); else syncLayerSections();
+  }
+
+  layersPanel.addEventListener("click", function (ev) {
+    ev.stopPropagation();
+    var tab = ev.target.closest(".mlp-tab");
+    if (tab) showTab(tab.dataset.tab);
+  });
+
+  function setPanel(open, tab) {
+    layersPanel.hidden = !open;
+    var btn = document.getElementById("layersBtn");
+    if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open) showTab(tab || activeTab());
+  }
+
   on("layersBtn", "click", function (ev) {
     ev.stopPropagation();
-    layersPanel.hidden = !layersPanel.hidden;
-    if (!layersPanel.hidden) syncLayerSections();
+    setPanel(layersPanel.hidden);
   });
-  layersPanel.addEventListener("click", function (ev) { ev.stopPropagation(); });
-  document.addEventListener("click", function () { layersPanel.hidden = true; });
+  // the control bar around the button should not close the panel it opens
+  on("mapCtl", "click", function (ev) { ev.stopPropagation(); });
+  document.addEventListener("click", function () { setPanel(false); });
 
   on("layers2d", "click", function (ev) {
     var b = ev.target.closest("[data-base]");
@@ -1659,10 +1691,7 @@
     });
     panel.addEventListener("click", function (ev) { ev.stopPropagation(); });
   }
-  wireDrop("filtersBtn", "filtersPanel");
-  document.addEventListener("click", function () {
-    document.querySelectorAll(".drop-panel.open").forEach(function (p) { p.classList.remove("open"); });
-  });
+  // (the Filters dropdown moved into the in-map panel; see setPanel/showTab)
 
   /* ---------- shared filters (drive 2D, the table, and the 4D globe) ---------- */
 
@@ -1788,7 +1817,7 @@
   }
 
   if (location.hash === "#3d-filters") {
-    document.getElementById("filtersPanel").classList.add("open");
+    setPanel(true, "filters");
     setTimeout(refresh3dFilters, 2500);
     setTimeout(refresh3dFilters, 8000);
   }
