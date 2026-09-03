@@ -2038,9 +2038,21 @@ a.news-row:hover .nt { color: var(--blue-600); }
   flex-wrap: wrap;
 }
 
+/* The Insights controls are combo boxes on every screen: the label above,
+   the value below, in one box. The phone had this first; a row of inline
+   chips at desktop width read as three unrelated pills. */
 .insight-view-controls .select-chip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  align-items: start;
+  gap: 2px;
+  min-width: 150px;
+  padding: 8px 12px;
   box-shadow: 0 2px 8px rgba(17, 43, 84, .06);
 }
+.insight-view-controls .select-chip .lbl { padding: 0; font-size: 10.5px; font-weight: 600; }
+.insight-view-controls .select-chip select { width: 100%; min-width: 0; padding: 0; font-size: 13.5px; }
 
 .insight-view-intro::after {
   content: "";
@@ -2359,27 +2371,10 @@ body.insight-modal-open { overflow: hidden; }
     align-items: stretch;
     gap: 8px;
   }
-  .insight-view-controls .select-chip {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    align-content: center;
-    align-items: start;
-    gap: 2px;
-    width: 100%;
-    min-width: 0;
-    padding: 7px 10px;
-  }
-  .insight-view-controls .select-chip .lbl {
-    padding: 0;
-    font-size: 10.5px;
-    font-weight: 600;
-  }
-  .insight-view-controls .select-chip select {
-    width: 100%;
-    min-width: 0;
-    padding: 0;
-    font-size: 13px;
-  }
+  .insight-view-controls .select-chip { width: 100%; min-width: 0; padding: 7px 10px; }
+  .insight-view-controls .select-chip select { font-size: 13px; }
+  /* The scope line wraps as prose, not as a pill trying to stay on one line. */
+  .insight-view-intro .insight-data-scope { display: block; border-radius: 12px; line-height: 1.55; padding: 6px 10px; }
   .insight-view-controls .insight-region-chip { grid-column: 1; grid-row: 1; }
   .insight-view-controls .insight-range-chip { grid-column: 2; grid-row: 1; }
   .analysis-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
