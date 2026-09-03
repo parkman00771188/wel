@@ -31,8 +31,8 @@
   EQ.ready.then(function () {
 
   var state = {
-    live: false,                         // All is the default; Now enables rolling 24h updates
-    startMs: Date.parse("1900-01-01T00:00:00Z"), // selected window [startMs, endMs]
+    live: false,                         // 20 years is the default; Now enables rolling 24h updates
+    startMs: Date.now() - 7305 * 864e5,  // selected window [startMs, endMs]
     endMs: Date.now(),
     magLo: 1, magHi: 9.5,                // shared filters (2D map, table, 4D globe)
     bands: { 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true, 8: true, 9: true, 10: true },
@@ -1812,7 +1812,9 @@
 
   /* ---------------- boot ---------------- */
 
-  setRange(Date.parse("1900-01-01T00:00:00Z"), Date.now(), false);
+  // Two decades: enough to show where earthquakes cluster without drawing the
+  // whole century at once. All is one click away in the Period combo.
+  setPresetDays(7305, false);
 
   // Open the full-catalog 3D globe by default, unless the console requested
   // the 2D child route before this embedded page finished booting.
