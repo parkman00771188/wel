@@ -298,19 +298,24 @@
       EQ.forEachInRange(from, now, addPoint);
     }
 
+    // Over a long window every cell's representative is a large event, so the
+    // map fills with the biggest dots; the scale comes down with the window
+    // and the halo is kept for short ones, where a strong quake is news.
+    var scale = state.days <= 365 ? 0.55 : state.days <= 3652 ? 0.4 : 0.32;
+    var halo = state.days <= 365;
     var evs = Object.keys(cells).map(function (key) { return cells[key]; });
     evs.sort(function (a, b) { return a.m - b.m; });
     evs.forEach(function (e) {
-      var markerRadius = Math.max(1.5, EQ.magRadius(e.m) * 0.55);
-      if (e.m >= 5.5) {
+      var markerRadius = Math.max(1.5, EQ.magRadius(e.m) * scale);
+      if (halo && e.m >= 5.5) {
         miniLayer.addLayer(L.circleMarker([e.lat, e.lng], {
           radius: markerRadius + 3, stroke: false, fillColor: EQ.miniColor(e.m), fillOpacity: 0.16, interactive: false
         }));
       }
       miniLayer.addLayer(L.circleMarker([e.lat, e.lng], {
         radius: markerRadius,
-        color: "#ffffff", weight: 0.6,
-        fillColor: EQ.miniColor(e.m), fillOpacity: 0.92, interactive: false
+        color: "#ffffff", weight: halo ? 0.6 : 0.4,
+        fillColor: EQ.miniColor(e.m), fillOpacity: halo ? 0.92 : 0.85, interactive: false
       }));
     });
   }
