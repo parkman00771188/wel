@@ -1542,7 +1542,7 @@
       String(d.getUTCDate()).padStart(2, "0");
   }
 
-  var PRESET_DAYS = [1, 7, 30, 90, 365, 1095, 1826, 3652];
+  var PRESET_DAYS = [1, 7, 30, 90, 365, 1095, 1826, 3652, 7305, 10958, 18263];
 
   function setRange(startMs, endMs, live, from3d) {
     stopPlay();

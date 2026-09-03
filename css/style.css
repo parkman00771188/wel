@@ -3705,6 +3705,80 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   .select-chip { padding: 0 12px; }
   .select-chip select, .select-chip .lbl { padding: 11px 0; }
 
+  /* On the dashboard, the guide is useful context before the filters. The
+     page-head becomes transparent to layout so its title and controls can sit
+     on opposite sides of the banner without duplicating markup. */
+  .dashboard-main {
+    display: flex;
+    flex-direction: column;
+  }
+  .dashboard-main > :not(.page-head) { order: 4; }
+  .dashboard-main > .page-head { display: contents; }
+  .dashboard-main > .page-head > :first-child {
+    order: 0;
+    padding: 24px 0 16px;
+  }
+  .dashboard-main > .dash-hero {
+    order: 1;
+    margin-bottom: 12px;
+  }
+  .dashboard-main > .page-head > .page-actions {
+    order: 2;
+    flex-wrap: nowrap;
+    margin-bottom: 20px;
+  }
+  .dashboard-main > .page-head > .page-actions .select-chip {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .dashboard-main > .stat-grid { order: 3; }
+
+  /* Keep the custom date interval and its preset on one line. Region remains
+     full-width below, while the map mode and Filters button share row three. */
+  .map-head .page-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: stretch;
+  }
+  .map-head .date-chip {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+    padding-inline: 8px;
+    gap: 4px;
+  }
+  .map-head .date-chip input[type="date"] {
+    flex: 1 1 0;
+    min-width: 0;
+    width: 0;
+  }
+  .map-head .map-period-chip {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    gap: 0;
+    padding-inline: 6px;
+  }
+  .map-head .map-period-chip .lbl { display: none; }
+  .map-head .map-period-chip select {
+    width: 52px;
+    max-width: 52px;
+  }
+  .map-head .map-region-chip {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .map-head #dimToggle {
+    grid-column: 1;
+    grid-row: 3;
+    justify-self: start;
+  }
+  .map-head .drop-wrap {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    justify-self: end;
+  }
+
   /* --- on-map furniture ---
      A phone has to fit the scrubber, the zoom pad, the layer control and a
      nine-step legend onto the same 390px as the map. The scrubber takes the
@@ -3932,4 +4006,11 @@ a.pub:hover .pub-title { color: var(--blue-600); }
    the burger, the title and the language picker. */
 @media (max-width: 400px) {
   .select-chip { flex-basis: 100%; }
+  .dashboard-main > .page-head > .page-actions .select-chip,
+  .map-head .map-period-chip,
+  .map-head .map-region-chip { flex-basis: auto; }
+}
+
+@media (max-width: 360px) {
+  .map-head .date-chip input[type="date"] { font-size: 12px; }
 }

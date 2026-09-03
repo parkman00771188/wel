@@ -72,8 +72,8 @@
         <span class="lbl">–</span>
         <input type="date" id="dateTo" aria-label="End date">
       </div>
-      <label class="select-chip"><span class="lbl">Period</span>
-        <select id="mapPeriod">
+      <label class="select-chip map-period-chip"><span class="lbl">Period</span>
+        <select id="mapPeriod" aria-label="Period">
           <option value="1">24h</option>
           <option value="7">7d</option>
           <option value="30">30d</option>
@@ -82,11 +82,14 @@
           <option value="1095">3y</option>
           <option value="1826">5y</option>
           <option value="3652">10y</option>
+          <option value="7305">20y</option>
+          <option value="10958">30y</option>
+          <option value="18263">50y</option>
           <option value="all" selected>All</option>
           <option value="custom" hidden>Custom</option>
         </select>
       </label>
-      <label class="select-chip"><span class="lbl">Region</span>
+      <label class="select-chip map-region-chip"><span class="lbl">Region</span>
         <select id="mapRegion">
           <option value="global" selected>Global</option>
           <option value="japan">Japan</option>
