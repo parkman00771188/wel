@@ -471,14 +471,14 @@ WEL_I18N.load({
   "The literature, and where every number here comes from.": "La literatura, y de dónde sale cada cifra que aparece aquí.",
   "Two things, both of them checkable. A reading list that keeps itself current, and a plain statement of the sources behind the maps and the charts.": "Dos cosas, ambas comprobables. Una lista de lecturas que se mantiene al día y una exposición clara de las fuentes detrás de los mapas y los gráficos.",
   "Publications, collected automatically.": "Publicaciones, recopiladas automáticamente.",
-  "OpenAlex topic T13018, Seismology and Earthquake Studies, widened a page at a time on the same cycle as the earthquake data. Sort by citations, newest, oldest or title.": "Tema T13018 de OpenAlex, Seismology and Earthquake Studies, ampliado página a página en el mismo ciclo que los datos sísmicos. Ordene por citas, más recientes, más antiguas o título.",
+  "Two OpenAlex topics — core seismology and the machine-learning stream — widened a page at a time on the same cycle as the earthquake data, with the newest papers from the major journals kept whatever their citation count. Search, then sort by citations, newest, oldest or title.": "Dos temas de OpenAlex —la sismología central y la corriente de aprendizaje automático— ampliados una página a la vez en el mismo ciclo que los datos sísmicos, conservando los artículos más recientes de las grandes revistas sin importar sus citas. Busca y luego ordena por citas, más recientes, más antiguos o título.",
   "Data sources, named.": "Fuentes de datos, con nombre.",
   "The eight catalogues, reference layers and feeds this site actually reads, each linking to the original rather than to a copy, with the USGS and ISC row counts read from the archive metadata rather than typed in.": "Los ocho catálogos, capas de referencia y fuentes de datos que este sitio lee de verdad, cada uno con enlace al original y no a una copia, y con los recuentos de filas de USGS e ISC leídos de los metadatos del archivo en lugar de escritos a mano.",
   "No original research is published here.": "Aquí no se publica investigación original.",
   "This is a place to read the field and to see the provenance of what is on screen.": "Este es un lugar para leer la disciplina y ver la procedencia de lo que aparece en pantalla.",
   "rows from USGS ANSS ComCat, M 2.0 and above": "filas de USGS ANSS ComCat, M 2.0 y superiores",
   "rows from the ISC Bulletin, M 3.0 and above, reviewed": "filas del Boletín del ISC, M 3.0 y superiores, revisadas",
-  "the OpenAlex topic the reading list is drawn from": "el tema de OpenAlex del que se extrae la lista de lecturas",
+  "OpenAlex topics the reading list is drawn from: core seismology and the machine-learning stream": "temas de OpenAlex de los que procede la lista de lectura: sismología central y la corriente de aprendizaje automático",
   "Visit the Research Hub →": "Visitar el centro de investigación →",
   "What the planet did today, in the words of the people reporting it.": "Lo que hizo el planeta hoy, en palabras de quienes lo informan.",
   "Earthquake coverage and seismology research news, gathered automatically and kept in one list rather than scattered across a dozen sites.": "Cobertura de sismos y noticias de investigación en sismología, recopiladas automáticamente y reunidas en una sola lista en vez de dispersas por una docena de sitios.",
@@ -529,7 +529,7 @@ WEL_I18N.load({
   "Holocene volcanoes, shown as an optional layer.": "Volcanes del Holoceno, mostrados como capa opcional.",
   "Coastlines, plate boundaries and administrative borders.": "Líneas de costa, límites de placas y fronteras administrativas.",
   "The satellite imagery on the globe and the Japan surface.": "Las imágenes de satélite del globo y de la superficie de Japón.",
-  "Topic T13018, Seismology and Earthquake Studies — the source of the publication list on this page.": "Tema T13018, Seismology and Earthquake Studies — la fuente de la lista de publicaciones de esta página.",
+  "Topics T10110 and T13018 — core seismology and the machine-learning stream — the source of the publication list on this page.": "Temas T10110 y T13018 —sismología central y la corriente de aprendizaje automático—, la fuente de la lista de publicaciones de esta página.",
   "Loading coverage…": "Cargando cobertura…",
   "Events": "Eventos",
 
@@ -564,6 +564,16 @@ WEL_I18N.load({
   "Measuring Quakes": "Medir los sismos",
   "Hazards & Effects": "Amenazas & efectos",
   "Notable Earthquakes": "Sismos notables",
+
+  /* publications search */
+  "Search publications": "Buscar publicaciones",
+  "{n} results": "$1 resultados",
+  "1 result": "1 resultado",
+  "No publications match that search.": "Ninguna publicación coincide con la búsqueda.",
+  "Recent": "Reciente",
+  "{n} citations": "$1 citas",
+  "OpenAlex · two topics, the last {n} years of seismology.": "OpenAlex · dos temas, los últimos $1 años de sismología.",
+  "OpenAlex · topic T13018, the last {n} years of seismology.": "OpenAlex · tema T13018, los últimos $1 años de sismología.",
 
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine

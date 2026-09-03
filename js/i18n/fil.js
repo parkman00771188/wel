@@ -471,14 +471,14 @@ WEL_I18N.load({
   "The literature, and where every number here comes from.": "Ang literatura, at kung saan nanggaling ang bawat numero rito.",
   "Two things, both of them checkable. A reading list that keeps itself current, and a plain statement of the sources behind the maps and the charts.": "Dalawang bagay, pareho mong matsetsek. Isang reading list na nananatiling napapanahon, at isang malinaw na pahayag ng mga pinagmulan ng mga mapa at chart.",
   "Publications, collected automatically.": "Mga publikasyon, awtomatikong kinokolekta.",
-  "OpenAlex topic T13018, Seismology and Earthquake Studies, widened a page at a time on the same cycle as the earthquake data. Sort by citations, newest, oldest or title.": "OpenAlex topic T13018, Seismology and Earthquake Studies, pinapalawak nang isang pahina sa bawat pagkakataon sa parehong siklo ng data ng lindol. Mag-sort ayon sa sitasyon, pinakabago, pinakaluma o pamagat.",
+  "Two OpenAlex topics — core seismology and the machine-learning stream — widened a page at a time on the same cycle as the earthquake data, with the newest papers from the major journals kept whatever their citation count. Search, then sort by citations, newest, oldest or title.": "Dalawang paksa sa OpenAlex — ang pangunahing seismology at ang daloy ng machine learning — na pinalalawak nang isang pahina sa bawat pagkakataon, kasabay ng siklo ng datos ng lindol, at pinananatili ang pinakabagong mga papel mula sa malalaking journal anuman ang bilang ng citation. Maghanap, saka ayusin ayon sa citation, pinakabago, pinakaluma o pamagat.",
   "Data sources, named.": "Mga pinagmulan ng data, pinangalanan.",
   "The eight catalogues, reference layers and feeds this site actually reads, each linking to the original rather than to a copy, with the USGS and ISC row counts read from the archive metadata rather than typed in.": "Ang walong katalogo, reference layer at feed na aktwal na binabasa ng site na ito, bawat isa ay naka-link sa orihinal at hindi sa kopya, na ang bilang ng row ng USGS at ISC ay binasa mula sa metadata ng arkibo sa halip na i-type.",
   "No original research is published here.": "Walang orihinal na pananaliksik ang inilalathala rito.",
   "This is a place to read the field and to see the provenance of what is on screen.": "Ito ay lugar upang basahin ang larangan at makita ang pinagmulan ng nasa screen.",
   "rows from USGS ANSS ComCat, M 2.0 and above": "row mula sa USGS ANSS ComCat, M 2.0 pataas",
   "rows from the ISC Bulletin, M 3.0 and above, reviewed": "row mula sa ISC Bulletin, M 3.0 pataas, nasuri",
-  "the OpenAlex topic the reading list is drawn from": "ang OpenAlex topic na pinagkukunan ng reading list",
+  "OpenAlex topics the reading list is drawn from: core seismology and the machine-learning stream": "mga paksa sa OpenAlex na pinagkukunan ng listahang ito: pangunahing seismology at ang daloy ng machine learning",
   "Visit the Research Hub →": "Bisitahin ang Hub ng Pananaliksik →",
   "What the planet did today, in the words of the people reporting it.": "Ang ginawa ng planeta ngayong araw, sa salita ng mga nag-uulat nito.",
   "Earthquake coverage and seismology research news, gathered automatically and kept in one list rather than scattered across a dozen sites.": "Mga balita tungkol sa lindol at pananaliksik sa seismolohiya, awtomatikong tinitipon at iniingatan sa iisang listahan sa halip na nakakalat sa isang dosenang site.",
@@ -529,7 +529,7 @@ WEL_I18N.load({
   "Holocene volcanoes, shown as an optional layer.": "Mga bulkang Holocene, ipinapakita bilang opsyonal na layer.",
   "Coastlines, plate boundaries and administrative borders.": "Mga baybayin, hangganan ng plaka at hangganang administratibo.",
   "The satellite imagery on the globe and the Japan surface.": "Ang satellite imagery sa globo at sa ibabaw ng Japan.",
-  "Topic T13018, Seismology and Earthquake Studies — the source of the publication list on this page.": "Topic T13018, Seismology and Earthquake Studies — ang pinagmulan ng listahan ng publikasyon sa pahinang ito.",
+  "Topics T10110 and T13018 — core seismology and the machine-learning stream — the source of the publication list on this page.": "Mga paksang T10110 at T13018 — pangunahing seismology at ang daloy ng machine learning — ang pinagmulan ng listahan ng publikasyon sa pahinang ito.",
   "Loading coverage…": "Naglo-load ng saklaw…",
   "Events": "Mga Pangyayari",
 
@@ -564,6 +564,16 @@ WEL_I18N.load({
   "Measuring Quakes": "Pagsukat sa Lindol",
   "Hazards & Effects": "Panganib & Epekto",
   "Notable Earthquakes": "Mga Kilalang Lindol",
+
+  /* publications search */
+  "Search publications": "Maghanap ng publikasyon",
+  "{n} results": "$1 resulta",
+  "1 result": "1 resulta",
+  "No publications match that search.": "Walang publikasyong tumutugma sa paghahanap.",
+  "Recent": "Bago",
+  "{n} citations": "$1 citation",
+  "OpenAlex · two topics, the last {n} years of seismology.": "OpenAlex · dalawang paksa, ang huling $1 taon ng seismology.",
+  "OpenAlex · topic T13018, the last {n} years of seismology.": "OpenAlex · paksang T13018, ang huling $1 taon ng seismology.",
 
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine

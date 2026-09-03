@@ -471,14 +471,14 @@ WEL_I18N.load({
   "The literature, and where every number here comes from.": "शोध साहित्य, और यहाँ का हर आँकड़ा कहाँ से आता है।",
   "Two things, both of them checkable. A reading list that keeps itself current, and a plain statement of the sources behind the maps and the charts.": "दो चीज़ें, दोनों जाँची जा सकती हैं। एक पठन-सूची जो खुद को ताज़ा रखती है, और मैप तथा चार्ट के पीछे के स्रोतों का सीधा-सादा ब्योरा।",
   "Publications, collected automatically.": "प्रकाशन, अपने आप एकत्र किए गए।",
-  "OpenAlex topic T13018, Seismology and Earthquake Studies, widened a page at a time on the same cycle as the earthquake data. Sort by citations, newest, oldest or title.": "OpenAlex विषय T13018, Seismology and Earthquake Studies, भूकंप डेटा के उसी चक्र पर एक-एक पृष्ठ करके बढ़ाया जाता है। उद्धरण, नवीनतम, सबसे पुराने या शीर्षक के अनुसार क्रमबद्ध करें।",
+  "Two OpenAlex topics — core seismology and the machine-learning stream — widened a page at a time on the same cycle as the earthquake data, with the newest papers from the major journals kept whatever their citation count. Search, then sort by citations, newest, oldest or title.": "OpenAlex के दो विषय — मूल भूकंप विज्ञान और मशीन लर्निंग की धारा — भूकंप डेटा के साथ उसी चक्र में एक-एक पृष्ठ बढ़ाकर एकत्र किए जाते हैं, और प्रमुख पत्रिकाओं के नवीनतम शोधपत्र उद्धरण संख्या की परवाह किए बिना रखे जाते हैं। खोजें, फिर उद्धरण, नवीनतम, पुराने या शीर्षक से क्रमबद्ध करें।",
   "Data sources, named.": "डेटा स्रोत, नाम सहित।",
   "The eight catalogues, reference layers and feeds this site actually reads, each linking to the original rather than to a copy, with the USGS and ISC row counts read from the archive metadata rather than typed in.": "इस साइट द्वारा वास्तव में पढ़े जाने वाले आठ कैटलॉग, संदर्भ लेयर और फ़ीड, हर एक किसी प्रति के बजाय मूल स्रोत से जुड़ा हुआ, और USGS तथा ISC की पंक्ति-संख्याएँ टाइप की हुई नहीं बल्कि संग्रह मेटाडेटा से पढ़ी गई।",
   "No original research is published here.": "यहाँ कोई मौलिक शोध प्रकाशित नहीं होता।",
   "This is a place to read the field and to see the provenance of what is on screen.": "यह जगह इस क्षेत्र को पढ़ने और स्क्रीन पर दिख रही चीज़ों का स्रोत देखने के लिए है।",
   "rows from USGS ANSS ComCat, M 2.0 and above": "USGS ANSS ComCat से पंक्तियाँ, M 2.0 और उससे ऊपर",
   "rows from the ISC Bulletin, M 3.0 and above, reviewed": "ISC Bulletin से पंक्तियाँ, M 3.0 और उससे ऊपर, समीक्षित",
-  "the OpenAlex topic the reading list is drawn from": "वह OpenAlex विषय जिससे पठन-सूची ली गई है",
+  "OpenAlex topics the reading list is drawn from: core seismology and the machine-learning stream": "OpenAlex विषय जिनसे यह पठन सूची ली गई है: मूल भूकंप विज्ञान और मशीन लर्निंग की धारा",
   "Visit the Research Hub →": "अनुसंधान हब देखें →",
   "What the planet did today, in the words of the people reporting it.": "आज पृथ्वी ने क्या किया, उन्हीं के शब्दों में जो इसकी रिपोर्ट कर रहे हैं।",
   "Earthquake coverage and seismology research news, gathered automatically and kept in one list rather than scattered across a dozen sites.": "भूकंप कवरेज और भूकंप विज्ञान की शोध खबरें, अपने आप जुटाई गईं और दर्जन भर साइटों में बिखरी रहने के बजाय एक ही सूची में।",
@@ -529,7 +529,7 @@ WEL_I18N.load({
   "Holocene volcanoes, shown as an optional layer.": "होलोसीन ज्वालामुखी, एक वैकल्पिक लेयर के रूप में।",
   "Coastlines, plate boundaries and administrative borders.": "तटरेखाएँ, प्लेट सीमाएँ और प्रशासनिक सीमाएँ।",
   "The satellite imagery on the globe and the Japan surface.": "ग्लोब और जापान सतह पर दिखने वाली उपग्रह छवियाँ।",
-  "Topic T13018, Seismology and Earthquake Studies — the source of the publication list on this page.": "विषय T13018, Seismology and Earthquake Studies — इस पृष्ठ की प्रकाशन सूची का स्रोत।",
+  "Topics T10110 and T13018 — core seismology and the machine-learning stream — the source of the publication list on this page.": "विषय T10110 और T13018 — मूल भूकंप विज्ञान और मशीन लर्निंग की धारा — इस पृष्ठ की प्रकाशन सूची का स्रोत।",
   "Loading coverage…": "कवरेज लोड हो रही है…",
   "Events": "घटनाएँ",
 
@@ -564,6 +564,16 @@ WEL_I18N.load({
   "Measuring Quakes": "भूकंप मापन",
   "Hazards & Effects": "आपदाएँ & प्रभाव",
   "Notable Earthquakes": "उल्लेखनीय भूकंप",
+
+  /* publications search */
+  "Search publications": "प्रकाशन खोजें",
+  "{n} results": "$1 परिणाम",
+  "1 result": "1 परिणाम",
+  "No publications match that search.": "इस खोज से कोई प्रकाशन मेल नहीं खाता।",
+  "Recent": "हाल का",
+  "{n} citations": "$1 उद्धरण",
+  "OpenAlex · two topics, the last {n} years of seismology.": "OpenAlex · दो विषय, भूकंप विज्ञान के पिछले $1 वर्ष।",
+  "OpenAlex · topic T13018, the last {n} years of seismology.": "OpenAlex · विषय T13018, भूकंप विज्ञान के पिछले $1 वर्ष।",
 
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine

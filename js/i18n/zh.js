@@ -471,14 +471,14 @@ WEL_I18N.load({
   "The literature, and where every number here comes from.": "文献，以及这里每一个数字的来源。",
   "Two things, both of them checkable. A reading list that keeps itself current, and a plain statement of the sources behind the maps and the charts.": "两件事，都可以核对。一份能自我更新的阅读清单，以及一段对地图和图表背后来源的直白说明。",
   "Publications, collected automatically.": "论文，自动收集。",
-  "OpenAlex topic T13018, Seismology and Earthquake Studies, widened a page at a time on the same cycle as the earthquake data. Sort by citations, newest, oldest or title.": "OpenAlex 主题 T13018，地震学与地震研究，以与地震数据相同的周期逐页扩充。可按被引次数、最新、最早或标题排序。",
+  "Two OpenAlex topics — core seismology and the machine-learning stream — widened a page at a time on the same cycle as the earthquake data, with the newest papers from the major journals kept whatever their citation count. Search, then sort by citations, newest, oldest or title.": "两个 OpenAlex 主题（地震学核心领域与机器学习方向），与地震数据同一周期逐页扩展采集；主要期刊的最新论文无论被引多少都会保留。可先搜索，再按被引、最新、最早或标题排序。",
   "Data sources, named.": "数据来源，逐一列明。",
   "The eight catalogues, reference layers and feeds this site actually reads, each linking to the original rather than to a copy, with the USGS and ISC row counts read from the archive metadata rather than typed in.": "本站实际读取的八份目录、参考图层和数据源，每一项都链接到原始出处而不是副本；其中 USGS 和 ISC 的记录条数直接读自档案库元数据，而不是手工填写。",
   "No original research is published here.": "这里不发表原创研究。",
   "This is a place to read the field and to see the provenance of what is on screen.": "这里是一个读懂这个领域、看清屏幕上内容出处的地方。",
   "rows from USGS ANSS ComCat, M 2.0 and above": "条记录来自 USGS ANSS ComCat，M 2.0 及以上",
   "rows from the ISC Bulletin, M 3.0 and above, reviewed": "条记录来自 ISC 公报，M 3.0 及以上，已复核",
-  "the OpenAlex topic the reading list is drawn from": "阅读清单所依据的 OpenAlex 主题",
+  "OpenAlex topics the reading list is drawn from: core seismology and the machine-learning stream": "本阅读列表所依据的 OpenAlex 主题：地震学核心领域与机器学习方向",
   "Visit the Research Hub →": "访问研究中心 →",
   "What the planet did today, in the words of the people reporting it.": "地球今天做了什么，由报道它的人来讲。",
   "Earthquake coverage and seismology research news, gathered automatically and kept in one list rather than scattered across a dozen sites.": "地震报道与地震学研究新闻，自动汇集并集中在一份列表里，而不是散落在十几个网站上。",
@@ -529,7 +529,7 @@ WEL_I18N.load({
   "Holocene volcanoes, shown as an optional layer.": "全新世火山，作为可选图层显示。",
   "Coastlines, plate boundaries and administrative borders.": "海岸线、板块边界和行政边界。",
   "The satellite imagery on the globe and the Japan surface.": "地球仪和日本地表上的卫星影像。",
-  "Topic T13018, Seismology and Earthquake Studies — the source of the publication list on this page.": "主题 T13018，地震学与地震研究 — 本页论文清单的来源。",
+  "Topics T10110 and T13018 — core seismology and the machine-learning stream — the source of the publication list on this page.": "主题 T10110 与 T13018（地震学核心领域与机器学习方向）— 本页论文列表的来源。",
   "Loading coverage…": "正在加载报道…",
   "Events": "事件",
 
@@ -564,6 +564,16 @@ WEL_I18N.load({
   "Measuring Quakes": "测量地震",
   "Hazards & Effects": "灾害 & 影响",
   "Notable Earthquakes": "著名地震",
+
+  /* publications search */
+  "Search publications": "搜索论文",
+  "{n} results": "$1 条结果",
+  "1 result": "1 条结果",
+  "No publications match that search.": "没有符合搜索条件的论文。",
+  "Recent": "最新",
+  "{n} citations": "被引 $1 次",
+  "OpenAlex · two topics, the last {n} years of seismology.": "OpenAlex · 两个主题，近 $1 年的地震学。",
+  "OpenAlex · topic T13018, the last {n} years of seismology.": "OpenAlex · 主题 T13018，近 $1 年的地震学。",
 
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine

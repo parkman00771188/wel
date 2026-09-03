@@ -471,14 +471,14 @@ WEL_I18N.load({
   "The literature, and where every number here comes from.": "문헌, 그리고 이곳의 모든 숫자가 어디서 오는지.",
   "Two things, both of them checkable. A reading list that keeps itself current, and a plain statement of the sources behind the maps and the charts.": "두 가지, 둘 다 확인할 수 있습니다. 스스로 최신 상태를 유지하는 읽기 목록, 그리고 지도와 차트 뒤의 출처를 있는 그대로 밝힌 목록.",
   "Publications, collected automatically.": "논문, 자동으로 수집.",
-  "OpenAlex topic T13018, Seismology and Earthquake Studies, widened a page at a time on the same cycle as the earthquake data. Sort by citations, newest, oldest or title.": "OpenAlex 토픽 T13018 '지진학 및 지진 연구'를 지진 데이터와 같은 주기로 한 페이지씩 넓혀 갑니다. 인용 수·최신·오래된 순·제목으로 정렬.",
+  "Two OpenAlex topics — core seismology and the machine-learning stream — widened a page at a time on the same cycle as the earthquake data, with the newest papers from the major journals kept whatever their citation count. Search, then sort by citations, newest, oldest or title.": "OpenAlex 토픽 2개(지진학 핵심 분야와 기계학습 흐름)를 지진 데이터와 같은 주기로 한 페이지씩 넓혀 수집하며, 주요 학술지의 최신 논문은 인용 수와 무관하게 유지합니다. 검색한 뒤 인용 수, 최신순, 오래된 순, 제목순으로 정렬할 수 있습니다.",
   "Data sources, named.": "데이터 출처, 이름을 밝혀.",
   "The eight catalogues, reference layers and feeds this site actually reads, each linking to the original rather than to a copy, with the USGS and ISC row counts read from the archive metadata rather than typed in.": "이 사이트가 실제로 읽는 여덟 개의 카탈로그·참조 레이어·피드. 각각 복사본이 아닌 원본으로 연결되고, USGS와 ISC의 행 수는 직접 적은 것이 아니라 아카이브 메타데이터에서 읽어 옵니다.",
   "No original research is published here.": "여기서는 독자 연구를 발표하지 않습니다.",
   "This is a place to read the field and to see the provenance of what is on screen.": "이곳은 이 분야를 읽고, 화면에 있는 것의 출처를 확인하는 곳입니다.",
   "rows from USGS ANSS ComCat, M 2.0 and above": "USGS ANSS ComCat의 행 수, M 2.0 이상",
   "rows from the ISC Bulletin, M 3.0 and above, reviewed": "ISC Bulletin의 행 수, M 3.0 이상, 검토 완료",
-  "the OpenAlex topic the reading list is drawn from": "읽기 목록의 출처인 OpenAlex 토픽",
+  "OpenAlex topics the reading list is drawn from: core seismology and the machine-learning stream": "이 읽기 목록의 출처인 OpenAlex 토픽: 지진학 핵심 분야와 기계학습 흐름",
   "Visit the Research Hub →": "연구 허브 방문 →",
   "What the planet did today, in the words of the people reporting it.": "오늘 지구에서 일어난 일을, 보도하는 사람들의 말로.",
   "Earthquake coverage and seismology research news, gathered automatically and kept in one list rather than scattered across a dozen sites.": "지진 보도와 지진학 연구 뉴스를 자동으로 모아, 여러 사이트에 흩어진 채 두지 않고 한 목록에 담습니다.",
@@ -529,7 +529,7 @@ WEL_I18N.load({
   "Holocene volcanoes, shown as an optional layer.": "홀로세 화산, 선택 레이어로 표시.",
   "Coastlines, plate boundaries and administrative borders.": "해안선, 판 경계, 행정 경계.",
   "The satellite imagery on the globe and the Japan surface.": "지구본과 일본 지표면의 위성 영상.",
-  "Topic T13018, Seismology and Earthquake Studies — the source of the publication list on this page.": "토픽 T13018 '지진학 및 지진 연구' — 이 페이지 논문 목록의 출처.",
+  "Topics T10110 and T13018 — core seismology and the machine-learning stream — the source of the publication list on this page.": "토픽 T10110과 T13018(지진학 핵심 분야와 기계학습 흐름) — 이 페이지 논문 목록의 출처.",
   "Loading coverage…": "기사를 불러오는 중…",
   "Events": "지진 사건",
 
@@ -564,6 +564,16 @@ WEL_I18N.load({
   "Measuring Quakes": "지진 측정",
   "Hazards & Effects": "재해와 영향",
   "Notable Earthquakes": "주요 지진",
+
+  /* publications search */
+  "Search publications": "논문 검색",
+  "{n} results": "$1건",
+  "1 result": "1건",
+  "No publications match that search.": "검색 조건에 맞는 논문이 없습니다.",
+  "Recent": "최신",
+  "{n} citations": "인용 $1회",
+  "OpenAlex · two topics, the last {n} years of seismology.": "OpenAlex · 토픽 2개, 최근 $1년의 지진학.",
+  "OpenAlex · topic T13018, the last {n} years of seismology.": "OpenAlex · 토픽 T13018, 최근 $1년의 지진학.",
 
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine

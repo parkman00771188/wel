@@ -471,14 +471,14 @@ WEL_I18N.load({
   "The literature, and where every number here comes from.": "文献、そしてここにあるすべての数字の出どころ。",
   "Two things, both of them checkable. A reading list that keeps itself current, and a plain statement of the sources behind the maps and the charts.": "二つのこと、どちらも検証できます。自ら最新を保つ読書リストと、地図とグラフの背後にある出典をありのまま示したリスト。",
   "Publications, collected automatically.": "論文、自動収集。",
-  "OpenAlex topic T13018, Seismology and Earthquake Studies, widened a page at a time on the same cycle as the earthquake data. Sort by citations, newest, oldest or title.": "OpenAlexトピックT13018「地震学と地震研究」を、地震データと同じ周期で1ページずつ広げていきます。被引用数・新着・古い順・タイトルで並べ替え。",
+  "Two OpenAlex topics — core seismology and the machine-learning stream — widened a page at a time on the same cycle as the earthquake data, with the newest papers from the major journals kept whatever their citation count. Search, then sort by citations, newest, oldest or title.": "OpenAlexの2トピック（地震学の中核分野と機械学習の流れ）を、地震データと同じ周期で1ページずつ広げて収集し、主要誌の最新論文は被引用数に関係なく保持します。検索してから、被引用数・新着・古い順・タイトルで並べ替えられます。",
   "Data sources, named.": "データ出典、名前を明示。",
   "The eight catalogues, reference layers and feeds this site actually reads, each linking to the original rather than to a copy, with the USGS and ISC row counts read from the archive metadata rather than typed in.": "このサイトが実際に読み込む8つのカタログ・参照レイヤー・フィード。それぞれコピーではなく原本にリンクし、USGSとISCの行数は手で書いたものではなくアーカイブのメタデータから読み取ります。",
   "No original research is published here.": "ここで独自の研究を発表することはありません。",
   "This is a place to read the field and to see the provenance of what is on screen.": "ここはこの分野を読み、画面上にあるものの出所を確認する場所です。",
   "rows from USGS ANSS ComCat, M 2.0 and above": "USGS ANSS ComCatの行数、M2.0以上",
   "rows from the ISC Bulletin, M 3.0 and above, reviewed": "ISC Bulletinの行数、M3.0以上、審査済み",
-  "the OpenAlex topic the reading list is drawn from": "読書リストの出典となるOpenAlexトピック",
+  "OpenAlex topics the reading list is drawn from: core seismology and the machine-learning stream": "この読書リストの出典となるOpenAlexトピック：地震学の中核分野と機械学習の流れ",
   "Visit the Research Hub →": "研究ハブを見る →",
   "What the planet did today, in the words of the people reporting it.": "今日、地球で起きたことを、報じる人々の言葉で。",
   "Earthquake coverage and seismology research news, gathered automatically and kept in one list rather than scattered across a dozen sites.": "地震報道と地震学の研究ニュースを自動で集め、多数のサイトに散らばったままにせず一つのリストにまとめます。",
@@ -529,7 +529,7 @@ WEL_I18N.load({
   "Holocene volcanoes, shown as an optional layer.": "完新世の火山、オプションレイヤーとして表示。",
   "Coastlines, plate boundaries and administrative borders.": "海岸線、プレート境界、行政境界。",
   "The satellite imagery on the globe and the Japan surface.": "地球儀と日本の地表の衛星画像。",
-  "Topic T13018, Seismology and Earthquake Studies — the source of the publication list on this page.": "トピックT13018「地震学と地震研究」 — このページの論文リストの出典。",
+  "Topics T10110 and T13018 — core seismology and the machine-learning stream — the source of the publication list on this page.": "トピックT10110とT13018（地震学の中核分野と機械学習の流れ）— このページの論文リストの出典。",
   "Loading coverage…": "記事を読み込み中…",
   "Events": "地震",
 
@@ -564,6 +564,16 @@ WEL_I18N.load({
   "Measuring Quakes": "地震の測定",
   "Hazards & Effects": "災害 & 影響",
   "Notable Earthquakes": "主な地震",
+
+  /* publications search */
+  "Search publications": "論文を検索",
+  "{n} results": "$1件",
+  "1 result": "1件",
+  "No publications match that search.": "検索条件に一致する論文はありません。",
+  "Recent": "新着",
+  "{n} citations": "被引用 $1回",
+  "OpenAlex · two topics, the last {n} years of seismology.": "OpenAlex · 2トピック、直近$1年の地震学。",
+  "OpenAlex · topic T13018, the last {n} years of seismology.": "OpenAlex · トピック T13018、直近$1年の地震学。",
 
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine

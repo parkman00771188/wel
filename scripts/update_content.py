@@ -42,10 +42,39 @@ NEWS_PATH = OUT_DIR / "news.json"
 CONTACT = "parkman@mindsai.co.kr"
 UA = f"world-earthquake-labs/1.0 (+https://github.com/parkman00771188/wel; {CONTACT})"
 
-OPENALEX_TOPIC = "T13018"      # Seismology and Earthquake Studies
+# Two OpenAlex topics, core first. T10110 is the seismology canon -- JGR Solid
+# Earth, GRL, SRL, BSSA, GJI, Tectonophysics, EPSL. T13018 sits under the
+# Artificial Intelligence subfield and carries the phase-picking and deep-
+# learning stream (PhaseNet, EQTransformer); useful, but it was the only source
+# for a long time, which is why the list read like a machine-learning venue.
+OPENALEX_TOPICS = [
+    ("T10110", "earthquake and tectonic studies"),
+    ("T13018", "Seismology and Earthquake Studies"),
+]
+OPENALEX_TOPIC = OPENALEX_TOPICS[0][0]   # kept for anything that imports it
 PAPER_YEARS = 10
 PAPER_PAGE_SIZE = 50
-PAPER_CAP = 300
+PAPER_CAP = 300        # the most-cited pool
+PAPER_RECENT = 80      # the protected recent pool, newest first
+PAPER_CITED_PAGES = 20 # how far down the citation ranking the widening loop goes
+
+# Venues the recent pool draws from. The newest stream of either topic is noisy
+# -- aggregators, out-of-field journals, deposits -- and a paper with no
+# citations yet has nothing else to vouch for it, so the venue does. Matched on
+# a normalised substring so OpenAlex's spelling variants all count.
+CANON_VENUES = (
+    "journal of geophysical research solid earth", "geophysical research letters",
+    "seismological research letters", "bulletin of the seismological society of america",
+    "geophysical journal international", "tectonophysics", "earth and planetary science letters",
+    "earth planets and space", "seismica", "nature geoscience", "nature communications",
+    "science advances", "nature", "science", "journal of seismology", "pure and applied geophysics",
+    "earthquake spectra", "soil dynamics and earthquake engineering", "earthquake engineering & structural dynamics",
+    "bulletin of earthquake engineering", "geophysics", "journal of geophysical research",
+    "geology", "tectonics", "earth-science reviews", "reviews of geophysics",
+    "seismological society of america", "geochemistry geophysics geosystems", "scientific reports",
+)
+# Deposits and aggregators, not papers: a copy of something published elsewhere.
+REPOSITORY_VENUES = ("zenodo", "figshare", "institutional repositor", "irdb", "doaj", "arxiv", "ssrn", "preprint")
 NEWS_CAP = 300
 
 # Seeding queries, then one of them per cycle so the archive keeps widening
@@ -151,10 +180,12 @@ def rebuild_abstract(index: dict | None) -> str:
     return clean(" ".join(word for _, word in slots), 320)
 
 
-def openalex_page(sort: str, page: int) -> list[dict]:
+def openalex_page(sort: str, page: int, topic: str = OPENALEX_TOPIC) -> list[dict]:
     since = (datetime.now(timezone.utc) - timedelta(days=365 * PAPER_YEARS)).date().isoformat()
     query = urllib.parse.urlencode({
-        "filter": f"primary_topic.id:{OPENALEX_TOPIC},from_publication_date:{since},type:article",
+        # is_retracted is OpenAlex's own flag; the title guard in paper_row
+        # catches the ones it has not caught up with yet.
+        "filter": f"primary_topic.id:{topic},from_publication_date:{since},type:article,is_retracted:false",
         "sort": sort,
         "per-page": PAPER_PAGE_SIZE,
         "page": page,
@@ -169,9 +200,17 @@ def openalex_page(sort: str, page: int) -> list[dict]:
         return []
 
 
+def venue_is(names: tuple, venue: str) -> bool:
+    key = re.sub(r"[^a-z0-9& ]+", " ", (venue or "").lower())
+    key = re.sub(r"\s+", " ", key).strip()
+    return any(n in key for n in names)
+
+
 def paper_row(work: dict) -> dict | None:
     title = clean(work.get("display_name") or "", 240)
     if not title:
+        return None
+    if work.get("is_retracted") or title.upper().startswith("RETRACTED"):
         return None
     authorships = work.get("authorships") or []
     names = [a.get("author", {}).get("display_name") for a in authorships[:3]]
@@ -191,54 +230,92 @@ def paper_row(work: dict) -> dict | None:
         "open_access": bool((work.get("open_access") or {}).get("is_oa")),
         "url": doi or (work.get("primary_location") or {}).get("landing_page_url") or "",
         "abstract": rebuild_abstract(work.get("abstract_inverted_index")),
+        "topic": ((work.get("primary_topic") or {}).get("id") or "").rsplit("/", 1)[-1],
     }
 
 
 def refresh_papers() -> bool:
     store = read_json(PAPERS_PATH)
     items: list[dict] = store.get("items") or []
-    seen = {row.get("id") for row in items}
-    seeded = bool(items)
-    cursor = int(store.get("next_page") or 1)
+    seeded = store.get("schema") == 2 and bool(items)
+    # One citation cursor per topic, so each ranking is walked on its own.
+    cursors: dict = dict(store.get("cursors") or {})
+    for topic, _ in OPENALEX_TOPICS:
+        cursors.setdefault(topic, 1)
 
     works: list[dict] = []
     if not seeded:
-        # First run: four pages of the most-cited decade, so the hub opens full.
-        print(f"[content] 논문 최초 수집 - 최근 {PAPER_YEARS}년 피인용 상위")
-        for page in range(1, 5):
-            works += openalex_page("cited_by_count:desc", page)
-        cursor = 5
+        # First run under this schema: the most-cited pages of both topics, so
+        # the hub opens full, then the newest page of each for the recent pool.
+        print(f"[content] 논문 재수집 - 두 토픽, 최근 {PAPER_YEARS}년 피인용 상위 + 최신")
+        for topic, _ in OPENALEX_TOPICS:
+            for page in range(1, 5):
+                works += openalex_page("cited_by_count:desc", page, topic)
+            works += openalex_page("publication_date:desc", 1, topic)
+            works += openalex_page("publication_date:desc", 2, topic)
+            cursors[topic] = 5
+        items = []   # the old single-topic store is replaced, not merged
     else:
-        works += openalex_page("publication_date:desc", 1)     # 새로 나온 것
-        works += openalex_page("cited_by_count:desc", cursor)  # 아직 안 본 다음 장
-        cursor = cursor + 1 if cursor < 20 else 1              # 상위 1000편 한 바퀴
+        for topic, _ in OPENALEX_TOPICS:
+            works += openalex_page("publication_date:desc", 1, topic)          # what is new
+            works += openalex_page("cited_by_count:desc", cursors[topic], topic)  # the next unseen page
+            cursors[topic] = cursors[topic] + 1 if cursors[topic] < PAPER_CITED_PAGES else 1
 
+    seen_ids = {row.get("id") for row in items}
+    seen_titles = {title_key(row.get("title")) for row in items}
     added = 0
     for work in works:
         row = paper_row(work)
-        if not row or not row["id"] or row["id"] in seen:
+        if not row or not row["id"] or row["id"] in seen_ids:
             continue
-        seen.add(row["id"])
+        # A copy in a repository is not another paper.
+        if venue_is(REPOSITORY_VENUES, row["venue"]):
+            continue
+        # The same paper reaches both topics now and then; the id differs only
+        # when OpenAlex has two records for it, so match on the title as well.
+        tkey = title_key(row["title"])
+        if tkey and tkey in seen_titles:
+            continue
+        seen_ids.add(row["id"])
+        seen_titles.add(tkey)
         items.append(row)
         added += 1
 
-    if not added:
+    if not added and seeded:
         print(f"[content] 새 논문 없음 (보관 {len(items):,}편)")
         return False
 
-    # 인용수 높은 순으로 두되, 같은 값이면 최신이 앞으로
+    # Two pools. The most-cited pool is the list as it always was. The recent
+    # pool is the newest papers from canonical venues, kept whatever their
+    # citation count -- which is what "recent" means -- and flagged so the page
+    # can say so. A paper in both is stored once.
+    by_cited = sorted(items, key=lambda r: (r.get("cited") or 0, r.get("date") or ""), reverse=True)
+    cited_pool = by_cited[:PAPER_CAP]
+    recent_pool = sorted(
+        (r for r in items if venue_is(CANON_VENUES, r.get("venue"))),
+        key=lambda r: r.get("date") or "", reverse=True,
+    )[:PAPER_RECENT]
+    recent_ids = {r["id"] for r in recent_pool}
+    keep = {r["id"]: r for r in cited_pool}
+    for r in recent_pool:
+        keep.setdefault(r["id"], r)
+    items = list(keep.values())
+    for r in items:
+        r["recent"] = r["id"] in recent_ids
     items.sort(key=lambda r: (r.get("cited") or 0, r.get("date") or ""), reverse=True)
-    del items[PAPER_CAP:]
+
     write_json(PAPERS_PATH, {
-        "schema": 1,
+        "schema": 2,
         "generated_utc": utc_now(),
-        "source": f"OpenAlex - topic {OPENALEX_TOPIC} (Seismology and Earthquake Studies)",
+        "source": "OpenAlex - topics " + ", ".join(f"{t} ({n})" for t, n in OPENALEX_TOPICS),
+        "topics": [t for t, _ in OPENALEX_TOPICS],
         "window_years": PAPER_YEARS,
-        "next_page": cursor,
+        "cursors": cursors,
         "count": len(items),
+        "recent_count": len(recent_pool),
         "items": items,
     })
-    print(f"[content] 논문 +{added}편 (보관 {len(items):,}편)")
+    print(f"[content] 논문 +{added}편 (보관 {len(items):,}편, 최신 풀 {len(recent_pool)}편)")
     return True
 
 

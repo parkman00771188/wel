@@ -471,14 +471,14 @@ WEL_I18N.load({
   "The literature, and where every number here comes from.": "Literatür ve buradaki her sayının kaynağı.",
   "Two things, both of them checkable. A reading list that keeps itself current, and a plain statement of the sources behind the maps and the charts.": "İki şey, ikisi de denetlenebilir. Kendini güncel tutan bir okuma listesi ve haritaların ve grafiklerin arkasındaki kaynakların açıkça belirtilmesi.",
   "Publications, collected automatically.": "Otomatik olarak toplanan yayınlar.",
-  "OpenAlex topic T13018, Seismology and Earthquake Studies, widened a page at a time on the same cycle as the earthquake data. Sort by citations, newest, oldest or title.": "OpenAlex konusu T13018, Sismoloji ve Deprem Çalışmaları; deprem verileriyle aynı döngüde sayfa sayfa genişletilir. Atıfa, en yeniye, en eskiye veya başlığa göre sıralayın.",
+  "Two OpenAlex topics — core seismology and the machine-learning stream — widened a page at a time on the same cycle as the earthquake data, with the newest papers from the major journals kept whatever their citation count. Search, then sort by citations, newest, oldest or title.": "İki OpenAlex konusu — çekirdek sismoloji ve makine öğrenmesi akımı — deprem verileriyle aynı döngüde her seferinde bir sayfa genişletilir; büyük dergilerin en yeni makaleleri atıf sayısına bakılmadan tutulur. Arayın, sonra atıf, en yeni, en eski ya da başlığa göre sıralayın.",
   "Data sources, named.": "Veri kaynakları, adıyla.",
   "The eight catalogues, reference layers and feeds this site actually reads, each linking to the original rather than to a copy, with the USGS and ISC row counts read from the archive metadata rather than typed in.": "Bu sitenin gerçekten okuduğu sekiz katalog, referans katman ve akış; her biri bir kopyaya değil özgün kaynağa bağlanır. USGS ve ISC satır sayıları elle yazılmaz, arşiv üst verisinden okunur.",
   "No original research is published here.": "Burada özgün araştırma yayımlanmaz.",
   "This is a place to read the field and to see the provenance of what is on screen.": "Burası alanı okumak ve ekrandakinin kaynağını görmek için bir yerdir.",
   "rows from USGS ANSS ComCat, M 2.0 and above": "USGS ANSS ComCat'ten satır, M 2.0 ve üzeri",
   "rows from the ISC Bulletin, M 3.0 and above, reviewed": "ISC Bülteni'nden satır, M 3.0 ve üzeri, incelenmiş",
-  "the OpenAlex topic the reading list is drawn from": "okuma listesinin çekildiği OpenAlex konusu",
+  "OpenAlex topics the reading list is drawn from: core seismology and the machine-learning stream": "okuma listesinin alındığı OpenAlex konuları: çekirdek sismoloji ve makine öğrenmesi akımı",
   "Visit the Research Hub →": "Araştırma Merkezine git →",
   "What the planet did today, in the words of the people reporting it.": "Gezegenin bugün ne yaptığı, haberi verenlerin sözleriyle.",
   "Earthquake coverage and seismology research news, gathered automatically and kept in one list rather than scattered across a dozen sites.": "Deprem haberleri ve sismoloji araştırma haberleri; onlarca siteye dağılmak yerine otomatik toplanıp tek bir listede tutulur.",
@@ -529,7 +529,7 @@ WEL_I18N.load({
   "Holocene volcanoes, shown as an optional layer.": "Holosen yanardağları, isteğe bağlı bir katman olarak gösterilir.",
   "Coastlines, plate boundaries and administrative borders.": "Kıyı çizgileri, levha sınırları ve idari sınırlar.",
   "The satellite imagery on the globe and the Japan surface.": "Küre ve Japonya yüzeyindeki uydu görüntüleri.",
-  "Topic T13018, Seismology and Earthquake Studies — the source of the publication list on this page.": "Konu T13018, Sismoloji ve Deprem Çalışmaları — bu sayfadaki yayın listesinin kaynağı.",
+  "Topics T10110 and T13018 — core seismology and the machine-learning stream — the source of the publication list on this page.": "T10110 ve T13018 konuları — çekirdek sismoloji ve makine öğrenmesi akımı — bu sayfadaki yayın listesinin kaynağı.",
   "Loading coverage…": "Haberler yükleniyor…",
   "Events": "Olaylar",
 
@@ -564,6 +564,16 @@ WEL_I18N.load({
   "Measuring Quakes": "Deprem Ölçümü",
   "Hazards & Effects": "Tehlikeler & Etkiler",
   "Notable Earthquakes": "Önemli Depremler",
+
+  /* publications search */
+  "Search publications": "Yayın ara",
+  "{n} results": "$1 sonuç",
+  "1 result": "1 sonuç",
+  "No publications match that search.": "Bu aramayla eşleşen yayın yok.",
+  "Recent": "Yeni",
+  "{n} citations": "$1 atıf",
+  "OpenAlex · two topics, the last {n} years of seismology.": "OpenAlex · iki konu, sismolojinin son $1 yılı.",
+  "OpenAlex · topic T13018, the last {n} years of seismology.": "OpenAlex · T13018 konusu, sismolojinin son $1 yılı.",
 
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine

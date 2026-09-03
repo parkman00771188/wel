@@ -471,14 +471,14 @@ WEL_I18N.load({
   "The literature, and where every number here comes from.": "Literaturnya, dan asal setiap angka di sini.",
   "Two things, both of them checkable. A reading list that keeps itself current, and a plain statement of the sources behind the maps and the charts.": "Dua hal, keduanya dapat diperiksa. Daftar bacaan yang selalu memperbarui dirinya, dan pernyataan terus terang tentang sumber di balik peta dan grafik.",
   "Publications, collected automatically.": "Publikasi, dikumpulkan otomatis.",
-  "OpenAlex topic T13018, Seismology and Earthquake Studies, widened a page at a time on the same cycle as the earthquake data. Sort by citations, newest, oldest or title.": "Topik OpenAlex T13018, Seismology and Earthquake Studies, diperluas satu halaman demi satu halaman pada siklus yang sama dengan data gempa. Urutkan menurut sitasi, terbaru, terlama, atau judul.",
+  "Two OpenAlex topics — core seismology and the machine-learning stream — widened a page at a time on the same cycle as the earthquake data, with the newest papers from the major journals kept whatever their citation count. Search, then sort by citations, newest, oldest or title.": "Dua topik OpenAlex — seismologi inti dan arus pembelajaran mesin — diperluas satu halaman setiap kali pada siklus yang sama dengan data gempa, dengan makalah terbaru dari jurnal utama tetap dipertahankan berapa pun sitasinya. Cari, lalu urutkan berdasarkan sitasi, terbaru, terlama, atau judul.",
   "Data sources, named.": "Sumber data, disebutkan.",
   "The eight catalogues, reference layers and feeds this site actually reads, each linking to the original rather than to a copy, with the USGS and ISC row counts read from the archive metadata rather than typed in.": "Delapan katalog, lapisan rujukan, dan umpan yang benar-benar dibaca situs ini, masing-masing tertaut ke aslinya, bukan ke salinan, dengan jumlah baris USGS dan ISC yang dibaca dari metadata arsip alih-alih diketik manual.",
   "No original research is published here.": "Tidak ada riset orisinal yang diterbitkan di sini.",
   "This is a place to read the field and to see the provenance of what is on screen.": "Ini tempat untuk membaca perkembangan bidang ini dan melihat asal-usul apa yang tampil di layar.",
   "rows from USGS ANSS ComCat, M 2.0 and above": "baris dari USGS ANSS ComCat, M 2.0 ke atas",
   "rows from the ISC Bulletin, M 3.0 and above, reviewed": "baris dari Buletin ISC, M 3.0 ke atas, sudah ditinjau",
-  "the OpenAlex topic the reading list is drawn from": "topik OpenAlex tempat daftar bacaan diambil",
+  "OpenAlex topics the reading list is drawn from: core seismology and the machine-learning stream": "topik OpenAlex yang menjadi sumber daftar bacaan ini: seismologi inti dan arus pembelajaran mesin",
   "Visit the Research Hub →": "Kunjungi Pusat Riset →",
   "What the planet did today, in the words of the people reporting it.": "Apa yang dilakukan planet ini hari ini, dalam kata-kata mereka yang melaporkannya.",
   "Earthquake coverage and seismology research news, gathered automatically and kept in one list rather than scattered across a dozen sites.": "Liputan gempa bumi dan berita riset seismologi, dikumpulkan otomatis dan disimpan dalam satu daftar alih-alih tersebar di belasan situs.",
@@ -529,7 +529,7 @@ WEL_I18N.load({
   "Holocene volcanoes, shown as an optional layer.": "Gunung api Holosen, ditampilkan sebagai lapisan opsional.",
   "Coastlines, plate boundaries and administrative borders.": "Garis pantai, batas lempeng, dan batas administrasi.",
   "The satellite imagery on the globe and the Japan surface.": "Citra satelit pada globe dan permukaan Jepang.",
-  "Topic T13018, Seismology and Earthquake Studies — the source of the publication list on this page.": "Topik T13018, Seismology and Earthquake Studies — sumber daftar publikasi di halaman ini.",
+  "Topics T10110 and T13018 — core seismology and the machine-learning stream — the source of the publication list on this page.": "Topik T10110 dan T13018 — seismologi inti dan arus pembelajaran mesin — sumber daftar publikasi di halaman ini.",
   "Loading coverage…": "Memuat cakupan…",
   "Events": "Kejadian",
 
@@ -564,6 +564,16 @@ WEL_I18N.load({
   "Measuring Quakes": "Mengukur Gempa",
   "Hazards & Effects": "Bahaya & Dampak",
   "Notable Earthquakes": "Gempa Penting",
+
+  /* publications search */
+  "Search publications": "Cari publikasi",
+  "{n} results": "$1 hasil",
+  "1 result": "1 hasil",
+  "No publications match that search.": "Tidak ada publikasi yang cocok dengan pencarian.",
+  "Recent": "Terbaru",
+  "{n} citations": "$1 sitasi",
+  "OpenAlex · two topics, the last {n} years of seismology.": "OpenAlex · dua topik, $1 tahun terakhir seismologi.",
+  "OpenAlex · topic T13018, the last {n} years of seismology.": "OpenAlex · topik T13018, $1 tahun terakhir seismologi.",
 
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine

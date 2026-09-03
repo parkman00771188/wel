@@ -90,6 +90,10 @@
       <div class="card" id="secPubs">
         <div class="card-head">
           <div class="card-title" style="font-size:17px">Publications</div>
+          <label class="select-chip pub-search">
+            <i data-icon="filter" data-size="15"></i>
+            <input type="search" id="pubSearch" placeholder="Search publications" aria-label="Search publications" autocomplete="off">
+          </label>
           <label class="select-chip pub-sort">
             <span class="lbl">Sort</span>
             <select id="pubSort">
@@ -101,6 +105,7 @@
           </label>
         </div>
         <p class="card-sub" id="pubSource"></p>
+        <p class="pub-count" id="pubMatch" hidden></p>
         <!-- Filled from data/papers.json, refreshed on the same 10-minute
              cycle as the earthquake data (scripts/update_content.py). -->
         <div class="pub-grid" id="pubGrid"></div>

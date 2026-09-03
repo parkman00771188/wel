@@ -41,7 +41,7 @@
       note: "The satellite imagery on the globe and the Japan surface." },
     { name: "OpenAlex", tag: "Literature",
       url: "https://openalex.org/",
-      note: "Topic T13018, Seismology and Earthquake Studies — the source of the publication list on this page." }
+      note: "Topics T10110 and T13018 — core seismology and the machine-learning stream — the source of the publication list on this page." }
   ];
 
   var grid = document.getElementById("pubGrid");
@@ -52,8 +52,11 @@
   var countEl = document.getElementById("pubCount");
   var sourceEl = document.getElementById("pubSource");
 
-  var items = [];
+  var items = [];      // every paper the store holds
+  var listed = [];     // the ones that match the search box, in the chosen order
   var shown = 0;
+  var searchEl = document.getElementById("pubSearch");
+  var matchEl = document.getElementById("pubMatch");
 
   function escapeHTML(value) {
     return String(value == null ? "" : value)
@@ -117,32 +120,64 @@
       ? '<span class="pub-cites">' + p.cited.toLocaleString() + " citations</span>"
       : "";
     var oa = p.open_access ? '<span class="pub-oa">Open access</span>' : "";
+    // Papers in the recent pool are there for being new, not for being cited;
+    // say so, or a card with no citation count looks like an oversight.
+    var recent = p.recent ? '<span class="pub-recent">Recent</span>' : "";
     var body = '<div class="pub-title">' + escapeHTML(p.title) + "</div>"
       + (p.authors ? '<div class="pub-authors">' + escapeHTML(p.authors) + "</div>" : "")
       + (meta ? '<div class="pub-meta">' + meta + "</div>" : "")
-      + (cites || oa ? '<div class="pub-badges">' + cites + oa + "</div>" : "");
+      + (cites || oa || recent ? '<div class="pub-badges">' + recent + cites + oa + "</div>" : "");
     return p.url
       ? '<a class="pub" href="' + escapeHTML(p.url) + '" target="_blank" rel="noopener">' + body + "</a>"
       : '<div class="pub">' + body + "</div>";
   }
 
   function draw() {
-    grid.innerHTML = items.slice(0, shown).map(card).join("");
-    moreRow.hidden = shown >= items.length;
+    grid.innerHTML = listed.length
+      ? listed.slice(0, shown).map(card).join("")
+      : '<p class="pub-empty">No publications match that search.</p>';
+    moreRow.hidden = shown >= listed.length;
+    if (matchEl) {
+      var q = searchEl && searchEl.value.trim();
+      matchEl.hidden = !q;
+      if (q) matchEl.textContent = listed.length === 1 ? "1 result" : listed.length.toLocaleString() + " results";
+    }
+  }
+
+  /* Plain substring match over everything a reader might remember a paper by.
+     Each word has to appear somewhere, in any field, in any order. */
+  function haystack(p) {
+    return [p.title, p.authors, p.venue, p.abstract, p.year].filter(Boolean).join(" \u0001 ").toLowerCase();
+  }
+  function matches(p, words) {
+    var h = p._hay || (p._hay = haystack(p));
+    for (var i = 0; i < words.length; i++) if (h.indexOf(words[i]) === -1) return false;
+    return true;
   }
 
   function applySort() {
-    items.sort(SORTS[sortSel.value] || SORTS.cited);
-    // A new ordering is a new list; showing page four of it would be arbitrary.
-    shown = Math.min(PAGE, items.length);
+    var q = (searchEl && searchEl.value || "").trim().toLowerCase();
+    var words = q ? q.split(/\s+/) : [];
+    listed = words.length ? items.filter(function (p) { return matches(p, words); }) : items.slice();
+    listed.sort(SORTS[sortSel.value] || SORTS.cited);
+    // A new ordering or a new query is a new list; page four of it would be arbitrary.
+    shown = Math.min(PAGE, listed.length);
     draw();
   }
 
   moreBtn.addEventListener("click", function () {
-    shown = Math.min(shown + PAGE, items.length);
+    shown = Math.min(shown + PAGE, listed.length);
     draw();
   });
   sortSel.addEventListener("change", applySort);
+  if (searchEl) {
+    var searchTimer = 0;
+    searchEl.addEventListener("input", function () {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(applySort, 120);
+    });
+    searchEl.addEventListener("search", applySort);   // the clear button on the field
+  }
 
   /* ---------- data sources ---------- */
 
@@ -181,8 +216,9 @@
       }
       if (countEl) countEl.textContent = items.length.toLocaleString();
       if (sourceEl) {
-        sourceEl.textContent = "OpenAlex · topic T13018, the last "
-          + (payload.window_years || 10) + " years of seismology.";
+        sourceEl.textContent = (payload.topics && payload.topics.length > 1)
+          ? "OpenAlex \u00b7 two topics, the last " + (payload.window_years || 10) + " years of seismology."
+          : "OpenAlex \u00b7 topic T13018, the last " + (payload.window_years || 10) + " years of seismology.";
       }
       applySort();
     })

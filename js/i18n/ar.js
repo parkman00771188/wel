@@ -471,14 +471,14 @@ WEL_I18N.load({
   "The literature, and where every number here comes from.": "الأدبيات، ومن أين يأتي كل رقم هنا.",
   "Two things, both of them checkable. A reading list that keeps itself current, and a plain statement of the sources behind the maps and the charts.": "شيئان، كلاهما قابل للتحقق. قائمة قراءة تُحدّث نفسها، وبيان صريح بالمصادر وراء الخرائط والرسوم البيانية.",
   "Publications, collected automatically.": "منشورات، مجموعة تلقائيًا.",
-  "OpenAlex topic T13018, Seismology and Earthquake Studies, widened a page at a time on the same cycle as the earthquake data. Sort by citations, newest, oldest or title.": "موضوع OpenAlex رقم T13018، علم الزلازل ودراسات الزلازل، يتوسع صفحةً صفحة على دورة بيانات الزلازل نفسها. رتّب حسب الاستشهادات أو الأحدث أو الأقدم أو العنوان.",
+  "Two OpenAlex topics — core seismology and the machine-learning stream — widened a page at a time on the same cycle as the earthquake data, with the newest papers from the major journals kept whatever their citation count. Search, then sort by citations, newest, oldest or title.": "موضوعان في OpenAlex — علم الزلازل الأساسي وتيار التعلم الآلي — يُوسَّعان صفحةً في كل مرة على الدورة نفسها التي تُحدَّث بها بيانات الزلازل، مع الاحتفاظ بأحدث الأوراق من المجلات الكبرى أيًا كان عدد استشهاداتها. ابحث، ثم رتّب حسب الاستشهادات أو الأحدث أو الأقدم أو العنوان.",
   "Data sources, named.": "مصادر البيانات، مسمّاة.",
   "The eight catalogues, reference layers and feeds this site actually reads, each linking to the original rather than to a copy, with the USGS and ISC row counts read from the archive metadata rather than typed in.": "الفهارس والطبقات المرجعية والتغذيات الثمانية التي يقرأها هذا الموقع فعلًا، ويرتبط كل منها بالأصل لا بنسخة، مع قراءة أعداد صفوف USGS و ISC من بيانات الأرشيف الوصفية بدل كتابتها يدويًا.",
   "No original research is published here.": "لا تُنشر هنا أبحاث أصلية.",
   "This is a place to read the field and to see the provenance of what is on screen.": "هذا مكان لقراءة المجال ولمعرفة منشأ ما يظهر على الشاشة.",
   "rows from USGS ANSS ComCat, M 2.0 and above": "صف من USGS ANSS ComCat، M 2.0 وما فوق",
   "rows from the ISC Bulletin, M 3.0 and above, reviewed": "صف من نشرة ISC، M 3.0 وما فوق، مراجَعة",
-  "the OpenAlex topic the reading list is drawn from": "موضوع OpenAlex الذي تُستمد منه قائمة القراءة",
+  "OpenAlex topics the reading list is drawn from: core seismology and the machine-learning stream": "موضوعا OpenAlex اللذان تُستمد منهما قائمة القراءة: علم الزلازل الأساسي وتيار التعلم الآلي",
   "Visit the Research Hub →": "زر مركز الأبحاث →",
   "What the planet did today, in the words of the people reporting it.": "ما فعله الكوكب اليوم، بكلمات من ينقلونه.",
   "Earthquake coverage and seismology research news, gathered automatically and kept in one list rather than scattered across a dozen sites.": "تغطية الزلازل وأخبار أبحاث علم الزلازل، مجموعة تلقائيًا ومحفوظة في قائمة واحدة بدل تشتتها في عشرات المواقع.",
@@ -529,7 +529,7 @@ WEL_I18N.load({
   "Holocene volcanoes, shown as an optional layer.": "براكين الهولوسين، تُعرض كطبقة اختيارية.",
   "Coastlines, plate boundaries and administrative borders.": "خطوط السواحل وحدود الصفائح والحدود الإدارية.",
   "The satellite imagery on the globe and the Japan surface.": "صور الأقمار الصناعية على الكرة وعلى سطح اليابان.",
-  "Topic T13018, Seismology and Earthquake Studies — the source of the publication list on this page.": "الموضوع T13018، علم الزلازل ودراسات الزلازل — مصدر قائمة المنشورات في هذه الصفحة.",
+  "Topics T10110 and T13018 — core seismology and the machine-learning stream — the source of the publication list on this page.": "الموضوعان T10110 وT13018 — علم الزلازل الأساسي وتيار التعلم الآلي — مصدر قائمة المنشورات في هذه الصفحة.",
   "Loading coverage…": "جارٍ تحميل التغطية…",
   "Events": "الأحداث",
 
@@ -564,6 +564,16 @@ WEL_I18N.load({
   "Measuring Quakes": "قياس الزلازل",
   "Hazards & Effects": "المخاطر & الآثار",
   "Notable Earthquakes": "زلازل بارزة",
+
+  /* publications search */
+  "Search publications": "ابحث في المنشورات",
+  "{n} results": "$1 نتيجة",
+  "1 result": "نتيجة واحدة",
+  "No publications match that search.": "لا توجد منشورات تطابق هذا البحث.",
+  "Recent": "حديث",
+  "{n} citations": "$1 استشهادًا",
+  "OpenAlex · two topics, the last {n} years of seismology.": "OpenAlex · موضوعان، آخر $1 سنة من علم الزلازل.",
+  "OpenAlex · topic T13018, the last {n} years of seismology.": "OpenAlex · الموضوع T13018، آخر $1 سنة من علم الزلازل.",
 
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine

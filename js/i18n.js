@@ -159,6 +159,14 @@
       var out = translate(n.nodeValue);
       if (out !== null) n.nodeValue = out;
     }
+    /* Two attributes are read as text too: a field's placeholder and a
+       control's spoken label. Nothing else on the site puts prose in one. */
+    var els = root.nodeType === 1 ? root.querySelectorAll("[placeholder],[aria-label]") : [];
+    for (var i = 0; i < els.length; i++) {
+      var ph = els[i].getAttribute("placeholder"), al = els[i].getAttribute("aria-label"), t;
+      if (ph && (t = translate(ph)) !== null) els[i].setAttribute("placeholder", t);
+      if (al && (t = translate(al)) !== null) els[i].setAttribute("aria-label", t);
+    }
     applying = false;
   }
 
