@@ -75,7 +75,10 @@ CANON_VENUES = (
 )
 # Deposits and aggregators, not papers: a copy of something published elsewhere.
 REPOSITORY_VENUES = ("zenodo", "figshare", "institutional repositor", "irdb", "doaj", "arxiv", "ssrn", "preprint")
-NEWS_CAP = 300
+# The page shows thirty a page, so the store need not be small; about a year
+# of headlines at the current rate. The cap exists only so the file cannot
+# grow without bound -- the oldest go first.
+NEWS_CAP = 3000
 
 # Seeding queries, then one of them per cycle so the archive keeps widening
 # instead of re-reading the same front page forever.

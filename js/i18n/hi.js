@@ -608,6 +608,7 @@ WEL_I18N.load({
   "No updates yet.": "अभी कोई अपडेट नहीं।",
 
   /* news hub 2 */
+  "Page {n} of {n}": "पृष्ठ $1 / $2",
   "Latest papers": "नवीनतम शोधपत्र",
   "Latest earthquakes": "नवीनतम भूकंप",
   "The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.": "संग्राहक द्वारा हाल में जोड़े गए प्रमुख पत्रिकाओं के शोधपत्र। खोज सहित पूरी सूची रिसर्च हब में है।",

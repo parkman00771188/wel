@@ -608,6 +608,7 @@ WEL_I18N.load({
   "No updates yet.": "まだ更新はありません。",
 
   /* news hub 2 */
+  "Page {n} of {n}": "$1 / $2ページ",
   "Latest papers": "最新の論文",
   "Latest earthquakes": "最新の地震",
   "The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.": "収集器が最近追加した主要誌の論文です。検索できる全リストはリサーチハブにあります。",

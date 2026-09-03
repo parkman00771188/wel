@@ -2618,6 +2618,13 @@ a.upd-row:hover .upd-title { color: var(--blue-600); }
 .upd-type.paper { background: var(--green-050); color: var(--green-500); }
 .upd-type.quake { background: #fff3e0; color: #b45d12; font-variant-numeric: tabular-nums; }
 .upd-by .pub-oa { font-size: 11px; padding: 1px 7px; border-radius: 20px; }
+.upd-pager {
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  padding: 18px 0 4px; border-top: 1px solid var(--line-soft);
+}
+.upd-pager .btn { padding: 8px 16px; font-size: 13px; }
+.upd-pager .btn[disabled] { opacity: .45; cursor: default; }
+.upd-page { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
 @media (max-width: 680px) {
   /* The pill and the time share the first line; the title takes the next. */
   .upd-row { flex-wrap: wrap; row-gap: 6px; }

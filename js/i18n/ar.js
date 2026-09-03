@@ -608,6 +608,7 @@ WEL_I18N.load({
   "No updates yet.": "لا توجد تحديثات بعد.",
 
   /* news hub 2 */
+  "Page {n} of {n}": "الصفحة $1 من $2",
   "Latest papers": "أحدث الأوراق",
   "Latest earthquakes": "أحدث الزلازل",
   "The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.": "أحدث الأوراق التي أضافها المجمِّع من المجلات الكبرى. القائمة الكاملة مع البحث في مركز الأبحاث.",

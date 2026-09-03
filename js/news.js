@@ -35,13 +35,13 @@
   // hourly, and hide the papers, which arrive weekly.
   var OVERVIEW_CAP = { news: 8, paper: 4, quake: 4 };
   var OVERVIEW_MIN_MAG = 4.5;   // an overview row is an earthquake worth a headline
-  var PAPERS_SHOWN = 40;
-  var QUAKES_SHOWN = 50;
+  var PAGE = 30;                // rows per page in the News, Papers and Earthquakes views
 
   var feed = byId("newsFeed");
   var items = [];          // news rows
   var current = "all";     // news category
   var quakeFloor = 0;      // Earthquakes view: minimum magnitude
+  var page = { news: 0, papers: 0, quakes: 0 };   // current page per view
   var stores = { news: null, papers: null, live: null, meta: null };
 
   /* ---------- formatting ---------- */
@@ -124,21 +124,9 @@
   function renderFeed() {
     if (!feed) return;
     var rows = current === "all" ? items : items.filter(function (n) { return n.cat === current; });
-    if (!rows.length) {
-      feed.innerHTML = '<p class="news-empty">No updates in this category yet.</p>';
-      return;
-    }
-    feed.innerHTML = rows.map(function (n) {
-      var meta = '<div class="news-meta">'
-        + '<span class="news-src">' + escapeHTML(n.source || "") + "</span>"
-        + '<span class="news-time">' + timeAgo(n.published) + "</span></div>";
-      var body = '<div class="nt">' + escapeHTML(n.title) + "</div>"
-        + (n.desc ? '<div class="nd">' + escapeHTML(n.desc) + "</div>" : "")
-        + meta;
-      return n.url
-        ? '<a class="news-row" href="' + escapeHTML(n.url) + '" target="_blank" rel="noopener">' + body + "</a>"
-        : '<div class="news-row">' + body + "</div>";
-    }).join("");
+    paginate("news", feed, rows, function (n) {
+      return row(kindPill("news", "News"), n.title, escapeHTML(n.source || ""), timeAgo(n.published), n.url);
+    }, "No updates in this category yet.");
   }
 
   function paintCategory() {
@@ -152,13 +140,45 @@
     var b = ev.target.closest("button");
     if (!b) return;
     current = CATEGORIES.indexOf(b.dataset.cat) === -1 ? "all" : b.dataset.cat;
+    page.news = 0;   // a new filter is a new list; page four of it would be arbitrary
     paintCategory();
+  });
+
+  /* ---------- paging ---------- */
+
+  /* Thirty rows a page, with Previous / Next under the list. */
+  function paginate(view, host, list, render, emptyText) {
+    var pages = Math.max(1, Math.ceil(list.length / PAGE));
+    if (page[view] >= pages) page[view] = pages - 1;
+    if (page[view] < 0) page[view] = 0;
+    var start = page[view] * PAGE;
+    var slice = list.slice(start, start + PAGE);
+    var html = slice.length ? slice.map(render).join("") : '<p class="news-empty">' + emptyText + "</p>";
+    if (pages > 1) {
+      html += '<div class="upd-pager" data-view="' + view + '">'
+        + '<button type="button" class="btn btn-outline" data-dir="-1"' + (page[view] === 0 ? " disabled" : "") + ">Previous</button>"
+        + '<span class="upd-page">Page ' + (page[view] + 1) + " of " + pages + "</span>"
+        + '<button type="button" class="btn btn-outline" data-dir="1"' + (page[view] === pages - 1 ? " disabled" : "") + ">Next</button>"
+        + "</div>";
+    }
+    host.innerHTML = html;
+  }
+  var RENDER = {};   // view -> render function, filled below
+  document.addEventListener("click", function (ev) {
+    var b = ev.target.closest(".upd-pager button[data-dir]");
+    if (!b || b.disabled) return;
+    var view = b.closest(".upd-pager").dataset.view;
+    page[view] += Number(b.dataset.dir);
+    if (RENDER[view]) RENDER[view]();
+    var card = b.closest(".card");
+    if (card) card.scrollIntoView({ block: "start", behavior: "smooth" });
   });
 
   /* ---------- shared row markup ---------- */
 
-  function row(pill, title, by, when, url) {
-    var body = '<div class="upd-main"><div class="upd-title">' + escapeHTML(title) + "</div>"
+  function row(pill, title, by, when, url) { return rowHTML(pill, escapeHTML(title), by, when, url); }
+  function rowHTML(pill, titleHTML, by, when, url) {
+    var body = '<div class="upd-main"><div class="upd-title">' + titleHTML + "</div>"
       + (by ? '<div class="upd-by">' + by + "</div>" : "") + "</div>";
     var inner = pill + body + '<span class="upd-time">' + when + "</span>";
     if (!url) return '<div class="upd-row">' + inner + "</div>";
@@ -168,10 +188,9 @@
     return '<a class="upd-row" href="' + escapeHTML(url) + '"' + (external ? ' target="_blank" rel="noopener"' : "") + ">" + inner + "</a>";
   }
   function kindPill(kind, label) { return '<span class="upd-type ' + kind + '">' + label + "</span>"; }
-  function magPill(m) {
-    var c = magColor(m);
-    return '<span class="upd-type quake" style="background:' + c + '22;color:' + c + '">M ' + Number(m).toFixed(1) + "</span>";
-  }
+  /* The magnitude leads the title in the title's own dark type: the map's
+     yellow for a M 2 or M 3 is unreadable as text on white. */
+  function magHTML(m) { return "M " + Number(m).toFixed(1); }
 
   /* ---------- the three lists ---------- */
 
@@ -190,6 +209,14 @@
       .sort(function (a, b) { return b.time_ms - a.time_ms; });
   }
   // Each phrase is its own text node, so the engine can translate it alone.
+  /* The map opens on this event. The query names the place and time; the
+     id is a shortcut when the map's own list has the same event. The "./" is
+     deliberate: js/common.js turns plain /map links into console tabs and
+     would drop the query, and it does not match this form. */
+  function quakeHref(e) {
+    return "./map?focus=" + [e.latitude, e.longitude, e.time_ms, Math.round(e.depth_km || 0), e.magnitude].join(",")
+      + "&fid=" + encodeURIComponent(e.id || "") + "#3d";
+  }
   function quakeBy(e) { return "<span>Depth " + Math.round(e.depth_km || 0) + " km</span> · USGS"; }
   function paperBy(p) { return escapeHTML(p.venue || "") + (p.date ? " · " + dateOf(p.date) : ""); }
 
@@ -205,7 +232,7 @@
       rows.push({ kind: "paper", t: x.t, html: row(kindPill("paper", "Paper"), x.p.title, paperBy(x.p), timeAgo(x.t), x.p.url) });
     });
     newestQuakes(OVERVIEW_MIN_MAG).forEach(function (e) {
-      rows.push({ kind: "quake", t: e.time_ms, html: row(kindPill("quake", "Earthquake"), "M " + Number(e.magnitude).toFixed(1) + " · " + (e.place || ""), quakeBy(e), timeAgo(e.time_ms), "map#3d") });
+      rows.push({ kind: "quake", t: e.time_ms, html: rowHTML(kindPill("quake", "Earthquake"), magHTML(e.magnitude) + " \u00b7 " + escapeHTML(e.place || ""), quakeBy(e), timeAgo(e.time_ms), quakeHref(e)) });
     });
     rows.sort(function (a, b) { return b.t - a.t; });
     var taken = { news: 0, paper: 0, quake: 0 };
@@ -216,21 +243,20 @@
   function renderPapers() {
     var host = byId("paperList");
     if (!host) return;
-    var list = newestPapers().slice(0, PAPERS_SHOWN);
-    host.innerHTML = list.length ? list.map(function (x) {
+    paginate("papers", host, newestPapers(), function (x) {
       var by = paperBy(x.p) + (x.p.open_access ? ' · <span class="pub-oa">Open access</span>' : "");
       return row(kindPill("paper", "Paper"), x.p.title, by, timeAgo(x.t), x.p.url);
-    }).join("") : '<p class="news-empty">No updates yet.</p>';
+    }, "No updates yet.");
   }
 
   function renderQuakes() {
     var host = byId("quakeList");
     if (!host) return;
-    var list = newestQuakes(quakeFloor).slice(0, QUAKES_SHOWN);
-    host.innerHTML = list.length ? list.map(function (e) {
+    // The same Earthquake pill as the Overview, so the four views read alike.
+    paginate("quakes", host, newestQuakes(quakeFloor), function (e) {
       var place = e.place || (Number(e.latitude).toFixed(1) + ", " + Number(e.longitude).toFixed(1));
-      return row(magPill(e.magnitude), place, quakeBy(e), timeAgo(e.time_ms), "map#3d");
-    }).join("") : '<p class="news-empty">No earthquakes in the last 14 days.</p>';
+      return rowHTML(kindPill("quake", "Earthquake"), magHTML(e.magnitude) + " \u00b7 " + escapeHTML(place), quakeBy(e), timeAgo(e.time_ms), quakeHref(e));
+    }, "No earthquakes in the last 14 days.");
     var note = byId("quakeNote");
     if (note && stores.live) {
       note.innerHTML = "<span>Live overlay refreshed:</span> <span>" + timeAgo(stores.live.generated_utc) + "</span>"
@@ -242,8 +268,20 @@
     var b = ev.target.closest("button");
     if (!b) return;
     quakeFloor = Number(b.dataset.min) || 0;
+    page.quakes = 0;
     document.querySelectorAll("#quakeFilter button").forEach(function (x) { x.classList.toggle("active", x === b); });
     renderQuakes();
+  });
+
+  /* Inside the console the link cannot navigate -- the map is another frame
+     -- so the shell is asked to open the map on this event instead. */
+  document.addEventListener("click", function (ev) {
+    var a = ev.target.closest('a.upd-row[href^="./map?focus="]');
+    if (!a || window.parent === window) return;
+    ev.preventDefault();
+    var u = new URL(a.getAttribute("href"), location.href);
+    var p = (u.searchParams.get("focus") || "").split(",");
+    window.parent.postMessage({ wel: "focus-quake", lat: p[0], lng: p[1], t: p[2], depth: p[3], m: p[4], id: u.searchParams.get("fid") }, "*");
   });
 
   /* ---------- stats strip ---------- */
@@ -262,6 +300,7 @@
     if (newest) set("statUpdated", timeAgo(newest));
   }
 
+  RENDER.news = renderFeed; RENDER.papers = renderPapers; RENDER.quakes = renderQuakes;
   function renderAll() { renderStats(); renderOverview(); renderPapers(); renderQuakes(); }
 
   /* ---------- loading ---------- */

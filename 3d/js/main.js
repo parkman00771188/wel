@@ -78,6 +78,12 @@ async function boot() {
 
   // The host page owns the UTC / local choice for the whole site; when it
   // changes, redraw everything whose text carries a timestamp.
+  // The host asks for one event by place and time: fly there and, if it is
+  // among the drawn events, open its card.
+  window.addEventListener('message', (ev) => {
+    if (!ev.data || ev.data.wel !== 'focus') return;
+    app.focusPlace(+ev.data.lat, +ev.data.lon, +ev.data.depth || 10, +ev.data.timeMs);
+  });
   window.addEventListener('message', (ev) => {
     if (!ev.data || ev.data.wel !== 'tz') return;
     if (setUtcMode(ev.data.mode === 'utc')) {
@@ -339,6 +345,34 @@ class App {
     this.marker.show(i, this.quakes.positions);
     this.showCard(i);
     this.flyTo(this.worldPos(i), 1100, { keepDistance: true });
+    this.dirty = true;
+  }
+
+  /**
+   * Centre a place rather than an index: the host knows an event by where and
+   * when, not by its position in our arrays. The nearest drawn event in place
+   * and time takes over if it is close enough; otherwise the camera just goes
+   * there.
+   */
+  focusPlace(lat, lon, depthKm, timeMs, tries = 0) {
+    if (!isFinite(lat) || !isFinite(lon)) return;
+    // The request usually arrives while the globe is still loading its bins;
+    // wait for the layer rather than answer with nothing.
+    const layer = this.view === 'globe' ? this.globe?.layer : null;
+    if (!layer?.events?.lat?.length) {
+      if (tries < 60) setTimeout(() => this.focusPlace(lat, lon, depthKm, timeMs, tries + 1), 500);
+      return;
+    }
+    const ev = layer.events;
+    const days = isFinite(timeMs) ? (timeMs - this.data.epochMs) / 86400e3 : null;
+    let best = -1, bd = Infinity;
+    for (let i = 0; i < ev.lat.length; i++) {
+      let d = Math.abs(ev.lat[i] - lat) + Math.abs(ev.lon[i] - lon);
+      if (days != null) d += Math.abs(layer.tDays[i] - days);
+      if (d < bd) { bd = d; best = i; }
+    }
+    if (best >= 0 && bd < 0.2) { this.focusEvent(best); return; }
+    this.globe.focusOn(lon, lat, depthKm, { keepDistance: true });
     this.dirty = true;
   }
 

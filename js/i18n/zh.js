@@ -608,6 +608,7 @@ WEL_I18N.load({
   "No updates yet.": "尚无更新。",
 
   /* news hub 2 */
+  "Page {n} of {n}": "第 $1 页，共 $2 页",
   "Latest papers": "最新论文",
   "Latest earthquakes": "最新地震",
   "The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.": "采集器最近加入的主要期刊论文。可搜索的完整列表见研究中心。",

@@ -256,6 +256,18 @@
       });
       if (guideSub) activate("learn", true, guideSub);
     }
+    // A child page asks for the map on one earthquake: open the 3D map and
+    // pass the request on once the map page's script is listening.
+    if (ev.data && ev.data.wel === "focus-quake") {
+      activate("map", true, "3d");
+      var mf = document.getElementById("frame-map"), tries = 0, req = ev.data;
+      (function relay() {
+        var w = mf && mf.contentWindow;
+        try { if (w && w.WEL_MAP_READY) { w.postMessage(req, "*"); return; } } catch (e) { /* not yet */ }
+        if (++tries < 80) setTimeout(relay, 250);
+      })();
+      return;
+    }
     if (ev.data && ev.data.wel === "subnav-active" && VIEWS[ev.data.view] &&
         validSubview(ev.data.view, ev.data.sub)) {
       // Record it before activating, so a page reporting the section it just

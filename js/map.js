@@ -103,6 +103,15 @@
 
   var frame3d = null;
 
+  /* A request to open on one earthquake can arrive before the catalogue is
+     ready; hold it until the handler below exists. */
+  var focusQuake = null, pendingFocus = null;
+  window.addEventListener("message", function (ev) {
+    if (!ev.data || ev.data.wel !== "focus-quake") return;
+    if (focusQuake) focusQuake(ev.data); else pendingFocus = ev.data;
+  });
+  window.WEL_MAP_READY = true;
+
   function update3dSuspension() {
     try {
       var app3d = frame3d && frame3d.contentWindow && frame3d.contentWindow.__app;
@@ -1834,5 +1843,45 @@
     setTimeout(refresh3dFilters, 2500);
     setTimeout(refresh3dFilters, 8000);
   }
+
+  /* ---- open on one earthquake: ?focus=lat,lng,ms,depth&fid=id, or a message ---- */
+  focusQuake = function (q) {
+    var lat = +q.lat, lng = +q.lng, t = +q.t;
+    if (!isFinite(lat) || !isFinite(lng)) return;
+    // The event has to be inside the window to be drawn at all.
+    if (isFinite(t) && (t < state.startMs || t > state.endMs)) setRange(Math.min(state.startMs, t - EQ.D), Date.now(), false);
+    if (document.getElementById("mapShell").classList.contains("mode-3d")) {
+      var tries = 0;
+      (function poll() {
+        var w = frame3d && frame3d.contentWindow;
+        if (w && w.__app) { w.postMessage({ wel: "focus", lat: lat, lon: lng, depth: +q.depth || 10, timeMs: t }, "*"); return; }
+        if (++tries < 100) setTimeout(poll, 300);
+      })();
+      return;
+    }
+    // 2D: go there and open the card. The request carries everything the
+    // card shows, so the event is built from it -- the way a click on the
+    // fast canvas builds one -- rather than looked up in a cache that, over a
+    // long window, is empty.
+    // The 2D view is still settling its own initial view when a request
+    // arrives at boot; a flight started under that is cancelled by it.
+    var who = EQ.regionFor(lat, lng);
+    setTimeout(function () { map.flyTo([lat, lng], 5, { duration: 1.2 }); }, 700);
+    setTimeout(function () {
+      select({
+        id: q.id || "hit", m: Math.round((+q.m || 0) * 10) / 10,
+        lat: Math.round(lat * 1000) / 1000, lng: Math.round(lng * 1000) / 1000,
+        depth: Math.max(0, Math.round(+q.depth || 0)), t: isFinite(t) ? t : Date.now(),
+        loc: who.loc, group: who.group, region: who.region || who.group,
+        rof: who.rof, status: "Reviewed"
+      }, false);
+    }, 2100);
+  };
+  var fq = new URLSearchParams(location.search);
+  if (fq.get("focus")) {
+    var fp = fq.get("focus").split(",");
+    focusQuake({ lat: fp[0], lng: fp[1], t: fp[2], depth: fp[3], m: fp[4], id: fq.get("fid") });
+  }
+  if (pendingFocus) { focusQuake(pendingFocus); pendingFocus = null; }
   });
 })();

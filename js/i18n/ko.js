@@ -608,6 +608,7 @@ WEL_I18N.load({
   "No updates yet.": "아직 업데이트가 없습니다.",
 
   /* news hub 2 */
+  "Page {n} of {n}": "$1 / $2페이지",
   "Latest papers": "최신 논문",
   "Latest earthquakes": "최신 지진",
   "The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.": "수집기가 최근 추가한 주요 학술지 논문입니다. 검색이 가능한 전체 목록은 연구 허브에 있습니다.",

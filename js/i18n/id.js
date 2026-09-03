@@ -608,6 +608,7 @@ WEL_I18N.load({
   "No updates yet.": "Belum ada pembaruan.",
 
   /* news hub 2 */
+  "Page {n} of {n}": "Halaman $1 dari $2",
   "Latest papers": "Makalah terbaru",
   "Latest earthquakes": "Gempa terbaru",
   "The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.": "Makalah terbaru yang ditambahkan pengumpul, dari jurnal-jurnal utama. Daftar lengkap dengan pencarian ada di Pusat Riset.",

@@ -608,6 +608,7 @@ WEL_I18N.load({
   "No updates yet.": "Henüz güncelleme yok.",
 
   /* news hub 2 */
+  "Page {n} of {n}": "Sayfa $1 / $2",
   "Latest papers": "En yeni makaleler",
   "Latest earthquakes": "En yeni depremler",
   "The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.": "Toplayıcının en son eklediği, büyük dergilerden makaleler. Aramalı tam liste Araştırma Merkezi'nde.",

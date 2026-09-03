@@ -608,6 +608,7 @@ WEL_I18N.load({
   "No updates yet.": "Aún no hay actualizaciones.",
 
   /* news hub 2 */
+  "Page {n} of {n}": "Página $1 de $2",
   "Latest papers": "Últimos artículos",
   "Latest earthquakes": "Últimos sismos",
   "The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.": "Los artículos más recientes que añadió el recolector, de las grandes revistas. La lista completa, con buscador, está en el Centro de Investigación.",

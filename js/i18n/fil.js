@@ -608,6 +608,7 @@ WEL_I18N.load({
   "No updates yet.": "Wala pang update.",
 
   /* news hub 2 */
+  "Page {n} of {n}": "Pahina $1 ng $2",
   "Latest papers": "Pinakabagong papel",
   "Latest earthquakes": "Pinakabagong lindol",
   "The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.": "Ang pinakabagong papel na idinagdag ng kolektor, mula sa malalaking journal. Ang buong listahan, may paghahanap, ay nasa Research Hub.",
