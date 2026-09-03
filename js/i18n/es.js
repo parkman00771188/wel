@@ -586,6 +586,27 @@ WEL_I18N.load({
   "Earthquake News & Updates": "Noticias y novedades sísmicas",
   "Today's earthquake news and research coverage, refreshed every 10 minutes.": "Noticias sísmicas de hoy y cobertura de investigación, actualizadas cada 10 minutos.",
 
+  /* news hub */
+  "Update Log": "Registro de actualizaciones",
+  "News items": "Noticias",
+  "Papers": "Artículos",
+  "Live earthquakes": "Sismos en vivo",
+  "Last updated": "Última actualización",
+  "Latest updates": "Últimas actualizaciones",
+  "What the ten-minute cycle brought in most recently: news, papers and earthquake data, newest first.": "Lo que el ciclo de diez minutos trajo más recientemente: noticias, artículos y datos sísmicos, lo más nuevo primero.",
+  "Paper": "Artículo",
+  "Live earthquake overlay refreshed: {n} events in the last 14 days": "Capa sísmica en vivo actualizada: $1 eventos en los últimos 14 días",
+  "Earthquake catalogue rebuilt: {n} events since 1900": "Catálogo sísmico reconstruido: $1 eventos desde 1900",
+  "News feed refreshed: {n} items": "Fuente de noticias actualizada: $1 elementos",
+  "Publication list refreshed: {n} papers": "Lista de publicaciones actualizada: $1 artículos",
+  "Every file the ten-minute cycle writes, and when it last wrote it.": "Cada archivo que escribe el ciclo de diez minutos, y cuándo lo escribió por última vez.",
+  "Live earthquake overlay": "Capa sísmica en vivo",
+  "News feed": "Fuente de noticias",
+  "Publication list": "Lista de publicaciones",
+  "{n} items": "$1 elementos",
+  "{n} papers": "$1 artículos",
+  "No updates yet.": "Aún no hay actualizaciones.",
+
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
      languages can translate it in isolation: seven have no articles at all,

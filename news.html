@@ -45,26 +45,82 @@
 
 <div id="site-header"></div>
 
-<main class="container page-pad-bottom">
-  <div class="page-head">
-    <div>
-      <h1>Earthquake News &amp; Updates</h1>
-      <p class="sub">Today's earthquake news and research coverage, refreshed every 10 minutes.</p>
-    </div>
-    <div class="page-actions">
-      <div class="range-chips" id="newsFilter">
-        <button data-cat="all" class="active">All</button>
-        <button data-cat="event">Events</button>
-        <button data-cat="research">Research</button>
-        <button data-cat="network">Network</button>
+<div class="side-layout">
+  <!-- ============ Sidebar ============ -->
+  <aside class="side-nav">
+    <div class="side-title">News &amp; Updates</div>
+    <!-- Overview says what the cycle brought in last; News is the coverage
+         feed; Update Log is every file the cycle writes and when. -->
+    <a href="#overview" class="active" data-subview="overview"><i data-icon="grid" data-size="18"></i> Overview</a>
+    <a href="#news" data-subview="news"><i data-icon="radio" data-size="18"></i> News</a>
+    <a href="#log" data-subview="log"><i data-icon="clock" data-size="18"></i> Update Log</a>
+  </aside>
+
+  <!-- ============ Content ============ -->
+  <section class="side-content">
+    <div class="content-head">
+      <div>
+        <h1>Earthquake News &amp; Updates</h1>
+        <p class="sub">Today's earthquake news and research coverage, refreshed every 10 minutes.</p>
       </div>
     </div>
-  </div>
 
-  <div class="card news-page">
-    <div id="newsFeed"></div>
-  </div>
-</main>
+    <!-- Every figure is read from the feeds at runtime. -->
+    <div class="res-stats" id="newsStats">
+      <div class="res-stat">
+        <div class="res-icon"><i data-icon="radio" data-size="22"></i></div>
+        <div><div class="k">News items</div><div class="v" id="statNews">—</div></div>
+      </div>
+      <div class="res-stat">
+        <div class="res-icon"><i data-icon="book" data-size="22"></i></div>
+        <div><div class="k">Papers</div><div class="v" id="statPapers">—</div></div>
+      </div>
+      <div class="res-stat">
+        <div class="res-icon"><i data-icon="activity" data-size="22"></i></div>
+        <div><div class="k">Live earthquakes</div><div class="v" id="statLive">—</div></div>
+      </div>
+      <div class="res-stat">
+        <div class="res-icon"><i data-icon="clock" data-size="22"></i></div>
+        <div><div class="k">Last updated</div><div class="v" id="statUpdated">—</div></div>
+      </div>
+    </div>
+
+    <section class="res-view" id="viewOverview">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title" style="font-size:17px">Latest updates</div>
+        </div>
+        <p class="card-sub">What the ten-minute cycle brought in most recently: news, papers and earthquake data, newest first.</p>
+        <div class="upd-list" id="updList"></div>
+      </div>
+    </section>
+
+    <section class="res-view" id="viewNews" hidden>
+      <div class="card news-page">
+        <div class="card-head">
+          <div class="card-title" style="font-size:17px">News</div>
+          <div class="range-chips" id="newsFilter">
+            <button data-cat="all" class="active">All</button>
+            <button data-cat="event">Events</button>
+            <button data-cat="research">Research</button>
+            <button data-cat="network">Network</button>
+          </div>
+        </div>
+        <div id="newsFeed"></div>
+      </div>
+    </section>
+
+    <section class="res-view" id="viewLog" hidden>
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title" style="font-size:17px">Update Log</div>
+        </div>
+        <p class="card-sub">Every file the ten-minute cycle writes, and when it last wrote it.</p>
+        <div class="upd-list" id="logList"></div>
+      </div>
+    </section>
+  </section>
+</div>
 
 <div id="site-footer"></div>
 

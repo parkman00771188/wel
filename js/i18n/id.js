@@ -586,6 +586,27 @@ WEL_I18N.load({
   "Earthquake News & Updates": "Berita & Pembaruan Gempa",
   "Today's earthquake news and research coverage, refreshed every 10 minutes.": "Berita gempa hari ini dan liputan riset, diperbarui setiap 10 menit.",
 
+  /* news hub */
+  "Update Log": "Log Pembaruan",
+  "News items": "Item berita",
+  "Papers": "Makalah",
+  "Live earthquakes": "Gempa langsung",
+  "Last updated": "Terakhir diperbarui",
+  "Latest updates": "Pembaruan terbaru",
+  "What the ten-minute cycle brought in most recently: news, papers and earthquake data, newest first.": "Yang paling baru dibawa siklus sepuluh menit: berita, makalah dan data gempa, terbaru lebih dulu.",
+  "Paper": "Makalah",
+  "Live earthquake overlay refreshed: {n} events in the last 14 days": "Lapisan gempa langsung diperbarui: $1 kejadian dalam 14 hari terakhir",
+  "Earthquake catalogue rebuilt: {n} events since 1900": "Katalog gempa dibangun ulang: $1 kejadian sejak 1900",
+  "News feed refreshed: {n} items": "Umpan berita diperbarui: $1 item",
+  "Publication list refreshed: {n} papers": "Daftar publikasi diperbarui: $1 makalah",
+  "Every file the ten-minute cycle writes, and when it last wrote it.": "Setiap berkas yang ditulis siklus sepuluh menit, dan kapan terakhir ditulis.",
+  "Live earthquake overlay": "Lapisan gempa langsung",
+  "News feed": "Umpan berita",
+  "Publication list": "Daftar publikasi",
+  "{n} items": "$1 item",
+  "{n} papers": "$1 makalah",
+  "No updates yet.": "Belum ada pembaruan.",
+
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
      languages can translate it in isolation: seven have no articles at all,

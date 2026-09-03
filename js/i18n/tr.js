@@ -586,6 +586,27 @@ WEL_I18N.load({
   "Earthquake News & Updates": "Deprem Haberleri ve Güncellemeler",
   "Today's earthquake news and research coverage, refreshed every 10 minutes.": "Bugünün deprem haberleri ve araştırma haberleri, her 10 dakikada güncellenir.",
 
+  /* news hub */
+  "Update Log": "Güncelleme Günlüğü",
+  "News items": "Haber öğeleri",
+  "Papers": "Makaleler",
+  "Live earthquakes": "Canlı depremler",
+  "Last updated": "Son güncelleme",
+  "Latest updates": "En son güncellemeler",
+  "What the ten-minute cycle brought in most recently: news, papers and earthquake data, newest first.": "On dakikalık döngünün en son getirdikleri: haberler, makaleler ve deprem verileri, en yeni önce.",
+  "Paper": "Makale",
+  "Live earthquake overlay refreshed: {n} events in the last 14 days": "Canlı deprem katmanı yenilendi: son 14 günde $1 olay",
+  "Earthquake catalogue rebuilt: {n} events since 1900": "Deprem kataloğu yeniden oluşturuldu: 1900'den bu yana $1 olay",
+  "News feed refreshed: {n} items": "Haber akışı yenilendi: $1 öğe",
+  "Publication list refreshed: {n} papers": "Yayın listesi yenilendi: $1 makale",
+  "Every file the ten-minute cycle writes, and when it last wrote it.": "On dakikalık döngünün yazdığı her dosya ve en son ne zaman yazdığı.",
+  "Live earthquake overlay": "Canlı deprem katmanı",
+  "News feed": "Haber akışı",
+  "Publication list": "Yayın listesi",
+  "{n} items": "$1 öğe",
+  "{n} papers": "$1 makale",
+  "No updates yet.": "Henüz güncelleme yok.",
+
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
      languages can translate it in isolation: seven have no articles at all,

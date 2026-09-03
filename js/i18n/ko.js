@@ -586,6 +586,27 @@ WEL_I18N.load({
   "Earthquake News & Updates": "지진 뉴스 및 업데이트",
   "Today's earthquake news and research coverage, refreshed every 10 minutes.": "오늘의 지진 뉴스와 연구 보도, 10분마다 갱신.",
 
+  /* news hub */
+  "Update Log": "업데이트 기록",
+  "News items": "뉴스 항목",
+  "Papers": "논문",
+  "Live earthquakes": "실시간 지진",
+  "Last updated": "최근 갱신",
+  "Latest updates": "최근 업데이트",
+  "What the ten-minute cycle brought in most recently: news, papers and earthquake data, newest first.": "10분 주기로 가장 최근에 들어온 뉴스·논문·지진 데이터, 최신순.",
+  "Paper": "논문",
+  "Live earthquake overlay refreshed: {n} events in the last 14 days": "실시간 지진 오버레이 갱신: 최근 14일 $1건",
+  "Earthquake catalogue rebuilt: {n} events since 1900": "지진 카탈로그 재구축: 1900년 이후 $1건",
+  "News feed refreshed: {n} items": "뉴스 피드 갱신: $1건",
+  "Publication list refreshed: {n} papers": "논문 목록 갱신: $1편",
+  "Every file the ten-minute cycle writes, and when it last wrote it.": "10분 주기가 쓰는 모든 파일과 마지막으로 쓴 시각.",
+  "Live earthquake overlay": "실시간 지진 오버레이",
+  "News feed": "뉴스 피드",
+  "Publication list": "논문 목록",
+  "{n} items": "$1건",
+  "{n} papers": "$1편",
+  "No updates yet.": "아직 업데이트가 없습니다.",
+
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
      languages can translate it in isolation: seven have no articles at all,

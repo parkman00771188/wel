@@ -586,6 +586,27 @@ WEL_I18N.load({
   "Earthquake News & Updates": "地震ニュースと更新情報",
   "Today's earthquake news and research coverage, refreshed every 10 minutes.": "今日の地震ニュースと研究報道、10分ごとに更新。",
 
+  /* news hub */
+  "Update Log": "更新ログ",
+  "News items": "ニュース件数",
+  "Papers": "論文",
+  "Live earthquakes": "リアルタイム地震",
+  "Last updated": "最終更新",
+  "Latest updates": "最新の更新",
+  "What the ten-minute cycle brought in most recently: news, papers and earthquake data, newest first.": "10分周期で最近取り込んだニュース・論文・地震データ、新しい順。",
+  "Paper": "論文",
+  "Live earthquake overlay refreshed: {n} events in the last 14 days": "リアルタイム地震オーバーレイ更新: 直近14日で$1件",
+  "Earthquake catalogue rebuilt: {n} events since 1900": "地震カタログ再構築: 1900年以降$1件",
+  "News feed refreshed: {n} items": "ニュースフィード更新: $1件",
+  "Publication list refreshed: {n} papers": "論文リスト更新: $1編",
+  "Every file the ten-minute cycle writes, and when it last wrote it.": "10分周期が書き出すすべてのファイルと、最後に書き出した時刻。",
+  "Live earthquake overlay": "リアルタイム地震オーバーレイ",
+  "News feed": "ニュースフィード",
+  "Publication list": "論文リスト",
+  "{n} items": "$1件",
+  "{n} papers": "$1編",
+  "No updates yet.": "まだ更新はありません。",
+
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
      languages can translate it in isolation: seven have no articles at all,

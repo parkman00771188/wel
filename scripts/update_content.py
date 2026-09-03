@@ -278,6 +278,9 @@ def refresh_papers() -> bool:
             continue
         seen_ids.add(row["id"])
         seen_titles.add(tkey)
+        # When the site first saw it -- the update log sorts by this, since
+        # a paper's publication date can be months before OpenAlex lists it.
+        row["added_utc"] = utc_now()
         items.append(row)
         added += 1
 
@@ -413,6 +416,7 @@ def refresh_news() -> bool:
         if not row or row["id"] in seen:
             continue
         seen.add(row["id"])
+        row["added_utc"] = utc_now()
         items.append(row)
         added += 1
 

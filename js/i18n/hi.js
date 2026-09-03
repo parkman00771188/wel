@@ -586,6 +586,27 @@ WEL_I18N.load({
   "Earthquake News & Updates": "भूकंप समाचार और अपडेट",
   "Today's earthquake news and research coverage, refreshed every 10 minutes.": "आज के भूकंप समाचार और शोध कवरेज, हर 10 मिनट में ताज़ा।",
 
+  /* news hub */
+  "Update Log": "अपडेट लॉग",
+  "News items": "समाचार आइटम",
+  "Papers": "शोधपत्र",
+  "Live earthquakes": "लाइव भूकंप",
+  "Last updated": "अंतिम अपडेट",
+  "Latest updates": "नवीनतम अपडेट",
+  "What the ten-minute cycle brought in most recently: news, papers and earthquake data, newest first.": "दस-मिनट चक्र में हाल ही में आए समाचार, शोधपत्र और भूकंप डेटा, नवीनतम पहले।",
+  "Paper": "शोधपत्र",
+  "Live earthquake overlay refreshed: {n} events in the last 14 days": "लाइव भूकंप ओवरले ताज़ा: पिछले 14 दिनों में $1 घटनाएँ",
+  "Earthquake catalogue rebuilt: {n} events since 1900": "भूकंप कैटलॉग पुनर्निर्मित: 1900 से $1 घटनाएँ",
+  "News feed refreshed: {n} items": "समाचार फ़ीड ताज़ा: $1 आइटम",
+  "Publication list refreshed: {n} papers": "प्रकाशन सूची ताज़ा: $1 शोधपत्र",
+  "Every file the ten-minute cycle writes, and when it last wrote it.": "दस-मिनट चक्र जो भी फ़ाइल लिखता है, और उसे आख़िरी बार कब लिखा।",
+  "Live earthquake overlay": "लाइव भूकंप ओवरले",
+  "News feed": "समाचार फ़ीड",
+  "Publication list": "प्रकाशन सूची",
+  "{n} items": "$1 आइटम",
+  "{n} papers": "$1 शोधपत्र",
+  "No updates yet.": "अभी कोई अपडेट नहीं।",
+
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
      languages can translate it in isolation: seven have no articles at all,
