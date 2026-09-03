@@ -575,6 +575,17 @@ WEL_I18N.load({
   "OpenAlex · two topics, the last {n} years of seismology.": "OpenAlex · iki konu, sismolojinin son $1 yılı.",
   "OpenAlex · topic T13018, the last {n} years of seismology.": "OpenAlex · T13018 konusu, sismolojinin son $1 yılı.",
 
+  /* search headings */
+  "Earthquakes today, and every one since 1900.": "Bugünün depremleri ve 1900'den bu yana her deprem.",
+  "Explore the world's seismic record on live 2D maps and a 3D globe.": "Dünyanın deprem kaydını canlı 2B haritalarda ve 3B kürede keşfedin.",
+  "Today's earthquakes and every recorded quake since 1900, on a 2D map and a 3D globe.": "Bugünün depremleri ve 1900'den bu yana kaydedilen her deprem, 2B haritada ve 3B kürede.",
+  "Latest Earthquakes: Global Overview": "Son Depremler: Küresel Genel Bakış",
+  "The largest recent earthquakes, counts and depths worldwide, refreshed every 10 minutes.": "Dünya genelinde son büyük depremler, sayılar ve derinlikler, her 10 dakikada güncellenir.",
+  "Earthquake Statistics Since 1900": "1900'den Bu Yana Deprem İstatistikleri",
+  "Trends, magnitude, depth and energy across 126 years of global earthquakes.": "126 yıllık küresel depremlerde eğilimler, büyüklük, derinlik ve enerji.",
+  "Earthquake News & Updates": "Deprem Haberleri ve Güncellemeler",
+  "Today's earthquake news and research coverage, refreshed every 10 minutes.": "Bugünün deprem haberleri ve araştırma haberleri, her 10 dakikada güncellenir.",
+
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
      languages can translate it in isolation: seven have no articles at all,

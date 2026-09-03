@@ -575,6 +575,17 @@ WEL_I18N.load({
   "OpenAlex · two topics, the last {n} years of seismology.": "OpenAlex · dalawang paksa, ang huling $1 taon ng seismology.",
   "OpenAlex · topic T13018, the last {n} years of seismology.": "OpenAlex · paksang T13018, ang huling $1 taon ng seismology.",
 
+  /* search headings */
+  "Earthquakes today, and every one since 1900.": "Mga lindol ngayon, at bawat lindol mula 1900.",
+  "Explore the world's seismic record on live 2D maps and a 3D globe.": "Tuklasin ang rekord ng lindol sa mundo sa live na 2D na mapa at 3D globe.",
+  "Today's earthquakes and every recorded quake since 1900, on a 2D map and a 3D globe.": "Mga lindol ngayon at bawat naitalang lindol mula 1900, sa 2D na mapa at 3D globe.",
+  "Latest Earthquakes: Global Overview": "Pinakabagong Lindol: Pangkalahatang Tanaw",
+  "The largest recent earthquakes, counts and depths worldwide, refreshed every 10 minutes.": "Pinakamalalaking kamakailang lindol, bilang at lalim sa buong mundo, ina-update tuwing 10 minuto.",
+  "Earthquake Statistics Since 1900": "Estadistika ng Lindol Mula 1900",
+  "Trends, magnitude, depth and energy across 126 years of global earthquakes.": "Mga trend, magnitude, lalim at enerhiya sa 126 taon ng lindol sa mundo.",
+  "Earthquake News & Updates": "Balita at Update sa Lindol",
+  "Today's earthquake news and research coverage, refreshed every 10 minutes.": "Balita sa lindol ngayon at saklaw ng pananaliksik, ina-update tuwing 10 minuto.",
+
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
      languages can translate it in isolation: seven have no articles at all,

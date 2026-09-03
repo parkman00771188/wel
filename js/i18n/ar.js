@@ -575,6 +575,17 @@ WEL_I18N.load({
   "OpenAlex · two topics, the last {n} years of seismology.": "OpenAlex · موضوعان، آخر $1 سنة من علم الزلازل.",
   "OpenAlex · topic T13018, the last {n} years of seismology.": "OpenAlex · الموضوع T13018، آخر $1 سنة من علم الزلازل.",
 
+  /* search headings */
+  "Earthquakes today, and every one since 1900.": "زلازل اليوم، وكل زلزال منذ عام 1900.",
+  "Explore the world's seismic record on live 2D maps and a 3D globe.": "استكشف سجل الزلازل العالمي على خرائط ثنائية الأبعاد مباشرة وكرة أرضية ثلاثية الأبعاد.",
+  "Today's earthquakes and every recorded quake since 1900, on a 2D map and a 3D globe.": "زلازل اليوم وكل زلزال مسجَّل منذ 1900، على خريطة ثنائية الأبعاد وكرة أرضية ثلاثية الأبعاد.",
+  "Latest Earthquakes: Global Overview": "أحدث الزلازل: نظرة عالمية",
+  "The largest recent earthquakes, counts and depths worldwide, refreshed every 10 minutes.": "أكبر الزلازل الأخيرة وأعدادها وأعماقها حول العالم، تُحدَّث كل 10 دقائق.",
+  "Earthquake Statistics Since 1900": "إحصاءات الزلازل منذ 1900",
+  "Trends, magnitude, depth and energy across 126 years of global earthquakes.": "الاتجاهات والقوة والعمق والطاقة عبر 126 عامًا من الزلازل العالمية.",
+  "Earthquake News & Updates": "أخبار الزلازل والتحديثات",
+  "Today's earthquake news and research coverage, refreshed every 10 minutes.": "أخبار الزلازل اليوم وتغطية الأبحاث، تُحدَّث كل 10 دقائق.",
+
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
      languages can translate it in isolation: seven have no articles at all,

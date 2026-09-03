@@ -575,6 +575,17 @@ WEL_I18N.load({
   "OpenAlex · two topics, the last {n} years of seismology.": "OpenAlex · 토픽 2개, 최근 $1년의 지진학.",
   "OpenAlex · topic T13018, the last {n} years of seismology.": "OpenAlex · 토픽 T13018, 최근 $1년의 지진학.",
 
+  /* search headings */
+  "Earthquakes today, and every one since 1900.": "오늘의 지진, 그리고 1900년 이후의 모든 지진.",
+  "Explore the world's seismic record on live 2D maps and a 3D globe.": "실시간 2D 지도와 3D 지구본에서 전 세계 지진 기록을 탐색하세요.",
+  "Today's earthquakes and every recorded quake since 1900, on a 2D map and a 3D globe.": "오늘의 지진과 1900년 이후 기록된 모든 지진을 2D 지도와 3D 지구본에서.",
+  "Latest Earthquakes: Global Overview": "최신 지진: 전 세계 개요",
+  "The largest recent earthquakes, counts and depths worldwide, refreshed every 10 minutes.": "전 세계의 최근 대형 지진, 발생 수와 깊이를 10분마다 갱신합니다.",
+  "Earthquake Statistics Since 1900": "1900년 이후 지진 통계",
+  "Trends, magnitude, depth and energy across 126 years of global earthquakes.": "126년간의 전 세계 지진에서 본 추세, 규모, 깊이, 에너지.",
+  "Earthquake News & Updates": "지진 뉴스 및 업데이트",
+  "Today's earthquake news and research coverage, refreshed every 10 minutes.": "오늘의 지진 뉴스와 연구 보도, 10분마다 갱신.",
+
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
      languages can translate it in isolation: seven have no articles at all,

@@ -575,6 +575,17 @@ WEL_I18N.load({
   "OpenAlex · two topics, the last {n} years of seismology.": "OpenAlex · dos temas, los últimos $1 años de sismología.",
   "OpenAlex · topic T13018, the last {n} years of seismology.": "OpenAlex · tema T13018, los últimos $1 años de sismología.",
 
+  /* search headings */
+  "Earthquakes today, and every one since 1900.": "Los sismos de hoy, y todos los ocurridos desde 1900.",
+  "Explore the world's seismic record on live 2D maps and a 3D globe.": "Explora el registro sísmico mundial en mapas 2D en vivo y un globo 3D.",
+  "Today's earthquakes and every recorded quake since 1900, on a 2D map and a 3D globe.": "Los sismos de hoy y todos los registrados desde 1900, en un mapa 2D y un globo 3D.",
+  "Latest Earthquakes: Global Overview": "Últimos sismos: panorama mundial",
+  "The largest recent earthquakes, counts and depths worldwide, refreshed every 10 minutes.": "Los mayores sismos recientes, recuentos y profundidades en todo el mundo, actualizados cada 10 minutos.",
+  "Earthquake Statistics Since 1900": "Estadísticas sísmicas desde 1900",
+  "Trends, magnitude, depth and energy across 126 years of global earthquakes.": "Tendencias, magnitud, profundidad y energía a lo largo de 126 años de sismos en el mundo.",
+  "Earthquake News & Updates": "Noticias y novedades sísmicas",
+  "Today's earthquake news and research coverage, refreshed every 10 minutes.": "Noticias sísmicas de hoy y cobertura de investigación, actualizadas cada 10 minutos.",
+
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
      languages can translate it in isolation: seven have no articles at all,

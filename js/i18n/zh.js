@@ -575,6 +575,17 @@ WEL_I18N.load({
   "OpenAlex · two topics, the last {n} years of seismology.": "OpenAlex · 两个主题，近 $1 年的地震学。",
   "OpenAlex · topic T13018, the last {n} years of seismology.": "OpenAlex · 主题 T13018，近 $1 年的地震学。",
 
+  /* search headings */
+  "Earthquakes today, and every one since 1900.": "今日地震，以及 1900 年以来的每一次地震。",
+  "Explore the world's seismic record on live 2D maps and a 3D globe.": "在实时 2D 地图和 3D 地球仪上探索全球地震记录。",
+  "Today's earthquakes and every recorded quake since 1900, on a 2D map and a 3D globe.": "今日地震与 1900 年以来记录的所有地震，尽在 2D 地图和 3D 地球仪。",
+  "Latest Earthquakes: Global Overview": "最新地震：全球概览",
+  "The largest recent earthquakes, counts and depths worldwide, refreshed every 10 minutes.": "全球近期最大地震、发生次数与深度，每 10 分钟更新。",
+  "Earthquake Statistics Since 1900": "1900 年以来的地震统计",
+  "Trends, magnitude, depth and energy across 126 years of global earthquakes.": "126 年全球地震的趋势、震级、深度与能量。",
+  "Earthquake News & Updates": "地震新闻与更新",
+  "Today's earthquake news and research coverage, refreshed every 10 minutes.": "今日地震新闻与研究报道，每 10 分钟更新。",
+
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
      languages can translate it in isolation: seven have no articles at all,
