@@ -258,10 +258,10 @@
   }
 
   function renderUpdated() {
-    var el = document.getElementById("appUpdated");
-    if (!updatedAt) { el.hidden = true; return; }
-    el.hidden = false;
-    el.textContent = agoText(updatedAt);
+    document.querySelectorAll(".app-updated").forEach(function (el) {
+      el.hidden = !updatedAt;
+      if (updatedAt) el.textContent = agoText(updatedAt);
+    });
   }
 
   function fetchStamp(url) {
