@@ -65,17 +65,17 @@
   /* ---------- header / footer ---------- */
 
   var NAV = [
-    { id: "platform", label: "Platform", href: "index.html#platform" },
-    { id: "livemap", label: "Live Map", href: "index.html#livemap" },
-    { id: "guide", label: "Earthquake Guide", href: "index.html#guide" },
-    { id: "insights", label: "Insights", href: "index.html#insights" },
-    { id: "research", label: "Research", href: "index.html#research" },
-    { id: "news", label: "News", href: "index.html#news" }
+    { id: "platform", label: "Platform", href: "/#platform" },
+    { id: "livemap", label: "Live Map", href: "/#livemap" },
+    { id: "guide", label: "Earthquake Guide", href: "/#guide" },
+    { id: "insights", label: "Insights", href: "/#insights" },
+    { id: "research", label: "Research", href: "/#research" },
+    { id: "news", label: "News", href: "/#news" }
   ];
 
   var CTA = {
-    "get-started": { label: "Get Started", href: "app.html" },
-    dashboard: { label: "Dashboard", href: "app.html" },
+    "get-started": { label: "Get Started", href: "/app" },
+    dashboard: { label: "Dashboard", href: "/app" },
     download: { label: "Download", href: "#", id: "ctaDownload" }
   };
 
@@ -100,7 +100,7 @@
 
     mount.outerHTML =
       '<header class="site-header"><div class="container header-inner">' +
-      '<a class="brand" href="index.html"><img src="resource/img/logo_new.png" alt="World Earthquake Labs"></a>' +
+      '<a class="brand" href="/"><img src="/resource/img/logo_new.png" alt="World Earthquake Labs"></a>' +
       /* The picker is emitted twice and the stylesheet shows one of them: on a
          phone the bar is only wide enough for the wordmark, the call to action
          and the burger, so the picker moves inside the dropdown, which has the
@@ -476,7 +476,7 @@
   function paintMetaFigures() {
     var nodes = document.querySelectorAll("[data-meta]");
     if (!nodes.length) return;
-    fetch("3d/data/global/meta.json", { cache: "no-cache" })
+    fetch("/3d/data/global/meta.json", { cache: "no-cache" })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (meta) {
         if (!meta) return;

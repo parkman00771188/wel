@@ -1334,6 +1334,34 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
   font-size: 12.5px; line-height: 1.65; color: var(--faint); margin: 10px 0 0;
 }
 
+/* Previous and next, at the foot of each guide topic. The guide reads end to
+   end as well as by search, and these are also the only links between one
+   topic and its neighbours now that they are separate pages. */
+.gd-seq {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 34px 0 8px;
+}
+.gd-seq a {
+  display: grid;
+  gap: 3px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: var(--card-shadow);
+  transition: border-color .12s, box-shadow .12s;
+}
+.gd-seq a:hover { border-color: var(--blue-300, #9fc0ff); box-shadow: var(--pop-shadow); }
+.gd-seq span { font-size: 11.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--faint); }
+.gd-seq b { font-size: 14.5px; font-weight: 700; color: var(--navy-800); }
+.gd-seq-next { text-align: end; }
+@media (max-width: 560px) {
+  .gd-seq { grid-template-columns: minmax(0, 1fr); }
+  .gd-seq-next { text-align: start; }
+}
+
 /* ---------- photographic figures ----------
    Some of the guide's diagrams are rendered illustrations rather than drawn
    SVG. Their labels are HTML sitting on top of the picture, not pixels baked
@@ -1693,7 +1721,7 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
 
 .gd-safety-head { text-align: center; max-width: 660px; margin: 0 auto 30px; }
 .gd-safety-head .shield { font-size: 34px; margin-bottom: 10px; }
-.gd-safety-head h2 { font-family: var(--font-serif); font-size: clamp(24px, 2.4vw, 31px); font-weight: 700; }
+.gd-safety-head h1, .gd-safety-head h2 { font-family: var(--font-serif); font-size: clamp(24px, 2.4vw, 31px); font-weight: 700; }
 .gd-safety-head p { color: var(--muted); font-size: 14.5px; line-height: 1.7; margin: 12px 0 0; }
 
 .gd-scenarios { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }

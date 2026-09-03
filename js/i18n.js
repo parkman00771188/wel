@@ -191,10 +191,10 @@
      to know which languages exist. A page with a lot of copy of its own — the
      Earthquake Guide — asks for an extra pack with data-i18n-pack, so the other
      eight pages are not carrying the guide's prose. */
-  var packs = ["js/i18n/" + lang + ".js"];
+  var packs = ["/js/i18n/" + lang + ".js"];
   var extra = document.body && document.body.dataset.i18nPack;
   if (extra) extra.split(/\s+/).forEach(function (p) {
-    if (p) packs.push("js/i18n/" + lang + "-" + p + ".js");
+    if (p) packs.push("/js/i18n/" + lang + "-" + p + ".js");
   });
 
   var pending = packs.length;

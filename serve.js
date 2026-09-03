@@ -23,6 +23,14 @@ http.createServer((req, res) => {
   const urlPath = decodeURIComponent(req.url.split("?")[0]);
   let file = path.normalize(path.join(ROOT, urlPath === "/" ? "index.html" : urlPath));
   if (!file.startsWith(ROOT)) { res.writeHead(403); return res.end(); }
+  // Cloudflare Pages serves /learn for learn.html, so the pages address each
+  // other that way. Resolve the same extensionless URLs here, or local testing
+  // exercises paths the deployed site never sees.
+  if (!path.extname(file)) {
+    const withHtml = file.replace(/[/]$/, "") + ".html";
+    if (fs.existsSync(withHtml)) file = withHtml;
+    else if (fs.existsSync(path.join(file, "index.html"))) file = path.join(file, "index.html");
+  }
   fs.readFile(file, (err, data) => {
     if (err) { res.writeHead(404); return res.end("not found"); }
     res.writeHead(200, {

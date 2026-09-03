@@ -22,7 +22,24 @@
   var VIEWS = {
     overview: { title: "Dashboard Overview", src: "dashboard.html?embed=1" },
     map: { title: "Live Earthquake Map", src: "map.html?embed=1" },
-    learn: { title: "Earthquake Guide", src: "learn.html?embed=1" },
+    learn: {
+      title: "Earthquake Guide",
+      src: "/learn?embed=1",
+      /* The guide is nine pages plus a hub, not one page with tabs, so a
+         subview here is a URL rather than a fragment. */
+      subUrl: {
+        overview: "/learn?embed=1",
+        basics: "/guide/earthquake-basics?embed=1",
+        plates: "/guide/plate-tectonics?embed=1",
+        measuring: "/guide/measuring-earthquakes?embed=1",
+        magnitude: "/guide/magnitude-and-intensity?embed=1",
+        hazards: "/guide/earthquake-hazards?embed=1",
+        history: "/guide/notable-earthquakes?embed=1",
+        terms: "/guide/earthquake-glossary?embed=1",
+        faq: "/guide/earthquake-faq?embed=1",
+        safety: "/guide/earthquake-safety?embed=1"
+      }
+    },
     insights: { title: "Seismic Insights", src: "insights.html?embed=1" },
     research: { title: "Research Hub", src: "research.html?embed=1" },
     news: { title: "News & Updates", src: "news.html?embed=1" }
@@ -156,7 +173,17 @@
       var frame = document.getElementById("frame-" + v);
       var on = v === view;
       frame.classList.toggle("active", on);
-      if (on && !frame.getAttribute("src")) {
+      var byUrl = VIEWS[v].subUrl;
+      if (on && byUrl) {
+        // A view whose subviews are separate pages: navigate, but only when the
+        // frame is not already showing the one asked for -- a page announcing
+        // itself on load would otherwise send us round again.
+        var want = byUrl[validSubview(v, sub) ? sub : DEFAULT_SUBVIEW[v]] || VIEWS[v].src;
+        if (frame.dataset.sub !== sub || !frame.getAttribute("src")) {
+          frame.dataset.sub = sub;
+          frame.src = want + (LANG !== "en" ? "&lang=" + LANG : "");
+        }
+      } else if (on && !frame.getAttribute("src")) {
         frame.src = VIEWS[v].src + (LANG !== "en" ? "&lang=" + LANG : "") +
           (validSubview(v, sub) ? "#" + sub : ""); // lazy-load at the requested child view
       } else if (on && validSubview(v, sub)) {
@@ -203,6 +230,10 @@
     if (ev.data && ev.data.wel === "nav" && VIEWS[ev.data.view]) activate(ev.data.view);
     if (ev.data && ev.data.wel === "subnav-active" && VIEWS[ev.data.view] &&
         validSubview(ev.data.view, ev.data.sub)) {
+      // Record it before activating, so a page reporting the section it just
+      // loaded is not answered by loading that section again.
+      var f = document.getElementById("frame-" + ev.data.view);
+      if (f && VIEWS[ev.data.view].subUrl) f.dataset.sub = ev.data.sub;
       activate(ev.data.view, true, ev.data.sub);
     }
   });

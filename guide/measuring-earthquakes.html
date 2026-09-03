@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How an Earthquake Becomes a Number — World Earthquake Labs</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="96x96" href="/resource/img/icon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/resource/img/icon-192.png">
+<link rel="apple-touch-icon" href="/resource/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&display=swap" rel="stylesheet">
+<!-- SEO -->
+<meta name="description" content="From a suspended mass to a published magnitude: how a seismometer works, how an epicenter is located from P and S arrival times, and why five magnitude scales exist.">
+<link rel="canonical" href="https://worldearthquakelabs.com/guide/measuring-earthquakes">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="World Earthquake Labs">
+<meta property="og:title" content="How an Earthquake Becomes a Number — World Earthquake Labs">
+<meta property="og:description" content="From a suspended mass to a published magnitude: how a seismometer works, how an epicenter is located from P and S arrival times, and why five magnitude scales exist.">
+<meta property="og:url" content="https://worldearthquakelabs.com/guide/measuring-earthquakes">
+<meta property="og:image" content="https://worldearthquakelabs.com/resource/img/og-cover-white.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How an Earthquake Becomes a Number — World Earthquake Labs">
+<meta name="twitter:description" content="From a suspended mass to a published magnitude: how a seismometer works, how an epicenter is located from P and S arrival times, and why five magnitude scales exist.">
+<meta name="twitter:image" content="https://worldearthquakelabs.com/resource/img/og-cover-white.jpg">
+<link rel="stylesheet" href="/css/style.css">
+<!-- Inside the console every child page runs in an iframe, and the shell has
+     already loaded AdSense. Pausing here keeps a second copy from stacking a
+     second anchor on the first; the loader tag itself stays static below so
+     the verification crawler still finds it in the source. -->
+<script>
+  if (window.parent !== window) {
+    (window.adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 1;
+  }
+</script>
+<!-- Google AdSense. Static in <head> on every page so the verification
+     crawler finds it in the source, not only after JavaScript runs. -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7720076982812531"
+        crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://worldearthquakelabs.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Earthquake Guide",
+      "item": "https://worldearthquakelabs.com/learn"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "How an Earthquake Becomes a Number",
+      "item": "https://worldearthquakelabs.com/guide/measuring-earthquakes"
+    }
+  ]
+}
+</script>
+</head>
+<body data-nav="guide" data-cta="dashboard" data-i18n-pack="guide" data-gd-section="measuring">
+
+<div id="site-header"></div>
+
+<div class="gd-navwrap">
+  <nav class="container gd-nav" id="gdNav">
+    <a href="/learn"><i data-icon="grid" data-size="18"></i> Overview</a>
+    <a href="/guide/earthquake-basics"><i data-icon="book" data-size="18"></i> Basics</a>
+    <a href="/guide/plate-tectonics"><i data-icon="globe" data-size="18"></i> Plate Tectonics</a>
+    <a href="/guide/measuring-earthquakes" class="active"><i data-icon="antenna" data-size="18"></i> Measuring Quakes</a>
+    <a href="/guide/magnitude-and-intensity"><i data-icon="activity" data-size="18"></i> Magnitude &amp; Intensity</a>
+    <a href="/guide/earthquake-hazards"><i data-icon="bell" data-size="18"></i> Hazards &amp; Effects</a>
+    <a href="/guide/notable-earthquakes"><i data-icon="bookmark" data-size="18"></i> Notable Earthquakes</a>
+    <a href="/guide/earthquake-glossary"><i data-icon="doc" data-size="18"></i> Key Terms</a>
+    <a href="/guide/earthquake-faq"><i data-icon="help" data-size="18"></i> FAQ</a>
+    <a href="/guide/earthquake-safety"><i data-icon="shield" data-size="18"></i> Safety Guide</a>
+  </nav>
+</div>
+
+<main class="container page-pad-bottom">
+  <section class="gd-sec active" id="gd-measuring">
+    <header class="gd-lead">
+      <span class="gd-lead-kicker">Measuring Quakes</span>
+      <h1>How an earthquake becomes a number</h1>
+      <p>From a suspended mass to a published magnitude &mdash; locating the epicenter, and why five different magnitude scales exist at all.</p>
+    </header>
+    <div class="gd-grid split-62">
+      <div class="card gd-card">
+        <h2 class="gd-title">From ground motion to a record</h2>
+        <div class="rich-text">
+          <p>A <b>seismometer</b> solves one problem: how do you measure the motion of the ground while
+            standing on it? The answer is inertia. A suspended mass tends to stay put while its frame moves
+            with the earth, and the relative motion between the two is what gets recorded.</p>
+          <p>Modern broadband instruments hold the mass almost still with a feedback force and record how
+            much force that took — which gives a faithful signal from about 0.01 Hz to 50 Hz, five orders
+            of magnitude of period in one box. Next to them sit <b>strong-motion accelerometers</b>, which
+            are deliberately less sensitive so they do not clip when the shaking is violent.</p>
+          <p>Three components — north, east and vertical — are needed, because ground motion is a vector
+            and the wave types are told apart by which direction they move.</p>
+        </div>
+        <div class="gd-tablewrap">
+          <table class="eq-table gd-table tight" style="margin-top:14px">
+            <thead><tr><th>Instrument</th><th class="nw">Records</th><th class="wide">Good for</th></tr></thead>
+            <tbody>
+              <tr><td class="mag">Broadband seismometer</td><td class="nw">Velocity</td><td>Distant and small events; waveform modelling</td></tr>
+              <tr><td class="mag">Strong-motion accelerometer</td><td class="nw">Acceleration</td><td>Severe local shaking; building codes; ShakeMaps</td></tr>
+              <tr><td class="mag">Short-period sensor</td><td class="nw">Velocity, narrow band</td><td>Dense local networks; small quakes</td></tr>
+              <tr><td class="mag">GNSS / GPS station</td><td class="nw">Permanent displacement</td><td>Very large quakes, where seismometers saturate</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card gd-card">
+        <h2 class="gd-title">Finding the epicenter</h2>
+        <p class="gd-desc">One station gives a distance but no direction. Three give a point. This is the
+          classic construction, and although agencies now solve it numerically for hundreds of arrivals at
+          once, the logic is unchanged.</p>
+        <div class="gd-fig">
+          <svg viewBox="0 0 420 260" role="img" aria-label="Locating an epicenter by triangulation from three stations">
+            <rect x="10" y="10" width="400" height="240" rx="10" fill="#f7f9fc"/>
+            <g fill="none" stroke-width="1.6">
+              <circle cx="110" cy="80" r="115.7" stroke="#1a6ef5" stroke-dasharray="5 4" opacity=".75"/>
+              <circle cx="316" cy="108" r="117.3" stroke="#0e9a8d" stroke-dasharray="5 4" opacity=".75"/>
+              <circle cx="196" cy="216" r="70.6" stroke="#e8622d" stroke-dasharray="5 4" opacity=".75"/>
+            </g>
+            <g>
+              <path d="M104 74 h12 v12 h-12 Z" fill="#1a6ef5"/>
+              <path d="M310 102 h12 v12 h-12 Z" fill="#0e9a8d"/>
+              <path d="M190 210 h12 v12 h-12 Z" fill="#e8622d"/>
+            </g>
+            <circle cx="205" cy="146" r="7" fill="#e8432d"/>
+            <circle cx="205" cy="146" r="13" fill="none" stroke="#e8432d" stroke-width="1.6" opacity=".55"/>
+            <g font-family="Inter,sans-serif" font-size="11" font-weight="600">
+              <text x="80" y="66" fill="#1a6ef5">Station A</text>
+              <text x="288" y="94" fill="#0e9a8d">Station B</text>
+              <text x="168" y="238" fill="#e8622d">Station C</text>
+              <text x="219" y="143" fill="#16294e">epicenter</text>
+            </g>
+          </svg>
+        </div>
+        <div class="rich-text">
+          <p>Each station converts its S–P interval into a distance and draws a circle of that radius. Two
+            circles cross at two points; the third picks one. Depth then comes from how the arrival times
+            vary with distance, and the whole solution is refined until predicted and observed times
+            agree.</p>
+        </div>
+        <div class="gd-note">Depth is always the least certain number in an earthquake report — especially
+          offshore, where every station is on one side. A depth given as a round <b>10 km</b> usually means
+          it could not be resolved and was fixed at a default.</div>
+      </div>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">Which magnitude is it?</h2>
+      <p class="gd-desc">"Magnitude" is not one measurement. Several scales exist because different
+        instruments, distances and event sizes need different methods — and older scales stop responding
+        once an earthquake gets big enough, a problem called <b>saturation</b>.</p>
+      <div class="gd-tablewrap">
+        <table class="eq-table gd-table tight">
+          <thead><tr><th>Scale</th><th>Symbol</th><th class="wide">Measured from</th><th>Useful range</th><th>Saturates at</th></tr></thead>
+          <tbody>
+            <tr><td class="mag">Local (Richter)</td><td>M<sub>L</sub></td><td>Peak amplitude on a short-period record, within ~600 km</td><td>2–6</td><td>~6.5</td></tr>
+            <tr><td class="mag">Body wave</td><td>m<sub>b</sub></td><td>Amplitude of the first 1-second P waves</td><td>4–6.5</td><td>~6.5</td></tr>
+            <tr><td class="mag">Surface wave</td><td>M<sub>s</sub></td><td>Amplitude of 20-second surface waves</td><td>5–8</td><td>~8.3</td></tr>
+            <tr><td class="mag">Duration / coda</td><td>M<sub>d</sub></td><td>How long the signal lasts</td><td>1–4</td><td>—</td></tr>
+            <tr><td class="mag big">Moment</td><td>M<sub>w</sub></td><td>Seismic moment: rigidity × rupture area × slip</td><td>3.5 and up</td><td>Does not saturate</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="gd-grid two" style="margin-top:18px">
+        <div class="rich-text">
+          <p><b>Why saturation matters.</b> Charles Richter's 1935 scale reads the tallest wiggle at a
+            given period. Once a rupture lasts longer than that period, making it longer still does not
+            make the wiggle taller — so an M 8 and an M 9 can look nearly identical on M<sub>L</sub>. The
+            1960 Chile earthquake was M<sub>s</sub> 8.5 by the scales of the day; recomputed as moment
+            magnitude it is <b>M<sub>w</sub> 9.5</b>, more than thirty times the energy.</p>
+        </div>
+        <div class="rich-text">
+          <p><b>Why M<sub>w</sub> is the standard.</b> Moment magnitude is derived from the physical size
+            of the rupture rather than from a single amplitude, so it keeps working at any size and can be
+            compared across decades and agencies. Small events still get M<sub>L</sub> or M<sub>d</sub>,
+            because there is not enough long-period signal to compute a moment — which is why a catalogue
+            mixes magnitude types, and why this site records which type each event carries.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">Where this site's numbers come from</h2>
+      <p class="gd-desc">World Earthquake Labs does not operate seismometers. It reads the catalogues that
+        the monitoring agencies publish, merges them, and keeps the result current.</p>
+      <div class="ready-steps">
+        <div class="rs"><span class="rs-n">1</span>
+          <div><b>National and global networks record the event.</b> Thousands of stations run by
+            universities, geological surveys and meteorological agencies stream continuously to data
+            centres.</div></div>
+        <div class="rs"><span class="rs-n">2</span>
+          <div><b>An agency locates it and assigns a magnitude.</b> The USGS publishes an automatic
+            solution within minutes and revises it as more data arrives; the ISC re-reviews everything by
+            hand, which is thorough but runs about two years behind the present.</div></div>
+        <div class="rs"><span class="rs-n">3</span>
+          <div><b>We merge the catalogues.</b> USGS ANSS ComCat (M 2.0+) and the ISC Bulletin (M 3.0+) are
+            deduplicated into a single archive back to 1900 — <span data-meta="count">2,974,013</span> events at the last rebuild. Japan
+            additionally carries JMA, which lists events USGS never publishes.</div></div>
+        <div class="rs"><span class="rs-n">4</span>
+          <div><b>The recent window is refreshed every 10 minutes.</b> The last 14 days are re-fetched
+            rather than appended, so revised magnitudes and withdrawn events are corrected here too.</div></div>
+      </div>
+      <div class="gd-note" style="margin-top:16px">Early magnitudes get revised. An event that appears as
+        M 6.8 in the first minutes may settle at M 7.1 an hour later — not an error, just more stations
+        reporting. Treat anything within an hour of origin as provisional.</div>
+    </div>
+  </section>
+
+  <nav class="gd-seq" aria-label="Guide sections">
+    <a class="gd-seq-prev" href="/guide/plate-tectonics"><span>Previous</span><b>Plate Tectonics</b></a>
+    <a class="gd-seq-next" href="/guide/magnitude-and-intensity"><span>Next</span><b>Magnitude &amp; Intensity</b></a>
+  </nav>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="/js/common.js"></script>
+<script src="/js/i18n.js"></script>
+<script src="/js/learn.js"></script>
+</body>
+</html>
