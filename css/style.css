@@ -2536,13 +2536,14 @@ a.pub:hover .pub-title { color: var(--blue-600); }
 .pub-sort .lbl { font-size: 12.5px; }
 
 /* The search field shares the sort chip's shell, so the two read as one row of
-   controls. It gives way first when the head runs out of room. */
-.pub-search { flex: 1 1 200px; min-width: 0; max-width: 320px; gap: 8px; }
+   controls. It takes the room the title leaves -- a query is often a paper's
+   name, and those run long -- and gives way first when the head runs short. */
+.pub-search { flex: 1 1 320px; min-width: 0; max-width: 560px; gap: 9px; margin-inline-start: auto; }
 .pub-search svg { color: var(--muted); flex-shrink: 0; }
 .pub-search input {
   flex: 1; min-width: 0; border: none; background: none; outline: none;
-  font-family: inherit; font-size: 13.5px; font-weight: 600; color: var(--navy-800);
-  padding: 0;
+  font-family: inherit; font-size: 14px; font-weight: 600; color: var(--navy-800);
+  padding: 1px 0;
 }
 .pub-search input::placeholder { color: var(--faint); font-weight: 500; }
 .pub-count { font-size: 12.5px; color: var(--muted); margin: 10px 0 -6px; }
@@ -3826,6 +3827,11 @@ a.pub:hover .pub-title { color: var(--blue-600); }
   /* Card headings and their right-hand note stop fighting for one line. */
   .card-head { flex-direction: column; align-items: flex-start; gap: 8px; }
   .pub-sort { width: 100%; }
+  /* The search field takes the full row, and the same 44px height as the
+     other chips: the input is the tap target, so it carries the padding the
+     chip gave up above. 16px stops iOS zooming in when it gains focus. */
+  .pub-search { width: 100%; max-width: none; margin-inline-start: 0; }
+  .pub-search input { padding: 10px 0; font-size: 16px; }
   /* The tag and the count read fine under the name on a narrow screen; beside
      it they squeeze the note to three words a line. */
   .src-row { flex-direction: column; gap: 8px; }

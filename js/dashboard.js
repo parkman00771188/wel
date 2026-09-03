@@ -24,7 +24,7 @@
   var SIGNIFICANT_MIN_MAG = 4;
   function periodLbl() { return PERIOD_LBL[state.days] || "All"; }
 
-  var state = { region: "All Regions", days: 7 };
+  var state = { region: "All Regions", days: 7305 };   // two decades, the same default as the map
 
   function regionEvents() {
     return EQ.byRegion(EQ.events, state.region);
@@ -322,12 +322,20 @@
 
   /* ---------------- controls ---------------- */
 
-  on("periodSelect", "change", function () {
-    state.days = this.value === "all" ? ALL_DAYS : +this.value;
+  // Long windows aggregate the whole catalog, so the region filter has nothing
+  // to act on; it is disabled rather than silently ignored. Applied at boot too,
+  // since the default window is a long one.
+  function syncRegionToPeriod() {
     var regionSel = document.getElementById("regionSelect");
     var isLong = state.days > 120;
-    regionSel.disabled = isLong; // long windows aggregate the whole catalog
+    regionSel.disabled = isLong;
     if (isLong) { regionSel.value = "All Regions"; state.region = "All Regions"; }
+  }
+  syncRegionToPeriod();
+
+  on("periodSelect", "change", function () {
+    state.days = this.value === "all" ? ALL_DAYS : +this.value;
+    syncRegionToPeriod();
     renderAll();
   });
 
