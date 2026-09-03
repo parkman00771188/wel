@@ -36,6 +36,7 @@
   var OVERVIEW_CAP = { news: 8, paper: 4, quake: 4 };
   var OVERVIEW_MIN_MAG = 4.5;   // an overview row is an earthquake worth a headline
   var PAGE = 30;                // rows per page in the News, Papers and Earthquakes views
+  var PAPERS_KEPT = 300;        // the Papers view shows this many of the newest; the store keeps all
 
   var feed = byId("newsFeed");
   var items = [];          // news rows
@@ -66,9 +67,6 @@
     if (!isFinite(t)) return "";
     return DFMT ? DFMT.format(new Date(t)) : String(iso).slice(0, 10);
   }
-  // Always Western digits with comma groups: that is what the translation
-  // engine's {n} pattern matches, whatever the language.
-  function num(n) { return Number(n || 0).toLocaleString("en-US"); }
 
   function escapeHTML(value) {
     return String(value == null ? "" : value)
@@ -94,7 +92,6 @@
     byId("viewNews").hidden = name !== "news";
     byId("viewPapers").hidden = name !== "papers";
     byId("viewQuakes").hidden = name !== "quakes";
-    byId("newsStats").hidden = name !== "overview";
 
     document.querySelectorAll(".side-nav a[data-subview]").forEach(function (a) {
       a.classList.toggle("active", a.dataset.subview === name);
@@ -243,7 +240,7 @@
   function renderPapers() {
     var host = byId("paperList");
     if (!host) return;
-    paginate("papers", host, newestPapers(), function (x) {
+    paginate("papers", host, newestPapers().slice(0, PAPERS_KEPT), function (x) {
       var by = paperBy(x.p) + (x.p.open_access ? ' · <span class="pub-oa">Open access</span>' : "");
       return row(kindPill("paper", "Paper"), x.p.title, by, timeAgo(x.t), x.p.url);
     }, "No updates yet.");
@@ -284,24 +281,8 @@
     window.parent.postMessage({ wel: "focus-quake", lat: p[0], lng: p[1], t: p[2], depth: p[3], m: p[4], id: u.searchParams.get("fid") }, "*");
   });
 
-  /* ---------- stats strip ---------- */
-
-  function renderStats() {
-    var news = stores.news, papers = stores.papers, live = stores.live;
-    var set = function (id, v) { var el = byId(id); if (el) el.textContent = v; };
-    if (news) set("statNews", num(news.count || (news.items || []).length));
-    if (papers) set("statPapers", num(papers.count || (papers.items || []).length));
-    if (live) set("statLive", num(live.count));
-    var newest = 0;
-    [news, papers, live, stores.meta].forEach(function (s) {
-      var t = s && Date.parse(s.generated_utc);
-      if (t && t > newest) newest = t;
-    });
-    if (newest) set("statUpdated", timeAgo(newest));
-  }
-
   RENDER.news = renderFeed; RENDER.papers = renderPapers; RENDER.quakes = renderQuakes;
-  function renderAll() { renderStats(); renderOverview(); renderPapers(); renderQuakes(); }
+  function renderAll() { renderOverview(); renderPapers(); renderQuakes(); }
 
   /* ---------- loading ---------- */
 
