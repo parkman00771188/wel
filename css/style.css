@@ -2616,7 +2616,7 @@ a.upd-row:hover .upd-title { color: var(--blue-600); }
 }
 .upd-type.news { background: var(--blue-050); color: var(--blue-600); }
 .upd-type.paper { background: var(--green-050); color: var(--green-500); }
-.upd-type.data { background: #fff3e0; color: #b45d12; }
+.upd-type.quake { background: #fff3e0; color: #b45d12; }
 .log-side { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
 .log-when { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 @media (max-width: 680px) {

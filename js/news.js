@@ -32,7 +32,7 @@
   // Overview takes the newest few of each kind, then merges them by time. A
   // single cap across kinds would fill the list with headlines, which arrive
   // hourly, and hide the papers, which arrive weekly.
-  var OVERVIEW_CAP = { news: 8, paper: 4, data: 99 };
+  var OVERVIEW_CAP = { news: 8, paper: 4, quake: 99 };
 
   var feed = byId("newsFeed");
   var items = [];          // news rows
@@ -168,27 +168,28 @@
       if (isFinite(t)) rows.push({ kind: "paper", t: t, title: p.title, by: p.venue || "", url: p.url || "" });
     });
     if (live && live.generated_utc) {
-      rows.push({ kind: "data", t: Date.parse(live.generated_utc),
+      rows.push({ kind: "quake", t: Date.parse(live.generated_utc),
         title: "Live earthquake overlay refreshed: " + num(live.count) + " events in the last 14 days", by: "USGS", url: "map#3d" });
     }
     if (meta && meta.generated_utc) {
-      rows.push({ kind: "data", t: Date.parse(meta.generated_utc),
+      rows.push({ kind: "quake", t: Date.parse(meta.generated_utc),
         title: "Earthquake catalogue rebuilt: " + num(meta.count) + " events since 1900", by: "USGS + ISC", url: "map" });
     }
     if (news && news.generated_utc) {
-      rows.push({ kind: "data", t: Date.parse(news.generated_utc),
+      // A feed's own refresh is filed under what the feed carries.
+      rows.push({ kind: "news", t: Date.parse(news.generated_utc),
         title: "News feed refreshed: " + num(news.count || (news.items || []).length) + " items", by: "Google News + ScienceDaily", url: "#news" });
     }
     if (papers && papers.generated_utc) {
-      rows.push({ kind: "data", t: Date.parse(papers.generated_utc),
+      rows.push({ kind: "paper", t: Date.parse(papers.generated_utc),
         title: "Publication list refreshed: " + num(papers.count || (papers.items || []).length) + " papers", by: "OpenAlex", url: "research#publications" });
     }
     rows.sort(function (a, b) { return b.t - a.t; });
-    var taken = { news: 0, paper: 0, data: 0 };
+    var taken = { news: 0, paper: 0, quake: 0 };
     return rows.filter(function (r) { return ++taken[r.kind] <= OVERVIEW_CAP[r.kind]; });
   }
 
-  var KIND_LABEL = { news: "News", paper: "Paper", data: "Data" };
+  var KIND_LABEL = { news: "News", paper: "Paper", quake: "Earthquake" };
 
   function renderOverview() {
     var host = byId("updList");
