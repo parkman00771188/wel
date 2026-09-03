@@ -620,6 +620,10 @@ WEL_I18N.load({
   "Catalogue rebuilt:": "Katalog yeniden oluşturuldu:",
 
   /* insights floor */
+  "Detail": "Ayrıntı",
+  "M {n}+ (default)": "M $1+ (varsayılan)",
+  "M {n}+ (slower)": "M $1+ (daha yavaş)",
+  "M {n}+ (slowest)": "M $1+ (en yavaş)",
   "M {n}+ only": "Yalnızca M $1+",
   "{n} events analysed": "$1 olay incelendi",
   "of {n} in the catalogue": "katalogdaki $1 olaydan",

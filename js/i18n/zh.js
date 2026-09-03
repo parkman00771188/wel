@@ -620,6 +620,10 @@ WEL_I18N.load({
   "Catalogue rebuilt:": "目录重建：",
 
   /* insights floor */
+  "Detail": "精细度",
+  "M {n}+ (default)": "M $1+（默认）",
+  "M {n}+ (slower)": "M $1+（较慢）",
+  "M {n}+ (slowest)": "M $1+（最慢）",
   "M {n}+ only": "仅 M $1+",
   "{n} events analysed": "分析 $1 次事件",
   "of {n} in the catalogue": "目录共 $1 次",

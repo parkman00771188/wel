@@ -620,6 +620,10 @@ WEL_I18N.load({
   "Catalogue rebuilt:": "कैटलॉग पुनर्निर्मित:",
 
   /* insights floor */
+  "Detail": "विवरण",
+  "M {n}+ (default)": "M $1+ (डिफ़ॉल्ट)",
+  "M {n}+ (slower)": "M $1+ (धीमा)",
+  "M {n}+ (slowest)": "M $1+ (सबसे धीमा)",
   "M {n}+ only": "केवल M $1+",
   "{n} events analysed": "$1 घटनाएँ विश्लेषित",
   "of {n} in the catalogue": "कैटलॉग की $1 में से",

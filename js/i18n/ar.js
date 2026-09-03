@@ -620,6 +620,10 @@ WEL_I18N.load({
   "Catalogue rebuilt:": "إعادة بناء الكتالوج:",
 
   /* insights floor */
+  "Detail": "التفصيل",
+  "M {n}+ (default)": "M $1+ (افتراضي)",
+  "M {n}+ (slower)": "M $1+ (أبطأ)",
+  "M {n}+ (slowest)": "M $1+ (الأبطأ)",
   "M {n}+ only": "M $1+ فقط",
   "{n} events analysed": "تحليل $1 حدثًا",
   "of {n} in the catalogue": "من أصل $1 في الكتالوج",

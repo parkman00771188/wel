@@ -620,6 +620,10 @@ WEL_I18N.load({
   "Catalogue rebuilt:": "Katalog dibangun ulang:",
 
   /* insights floor */
+  "Detail": "Detail",
+  "M {n}+ (default)": "M $1+ (bawaan)",
+  "M {n}+ (slower)": "M $1+ (lebih lambat)",
+  "M {n}+ (slowest)": "M $1+ (paling lambat)",
   "M {n}+ only": "Hanya M $1+",
   "{n} events analysed": "$1 kejadian dianalisis",
   "of {n} in the catalogue": "dari $1 di katalog",

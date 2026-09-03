@@ -620,6 +620,10 @@ WEL_I18N.load({
   "Catalogue rebuilt:": "カタログ再構築:",
 
   /* insights floor */
+  "Detail": "詳細度",
+  "M {n}+ (default)": "M $1+（既定）",
+  "M {n}+ (slower)": "M $1+（遅い）",
+  "M {n}+ (slowest)": "M $1+（最も遅い）",
   "M {n}+ only": "M $1+のみ",
   "{n} events analysed": "$1件を分析",
   "of {n} in the catalogue": "カタログ全体$1件のうち",

@@ -620,6 +620,10 @@ WEL_I18N.load({
   "Catalogue rebuilt:": "카탈로그 재구축:",
 
   /* insights floor */
+  "Detail": "상세도",
+  "M {n}+ (default)": "M $1+ (기본)",
+  "M {n}+ (slower)": "M $1+ (느림)",
+  "M {n}+ (slowest)": "M $1+ (가장 느림)",
   "M {n}+ only": "M $1+만",
   "{n} events analysed": "$1건 분석",
   "of {n} in the catalogue": "카탈로그 전체 $1건 중",

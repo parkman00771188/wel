@@ -620,6 +620,10 @@ WEL_I18N.load({
   "Catalogue rebuilt:": "Muling binuo ang katalogo:",
 
   /* insights floor */
+  "Detail": "Detalye",
+  "M {n}+ (default)": "M $1+ (default)",
+  "M {n}+ (slower)": "M $1+ (mas mabagal)",
+  "M {n}+ (slowest)": "M $1+ (pinakamabagal)",
   "M {n}+ only": "M $1+ lamang",
   "{n} events analysed": "$1 pangyayari ang nasuri",
   "of {n} in the catalogue": "mula sa $1 sa katalogo",

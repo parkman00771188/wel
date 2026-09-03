@@ -94,10 +94,10 @@
           </select>
         </label>
         <!-- Long windows analyse M 4+ or M 5+ only, so the page stays fast; this
-             lowers the floor one step for a reader who wants the detail. -->
-        <label class="select-chip insight-floor-chip" id="floorChip" hidden>
-          <input type="checkbox" id="floorToggle">
-          <span class="lbl" id="floorLabel">Include M 4+ (slower)</span>
+             lets a reader lower the floor, down to M 3+, at the cost of a wait.
+             The options are written by script for the window in force. -->
+        <label class="select-chip insight-floor-chip" id="floorChip" hidden><span class="lbl">Detail</span>
+          <select id="floorSelect"></select>
         </label>
         <label class="select-chip insight-region-chip"><span class="lbl">Region</span>
           <select id="regionSelect">

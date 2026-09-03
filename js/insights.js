@@ -24,7 +24,7 @@
   var PERIOD_LBL = { 1: "24h", 7: "7d", 30: "30d", 90: "90d", 365: "1y", 1095: "3y", 1826: "5y", 3652: "10y", 7305: "20y", 10958: "30y", 18263: "50y" };
   var ALL_DAYS = Math.ceil((Date.now() - Date.parse("1900-01-01T00:00:00Z")) / 86400e3);
   function periodLbl() { return PERIOD_LBL[state.days] || "All"; }
-  var state = { days: 7305, region: "Global", detail: false };   // two decades, the same default as the map
+  var state = { days: 7305, region: "Global", floor: null };   // two decades, the same default as the map; floor null = default
   var charts = {};
   var eventLookup = {};
   var historyState = { page: 0, size: 20, query: "", sort: "latest" };
@@ -33,14 +33,17 @@
   /* Short windows analyse every event the recent cache holds. Long ones would
      mean hundreds of thousands of objects for the charts, so they take a
      magnitude floor -- M 4+ up to twenty years, M 5+ beyond -- and the reader
-     may lower it one step with the toggle, at the cost of a wait. */
+     may lower it, down to M 3+, at the cost of a wait: the whole record at
+     M 3+ is two million objects and several seconds. */
   function defaultFloor() {
     if (state.days <= 120) return 2;
     return state.days > 7300 ? 5 : 4;
   }
+  var MIN_FLOOR = 3;   // M 2+ over a long window is three million objects: not offered
   function analysisFloor() {
     var f = defaultFloor();
-    return f > 2 && state.detail ? f - 1 : f;
+    if (f <= 2 || state.floor == null) return f;
+    return Math.min(f, Math.max(MIN_FLOOR, state.floor));
   }
   function fmtN(n) { return Number(n || 0).toLocaleString("en-US"); }
 
@@ -57,13 +60,25 @@
     return parts.join(" \u00b7 ");
   }
 
+  /* The chooser offers the default and each step down to M 3+, each labelled
+     with what it costs. Rebuilt whenever the window changes, because the
+     default moves with it. */
+  var COST = ["(default)", "(slower)", "(slowest)"];
   function syncFloorChip() {
-    var chip = document.getElementById("floorChip"), box = document.getElementById("floorToggle"), lbl = document.getElementById("floorLabel");
-    if (!chip) return;
+    var chip = document.getElementById("floorChip"), sel = document.getElementById("floorSelect");
+    if (!chip || !sel) return;
     var base = defaultFloor();
     chip.hidden = base <= 2;
-    if (box) box.checked = state.detail;
-    if (lbl) lbl.textContent = "Include M " + (base - 1) + "+ (slower)";
+    if (base <= 2) return;
+    var current = analysisFloor();
+    sel.innerHTML = "";
+    for (var f = base, i = 0; f >= MIN_FLOOR; f--, i++) {
+      var o = document.createElement("option");
+      o.value = String(f);
+      o.textContent = "M " + f + "+ " + (COST[i] || COST[COST.length - 1]);
+      if (f === current) o.selected = true;
+      sel.appendChild(o);
+    }
   }
 
   function escapeHTML(value) {
@@ -775,10 +790,11 @@
     renderAll();
   });
 
-  on("floorToggle", "change", function () {
-    state.detail = this.checked;
+  on("floorSelect", "change", function () {
+    var f = +this.value;
+    state.floor = f === defaultFloor() ? null : f;
     historyState.page = 0;
-    // Half a million objects take a moment; say so before the page freezes.
+    // A million objects take a few seconds; say so before the page freezes.
     document.getElementById("analysisScope").textContent = "Computing\u2026";
     setTimeout(renderAll, 30);
   });

@@ -620,6 +620,10 @@ WEL_I18N.load({
   "Catalogue rebuilt:": "Catálogo reconstruido:",
 
   /* insights floor */
+  "Detail": "Detalle",
+  "M {n}+ (default)": "M $1+ (predeterminado)",
+  "M {n}+ (slower)": "M $1+ (más lento)",
+  "M {n}+ (slowest)": "M $1+ (el más lento)",
   "M {n}+ only": "Solo M $1+",
   "{n} events analysed": "$1 eventos analizados",
   "of {n} in the catalogue": "de $1 en el catálogo",
