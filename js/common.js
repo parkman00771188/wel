@@ -528,6 +528,27 @@
       .catch(function () {});
   }
 
+  /* A reader who arrives from somewhere else -- a search result, a link in an
+     article -- gets the console, which is the site as it is meant to be used;
+     the page they asked for opens as its tab. The decision rests on the
+     referrer alone: a crawler sends none, so it sees and indexes this page as
+     it is, at its own URL, and no redirect is ever shown to it. A reader who
+     typed the address gets the same page the crawler saw. Links from our own
+     pages are not "elsewhere" -- the home page routes those itself. */
+  function arrivedFromElsewhere() {
+    if (EMBED || window.top !== window.self || !document.referrer) return false;
+    try { return new URL(document.referrer).host !== location.host; } catch (e) { return false; }
+  }
+  (function openConsoleForVisitors() {
+    var route = consoleRoute(location.pathname);
+    if (!route || !arrivedFromElsewhere()) return;
+    // A fragment on the page is its sub-view (#3d on the map); the console
+    // takes the same names after a slash.
+    var frag = location.hash.match(/^#([a-z0-9-]+)$/);
+    var sub = route.sub || (frag ? frag[1] : "");
+    location.replace("/app" + location.search + "#" + route.view + (sub ? "/" + sub : ""));
+  })();
+
   window.WEL = {
     icon: icon, renderIcons: renderIcons, toast: toast, embed: EMBED,
     AD: AD, mountAd: mountAd, tz: TZ, tzControlHTML: tzControlHTML, langControlHTML: langControlHTML
