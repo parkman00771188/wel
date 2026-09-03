@@ -7,7 +7,7 @@ WEL_I18N.load({
   /* console shell */
   "Overview": "概要",
   "Live Map": "ライブマップ",
-  "3D Globe": "3D地球儀",
+  "3D Map": "3D地図",
   "2D Map": "2Dマップ",
   "Earthquake Guide": "地震ガイド",
   "Seismic Insights": "地震インサイト",
@@ -606,6 +606,17 @@ WEL_I18N.load({
   "{n} items": "$1件",
   "{n} papers": "$1編",
   "No updates yet.": "まだ更新はありません。",
+
+  /* news hub 2 */
+  "Latest papers": "最新の論文",
+  "Latest earthquakes": "最新の地震",
+  "The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.": "収集器が最近追加した主要誌の論文です。検索できる全リストはリサーチハブにあります。",
+  "From the live USGS overlay, refreshed every 10 minutes: the last 14 days, newest first.": "USGSリアルタイムオーバーレイより、10分ごとに更新: 直近14日、新しい順。",
+  "Open the Research Hub →": "リサーチハブを開く →",
+  "Depth {n} km": "深さ $1 km",
+  "No earthquakes in the last 14 days.": "直近14日間に地震はありません。",
+  "Live overlay refreshed:": "リアルタイムオーバーレイ更新:",
+  "Catalogue rebuilt:": "カタログ再構築:",
 
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine

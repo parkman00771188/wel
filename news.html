@@ -49,11 +49,12 @@
   <!-- ============ Sidebar ============ -->
   <aside class="side-nav">
     <div class="side-title">News &amp; Updates</div>
-    <!-- Overview says what the cycle brought in last; News is the coverage
-         feed; Update Log is every file the cycle writes and when. -->
+    <!-- Overview merges the newest of the three kinds the site collects;
+         the other three views are one kind each. -->
     <a href="#overview" class="active" data-subview="overview"><i data-icon="grid" data-size="18"></i> Overview</a>
     <a href="#news" data-subview="news"><i data-icon="radio" data-size="18"></i> News</a>
-    <a href="#log" data-subview="log"><i data-icon="clock" data-size="18"></i> Update Log</a>
+    <a href="#papers" data-subview="papers"><i data-icon="book" data-size="18"></i> Papers</a>
+    <a href="#quakes" data-subview="quakes"><i data-icon="activity" data-size="18"></i> Earthquakes</a>
   </aside>
 
   <!-- ============ Content ============ -->
@@ -110,13 +111,31 @@
       </div>
     </section>
 
-    <section class="res-view" id="viewLog" hidden>
+    <section class="res-view" id="viewPapers" hidden>
       <div class="card">
         <div class="card-head">
-          <div class="card-title" style="font-size:17px">Update Log</div>
+          <div class="card-title" style="font-size:17px">Latest papers</div>
+          <a class="btn-text" href="research#publications">Open the Research Hub &rarr;</a>
         </div>
-        <p class="card-sub">Every file the ten-minute cycle writes, and when it last wrote it.</p>
-        <div class="upd-list" id="logList"></div>
+        <p class="card-sub">The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.</p>
+        <div class="upd-list" id="paperList"></div>
+      </div>
+    </section>
+
+    <section class="res-view" id="viewQuakes" hidden>
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title" style="font-size:17px">Latest earthquakes</div>
+          <div class="range-chips" id="quakeFilter">
+            <button data-min="0" class="active">All</button>
+            <button data-min="2.5">M 2.5+</button>
+            <button data-min="4.5">M 4.5+</button>
+            <button data-min="6">M 6+</button>
+          </div>
+        </div>
+        <p class="card-sub">From the live USGS overlay, refreshed every 10 minutes: the last 14 days, newest first.</p>
+        <p class="card-sub" id="quakeNote" style="margin-top:-6px"></p>
+        <div class="upd-list" id="quakeList"></div>
       </div>
     </section>
   </section>

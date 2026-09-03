@@ -7,7 +7,7 @@ WEL_I18N.load({
   /* console shell */
   "Overview": "概览",
   "Live Map": "实时地图",
-  "3D Globe": "3D 地球仪",
+  "3D Map": "3D 地图",
   "2D Map": "2D 地图",
   "Earthquake Guide": "地震指南",
   "Seismic Insights": "地震洞察",
@@ -606,6 +606,17 @@ WEL_I18N.load({
   "{n} items": "$1 条",
   "{n} papers": "$1 篇",
   "No updates yet.": "尚无更新。",
+
+  /* news hub 2 */
+  "Latest papers": "最新论文",
+  "Latest earthquakes": "最新地震",
+  "The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.": "采集器最近加入的主要期刊论文。可搜索的完整列表见研究中心。",
+  "From the live USGS overlay, refreshed every 10 minutes: the last 14 days, newest first.": "来自 USGS 实时叠加层，每 10 分钟更新：最近 14 天，最新在前。",
+  "Open the Research Hub →": "打开研究中心 →",
+  "Depth {n} km": "深度 $1 km",
+  "No earthquakes in the last 14 days.": "最近 14 天没有地震。",
+  "Live overlay refreshed:": "实时叠加层刷新：",
+  "Catalogue rebuilt:": "目录重建：",
 
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine

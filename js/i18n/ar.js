@@ -7,7 +7,7 @@ WEL_I18N.load({
   /* console shell */
   "Overview": "نظرة عامة",
   "Live Map": "الخريطة الحية",
-  "3D Globe": "كرة ثلاثية الأبعاد",
+  "3D Map": "خريطة ثلاثية الأبعاد",
   "2D Map": "خريطة ثنائية الأبعاد",
   "Earthquake Guide": "دليل الزلازل",
   "Seismic Insights": "رؤى زلزالية",
@@ -606,6 +606,17 @@ WEL_I18N.load({
   "{n} items": "$1 عنصرًا",
   "{n} papers": "$1 ورقة",
   "No updates yet.": "لا توجد تحديثات بعد.",
+
+  /* news hub 2 */
+  "Latest papers": "أحدث الأوراق",
+  "Latest earthquakes": "أحدث الزلازل",
+  "The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.": "أحدث الأوراق التي أضافها المجمِّع من المجلات الكبرى. القائمة الكاملة مع البحث في مركز الأبحاث.",
+  "From the live USGS overlay, refreshed every 10 minutes: the last 14 days, newest first.": "من طبقة USGS المباشرة، تُحدَّث كل 10 دقائق: آخر 14 يومًا، الأحدث أولًا.",
+  "Open the Research Hub →": "افتح مركز الأبحاث →",
+  "Depth {n} km": "العمق $1 كم",
+  "No earthquakes in the last 14 days.": "لا زلازل خلال آخر 14 يومًا.",
+  "Live overlay refreshed:": "تحديث الطبقة المباشرة:",
+  "Catalogue rebuilt:": "إعادة بناء الكتالوج:",
 
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine

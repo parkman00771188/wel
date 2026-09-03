@@ -7,7 +7,7 @@ WEL_I18N.load({
   /* console shell */
   "Overview": "अवलोकन",
   "Live Map": "लाइव मैप",
-  "3D Globe": "3D ग्लोब",
+  "3D Map": "3D मानचित्र",
   "2D Map": "2D मैप",
   "Earthquake Guide": "भूकंप गाइड",
   "Seismic Insights": "भूकंपीय अंतर्दृष्टि",
@@ -606,6 +606,17 @@ WEL_I18N.load({
   "{n} items": "$1 आइटम",
   "{n} papers": "$1 शोधपत्र",
   "No updates yet.": "अभी कोई अपडेट नहीं।",
+
+  /* news hub 2 */
+  "Latest papers": "नवीनतम शोधपत्र",
+  "Latest earthquakes": "नवीनतम भूकंप",
+  "The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.": "संग्राहक द्वारा हाल में जोड़े गए प्रमुख पत्रिकाओं के शोधपत्र। खोज सहित पूरी सूची रिसर्च हब में है।",
+  "From the live USGS overlay, refreshed every 10 minutes: the last 14 days, newest first.": "USGS लाइव ओवरले से, हर 10 मिनट में ताज़ा: पिछले 14 दिन, नवीनतम पहले।",
+  "Open the Research Hub →": "रिसर्च हब खोलें →",
+  "Depth {n} km": "गहराई $1 किमी",
+  "No earthquakes in the last 14 days.": "पिछले 14 दिनों में कोई भूकंप नहीं।",
+  "Live overlay refreshed:": "लाइव ओवरले ताज़ा:",
+  "Catalogue rebuilt:": "कैटलॉग पुनर्निर्मित:",
 
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine

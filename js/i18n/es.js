@@ -7,7 +7,7 @@ WEL_I18N.load({
   /* console shell */
   "Overview": "Resumen",
   "Live Map": "Mapa en vivo",
-  "3D Globe": "Globo 3D",
+  "3D Map": "Mapa 3D",
   "2D Map": "Mapa 2D",
   "Earthquake Guide": "Guía de sismos",
   "Seismic Insights": "Análisis sísmico",
@@ -606,6 +606,17 @@ WEL_I18N.load({
   "{n} items": "$1 elementos",
   "{n} papers": "$1 artículos",
   "No updates yet.": "Aún no hay actualizaciones.",
+
+  /* news hub 2 */
+  "Latest papers": "Últimos artículos",
+  "Latest earthquakes": "Últimos sismos",
+  "The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.": "Los artículos más recientes que añadió el recolector, de las grandes revistas. La lista completa, con buscador, está en el Centro de Investigación.",
+  "From the live USGS overlay, refreshed every 10 minutes: the last 14 days, newest first.": "De la capa en vivo del USGS, actualizada cada 10 minutos: los últimos 14 días, lo más nuevo primero.",
+  "Open the Research Hub →": "Abrir el Centro de Investigación →",
+  "Depth {n} km": "Profundidad $1 km",
+  "No earthquakes in the last 14 days.": "Sin sismos en los últimos 14 días.",
+  "Live overlay refreshed:": "Capa en vivo actualizada:",
+  "Catalogue rebuilt:": "Catálogo reconstruido:",
 
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine

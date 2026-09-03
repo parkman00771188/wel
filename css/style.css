@@ -2597,11 +2597,11 @@ a.pub:hover .pub-title { color: var(--blue-600); }
    pill in the same family as the publication badges, so a reader can tell a
    paper from a headline from a data refresh at a glance. */
 .upd-list { display: flex; flex-direction: column; margin-top: 14px; }
-.upd-row, .log-row {
+.upd-row {
   display: flex; align-items: center; gap: 14px;
   padding: 13px 6px; border-bottom: 1px solid var(--line-soft); color: inherit;
 }
-.upd-row:last-child, .log-row:last-child { border-bottom: 0; }
+.upd-row:last-child { border-bottom: 0; }
 a.upd-row { border-radius: 8px; transition: background .12s; }
 a.upd-row:hover { background: var(--bg-soft); }
 a.upd-row:hover .upd-title { color: var(--blue-600); }
@@ -2616,17 +2616,14 @@ a.upd-row:hover .upd-title { color: var(--blue-600); }
 }
 .upd-type.news { background: var(--blue-050); color: var(--blue-600); }
 .upd-type.paper { background: var(--green-050); color: var(--green-500); }
-.upd-type.quake { background: #fff3e0; color: #b45d12; }
-.log-side { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
-.log-when { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.upd-type.quake { background: #fff3e0; color: #b45d12; font-variant-numeric: tabular-nums; }
+.upd-by .pub-oa { font-size: 11px; padding: 1px 7px; border-radius: 20px; }
 @media (max-width: 680px) {
   /* The pill and the time share the first line; the title takes the next. */
   .upd-row { flex-wrap: wrap; row-gap: 6px; }
   .upd-type { order: 0; }
   .upd-time { order: 1; margin-inline-start: auto; }
   .upd-main { order: 2; flex-basis: 100%; }
-  .log-row { flex-direction: column; align-items: flex-start; gap: 8px; }
-  .log-side { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 }
 .pub-empty { grid-column: 1 / -1; color: var(--faint); padding: 22px 2px; margin: 0; }
 

@@ -7,7 +7,7 @@ WEL_I18N.load({
   /* console shell */
   "Overview": "Ikhtisar",
   "Live Map": "Peta Langsung",
-  "3D Globe": "Globe 3D",
+  "3D Map": "Peta 3D",
   "2D Map": "Peta 2D",
   "Earthquake Guide": "Panduan Gempa Bumi",
   "Seismic Insights": "Wawasan Seismik",
@@ -606,6 +606,17 @@ WEL_I18N.load({
   "{n} items": "$1 item",
   "{n} papers": "$1 makalah",
   "No updates yet.": "Belum ada pembaruan.",
+
+  /* news hub 2 */
+  "Latest papers": "Makalah terbaru",
+  "Latest earthquakes": "Gempa terbaru",
+  "The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.": "Makalah terbaru yang ditambahkan pengumpul, dari jurnal-jurnal utama. Daftar lengkap dengan pencarian ada di Pusat Riset.",
+  "From the live USGS overlay, refreshed every 10 minutes: the last 14 days, newest first.": "Dari lapisan langsung USGS, diperbarui setiap 10 menit: 14 hari terakhir, terbaru lebih dulu.",
+  "Open the Research Hub →": "Buka Pusat Riset →",
+  "Depth {n} km": "Kedalaman $1 km",
+  "No earthquakes in the last 14 days.": "Tidak ada gempa dalam 14 hari terakhir.",
+  "Live overlay refreshed:": "Lapisan langsung diperbarui:",
+  "Catalogue rebuilt:": "Katalog dibangun ulang:",
 
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine

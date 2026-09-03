@@ -7,7 +7,7 @@ WEL_I18N.load({
   /* console shell */
   "Overview": "Buod",
   "Live Map": "Live na Mapa",
-  "3D Globe": "Globo 3D",
+  "3D Map": "3D na Mapa",
   "2D Map": "Mapa 2D",
   "Earthquake Guide": "Gabay sa Lindol",
   "Seismic Insights": "Insights sa Lindol",
@@ -606,6 +606,17 @@ WEL_I18N.load({
   "{n} items": "$1 item",
   "{n} papers": "$1 papel",
   "No updates yet.": "Wala pang update.",
+
+  /* news hub 2 */
+  "Latest papers": "Pinakabagong papel",
+  "Latest earthquakes": "Pinakabagong lindol",
+  "The newest papers the collector added, from the major journals. The full list, with search, is in the Research Hub.": "Ang pinakabagong papel na idinagdag ng kolektor, mula sa malalaking journal. Ang buong listahan, may paghahanap, ay nasa Research Hub.",
+  "From the live USGS overlay, refreshed every 10 minutes: the last 14 days, newest first.": "Mula sa live na overlay ng USGS, ina-update tuwing 10 minuto: huling 14 araw, pinakabago muna.",
+  "Open the Research Hub →": "Buksan ang Research Hub →",
+  "Depth {n} km": "Lalim $1 km",
+  "No earthquakes in the last 14 days.": "Walang lindol sa huling 14 araw.",
+  "Live overlay refreshed:": "Na-refresh ang live na overlay:",
+  "Catalogue rebuilt:": "Muling binuo ang katalogo:",
 
   /* An article stranded outside a <b> or an <a> is its own text node, so it
      reaches the engine alone, with no noun to agree with. None of these nine
