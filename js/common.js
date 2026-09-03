@@ -206,6 +206,35 @@
 
   var EMBED = /[?&]embed\b/.test(location.search);
 
+  /* Which console tab a content link belongs to. The pages are real URLs --
+     /map, /learn, /guide/plate-tectonics -- and stay that way in the markup so
+     crawlers and new tabs get the page. This is only consulted on a plain
+     click, to open the same thing in the console instead. Returns null for
+     anything that is not one of those pages. */
+  var GUIDE_SUB = {
+    "earthquake-basics": "basics", "plate-tectonics": "plates",
+    "measuring-earthquakes": "measuring", "magnitude-and-intensity": "magnitude",
+    "earthquake-hazards": "hazards", "notable-earthquakes": "history",
+    "earthquake-glossary": "terms", "earthquake-faq": "faq", "earthquake-safety": "safety"
+  };
+  var VIEW_OF = { dashboard: "overview", map: "map", insights: "insights", research: "research", learn: "learn", news: "news" };
+  function consoleRoute(href) {
+    if (!href || /^(#|https?:|mailto:)/i.test(href)) return null;
+    var path = href.replace(/[?#].*$/, "");
+    var m = path.match(/^\/?(map|dashboard|insights|research|learn|news)(?:\.html)?\/?$/);
+    if (m) return { view: VIEW_OF[m[1]], sub: null, path: "/" + m[1] };
+    m = path.match(/^\/?guide\/([a-z0-9-]+)(?:\.html)?\/?$/);
+    if (m && GUIDE_SUB[m[1]]) return { view: "learn", sub: GUIDE_SUB[m[1]], path: "/guide/" + m[1] };
+    return null;
+  }
+
+  /* A click the reader means as a plain navigation: left button, no modifier,
+     no target, not a download. Anything else keeps the real link. */
+  function plainClick(ev, a) {
+    return ev.button === 0 && !ev.metaKey && !ev.ctrlKey && !ev.shiftKey && !ev.altKey &&
+      !ev.defaultPrevented && !a.hasAttribute("download") && (!a.target || a.target === "_self");
+  }
+
   function initEmbed() {
     document.body.classList.add("embed");
     var h = document.getElementById("site-header");
@@ -214,19 +243,21 @@
     if (f) f.remove();
 
     // clicks on internal page links switch the console tab instead of navigating the iframe
-    var VIEW_OF = { dashboard: "overview", map: "map", insights: "insights", research: "research", learn: "learn", news: "news" };
     document.addEventListener("click", function (ev) {
       var a = ev.target.closest("a[href]");
       if (!a) return;
       var href = a.getAttribute("href") || "";
       if (/^#/.test(href)) return; // in-page anchors stay in the page
-      var m = href.match(/^(map|dashboard|insights|research|learn|news)\.html/);
-      if (m) {
+      var route = consoleRoute(href);
+      if (route && plainClick(ev, a)) {
         ev.preventDefault();
         if (window.parent !== window) {
-          window.parent.postMessage({ wel: "nav", view: VIEW_OF[m[1]] }, "*");
+          // A guide topic goes by path: the shell already maps /guide/<slug>
+          // to its section (see the guide-nav handler in js/app.js).
+          if (route.sub) window.parent.postMessage({ wel: "guide-nav", path: route.path }, "*");
+          else window.parent.postMessage({ wel: "nav", view: route.view }, "*");
         } else {
-          location.href = m[1] + ".html?embed=1";
+          location.href = "/app#" + route.view + (route.sub ? "/" + route.sub : "");
         }
         return;
       }
@@ -508,6 +539,19 @@
     } else {
       buildHeader();
       buildFooter();
+      // On the home page a plain click on a content link opens the console at
+      // that tab, as the old app.html#view links did. The href stays the real
+      // page, so crawlers, middle clicks and "open in new tab" get that instead.
+      if (/(^|\/)(index\.html)?$/.test(location.pathname)) {
+        document.addEventListener("click", function (ev) {
+          var a = ev.target.closest("a[href]");
+          if (!a) return;
+          var route = consoleRoute(a.getAttribute("href") || "");
+          if (!route || !plainClick(ev, a)) return;
+          ev.preventDefault();
+          location.href = "/app#" + route.view + (route.sub ? "/" + route.sub : "");
+        }, true);
+      }
     }
     // The console builds its own top bar in markup; give it the same control.
     var tzHost = document.getElementById("appTz");
