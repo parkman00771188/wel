@@ -229,6 +229,16 @@
   // pages inside iframes ask the console to switch tabs
   window.addEventListener("message", function (ev) {
     if (ev.data && ev.data.wel === "nav" && VIEWS[ev.data.view]) activate(ev.data.view);
+    if (ev.data && ev.data.wel === "guide-nav" && typeof ev.data.path === "string") {
+      var guideSub = null;
+      Object.keys(VIEWS.learn.subUrl).some(function (sub) {
+        var path = new URL(VIEWS.learn.subUrl[sub], location.href).pathname.replace(/\/$/, "") || "/";
+        if (path !== ev.data.path) return false;
+        guideSub = sub;
+        return true;
+      });
+      if (guideSub) activate("learn", true, guideSub);
+    }
     if (ev.data && ev.data.wel === "subnav-active" && VIEWS[ev.data.view] &&
         validSubview(ev.data.view, ev.data.sub)) {
       // Record it before activating, so a page reporting the section it just

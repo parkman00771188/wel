@@ -3,8 +3,8 @@
  * The guide's ten topics used to be one page with nine of them hidden behind
  * tabs, and this file switched between them. They are separate URLs now --
  * /learn for the hub and /guide/<slug> for each topic -- so the tab row is
- * ordinary links and the switching logic is gone. What is left is the two
- * things a single topic page still needs.
+ * ordinary links and the switching logic is gone. What is left is keeping the
+ * console route in sync and the emergency-kit checklist.
  */
 (function () {
   "use strict";
@@ -16,6 +16,24 @@
   var section = document.body.dataset.gdSection;
   if (section && window.parent !== window) {
     window.parent.postMessage({ wel: "subnav-active", view: "learn", sub: section }, "*");
+
+    /* Guide links normally open standalone pages. Inside the console, ask the
+       shell to load the matching embedded URL instead so its header and topic
+       navigation are not nested inside the iframe. */
+    document.addEventListener("click", function (ev) {
+      var a = ev.target.closest("a[href]");
+      if (!a || ev.defaultPrevented || ev.button !== 0 || ev.metaKey || ev.ctrlKey ||
+          ev.shiftKey || ev.altKey || a.hasAttribute("download") ||
+          (a.target && a.target !== "_self")) return;
+
+      var url;
+      try { url = new URL(a.href, location.href); } catch (e) { return; }
+      if (url.origin !== location.origin ||
+          !(/^\/learn\/?$/.test(url.pathname) || /^\/guide\/[^/]+\/?$/.test(url.pathname))) return;
+
+      ev.preventDefault();
+      window.parent.postMessage({ wel: "guide-nav", path: url.pathname.replace(/\/$/, "") || "/" }, "*");
+    }, true);
   }
 
   /* ---------- emergency kit checklist ---------- */
