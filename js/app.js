@@ -211,7 +211,8 @@
     if (!a) return;
     ev.preventDefault();
     var group = a.closest(".app-nav-group");
-    if (a.dataset.view === current && group && group.classList.contains("has-subnav")) {
+    // Parent rows disclose their choices; only a child choice changes the view.
+    if (group && group.classList.contains("has-subnav")) {
       var open = !group.classList.contains("open");
       group.classList.toggle("open", open);
       a.setAttribute("aria-expanded", open ? "true" : "false");
