@@ -196,16 +196,13 @@ const DICT = {
   '데이터': { en: 'Data', ja: 'データ' },
   '수록 기간': { en: 'Coverage', ja: '収録期間' },
   '갱신 시각': { en: 'Built at', ja: '更新時刻' },
-  '설정은 이 브라우저에 자동 저장됩니다': {
-    en: 'Settings are saved in this browser',
-    ja: '設定はこのブラウザに自動保存されます',
+  '새로고침하면 기본 설정으로 시작합니다': {
+    en: 'A reload starts from the default settings',
+    ja: '再読み込みで初期設定から始まります',
   },
   '초기화': { en: 'Reset', ja: '初期化' },
   '데이터 파일이 서로 맞지 않습니다': {
     en: 'The data files disagree with each other', ja: 'データファイルが一致しません' },
-  '저장된 설정을 지웠습니다. 새로고침하면 기본값으로 시작합니다.': {
-    en: 'Saved settings cleared. Reload to start from the defaults.',
-    ja: '保存された設定を消しました。再読み込みで初期値から始まります。' },
   '일시정지': { en: 'Pause', ja: '一時停止' },
   '데이터': { en: 'Data', ja: 'データ' },
   '수록': { en: 'Coverage', ja: '収録' },

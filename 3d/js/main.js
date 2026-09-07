@@ -53,6 +53,14 @@ const SAVED_INPUTS = [
   'sel-speed',
 ];
 
+/* The panel sections a reset covers, in panel order. Deliberately not every
+   <section> in the markup: .meta carries the language picker and the data
+   readout, and .jp-only the Japan notice, none of which are settings a reader
+   means to clear. Each gets a ↺ of its own, and the Reset button walks them
+   all. */
+const PANEL_SECTIONS = ['.sec-anim', '.sec-period', '.sec-mag', '.sec-depth',
+  '.sec-visual', '.sec-map'];
+
 const DAY_MS = 86400000;
 const INITIAL_VIEW = new URLSearchParams(location.search).get('view') === 'japan'
   ? 'japan' : 'globe';
@@ -144,7 +152,13 @@ class App {
     this.data = data;
     this.meta = data.meta;
     this.proj = makeProjection(data.meta);
-    this.saved = store.load();
+    /* A reload opens at the markup's defaults, not where the last session
+       left off. A magnitude floor or a switched-off band restored from days
+       ago hides earthquakes with nothing on screen to say why, and the map
+       reads as broken -- which is exactly how it was reported. Settings are
+       still written (saveNow), so this is the one line that decides it, and
+       every `?? default` below is what the restore used to override. */
+    this.saved = {};
     this.initialView = INITIAL_VIEW;
 
     const T = data.totalDays;
@@ -209,9 +223,7 @@ class App {
 
   /** A ↺ on each panel heading, resetting only that heading's section. */
   buildSectionResets() {
-    const sections = ['.sec-anim', '.sec-period', '.sec-mag', '.sec-depth',
-      '.sec-visual', '.sec-map'];
-    for (const selector of sections) {
+    for (const selector of PANEL_SECTIONS) {
       const section = $('panel').querySelector(selector);
       const heading = section?.querySelector('h2');
       if (!heading) continue;
@@ -258,6 +270,14 @@ class App {
 
     this.persist();
     this.dirty = true;
+  }
+
+  /** Every section at once, for the Reset button under the panel. */
+  resetAll() {
+    for (const selector of PANEL_SECTIONS) {
+      const section = $('panel').querySelector(selector);
+      if (section) this.resetSection(section);
+    }
   }
 
   /* ── event lists ────────────────────────────────────────── */
@@ -1551,14 +1571,15 @@ class App {
     $('btn-reset').addEventListener('click', () => {
       s.now = s.rangeStart; this.setPlaying(false); this.syncTime();
     });
-    $('btn-forget').addEventListener('click', () => {
-      store.clear();
-      $('saved-note').textContent = t('저장된 설정을 지웠습니다. 새로고침하면 기본값으로 시작합니다.');
-      this.persist = () => {};      // stop re-saving before the reload
-    });
+    /* Clearing the saved payload used to be this button's job. Nothing reads
+       that payload back any more, so it now does what its label has always
+       said: every panel section to the defaults, without a reload. The
+       language and the data readout are in .meta, outside PANEL_SECTIONS, so
+       a reset does not throw away the reader's language. */
+    $('btn-reset-all').addEventListener('click', () => this.resetAll());
     $('sel-speed').addEventListener('change', (e) => { s.speed = +e.target.value; });
-    s.speed = +$('sel-speed').value;   // apply the restored selection, not the default
-    this.updateSpeedOptions();         // fit the speed ladder to the restored span
+    s.speed = +$('sel-speed').value;   // whatever the control shows, not a second copy of it
+    this.updateSpeedOptions();         // fit the speed ladder to the opening span
     check('ck-loop', (on) => { s.loop = on; });
 
     /* panel + card */

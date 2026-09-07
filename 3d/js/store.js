@@ -1,7 +1,13 @@
 /**
  * Settings persistence. Everything the control panel exposes, plus the camera
- * and the selected period, is written to localStorage so a reload comes back
- * exactly as you left it.
+ * and the selected period, is written to localStorage as it changes.
+ *
+ * Nothing reads it back. 3d/js/main.js opens every session at the defaults the
+ * markup declares, because a magnitude floor or a switched-off band restored
+ * from an earlier visit hides earthquakes with nothing on screen to explain
+ * it -- the map reads as broken. `load` and `clear` are kept deliberately as
+ * the switch back: restoring is one line in the App constructor, and the write
+ * side stays in step with the panel meanwhile.
  *
  * The key is versioned: bumping VERSION retires incompatible payloads instead
  * of trying to migrate them.
