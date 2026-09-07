@@ -1576,7 +1576,14 @@ class App {
        said: every panel section to the defaults, without a reload. The
        language and the data readout are in .meta, outside PANEL_SECTIONS, so
        a reset does not throw away the reader's language. */
-    $('btn-reset-all').addEventListener('click', () => this.resetAll());
+    /* Bound through a guard, and under either id. $ returns null for an id
+       that is not in the document and addEventListener on null throws, which
+       here would take the rest of bindUI down with it -- and a reader can hold
+       a cached 3d/index.html beside a fresh copy of this file, because the
+       zone's Browser Cache TTL is a four-hour floor (see _headers). The old
+       btn-forget can go once that window has passed. */
+    const resetBtn = $('btn-reset-all') ?? $('btn-forget');
+    if (resetBtn) resetBtn.addEventListener('click', () => this.resetAll());
     $('sel-speed').addEventListener('change', (e) => { s.speed = +e.target.value; });
     s.speed = +$('sel-speed').value;   // whatever the control shows, not a second copy of it
     this.updateSpeedOptions();         // fit the speed ladder to the opening span
