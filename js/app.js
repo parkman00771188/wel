@@ -245,7 +245,10 @@
 
   // pages inside iframes ask the console to switch tabs
   window.addEventListener("message", function (ev) {
-    if (ev.data && ev.data.wel === "nav" && VIEWS[ev.data.view]) activate(ev.data.view);
+    // sub is optional: a link that named a section of the page it points at
+    // (research#publications) carries it, and activate() drops a name this
+    // shell does not know, so an unknown one falls back to the default view.
+    if (ev.data && ev.data.wel === "nav" && VIEWS[ev.data.view]) activate(ev.data.view, true, ev.data.sub);
     if (ev.data && ev.data.wel === "guide-nav" && typeof ev.data.path === "string") {
       var guideSub = null;
       Object.keys(VIEWS.learn.subUrl).some(function (sub) {

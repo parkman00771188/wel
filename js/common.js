@@ -222,9 +222,13 @@
     if (!href || /^(#|https?:|mailto:)/i.test(href)) return null;
     var path = href.replace(/[?#].*$/, "");
     var m = path.match(/^\/?(map|dashboard|insights|research|learn|news)(?:\.html)?\/?$/);
-    if (m) return { view: VIEW_OF[m[1]], sub: null, path: "/" + m[1] };
+    // research#publications names a section of the target page, not just the
+    // page. Dropping the fragment landed the click on that page's default
+    // view, so "Open the Research Hub" arrived at Overview and the reader had
+    // to find Publications again. The shell validates the name it is given.
+    if (m) return { view: VIEW_OF[m[1]], sub: (href.match(/#([a-z0-9-]+)$/) || [])[1] || null, path: "/" + m[1] };
     m = path.match(/^\/?guide\/([a-z0-9-]+)(?:\.html)?\/?$/);
-    if (m && GUIDE_SUB[m[1]]) return { view: "learn", sub: GUIDE_SUB[m[1]], path: "/guide/" + m[1] };
+    if (m && GUIDE_SUB[m[1]]) return { view: "learn", sub: GUIDE_SUB[m[1]], path: "/guide/" + m[1], guide: true };
     return null;
   }
 
@@ -253,9 +257,11 @@
         ev.preventDefault();
         if (window.parent !== window) {
           // A guide topic goes by path: the shell already maps /guide/<slug>
-          // to its section (see the guide-nav handler in js/app.js).
-          if (route.sub) window.parent.postMessage({ wel: "guide-nav", path: route.path }, "*");
-          else window.parent.postMessage({ wel: "nav", view: route.view }, "*");
+          // to its section (see the guide-nav handler in js/app.js). Every
+          // other page carries its section in the fragment instead, so the
+          // guide is told apart by its own flag rather than by having a sub.
+          if (route.guide) window.parent.postMessage({ wel: "guide-nav", path: route.path }, "*");
+          else window.parent.postMessage({ wel: "nav", view: route.view, sub: route.sub }, "*");
         } else {
           location.href = "/app#" + route.view + (route.sub ? "/" + route.sub : "");
         }
