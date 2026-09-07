@@ -34,7 +34,9 @@
   // single cap across kinds would fill the list with headlines, which arrive
   // hourly, and hide the papers, which arrive weekly.
   var OVERVIEW_CAP = { news: 8, paper: 4, quake: 4 };
-  var OVERVIEW_MIN_MAG = 4.5;   // an overview row is an earthquake worth a headline
+  // The magnitude floor for an Overview row lives in js/common.js, beside
+  // the rule that applies it (WEL.OVERVIEW_MIN_MAG), because the console's
+  // "Updated" chip has to agree with this list.
   var PAGE = 30;                // rows per page in the News, Papers and Earthquakes views
   var PAPERS_KEPT = 300;        // the Papers view shows this many of the newest; the store keeps all
 
@@ -217,24 +219,36 @@
   function quakeBy(e) { return "<span>Depth " + Math.round(e.depth_km || 0) + " km</span> · USGS"; }
   function paperBy(p) { return escapeHTML(p.venue || "") + (p.date ? " · " + dateOf(p.date) : ""); }
 
+  /* One row of the merged list, by kind. */
+  function overviewHTML(r) {
+    var it = r.item;
+    if (r.kind === "news") {
+      return row(kindPill("news", "News"), it.title, escapeHTML(it.source || ""), timeAgo(r.t), it.url);
+    }
+    if (r.kind === "paper") {
+      return row(kindPill("paper", "Paper"), it.title, paperBy(it), timeAgo(r.t), it.url);
+    }
+    return rowHTML(kindPill("quake", "Earthquake"),
+      magHTML(it.magnitude) + " \u00b7 " + escapeHTML(it.place || ""),
+      quakeBy(it), timeAgo(r.t), quakeHref(it));
+  }
+
+  /* The rows come from WEL.feedRows (js/common.js), already merged and sorted,
+     because the console header's "Updated" chip is the time of the top row of
+     this very list. Collecting them here as well is how the two would drift.
+
+     /js/* is served must-revalidate, but the zone's Browser Cache TTL is a
+     four-hour floor right now (see _headers), so a reader can hold an old
+     js/common.js beside a fresh copy of this file. An empty Overview is a poor
+     outcome; a throw here would take the other three views down with it. */
   function renderOverview() {
     var host = byId("updList");
     if (!host) return;
-    var rows = [];
-    ((stores.news && stores.news.items) || []).forEach(function (n) {
-      var t = Date.parse(n.added_utc || n.published);
-      if (isFinite(t)) rows.push({ kind: "news", t: t, html: row(kindPill("news", "News"), n.title, escapeHTML(n.source || ""), timeAgo(t), n.url) });
-    });
-    newestPapers().forEach(function (x) {
-      rows.push({ kind: "paper", t: x.t, html: row(kindPill("paper", "Paper"), x.p.title, paperBy(x.p), timeAgo(x.t), x.p.url) });
-    });
-    newestQuakes(OVERVIEW_MIN_MAG).forEach(function (e) {
-      rows.push({ kind: "quake", t: e.time_ms, html: rowHTML(kindPill("quake", "Earthquake"), magHTML(e.magnitude) + " \u00b7 " + escapeHTML(e.place || ""), quakeBy(e), timeAgo(e.time_ms), quakeHref(e)) });
-    });
-    rows.sort(function (a, b) { return b.t - a.t; });
+    var all;
+    try { all = WEL.feedRows(stores); } catch (e) { console.error("feedRows unavailable:", e); all = []; }
     var taken = { news: 0, paper: 0, quake: 0 };
-    rows = rows.filter(function (r) { return ++taken[r.kind] <= OVERVIEW_CAP[r.kind]; });
-    host.innerHTML = rows.length ? rows.map(function (r) { return r.html; }).join("") : '<p class="news-empty">No updates yet.</p>';
+    var rows = all.filter(function (r) { return ++taken[r.kind] <= OVERVIEW_CAP[r.kind]; });
+    host.innerHTML = rows.length ? rows.map(overviewHTML).join("") : '<p class="news-empty">No updates yet.</p>';
   }
 
   function renderPapers() {

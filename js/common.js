@@ -555,9 +555,61 @@
     location.replace("/app" + location.search + "#" + route.view + (sub ? "/" + sub : ""));
   })();
 
+  /* ---------- what the ten-minute cycle last put on the page ----------
+
+     The News & Updates Overview lists the newest of the three things the site
+     collects, and the console header carries an "Updated" chip. The two have
+     to be the same number: a chip reading five minutes, next to a list whose
+     newest row is an hour old, sends the reader looking for something that
+     was never there.
+
+     The chip used to read generated_utc -- when the collector last rewrote a
+     feed -- which is a different quantity. A feed is rewritten whenever the
+     collector adds a row, and a row whose own date falls outside the store's
+     cap is dropped again in the same run, so data/news.json was seven minutes
+     old while its newest row was fifty-seven. Both now read the rows
+     themselves, through here, so they cannot drift apart. */
+
+  var OVERVIEW_MIN_MAG = 4.5;   // an overview row is an earthquake worth a headline
+
+  /* Rows of {kind, t, item}, newest first, from the three payloads the pages
+     already fetch. A store that is missing or still loading contributes
+     nothing rather than throwing. */
+  function feedRows(stores) {
+    var rows = [];
+    stores = stores || {};
+    ((stores.news && stores.news.items) || []).forEach(function (n) {
+      var t = Date.parse(n.added_utc || n.published);
+      if (isFinite(t)) rows.push({ kind: "news", t: t, item: n });
+    });
+    /* A paper is dated by when the site first saw it: its publication date can
+       be months before OpenAlex lists it. Only the recent pool counts as an
+       update -- the cited pool is a library, and a 2018 classic added by the
+       widening loop is not news. */
+    ((stores.papers && stores.papers.items) || []).forEach(function (p) {
+      if (!p.recent && !p.added_utc) return;
+      var t = Date.parse(p.added_utc || p.date);
+      if (isFinite(t)) rows.push({ kind: "paper", t: t, item: p });
+    });
+    ((stores.live && stores.live.events) || []).forEach(function (e) {
+      if (!(e.magnitude >= OVERVIEW_MIN_MAG) || !isFinite(e.time_ms)) return;
+      rows.push({ kind: "quake", t: e.time_ms, item: e });
+    });
+    rows.sort(function (a, b) { return b.t - a.t; });
+    return rows;
+  }
+
+  /* The stamp the "Updated" chip shows: the top row's own time, and 0 when
+     there is nothing to show yet, which leaves the chip hidden. */
+  function feedNewest(stores) {
+    var rows = feedRows(stores);
+    return rows.length ? rows[0].t : 0;
+  }
+
   window.WEL = {
     icon: icon, renderIcons: renderIcons, toast: toast, embed: EMBED,
-    AD: AD, mountAd: mountAd, tz: TZ, tzControlHTML: tzControlHTML, langControlHTML: langControlHTML
+    AD: AD, mountAd: mountAd, tz: TZ, tzControlHTML: tzControlHTML, langControlHTML: langControlHTML,
+    feedRows: feedRows, feedNewest: feedNewest, OVERVIEW_MIN_MAG: OVERVIEW_MIN_MAG
   };
 
   document.addEventListener("DOMContentLoaded", function () {

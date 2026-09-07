@@ -306,26 +306,32 @@
     });
   }
 
-  function fetchStamp(url) {
+  function fetchFeed(url) {
     return fetch(url, { cache: "no-cache" })
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (m) { return (m && Date.parse(m.generated_utc)) || 0; })
-      .catch(function () { return 0; }); // offline — keep the last value
+      .catch(function () { return null; }); // offline — keep the last value
   }
 
-  /* Every file the ten-minute cycle can write, not just the catalogue. The
-     live overlay is only rewritten when USGS has something new, so on a quiet
-     morning its stamp sits hours old while the news and paper feeds -- which
-     refetch every cycle -- were written minutes ago. The newest of the four
-     is what "the site last updated" actually means. */
+  /* The chip shows the top row of the News & Updates Overview, so the two
+     always agree -- WEL.feedNewest is the rule both read (js/common.js).
+
+     It used to be the newest generated_utc of four files, which is when the
+     collector last wrote one, not when anything new arrived. Those diverge
+     routinely: the collector rewrites a feed whenever it adds a row, and a row
+     whose own date falls outside the store's cap is dropped again in the same
+     run. That is how the chip came to read "5 min ago" over an Overview whose
+     newest row was 55 minutes old.
+
+     The archive metadata is deliberately not among these three: rebuilding the
+     catalogue offline is not an update the Overview lists, and its stamp would
+     win the comparison for the week after a rebuild. */
   function fetchMeta() {
     Promise.all([
-      fetchStamp("3d/data/live/global.json"),
-      fetchStamp("3d/data/global/meta.json"),
-      fetchStamp("data/news.json"),
-      fetchStamp("data/papers.json")
-    ]).then(function (stamps) {
-      var newest = Math.max.apply(null, stamps);
+      fetchFeed("data/news.json"),
+      fetchFeed("data/papers.json"),
+      fetchFeed("3d/data/live/global.json")
+    ]).then(function (r) {
+      var newest = WEL.feedNewest({ news: r[0], papers: r[1], live: r[2] });
       if (newest) { updatedAt = newest; renderUpdated(); }
     });
   }
