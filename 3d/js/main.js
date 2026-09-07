@@ -380,7 +380,21 @@ class App {
     // wait for the layer rather than answer with nothing.
     const layer = this.view === 'globe' ? this.globe?.layer : null;
     if (!layer?.events?.lat?.length) {
-      if (tries < 60) setTimeout(() => this.focusPlace(lat, lon, depthKm, timeMs, tries + 1), 500);
+      if (tries < 60) {
+        setTimeout(() => this.focusPlace(lat, lon, depthKm, timeMs, tries + 1), 500);
+        return;
+      }
+      /* Thirty seconds and still no layer: the host may be part-way through
+         switching us off Japan, or the globe's bins are a cold 29 MB. The
+         camera needs no catalogue, so show the place rather than answer the
+         click with nothing -- which is how a request died outright while the
+         map was left on Japan and `layer` stayed null on every retry. The
+         view is not switched from here: the host's Region combo owns it, and
+         sync3dView would pull us back anyway. */
+      if (this.view === 'globe' && this.globe) {
+        this.globe.focusOn(lon, lat, depthKm, { keepDistance: true });
+        this.dirty = true;
+      }
       return;
     }
     const ev = layer.events;

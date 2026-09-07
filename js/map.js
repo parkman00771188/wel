@@ -1848,6 +1848,21 @@
   focusQuake = function (q) {
     var lat = +q.lat, lng = +q.lng, t = +q.t;
     if (!isFinite(lat) || !isFinite(lng)) return;
+    /* Global first, whatever the Region combo said. A focus request comes from
+       the News & Updates list, which is worldwide, and the Japan catalogue is
+       a box around Japan: asked for a Fiji event while the combo said Japan,
+       the 3D app had no globe layer to search and its focusPlace sat waiting
+       for one that was never coming, so the click did nothing at all.
+
+       Driven through the combo's own change event rather than by assigning
+       state.mapRegion, so everything that hangs off that handler moves too:
+       the combo the reader can see, the catalogue, the 2D view, and the 3D
+       app's own Japan/World toggle via sync3dView. */
+    var regionSel = document.getElementById("mapRegion");
+    if (regionSel && regionSel.value !== "global") {
+      regionSel.value = "global";
+      regionSel.dispatchEvent(new Event("change", { bubbles: true }));
+    }
     // The event has to be inside the window to be drawn at all.
     if (isFinite(t) && (t < state.startMs || t > state.endMs)) setRange(Math.min(state.startMs, t - EQ.D), Date.now(), false);
     if (document.getElementById("mapShell").classList.contains("mode-3d")) {
