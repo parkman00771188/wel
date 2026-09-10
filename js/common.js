@@ -135,14 +135,14 @@
       '<footer class="site-footer"><div class="container footer-top">' +
       '<div class="footer-tagline"><div class="l1">The World Earthquake Labs Platform</div>' +
       '<div class="l2">Integrated. Open. Built for Science and Society.</div></div>' +
+      /* Every one of these used to point at "#", and there was an "API
+         Documentation" link for an API that does not exist, plus three social
+         icons with no accounts behind them. A footer of dead links is what an
+         AdSense reviewer calls a navigation problem; these go to real pages. */
       '<nav class="footer-links">' +
-      '<a href="#">Data Use Policy</a><a href="#">Privacy Policy</a><a href="#">Terms of Service</a>' +
-      '<a href="#">Contact Us</a><a href="#">API Documentation</a></nav>' +
-      '<div class="footer-social">' +
-      '<a href="#" aria-label="X">' + icon("social_x", 16) + "</a>" +
-      '<a href="#" aria-label="LinkedIn">' + icon("social_in", 17) + "</a>" +
-      '<a href="#" aria-label="YouTube">' + icon("social_yt", 17) + "</a>" +
-      "</div></div>" +
+      '<a href="/terms#data">Data Use Policy</a><a href="/privacy">Privacy Policy</a>' +
+      '<a href="/terms">Terms of Service</a><a href="/about#contact">Contact Us</a></nav>' +
+      "</div>" +
       '<div class="footer-bottom"><div class="container">\u00a9 ' + new Date().getFullYear() +
       " World Earthquake Labs. All rights reserved.</div></div></footer>";
   }

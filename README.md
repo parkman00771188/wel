@@ -16,6 +16,7 @@
 | `news.html` | 지진 뉴스 (자동 수집) |
 | `learn.html` | 지진 기초 · 판구조론 · 규모와 진도 · 안전 가이드 |
 | `3d/index.html` | Three.js 3D 엔진 (단독 실행도 가능) |
+| `about.html` · `privacy.html` · `terms.html` | 소개·연락처, 개인정보처리방침, 이용약관(데이터 이용 정책 포함). 푸터에서 연결된다 |
 
 ## 실행 방법
 
@@ -110,6 +111,11 @@ python scripts/split_bins.py
 
 `research.html` 의 Featured Publications 와 `news.html` 의 피드가 이 두 파일을
 직접 읽는다.
+
+논문 저장소는 피인용 상위 300편 + 핵심 저널 최신 80편으로 상한이 있어 그 편수는
+늘지 않는다. Research Hub 상단의 Publications 숫자는 그래서 저장 편수가 아니라
+OpenAlex 가 두 토픽에 대해 돌려주는 최근 10년 전체 논문 수(`corpus_total`, 매
+사이클 갱신)이고, 큐레이션된 편수는 그 아래 작게 적는다.
 
 ## 브라우저 쪽 데이터 병합
 

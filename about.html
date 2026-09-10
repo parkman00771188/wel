@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-adsense-account" content="ca-pub-7720076982812531">
+<title>About and Contact — World Earthquake Labs</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="96x96" href="/resource/img/icon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/resource/img/icon-192.png">
+<link rel="apple-touch-icon" href="/resource/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&display=swap" rel="stylesheet">
+<!-- SEO -->
+<meta name="description" content="What World Earthquake Labs is, where its earthquake data comes from, how often it is refreshed, what it is not, and how to reach the people who run it.">
+<link rel="canonical" href="https://worldearthquakelabs.com/about">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="World Earthquake Labs">
+<meta property="og:title" content="About and Contact — World Earthquake Labs">
+<meta property="og:description" content="What World Earthquake Labs is, where its earthquake data comes from, how often it is refreshed, what it is not, and how to reach the people who run it.">
+<meta property="og:url" content="https://worldearthquakelabs.com/about">
+<meta property="og:image" content="https://worldearthquakelabs.com/resource/img/og-cover-white.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About and Contact — World Earthquake Labs">
+<meta name="twitter:description" content="What World Earthquake Labs is, where its earthquake data comes from, how often it is refreshed, what it is not, and how to reach the people who run it.">
+<meta name="twitter:image" content="https://worldearthquakelabs.com/resource/img/og-cover-white.jpg">
+<link rel="stylesheet" href="/css/style.css">
+<!-- Inside the console every child page runs in an iframe, and the shell has
+     already loaded AdSense. Pausing here keeps a second copy from stacking a
+     second anchor on the first; the loader tag itself stays static below so
+     the verification crawler still finds it in the source. -->
+<script>
+  if (window.parent !== window) {
+    (window.adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 1;
+  }
+</script>
+<!-- Google AdSense. Static in <head> on every page so the verification
+     crawler finds it in the source, not only after JavaScript runs. -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7720076982812531"
+        crossorigin="anonymous"></script>
+</head>
+<body data-nav="" data-cta="dashboard">
+
+<div id="site-header"></div>
+
+<main class="container legal">
+  <h1>About World Earthquake Labs</h1>
+  <p class="lead">An open, independent window on the world's earthquakes: every recorded
+    event since 1900, on a map and a globe, refreshed every ten minutes, with the
+    background to understand what you are looking at.</p>
+
+  <ul class="toc">
+    <li><a href="#what">What this site is</a></li>
+    <li><a href="#data">Where the data comes from</a></li>
+    <li><a href="#not">What it is not</a></li>
+    <li><a href="#funding">How it is funded</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+
+  <h2 id="what">What this site is</h2>
+  <p>World Earthquake Labs brings together, in one place, the things a curious reader
+    usually has to collect from several agencies and a stack of papers:</p>
+  <ul>
+    <li><strong><a href="/map">A live map</a></strong> of earthquakes in 2D and on a 3D globe,
+      covering about 2.97 million events since 1900, filterable by magnitude, depth and date.</li>
+    <li><strong><a href="/dashboard">A dashboard</a></strong> of the latest activity: the largest
+      recent events, counts over any window from 24 hours to the whole catalogue, magnitude and
+      depth distributions.</li>
+    <li><strong><a href="/insights">Seismic insights</a></strong>: activity over time, a real
+      Gutenberg–Richter curve computed from the full catalogue, depth profiles, energy release
+      and regional hotspots, with CSV export.</li>
+    <li><strong><a href="/learn">An earthquake guide</a></strong> in nine parts, from what an
+      earthquake is to plate tectonics, magnitude versus intensity, hazards, notable events and
+      practical safety.</li>
+    <li><strong><a href="/research">A research hub</a></strong> that tracks the seismology
+      literature of the last ten years, and <strong><a href="/news">a news feed</a></strong> of
+      earthquake reporting, both collected automatically.</li>
+  </ul>
+
+  <h2 id="data">Where the data comes from</h2>
+  <p>Nothing on this site is typed in by hand. The earthquake catalogue is built from public,
+    freely available sources and the site reads it directly:</p>
+  <ul>
+    <li><strong>USGS ANSS Comprehensive Catalog (ComCat)</strong>: worldwide events of magnitude 2.0
+      and above. The most recent 14 days are fetched again every ten minutes, so revised
+      magnitudes and withdrawn events are reflected here as well.</li>
+    <li><strong>ISC Bulletin</strong> (International Seismological Centre): reviewed events of
+      magnitude 3.0 and above, back to 1900.</li>
+    <li><strong>Japan Meteorological Agency (JMA)</strong>: Japan and its surrounding seas,
+      including small events that no global catalogue publishes.</li>
+  </ul>
+  <p>The two global catalogues are merged and de-duplicated offline into a single archive.
+    Reference layers (active faults, volcanoes, plate boundaries, basemaps) and the publication
+    metadata have their own sources, listed with links on the
+    <a href="/research#sources">Data Sources</a> page.</p>
+
+  <h2 id="not">What it is not</h2>
+  <div class="note">
+    World Earthquake Labs is an information and education site. It is <strong>not an official
+    earthquake or tsunami warning service</strong>, it does not issue alerts, and it does not
+    predict earthquakes. Nobody can. For warnings and safety instructions, follow your national
+    or regional agency, for example the USGS and NOAA Tsunami Warning Centers in the United
+    States, the Japan Meteorological Agency in Japan, or PHIVOLCS in the Philippines, and local
+    civil-protection authorities.
+  </div>
+  <p>Catalogue data is reported by the agencies as they publish it and can be revised for hours
+    or days after an event. Our <a href="/terms">Terms of Service</a> describe the limits of
+    what the site can promise.</p>
+
+  <h2 id="funding">How it is funded</h2>
+  <p>The site is free to use and has no accounts, subscriptions or paywalls. Running costs are
+    covered by advertising served through Google AdSense. How that affects you and what data is
+    involved is set out in the <a href="/privacy">Privacy Policy</a>.</p>
+
+  <h2 id="contact">Contact</h2>
+  <p>Questions, corrections, data issues, press and partnership enquiries all reach the team at
+    <a href="mailto:parkman@mindsai.co.kr">parkman@mindsai.co.kr</a>. If you are reporting an
+    error in the data, a link to the event on the <a href="/map">map</a> and the source you are
+    comparing it against helps us find it quickly.</p>
+  <p>World Earthquake Labs is an independent project and is not affiliated with the USGS, the
+    ISC, the JMA or any other agency whose data it uses.</p>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="/js/common.js"></script>
+<script src="/js/i18n.js"></script>
+</body>
+</html>

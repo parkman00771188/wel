@@ -257,73 +257,229 @@
     maxZoom: 10
   }).addTo(mini);
 
-  var miniLayer = L.layerGroup().addTo(mini);
+  /* Two pictures, because a week and twenty years are different things.
+
+     Up to 120 days the map shows events: a dot per earthquake, sized and
+     coloured by magnitude, thinned to the strongest per cell so a busy week
+     stays legible. Over years that treatment collapsed into a lattice of big
+     red dots -- given enough time every cell has had a large quake -- which
+     said nothing about where the earth actually shakes. A long window is
+     therefore drawn as a density field: every M 4+ event of the window
+     accumulated per pixel, log-scaled, in one blue ramp, with only the great
+     earthquakes marked one by one on top.
+
+     M 4 is the floor because that is roughly where the catalogue is complete
+     worldwide. Below it the field would map seismometer networks (California,
+     Japan, Italy) rather than seismicity. */
+  var FIELD_MIN_MAG = 4;
+  var FIELD_RAMP = ["#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b"];
+
+  mini.createPane("density").style.zIndex = 350;   // over the tiles, under the vector markers
+
+  /* 256-entry colour table over the ramp, so the per-pixel loop is a lookup. */
+  var LUT = (function () {
+    var out = new Uint8ClampedArray(256 * 3);
+    var stops = FIELD_RAMP.map(function (h) {
+      return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+    });
+    for (var i = 0; i < 256; i++) {
+      var f = i / 255 * (stops.length - 1), k = Math.min(stops.length - 2, Math.floor(f)), t = f - k;
+      for (var c = 0; c < 3; c++) out[i * 3 + c] = stops[k][c] + (stops[k + 1][c] - stops[k][c]) * t;
+    }
+    return out;
+  })();
+
+  /* One separable [1 2 1] pass; two of them make the 5-tap bell that turns a
+     lone event into a soft two-to-three pixel dot instead of a hard square. */
+  function blur3(a, W, H) {
+    var tmp = new Float32Array(a.length), x, y, i, row;
+    for (y = 0; y < H; y++) {
+      row = y * W;
+      tmp[row] = (2 * a[row] + a[row + 1]) * 0.25;
+      for (x = 1; x < W - 1; x++) { i = row + x; tmp[i] = (a[i - 1] + 2 * a[i] + a[i + 1]) * 0.25; }
+      tmp[row + W - 1] = (a[row + W - 2] + 2 * a[row + W - 1]) * 0.25;
+    }
+    for (x = 0; x < W; x++) {
+      a[x] = (2 * tmp[x] + tmp[x + W]) * 0.25;
+      for (y = 1; y < H - 1; y++) { i = y * W + x; a[i] = (tmp[i - W] + 2 * tmp[i] + tmp[i + W]) * 0.25; }
+      i = (H - 1) * W + x;
+      a[i] = (tmp[i - W] + 2 * tmp[i]) * 0.25;
+    }
+  }
+
+  var DensityLayer = L.Layer.extend({
+    onAdd: function (map) {
+      this._map = map;
+      this._canvas = L.DomUtil.create("canvas", "leaflet-layer");
+      map.getPane("density").appendChild(this._canvas);
+      map.on("moveend zoomend viewreset resize", this._reset, this);
+      this._reset();
+    },
+    onRemove: function (map) {
+      map.off("moveend zoomend viewreset resize", this._reset, this);
+      L.DomUtil.remove(this._canvas);
+    },
+    /* Show the field for [from, to] in ms, counting events of minMag and up.
+       Called with null it clears. */
+    show: function (from, to, minMag) {
+      this._range = from == null ? null : { from: from, to: to, minMag: minMag };
+      if (this._map) this._reset();
+    },
+    _reset: function () {
+      var map = this._map, size = map.getSize(), c = this._canvas;
+      var dpr = Math.min(2, window.devicePixelRatio || 1);
+      L.DomUtil.setPosition(c, map.containerPointToLayerPoint([0, 0]));
+      c.width = Math.max(1, Math.round(size.x * dpr));
+      c.height = Math.max(1, Math.round(size.y * dpr));
+      c.style.width = size.x + "px";
+      c.style.height = size.y + "px";
+      this._draw(c.width, c.height, dpr);
+    },
+    _draw: function (W, H, dpr) {
+      var ctx = this._canvas.getContext("2d");
+      ctx.clearRect(0, 0, W, H);
+      var r = this._range;
+      if (!r || W < 2 || H < 2 || !EQ.forEachInRange) return;
+      var map = this._map;
+
+      // Web Mercator by hand -- the arithmetic behind latLngToContainerPoint,
+      // without a Point object per event; a twenty-year window is a million.
+      // Calibrated on the centre so it agrees with Leaflet to the pixel.
+      var zoom = map.getZoom(), scale = 256 * Math.pow(2, zoom);
+      var center = map.getCenter();
+      var pc = map.project(center, zoom), cc = map.latLngToContainerPoint(center);
+      var ox = (cc.x - pc.x) * dpr, oy = (cc.y - pc.y) * dpr;
+      var RAD = Math.PI / 180, MAXLAT = 85.0511287798, TWO_PI = 2 * Math.PI, Q = Math.PI / 4;
+
+      var grid = new Float32Array(W * H), n = 0;
+      EQ.forEachInRange(r.from, r.to, function (m, lat, lng) {
+        if (m < r.minMag) return;
+        if (lat > MAXLAT) lat = MAXLAT; else if (lat < -MAXLAT) lat = -MAXLAT;
+        var x = (lng / 360 + 0.5) * scale * dpr + ox;
+        var y = (0.5 - Math.log(Math.tan(Q + lat * RAD / 2)) / TWO_PI) * scale * dpr + oy;
+        if (x < 0 || y < 0 || x >= W || y >= H) return;
+        grid[(y | 0) * W + (x | 0)] += 1;
+        n++;
+      });
+      if (!n) return;
+
+      blur3(grid, W, H);
+      blur3(grid, W, H);
+
+      // Log-scaled and normalised to the 99th percentile of the occupied
+      // pixels, so a handful of extreme cells (the Tohoku aftershock cloud)
+      // do not flatten every other subduction zone into the palest step.
+      var i, v, top = 0, occupied = 0;
+      for (i = 0; i < grid.length; i++) {
+        if (grid[i] > 0.01) { v = Math.log(1 + grid[i]); grid[i] = v; if (v > top) top = v; occupied++; }
+        else grid[i] = 0;
+      }
+      if (!top) return;
+      var hist = new Uint32Array(1024);
+      for (i = 0; i < grid.length; i++) if (grid[i]) hist[Math.min(1023, (grid[i] / top * 1023) | 0)]++;
+      var cum = 0, p99 = top;
+      for (i = 0; i < 1024; i++) { cum += hist[i]; if (cum >= occupied * 0.99) { p99 = (i + 1) / 1024 * top; break; } }
+
+      var img = ctx.createImageData(W, H), px = img.data;
+      for (i = 0; i < grid.length; i++) {
+        v = grid[i];
+        if (!v) continue;
+        var t = v / p99;
+        if (t > 1) t = 1;
+        var k = (t * 255) | 0, o = i * 4;
+        px[o] = LUT[k * 3]; px[o + 1] = LUT[k * 3 + 1]; px[o + 2] = LUT[k * 3 + 2];
+        px[o + 3] = Math.min(255, (0.35 + 0.75 * t) * 255) | 0;
+      }
+      ctx.putImageData(img, 0, 0);
+    }
+  });
+
+  var density = new DensityLayer().addTo(mini);
+  var miniLayer = L.layerGroup().addTo(mini);   // added after the field, so its canvas sits above it
 
   function miniCellSize() {
     if (state.days <= 1) return 1.25;
     if (state.days <= 7) return 2;
     if (state.days <= 30) return 3;
-    if (state.days <= 90) return 4;
-    if (state.days <= 365) return 5;
-    if (state.days <= 1095) return 6;
-    if (state.days <= 3652) return 8;
-    return 10;
+    return 4;
   }
 
-  function renderMini() {
-    miniLayer.clearLayers();
-    document.getElementById("mapRangeLbl").textContent = "(" + periodLbl() + ")";
+  /* The magnitude from which a long window marks earthquakes individually.
+     Roughly a few hundred marks whatever the window: M 6+ over a year, M 7+
+     over decades. */
+  function greatMag() { return state.days >= 3652 ? 7 : state.days >= 1095 ? 6.5 : 6; }
 
-    var now = Date.now();
-    var from = now - state.days * EQ.D;
+  var KEY = [["M 2–2.9", "#a7c8f0"], ["M 3–3.9", "#2f6bff"], ["M 4–4.9", "#f2b544"], ["M 5–5.9", "#ef8b3a"], ["M 6+", "#e8432d"]];
+  function renderKey(field, great) {
+    var el = document.getElementById("mapKey");
+    if (!el) return;
+    if (!field) {
+      el.innerHTML = KEY.map(function (k) {
+        return "<span><span class=\"legend-dot\" style=\"width:9px;height:9px;margin:0;background:" + k[1] + "\"></span>" + k[0] + "</span>";
+      }).join("");
+      return;
+    }
+    el.innerHTML =
+      "<span class=\"key-ramp\">Fewer<span class=\"ramp\" aria-hidden=\"true\"></span>More" +
+      "<span class=\"key-note\">M " + FIELD_MIN_MAG + "+ earthquakes</span></span>" +
+      "<span><span class=\"legend-dot key-great\"></span>M " + great + "+</span>";
+  }
+
+  /* Short windows: one dot per event, the strongest per cell. */
+  function renderMiniDots(from, now) {
     var cellSize = miniCellSize();
     var cells = Object.create(null);
-
-    // Keep one representative (the strongest, then newest) per geographic
-    // cell so long periods remain responsive while still covering the full window.
-    function addPoint(mag, lat, lng, depth, t) {
-      if (mag < 2.5) return;
-      var key = Math.floor((lat + 90) / cellSize) + ":" + Math.floor((lng + 180) / cellSize);
+    regionEvents().forEach(function (e) {
+      if (e.t < from || e.t > now || e.m < 2.5) return;
+      var key = Math.floor((e.lat + 90) / cellSize) + ":" + Math.floor((e.lng + 180) / cellSize);
       var cur = cells[key];
-      if (!cur || mag > cur.m || (mag === cur.m && t > cur.t)) {
-        cells[key] = { m: mag, lat: lat, lng: lng, depth: depth, t: t };
-      }
-    }
-
-    if (state.days <= 120) {
-      regionEvents().forEach(function (e) {
-        if (e.t >= from && e.t <= now) addPoint(e.m, e.lat, e.lng, e.depth, e.t);
-      });
-    } else {
-      EQ.forEachInRange(from, now, addPoint);
-    }
-
-    // Over a long window every cell's representative is a large event, so the
-    // map fills with the biggest dots; the scale comes down with the window
-    // and the halo is kept for short ones, where a strong quake is news.
-    var scale = state.days <= 365 ? 0.55 : state.days <= 3652 ? 0.4 : 0.32;
-    var halo = state.days <= 365;
+      if (!cur || e.m > cur.m || (e.m === cur.m && e.t > cur.t)) cells[key] = e;
+    });
     var evs = Object.keys(cells).map(function (key) { return cells[key]; });
     evs.sort(function (a, b) { return a.m - b.m; });
     evs.forEach(function (e) {
-      var markerRadius = Math.max(1.5, EQ.magRadius(e.m) * scale);
-      if (halo && e.m >= 5.5) {
+      var markerRadius = Math.max(1.5, EQ.magRadius(e.m) * 0.55);
+      if (e.m >= 5.5) {
         miniLayer.addLayer(L.circleMarker([e.lat, e.lng], {
           radius: markerRadius + 3, stroke: false, fillColor: EQ.miniColor(e.m), fillOpacity: 0.16, interactive: false
         }));
       }
       miniLayer.addLayer(L.circleMarker([e.lat, e.lng], {
-        radius: markerRadius,
-        color: "#ffffff", weight: halo ? 0.6 : 0.4,
-        fillColor: EQ.miniColor(e.m), fillOpacity: halo ? 0.92 : 0.85, interactive: false
+        radius: markerRadius, color: "#ffffff", weight: 0.6,
+        fillColor: EQ.miniColor(e.m), fillOpacity: 0.92, interactive: false
       }));
     });
+    renderKey(false);
   }
 
-  var KEY = [["M 2–2.9", "#a7c8f0"], ["M 3–3.9", "#2f6bff"], ["M 4–4.9", "#f2b544"], ["M 5–5.9", "#ef8b3a"], ["M 6+", "#e8432d"]];
-  document.getElementById("mapKey").innerHTML = KEY.map(function (k) {
-    return "<span><span class='legend-dot' style='width:9px;height:9px;margin:0;background:" + k[1] + "'></span>" + k[0] + "</span>";
-  }).join("");
+  /* Long windows: the density field, and the great earthquakes on top. */
+  function renderMiniField(from, now) {
+    density.show(from, now, FIELD_MIN_MAG);
+    var great = greatMag(), marks = [];
+    EQ.forEachInRange(from, now, function (m, lat, lng) {
+      if (m >= great) marks.push({ m: m, lat: lat, lng: lng });
+    });
+    marks.sort(function (a, b) { return a.m - b.m; });
+    marks.forEach(function (e) {
+      miniLayer.addLayer(L.circleMarker([e.lat, e.lng], {
+        radius: e.m >= 8 ? 5.5 : 3.5, color: "#ffffff", weight: 1,
+        fillColor: "#e8432d", fillOpacity: 0.92, interactive: false
+      }));
+    });
+    renderKey(true, great);
+  }
+
+  function renderMini() {
+    miniLayer.clearLayers();
+    document.getElementById("mapRangeLbl").textContent = "(" + periodLbl() + ")";
+    var now = Date.now(), from = now - state.days * EQ.D;
+    if (state.days > 120) {
+      renderMiniField(from, now);
+    } else {
+      density.show(null);
+      renderMiniDots(from, now);
+    }
+  }
 
   /* ---------------- controls ---------------- */
 

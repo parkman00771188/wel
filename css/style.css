@@ -1141,6 +1141,18 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
   color: var(--muted);
 }
 .map-key span { display: inline-flex; align-items: center; gap: 7px; }
+/* Over a long window the mini map is a density field; its key is the ramp
+   and one mark for the great earthquakes that are still drawn one by one. */
+.map-key .key-ramp { gap: 8px; }
+.map-key .ramp {
+  display: inline-block; width: 96px; height: 8px; border-radius: 4px;
+  background: linear-gradient(90deg, #cde2fb, #6da7ec, #3987e5, #184f95, #0d366b);
+}
+.map-key .key-note { color: var(--faint); margin-inline-start: 4px; }
+.map-key .key-great {
+  width: 9px; height: 9px; margin: 0; background: #e8432d;
+  box-shadow: 0 0 0 1.5px #fff, 0 0 0 2.5px rgba(232, 67, 45, 0.35);
+}
 
 .status-grid {
   display: grid;
@@ -2463,6 +2475,8 @@ body.insight-modal-open { overflow: hidden; }
 
 .res-stat .k { font-size: 13.5px; color: var(--muted); font-weight: 500; }
 .res-stat .v { font-family: var(--font-serif); font-size: 28px; font-weight: 700; color: var(--navy-800); line-height: 1.2; }
+.res-stat .s { font-size: 12px; color: var(--faint); margin-top: 3px; }
+.res-stat .s:empty { display: none; }
 
 .res-main {
   display: grid;
@@ -4198,3 +4212,37 @@ a.upd-row:hover .upd-title { color: var(--blue-600); }
 @media (max-width: 360px) {
   .map-head .date-chip input[type="date"] { font-size: 12px; }
 }
+
+/* ================= policy pages: about, privacy, terms =================
+   Plain reading pages. One measure, generous leading, the serif for headings
+   the rest of the site uses, and nothing that competes with the text. */
+.legal { max-width: 780px; padding: 52px 0 96px; }
+.legal h1 {
+  font-family: var(--font-serif); font-size: clamp(30px, 4vw, 40px); line-height: 1.15;
+  color: var(--navy-800); margin: 0 0 10px;
+}
+.legal .updated { color: var(--faint); font-size: 13.5px; margin: 0 0 30px; }
+.legal .lead { font-size: 17px; line-height: 1.7; color: var(--muted); margin: 0 0 8px; }
+.legal h2 {
+  font-family: var(--font-serif); font-size: 22px; line-height: 1.3; color: var(--navy-800);
+  margin: 40px 0 12px; scroll-margin-top: 96px;
+}
+.legal h3 { font-size: 16px; font-weight: 600; margin: 24px 0 8px; scroll-margin-top: 96px; }
+.legal p, .legal li { font-size: 15.5px; line-height: 1.75; }
+.legal p { margin: 0 0 14px; }
+.legal ul, .legal ol { padding-inline-start: 22px; margin: 6px 0 16px; }
+.legal li { margin: 4px 0; }
+.legal li p { margin: 0; }
+.legal a { color: #2f6bff; text-decoration: underline; text-underline-offset: 2px; }
+.legal .note {
+  border: 1px solid var(--line); background: #f6f8fb; border-radius: 12px;
+  padding: 14px 18px; margin: 18px 0 22px; font-size: 14.5px; line-height: 1.65; color: var(--muted);
+}
+.legal .toc { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0 0 8px; padding: 0; list-style: none; }
+.legal .toc li { margin: 0; font-size: 14px; }
+.legal .toc a { text-decoration: none; color: #2f6bff; }
+.legal .toc a:hover { text-decoration: underline; }
+.legal table { border-collapse: collapse; width: 100%; margin: 8px 0 18px; font-size: 14.5px; }
+.legal th, .legal td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.55; }
+.legal th { font-weight: 600; color: var(--navy-800); }
+.legal .table-wrap { overflow-x: auto; }

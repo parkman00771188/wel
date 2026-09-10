@@ -214,11 +214,22 @@
         grid.innerHTML = '<p class="pub-empty">No publications collected yet.</p>';
         return;
       }
-      if (countEl) countEl.textContent = items.length.toLocaleString();
+      /* The headline figure is the size of the literature -- OpenAlex's count
+         of works in the two topics over the window, which moves every day --
+         with the curated number beneath it. The store itself is capped (the
+         most cited plus the newest from the core journals), so its length
+         alone sat at the same total for weeks and read as a page nobody
+         updated. Older stores carry no corpus figure; they show the length. */
+      var corpus = +payload.corpus_total || 0;
+      if (countEl) countEl.textContent = (corpus || items.length).toLocaleString();
+      var curatedEl = document.getElementById("pubCurated");
+      if (curatedEl) curatedEl.textContent = corpus ? items.length.toLocaleString() + " curated below" : "";
       if (sourceEl) {
+        var years = payload.window_years || 10;
         sourceEl.textContent = (payload.topics && payload.topics.length > 1)
-          ? "OpenAlex \u00b7 two topics, the last " + (payload.window_years || 10) + " years of seismology."
-          : "OpenAlex \u00b7 topic T13018, the last " + (payload.window_years || 10) + " years of seismology.";
+          ? "OpenAlex \u00b7 two topics, the last " + years + " years of seismology \u00b7 " +
+            items.length.toLocaleString() + " papers: the most cited, plus the newest from the core journals."
+          : "OpenAlex \u00b7 topic T13018, the last " + years + " years of seismology.";
       }
       applySort();
     })

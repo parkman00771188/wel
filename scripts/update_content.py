@@ -58,6 +58,13 @@ PAPER_CAP = 300        # the most-cited pool
 PAPER_RECENT = 80      # the protected recent pool, newest first
 PAPER_CITED_PAGES = 20 # how far down the citation ranking the widening loop goes
 
+# How big the literature is. OpenAlex reports the number of works matching the
+# filter in every page's metadata; the last figure seen per topic is kept here
+# and written to the store, so the hub can say how many papers the ten-year
+# window holds -- a number that moves every day -- next to the few hundred it
+# curates, which is capped and therefore does not.
+CORPUS: dict[str, int] = {}
+
 # Venues the recent pool draws from. The newest stream of either topic is noisy
 # -- aggregators, out-of-field journals, deposits -- and a paper with no
 # citations yet has nothing else to vouch for it, so the venue does. Matched on
@@ -197,9 +204,13 @@ def openalex_page(sort: str, page: int, topic: str = OPENALEX_TOPIC) -> list[dic
     if not body:
         return []
     try:
-        return json.loads(body).get("results") or []
+        payload = json.loads(body)
     except ValueError:
         return []
+    count = (payload.get("meta") or {}).get("count")
+    if isinstance(count, int) and count > 0:
+        CORPUS[topic] = count
+    return payload.get("results") or []
 
 
 def venue_is(names: tuple, venue: str) -> bool:
@@ -309,6 +320,10 @@ def refresh_papers() -> bool:
         r["recent"] = r["id"] in recent_ids
     items.sort(key=lambda r: (r.get("cited") or 0, r.get("date") or ""), reverse=True)
 
+    # A topic whose request failed this cycle keeps last cycle's figure.
+    previous = store.get("corpus") or {}
+    corpus = {t: int(CORPUS.get(t) or previous.get(t) or 0) for t, _ in OPENALEX_TOPICS}
+
     write_json(PAPERS_PATH, {
         "schema": 2,
         "generated_utc": utc_now(),
@@ -318,6 +333,8 @@ def refresh_papers() -> bool:
         "cursors": cursors,
         "count": len(items),
         "recent_count": len(recent_pool),
+        "corpus": corpus,
+        "corpus_total": sum(corpus.values()),
         "items": items,
     })
     print(f"[content] 논문 +{added}편 (보관 {len(items):,}편, 최신 풀 {len(recent_pool)}편)")
