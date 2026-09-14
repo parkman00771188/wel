@@ -126,6 +126,73 @@
         <div class="src-list" id="srcList"></div>
       </div>
     </section>
+
+    <!-- ============ How this list is built ============
+         A list of papers drawn from a database is only as useful as the
+         reader's understanding of how it was drawn. This says exactly that,
+         and offers a way in for readers who have not read seismology before. -->
+    <section class="page-notes" id="how-this-list-is-built" aria-labelledby="resNotesTitle">
+      <h2 class="section-title" id="resNotesTitle">How this list is built</h2>
+      <p class="notes-intro">The publication list is a curated reading list drawn automatically from
+        <a class="link" href="https://docs.openalex.org/" target="_blank" rel="noopener">OpenAlex</a>, the
+        open index of scholarly works. It is not a search engine for all of seismology and it is not
+        peer review; it is a well-defined slice of the literature, refreshed on the same ten-minute cycle
+        as the earthquake data.</p>
+
+      <div class="gd-grid two">
+        <div class="card gd-card">
+          <h3 class="gd-title">Selection rules</h3>
+          <dl class="gd-defs">
+            <div>
+              <dt>Scope</dt>
+              <dd>Journal articles whose primary OpenAlex topic is either <em>earthquake and tectonic
+                studies</em> or <em>seismology and earthquake studies</em>, published in the last ten
+                years. Retracted works, preprints and repository copies of published papers are excluded.</dd>
+            </div>
+            <div>
+              <dt>Most cited</dt>
+              <dd>The 300 most-cited papers in that scope. The collector walks the citation ranking a page
+                at a time, so a paper that gathers citations later moves in on its own.</dd>
+            </div>
+            <div>
+              <dt>Recent</dt>
+              <dd>The 80 newest papers from the core journals of the field, kept whatever their citation
+                count and marked <em>Recent</em>. New work has no citations yet, so the venue vouches for
+                it: JGR Solid Earth, Geophysical Research Letters, Seismological Research Letters, the
+                Bulletin of the Seismological Society of America, Geophysical Journal International,
+                Tectonophysics, Earth and Planetary Science Letters, Seismica, Nature Geoscience and a
+                few others.</dd>
+            </div>
+            <div>
+              <dt>Counts</dt>
+              <dd>The large figure at the top is OpenAlex's count of every article in the scope; the small
+                one is how many are curated here. Citation counts are OpenAlex's and lag the publishers
+                by weeks.</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="card gd-card">
+          <h3 class="gd-title">Finding your way into the literature</h3>
+          <div class="rich-text">
+            <p>Seismology papers fall into a few recognisable kinds, and knowing which one you are
+              holding saves time. <b>Source studies</b> reconstruct a single earthquake: how far the fault
+              slipped, how fast the rupture ran, why it stopped where it did. <b>Catalogue and
+              statistics papers</b> work on thousands of events at once, on questions like completeness,
+              aftershock decay or the b-value of a region. <b>Hazard papers</b> turn those statistics into
+              probabilities of shaking for engineering and planning. <b>Method papers</b>, a fast-growing
+              share, are about detection itself: machine-learning phase pickers, dense nodal arrays,
+              fibre-optic sensing, early warning.</p>
+            <p>Sort by <em>Most cited</em> to see the papers a field builds on; sort by <em>Newest</em>
+              to see where it is going. Open access papers are marked, and every card links to the
+              publisher's page through its DOI.</p>
+          </div>
+          <div class="gd-note">The <a class="link" href="/learn">Earthquake Guide</a> explains the terms
+            these papers assume: magnitude scales, hypocenter and epicenter, seismic waves, plate
+            boundaries. The <a class="link" href="/guide/earthquake-glossary">glossary</a> is the quickest
+            route.</div>
+        </div>
+      </div>
+    </section>
   </section>
 </div>
 

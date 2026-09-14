@@ -140,7 +140,7 @@
          icons with no accounts behind them. A footer of dead links is what an
          AdSense reviewer calls a navigation problem; these go to real pages. */
       '<nav class="footer-links">' +
-      '<a href="/terms#data">Data Use Policy</a><a href="/privacy">Privacy Policy</a>' +
+      '<a href="/about">About</a><a href="/terms#data">Data Use Policy</a><a href="/privacy">Privacy Policy</a>' +
       '<a href="/terms">Terms of Service</a><a href="/about#contact">Contact Us</a></nav>' +
       "</div>" +
       '<div class="footer-bottom"><div class="container">\u00a9 ' + new Date().getFullYear() +

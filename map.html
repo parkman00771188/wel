@@ -346,6 +346,131 @@
   </aside>
   </div><!-- /.map-layout -->
 
+
+  <!-- ============ How to read the map ============
+       The map is an application, and an application page with no text is a
+       page a crawler and a first-time reader both find empty. What follows is
+       the explanation a good legend would carry if a legend had room: what a
+       dot is, why the dots line up, what "live" means here, and what the
+       catalogue can and cannot show. -->
+  <section class="page-notes map-notes" id="about-the-map" aria-labelledby="mapNotesTitle">
+    <h2 class="section-title" id="mapNotesTitle">How to read the live earthquake map</h2>
+    <p class="notes-intro">Every dot is one earthquake from a catalogue of about 2.97 million events
+      recorded since 1900. The map is a research instrument, not a warning service: it shows what the
+      agencies have published, as soon as they publish it.</p>
+
+    <div class="gd-grid two">
+      <div class="card gd-card">
+        <h3 class="gd-title">What a dot means</h3>
+        <div class="rich-text">
+          <p>Each dot sits on the <b>epicenter</b>, the point on the surface directly above where the
+            rupture began. Its size and colour follow <b>magnitude</b>, in nine steps from M 1 to M 9+. In
+            the 3D view you can switch the colouring to <b>depth</b> or to <b>time</b>, and the globe
+            plots each event at its true depth below the surface, so a subducting plate appears as a
+            sloping sheet of hypocenters rather than a smear on the map.</p>
+          <p>A magnitude step is not a small difference. Each whole unit means about <b>32 times more
+            energy</b> released, so the single M 7 on a busy day carries more energy than all of that
+            day's smaller earthquakes together.</p>
+        </div>
+      </div>
+      <div class="card gd-card">
+        <h3 class="gd-title">Why the dots line up</h3>
+        <div class="rich-text">
+          <p>Earthquakes are where plates meet. Turn on the <b>plate boundaries</b> layer and most dots
+            fall within a few hundred kilometres of a line: the subduction zones around the Pacific, the
+            mid-ocean ridges, the collision belt from the Mediterranean to the Himalaya. The Pacific rim
+            alone produces the large majority of the world's seismic energy.</p>
+          <p>Deep earthquakes, below about 70 km, occur only inside cold slabs of oceanic plate sinking
+            into the mantle. Filter the map to depths over 300 km and what remains is a map of the
+            world's subduction zones, and nothing else.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card gd-card">
+      <h3 class="gd-title">What "live" means here, and where the data comes from</h3>
+      <div class="rich-text">
+        <p>Three catalogues feed this map. The <b>USGS ANSS Comprehensive Catalog</b> supplies worldwide
+          events of magnitude 2.0 and above, and its most recent 14 days are fetched again every ten
+          minutes, so an earthquake usually appears here within a quarter of an hour of the USGS
+          publishing it. The <b>ISC Bulletin</b> supplies the reviewed record back to 1900; because the
+          ISC publishes about two years behind real time, the recent tail of the archive is USGS data.
+          The <b>Japan Meteorological Agency</b> supplies Japan and its surrounding seas, down to
+          magnitudes the global catalogues do not carry.</p>
+        <p>The archive is rebuilt offline: the two global catalogues are merged, duplicate reports of the
+          same event are removed, and the result is compressed into the files the map reads. Because the
+          live window is refetched rather than appended, corrections land here too: a magnitude that the
+          USGS revises from 6.9 to 7.1 changes on the map, and an event later withdrawn disappears.</p>
+      </div>
+      <div class="gd-note">Magnitudes are revised in the first hours after an earthquake, as more stations
+        report and analysts replace the automatic solution. A difference of a few tenths between this map
+        and a news report, or between two agencies, is normal and is not an error in either.</div>
+    </div>
+
+    <div class="gd-grid two">
+      <div class="card gd-card">
+        <h3 class="gd-title">What the catalogue cannot show</h3>
+        <div class="rich-text">
+          <p>A catalogue records what instruments detect. Worldwide, detection is complete only from about
+            <b>magnitude 4 to 4.5</b>; below that, an earthquake is listed only where a dense regional
+            network exists. That is why California, Japan, Italy and New Zealand look busier than
+            Indonesia or the Andes at small magnitudes. The difference is seismometers, not danger. Compare
+            regions at M 4.5 and above and the picture becomes fair.</p>
+          <p>The same applies through time. Before the 1960s only large earthquakes were located with any
+            reliability, so a 1930s year with few dots was not a quiet year; it was a poorly observed one.
+            The rise in small events over the decades records the growth of monitoring, not of seismicity.</p>
+        </div>
+      </div>
+      <div class="card gd-card">
+        <h3 class="gd-title">Using the controls</h3>
+        <div class="rich-text">
+          <p>The <b>period</b> menu spans 24 hours to the whole catalogue, and the two date fields accept
+            any custom range. The <b>timeline</b> under the map scrubs through the selected window; press
+            play to watch a sequence unfold, such as the aftershocks that follow a great earthquake for
+            months. <b>Layers</b> add coastlines, plate boundaries, active faults from the GEM Global
+            Active Faults database and Holocene volcanoes from the Smithsonian Global Volcanism Program.
+            <b>Filters</b> narrow the view by magnitude and depth, and the same filters drive the event
+            table beside the map.</p>
+          <p>Switch between <b>2D</b>, a flat map with a choice of basemaps, and <b>3D</b>, a globe that
+            renders depth. The Japan region opens a box view where depth is drawn downward to scale.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card gd-card">
+      <h3 class="gd-title">Common questions</h3>
+      <dl class="gd-defs">
+        <div>
+          <dt>I felt an earthquake and it is not here</dt>
+          <dd>Either it is below the threshold the local network publishes to the global catalogue, or it
+            has not been published yet. Check your national agency first; for Japan the JMA feed on this
+            map carries far smaller events than the global one.</dd>
+        </div>
+        <div>
+          <dt>Why did the magnitude change?</dt>
+          <dd>The first magnitude is automatic and uses the nearest stations. Within hours a seismologist
+            reviews it, and for larger events a moment magnitude (Mw) computed from the whole waveform
+            replaces the early estimate. The map shows the latest published value.</dd>
+        </div>
+        <div>
+          <dt>Does this map predict earthquakes?</dt>
+          <dd>No, and neither does anything else. Seismology can estimate long-term probabilities and the
+            likelihood of aftershocks after a large event, but not the time and place of the next
+            earthquake. For warnings, follow your national agency.</dd>
+        </div>
+        <div>
+          <dt>Can I reuse a screenshot or the data?</dt>
+          <dd>Yes, with credit; the <a class="link" href="/terms#data">data use policy</a> gives the
+            credit line and the terms of each source agency.</dd>
+        </div>
+      </dl>
+      <div class="gd-note">Primary sources: <a class="link" href="https://earthquake.usgs.gov/data/comcat/" target="_blank" rel="noopener">USGS ANSS ComCat documentation</a>,
+        <a class="link" href="https://www.isc.ac.uk/iscbulletin/" target="_blank" rel="noopener">ISC Bulletin</a>,
+        <a class="link" href="https://www.jma.go.jp/jma/en/Activities/earthquake.html" target="_blank" rel="noopener">JMA earthquake information</a>,
+        <a class="link" href="https://www.usgs.gov/programs/earthquake-hazards/magnitude-types" target="_blank" rel="noopener">USGS magnitude types</a>.
+        The full list of catalogues, basemaps and reference layers is on the <a class="link" href="/research#sources">Data Sources</a> page.</div>
+    </div>
+  </section>
 </main>
 
 <div id="site-footer"></div>

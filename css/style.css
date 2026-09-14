@@ -4246,3 +4246,35 @@ a.upd-row:hover .upd-title { color: var(--blue-600); }
 .legal th, .legal td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.55; }
 .legal th { font-weight: 600; color: var(--navy-800); }
 .legal .table-wrap { overflow-x: auto; }
+
+/* ================= explainers under the application pages =================
+   The map, dashboard, analysis, research and news pages are applications;
+   these sections carry the explanation a legend has no room for. They reuse
+   the guide's card and prose components so the two read as one site. */
+.page-notes { margin-top: 36px; }
+.page-notes .section-title { margin-bottom: 8px; }
+.page-notes .notes-intro { font-size: 15.5px; line-height: 1.7; color: var(--muted); max-width: 76ch; margin: 0 0 20px; }
+.page-notes .gd-card { margin-bottom: 22px; }
+.page-notes .gd-grid .gd-card { margin-bottom: 0; }
+.page-notes .gd-defs > div { grid-template-columns: 168px minmax(0, 1fr); }
+.page-notes .gd-defs dd a, .page-notes .rich-text a { color: var(--blue-600); }
+.page-notes .gd-note a { color: var(--blue-600); }
+.side-content .page-notes { margin-top: 30px; }
+/* The console frames the map into a two-column grid; the notes live on the
+   standalone page, where there is room to read them. */
+.embed .map-notes { display: none; }
+@media (max-width: 860px) {
+  .page-notes .gd-grid.two { grid-template-columns: 1fr; }
+  .page-notes .gd-defs > div { grid-template-columns: 1fr; gap: 4px; }
+}
+
+/* Guide chapters: who wrote it and what it was checked against. */
+.gd-lead .gd-byline, .gd-safety-head .gd-byline { font-size: 13px; color: var(--faint); margin-top: 12px; }
+.gd-sources { margin-top: 22px; }
+.gd-srclist { margin: 0; padding-inline-start: 20px; }
+.gd-srclist li { font-size: 14px; line-height: 1.7; color: var(--muted); margin: 5px 0; }
+.gd-srclist a { color: var(--blue-600); font-weight: 600; text-decoration: none; }
+.gd-srclist a:hover { text-decoration: underline; }
+
+/* An ad slot with no unit mounted takes no room. */
+.ad-slot:empty { display: none; }

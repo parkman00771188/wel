@@ -57,7 +57,7 @@
     <a href="#depth" data-insight-view="depth"><i data-icon="layers" data-size="18"></i> Depth Analysis</a>
     <a href="#regional" data-insight-view="regional"><i data-icon="globe" data-size="18"></i> Regional Insights</a>
     <a href="#energy" data-insight-view="energy"><i data-icon="antenna" data-size="18"></i> Energy Analysis</a>
-    <a href="#forecast" data-insight-view="forecast"><i data-icon="branch" data-size="18"></i> Forecast Models</a>
+    <a href="#forecast" data-insight-view="forecast"><i data-icon="branch" data-size="18"></i> Anomaly Monitor</a>
     <a href="#custom" data-insight-view="custom"><i data-icon="sliders" data-size="18"></i> Custom Analysis</a>
   </aside>
 
@@ -249,6 +249,96 @@
         </div>
       </div>
     </div>
+
+    <!-- ============ Methods ============
+         Every panel above is a computation. This is the note that says how
+         each one is computed and what it can honestly support, the way a
+         figure caption would in a paper. -->
+    <section class="page-notes" id="methods" aria-labelledby="methodsTitle">
+      <h2 class="section-title" id="methodsTitle">Methods: how each panel is computed</h2>
+      <p class="notes-intro">The charts run on the merged global catalogue (USGS ANSS ComCat and the ISC
+        Bulletin, de-duplicated, 1900 to today, magnitude 2.0 and above) plus the live 14-day USGS overlay.
+        Nothing is pre-computed or hand-entered; change the window or region and every panel is rebuilt
+        from the events in it.</p>
+
+      <div class="gd-grid two">
+        <div class="card gd-card">
+          <h3 class="gd-title">Windows, floors and regions</h3>
+          <div class="rich-text">
+            <p>Windows up to 120 days use every event in the catalogue. Longer windows would mean
+              scanning millions of rows, so they analyse magnitude 4 and above (or 5 and above for the
+              longest), which is also roughly where the catalogue is complete worldwide. The
+              <b>Detail</b> control lowers that floor to M 3 for a slower but fuller view.</p>
+            <p>Regions are fixed geographic groups assigned to each event when the catalogue is built.
+              "Pacific Ring of Fire" is a flag covering the Pacific margin, so it overlaps Japan, Alaska,
+              Indonesia and South America rather than sitting beside them.</p>
+          </div>
+        </div>
+        <div class="card gd-card">
+          <h3 class="gd-title">Earthquakes over time</h3>
+          <div class="rich-text">
+            <p>Events are counted per bin, hourly for a day, daily up to 120 days, monthly beyond, and a
+              rolling average is drawn over the bins to show the trend under the noise. The step-ups in
+              a multi-decade view mark improvements in monitoring; the isolated spikes are aftershock
+              sequences after great earthquakes.</p>
+          </div>
+        </div>
+        <div class="card gd-card">
+          <h3 class="gd-title">Magnitude–frequency distribution</h3>
+          <div class="rich-text">
+            <p>Events are counted in 0.2-magnitude bins and plotted on a logarithmic axis. In a complete
+              catalogue the points fall on a straight line, the <b>Gutenberg–Richter law</b>
+              log<sub>10</sub>&nbsp;N = a − bM with b close to 1: ten times fewer earthquakes for each
+              magnitude step. Where the line rolls over at the small end is the <b>magnitude of
+              completeness</b>: below it, the networks are missing events, not the Earth.</p>
+          </div>
+        </div>
+        <div class="card gd-card">
+          <h3 class="gd-title">Depth</h3>
+          <div class="rich-text">
+            <p>Depths are grouped into the conventional classes: <b>shallow</b> under 70 km,
+              <b>intermediate</b> 70–300 km, <b>deep</b> beyond 300 km. The magnitude–depth scatter shows
+              a dense line at exactly 10 km because agencies fix the depth there when the data cannot
+              resolve it; it is a convention, not a real concentration
+              (<a class="link" href="https://www.usgs.gov/faqs/why-do-so-many-earthquakes-occur-depth-10km" target="_blank" rel="noopener">USGS explains why</a>).</p>
+          </div>
+        </div>
+        <div class="card gd-card">
+          <h3 class="gd-title">Seismic energy</h3>
+          <div class="rich-text">
+            <p>Radiated energy scales as 10<sup>1.5&nbsp;M</sup>, the Gutenberg–Richter energy relation
+              (log<sub>10</sub>&nbsp;E&nbsp;=&nbsp;1.5&nbsp;M&nbsp;+&nbsp;4.8 in joules), so one unit of
+              magnitude is about 32 times the energy and two units about 1,000. The energy chart sums that
+              quantity per bin and the "Top Energy Contributors" table shows each event's share; in most
+              windows a handful of earthquakes carry nearly all of it.</p>
+          </div>
+        </div>
+        <div class="card gd-card">
+          <h3 class="gd-title">Hotspots and the density grid</h3>
+          <div class="rich-text">
+            <p>Regional hotspots rank the fixed regions by event count in the window. The spatial heatmap
+              counts events in 10° latitude–longitude cells and shades each cell by count. Both inherit
+              the catalogue's bias: at small magnitudes, well-instrumented regions look busier than they
+              are relative to the rest of the world.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card gd-card">
+        <h3 class="gd-title">The activity anomaly monitor is not a forecast</h3>
+        <div class="rich-text">
+          <p>The monitor compares each bin's observed count with a baseline: the average of the bins that
+            preceded it (six hours on a daily view, five to fourteen days on weekly to seasonal views,
+            twelve months on multi-year views). A bin well above its baseline is flagged as unusual.
+            That is a description of what has already happened, most often the start of an aftershock
+            sequence. It says nothing about what will happen next, and nothing on this site attempts to
+            predict earthquakes.</p>
+          <p>Any table on this page can be exported as CSV for the current selection. If you publish
+            results based on it, cite the source agencies as well as this site; the
+            <a class="link" href="/terms#data">data use policy</a> has the wording.</p>
+        </div>
+      </div>
+    </section>
   </section>
 </div>
 

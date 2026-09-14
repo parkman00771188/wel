@@ -18,7 +18,8 @@ from xml.sax.saxutils import escape
 ROOT = Path(__file__).resolve().parents[1]
 SITE = "https://worldearthquakelabs.com"
 
-# 색인시킬 페이지: (파일, 주소, changefreq, priority). 콘솔이 iframe 으로 부를 때
+# 색인시킬 페이지: (파일, 주소, changefreq, priority). 콘솔(/app)과 단독 3D(/3d/)는
+# 다른 페이지를 감싸는 껍데기라 noindex 이고 여기 없다. 콘솔이 iframe 으로 부를 때
 # 붙는 ?embed=1 사본은 각 페이지의 canonical 이 여기 있는 주소로 넘겨준다. 주소는
 # 호스팅이 서빙하는 확장자 없는 형태 -- /map.html 은 /map 으로 308 리다이렉트되므로
 # 사이트맵에는 최종 주소만 적는다.
@@ -42,16 +43,12 @@ PAGES = [
     ("about.html", "/about", "monthly", "0.3"),
     ("privacy.html", "/privacy", "yearly", "0.2"),
     ("terms.html", "/terms", "yearly", "0.2"),
-    ("app.html", "/app", "weekly", "0.6"),
-    ("3d/index.html", "/3d/", "weekly", "0.5"),
 ]
 
 # 그룹이 바뀌는 자리에 넣는 설명. 사이트맵을 읽는 사람을 위한 것.
 GROUP_NOTES = {
     "/learn": "The Earthquake Guide: a hub and nine topics",
     "/about": "Policy pages, linked from the footer",
-    "/app": "The console and the 3D globe are applications rather than documents;\n"
-            "       they are listed so they can be found, at a lower priority.",
 }
 
 SITEMAP_NOTE = """<!--

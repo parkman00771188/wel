@@ -170,6 +170,93 @@
       </div>
     </div>
   </div>
+
+  <!-- ============ How to read these numbers ============
+       Each tile and chart above is computed from the catalogue at load time.
+       This section says what each one counts and what it does not, so that a
+       reader (or a crawler) arriving cold can make sense of the figures. -->
+  <section class="page-notes" id="reading-the-dashboard" aria-labelledby="dashNotesTitle">
+    <h2 class="section-title" id="dashNotesTitle">How to read these numbers</h2>
+    <p class="notes-intro">Everything above is calculated from the same catalogue the
+      <a class="link" href="/map">live map</a> draws: USGS ANSS ComCat and the ISC Bulletin merged into
+      one record since 1900, with the last 14 days refreshed every ten minutes. Change the period and
+      every figure is recomputed for that window.</p>
+
+    <div class="gd-grid two">
+      <div class="card gd-card">
+        <h3 class="gd-title">The five tiles</h3>
+        <dl class="gd-defs">
+          <div>
+            <dt>Earthquakes</dt>
+            <dd>How many catalogued events of magnitude 2.0 and above fall in the selected window,
+              worldwide. The trend compares it with the window of the same length immediately before,
+              so "vs previous period" on a 7-day view means the seven days before that.</dd>
+          </div>
+          <div>
+            <dt>Total Magnitude</dt>
+            <dd>The plain sum of all magnitudes in the window. It is a rough activity index that moves
+              with the number of events; it is not energy. Energy is dominated by the largest event,
+              since each magnitude unit is about 32 times more of it.</dd>
+          </div>
+          <div>
+            <dt>Largest Event</dt>
+            <dd>The strongest earthquake in the window and where it was. Over 20 years this is the 2011
+              Tōhoku earthquake off Honshu, M 9.1.</dd>
+          </div>
+          <div>
+            <dt>Damaging range (M 5+)</dt>
+            <dd>How many events reached magnitude 5, roughly the size from which shaking damages
+              ordinary buildings near the epicenter. Whether damage actually occurs depends on depth,
+              distance and construction.</dd>
+          </div>
+          <div>
+            <dt>Archive</dt>
+            <dd>The size of the whole catalogue behind the site, all periods together.</dd>
+          </div>
+        </dl>
+      </div>
+      <div class="card gd-card">
+        <h3 class="gd-title">The charts</h3>
+        <div class="rich-text">
+          <p><b>Earthquakes Over Time</b> bins the window by hour for 24 hours, by day up to 120 days
+            and by month beyond that. The spikes on long views are aftershock sequences: the largest
+            column in the 20-year view is March 2011, when the Tōhoku earthquake was followed by
+            thousands of aftershocks within weeks.</p>
+          <p><b>Magnitude Distribution</b> shows how thoroughly small earthquakes outnumber large ones.
+            For every step down in magnitude there are roughly ten times more events, a regularity known
+            as the Gutenberg–Richter law. The M 2–3.9 bands dominate every window; M 7 and above is a
+            fraction of a percent.</p>
+          <p><b>Recent Significant Earthquakes</b> lists the newest events of magnitude 4 and above in
+            the window, with depth, in your chosen time zone.</p>
+          <p><b>Global Seismic Activity</b> draws each event as a dot for windows up to 120 days. Over
+            longer windows it shows the density of magnitude 4+ earthquakes, so that the plate boundaries
+            appear as bands rather than as a lattice of the largest events, and marks only the great
+            earthquakes individually.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card gd-card">
+      <h3 class="gd-title">Three things to keep in mind</h3>
+      <div class="rich-text">
+        <p><b>Counts depend on instruments.</b> The catalogue is complete worldwide only from about
+          magnitude 4 to 4.5. Regions with dense seismometer networks contribute many more small events,
+          and the number of small events grows over the decades as monitoring improves. A rising count
+          of M 2–3 earthquakes since 1980 is a record of better networks, not of a restless planet.
+          Compare periods at M 4.5 and above for a fair picture.</p>
+        <p><b>The last few days are provisional.</b> Magnitudes and locations are revised for hours after
+          an event, and the ISC's reviewed solutions arrive about two years later. The dashboard always
+          shows the latest published values, which is why a figure can change slightly between visits.</p>
+        <p><b>Regions only apply to short windows.</b> The region menu works on the detailed recent
+          record (up to 120 days). Longer windows are computed over the whole catalogue and are always
+          global.</p>
+      </div>
+      <div class="gd-note">This dashboard is an overview, not an alert system. For warnings, follow your
+        national agency. For the statistics behind these charts, including the magnitude–frequency
+        curve and energy release over any window, see <a class="link" href="/insights">Seismic Insights</a>;
+        for what magnitude and depth mean, see the <a class="link" href="/learn">Earthquake Guide</a>.</div>
+    </div>
+  </section>
 </main>
 
 <div id="site-footer"></div>

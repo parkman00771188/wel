@@ -119,6 +119,80 @@
         <div class="upd-list" id="quakeList"></div>
       </div>
     </section>
+
+    <!-- ============ About this feed ============
+         Headlines gathered from other publishers are their work, not ours;
+         what this page can add is transparency about how they were gathered,
+         and the background a reader needs to read earthquake news well. -->
+    <section class="page-notes" id="about-this-feed" aria-labelledby="newsNotesTitle">
+      <h2 class="section-title" id="newsNotesTitle">About this feed</h2>
+      <p class="notes-intro">The headlines here are gathered automatically and link straight to the
+        publishers; the reporting is theirs. This page adds the context that news reports usually
+        cannot: the live catalogue the events come from, and the vocabulary to read the coverage well.</p>
+
+      <div class="gd-grid two">
+        <div class="card gd-card">
+          <h3 class="gd-title">How the headlines are collected</h3>
+          <div class="rich-text">
+            <p>Every ten minutes the collector reads the Google News RSS results for a rotating set of
+              searches (<em>earthquake</em>, <em>major earthquake damage</em>, <em>tsunami earthquake
+              warning</em>, <em>magnitude 7 earthquake</em>, <em>aftershock sequence</em>, <em>earthquake
+              early warning system</em>, <em>earthquake research study</em>) together with ScienceDaily's
+              earthquake feed. A headline must actually be about an earthquake to be kept; duplicates of
+              the same story from different outlets are collapsed on the title; the newest 300 stay.</p>
+            <p>Each headline is sorted into one of three tabs by its wording. <b>Network</b> is anything
+              about instruments and systems: seismometers, stations, early warning. <b>Research</b> is
+              anything from a science outlet or that mentions a study, model or dataset. Everything else
+              is an <b>Event</b>, a report on a particular earthquake.</p>
+            <p>The <b>Earthquakes</b> tab is different in kind: it is not news but the live USGS feed
+              itself, the last 14 days of catalogued events, newest first. The <b>Papers</b> tab shows the
+              newest journal articles the <a class="link" href="/research">Research Hub</a> collected.</p>
+          </div>
+        </div>
+        <div class="card gd-card">
+          <h3 class="gd-title">Reading earthquake news well</h3>
+          <dl class="gd-defs">
+            <div>
+              <dt>The magnitude will change</dt>
+              <dd>The first figure is automatic and comes from the nearest stations. It is revised within
+                hours, and for large events a moment magnitude replaces it. Headlines written in the first
+                hour often carry a number the agencies have since moved by a few tenths.</dd>
+            </div>
+            <div>
+              <dt>Magnitude is not intensity</dt>
+              <dd>Magnitude is the size of the source; intensity is the shaking at a place. A deep M 7 can
+                be felt gently over a whole country; a shallow M 6 under a city can be devastating. "How
+                strong was it?" has two different answers.</dd>
+            </div>
+            <div>
+              <dt>Warning, advisory, watch</dt>
+              <dd>Tsunami messages come in grades. In the US system a <em>warning</em> means dangerous waves
+                are expected, an <em>advisory</em> means strong currents and waves dangerous near the
+                water, a <em>watch</em> means a threat is being evaluated. Japan's JMA grades are Major
+                Tsunami Warning, Tsunami Warning and Tsunami Advisory. The grade matters more than the word
+                "tsunami".</dd>
+            </div>
+            <div>
+              <dt>Aftershock forecasts are probabilities</dt>
+              <dd>After a large earthquake the USGS publishes the chance of further shocks of a given
+                size over the coming days and weeks. That is a statistical forecast built on how
+                sequences decay; it is not a prediction of a specific earthquake, and no agency issues
+                those.</dd>
+            </div>
+            <div>
+              <dt>Go to the source</dt>
+              <dd>Every significant earthquake has an official event page with the current magnitude,
+                depth, shaking maps and, where relevant, tsunami information. Find the event on the
+                <a class="link" href="/map">live map</a>; its card links to the USGS page.</dd>
+            </div>
+          </dl>
+          <div class="gd-note">Background: <a class="link" href="https://earthquake.usgs.gov/data/oaf/" target="_blank" rel="noopener">USGS operational aftershock forecasts</a>,
+            <a class="link" href="https://www.tsunami.gov/" target="_blank" rel="noopener">US Tsunami Warning Centers</a>,
+            <a class="link" href="https://www.usgs.gov/programs/earthquake-hazards/science/earthquake-early-warning" target="_blank" rel="noopener">USGS earthquake early warning</a>.
+            The <a class="link" href="/guide/magnitude-and-intensity">guide chapter on magnitude and intensity</a> goes deeper.</div>
+        </div>
+      </div>
+    </section>
   </section>
 </div>
 

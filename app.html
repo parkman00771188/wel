@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The console frames the pages that are indexed in their own right; the
+     standalone globe is the same engine the map page embeds. Neither is a
+     document of its own, so neither is offered to search. -->
+<meta name="robots" content="noindex, follow">
 <meta name="google-adsense-account" content="ca-pub-7720076982812531">
 <title>Platform Console — World Earthquake Labs</title>
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -126,15 +130,9 @@
          needs to verify the site and to run Auto ads. A fixed unit here needs
          one more thing: an ad-unit id. Create a display unit in
          AdSense → 광고 → 광고 단위 and paste its data-ad-slot into AD_SLOT at
-         the top of js/app.js. Until then this keeps its labelled placeholder.
+         the top of js/app.js. Until then the slot stays empty and collapsed.
     ──────────────────────────────────────────────────────────────────── -->
-    <div class="ad-slot" id="adSlot">
-      <div class="ad-placeholder">
-        <span class="ad-tag">AD</span>
-        <span class="ad-note">Google AdSense</span>
-        <span class="ad-size">300 × 250</span>
-      </div>
-    </div>
+    <div class="ad-slot" id="adSlot"></div>
   </aside>
 
   <!-- ============ Top bar ============ -->

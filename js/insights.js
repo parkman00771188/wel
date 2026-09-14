@@ -678,7 +678,7 @@
       cards: ["cardEnergy", "cardEnergyTop", "cardTopEvents"]
     },
     forecast: {
-      kicker: "Forecast Models",
+      kicker: "Anomaly Monitor",
       title: "Monitor departures from the activity baseline",
       copy: "The anomaly chart compares observed counts with a rolling baseline. It highlights unusual activity but is not a deterministic earthquake prediction.",
       cards: ["cardModel", "cardTime", "cardStats"]
