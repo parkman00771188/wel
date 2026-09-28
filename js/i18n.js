@@ -213,7 +213,7 @@
   }
   packs.forEach(function (src) {
     var s = document.createElement("script");
-    s.src = src;
+    s.src = src + "?v=20260922-review";
     s.async = false;
     s.onload = done;
     /* A pack that is missing is not an error: those strings stay in English. */

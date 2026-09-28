@@ -64,18 +64,23 @@
 
   /* ---------- header / footer ---------- */
 
+  /* The header points at the pages themselves. It used to point at sections
+     of the home page, and the call to action at the console, so a visitor who
+     followed the navigation never arrived at a page with its own URL, header
+     and footer -- an AdSense reviewer saw a landing page and an app shell. */
   var NAV = [
-    { id: "platform", label: "Platform", href: "/#platform" },
-    { id: "livemap", label: "Live Map", href: "/#livemap" },
-    { id: "guide", label: "Earthquake Guide", href: "/#guide" },
-    { id: "insights", label: "Insights", href: "/#insights" },
-    { id: "research", label: "Research", href: "/#research" },
-    { id: "news", label: "News", href: "/#news" }
+    { id: "platform", label: "Dashboard", href: "/" },
+    { id: "livemap", label: "Live Map", href: "/map" },
+    { id: "guide", label: "Earthquake Guide", href: "/learn" },
+    { id: "insights", label: "Insights", href: "/insights" },
+    { id: "research", label: "Research", href: "/research" },
+    { id: "news", label: "News", href: "/news" }
   ];
 
   var CTA = {
-    "get-started": { label: "Get Started", href: "/app" },
-    dashboard: { label: "Dashboard", href: "/app" },
+    "get-started": { label: "Get Started", href: "/" },
+    dashboard: { label: "Dashboard", href: "/" },
+    map: { label: "Live Map", href: "/map" },
     download: { label: "Download", href: "#", id: "ctaDownload" }
   };
 
@@ -85,16 +90,8 @@
     var active = document.body.dataset.nav || "";
     var cta = CTA[document.body.dataset.cta || "dashboard"];
 
-    /* Every nav target is a section of the home page. Written as
-       "index.html#platform" they are a full navigation even when the reader is
-       already on the home page: the browser reloads to the top, the host
-       redirects index.html to the clean URL, and only then does it scroll down
-       -- the visible jump to the top and back. On the home page the same
-       targets are plain fragments, which scroll without leaving the document. */
-    var onHome = /(^|\/)(index\.html)?$/.test(location.pathname);
-
     var links = NAV.map(function (n) {
-      var href = onHome ? n.href.slice(n.href.indexOf("#")) : n.href;
+      var href = n.href;
       return '<a href="' + href + '"' + (n.id === active ? ' class="active"' : "") + ">" + n.label + "</a>";
     }).join("");
 
@@ -120,9 +117,7 @@
     if (burger) burger.addEventListener("click", function () {
       nav.classList.toggle("open");
     });
-    /* On the home page the links now scroll instead of navigating, so nothing
-       reloads the header and the open dropdown would sit over the section the
-       reader just asked for. */
+    /* Close the dropdown on a click so it is not left open over the page. */
     if (nav) nav.addEventListener("click", function (ev) {
       if (ev.target.closest("a")) nav.classList.remove("open");
     });
@@ -131,20 +126,23 @@
   function buildFooter() {
     var mount = document.getElementById("site-footer");
     if (!mount) return;
+    /* Every link goes to a real page. There used to be "#" links, an "API
+       Documentation" link for an API that does not exist, and three social
+       icons with no accounts behind them; a footer of dead links is what an
+       AdSense reviewer calls a navigation problem. */
     mount.outerHTML =
       '<footer class="site-footer"><div class="container footer-top">' +
-      '<div class="footer-tagline"><div class="l1">The World Earthquake Labs Platform</div>' +
-      '<div class="l2">Integrated. Open. Built for Science and Society.</div></div>' +
-      /* Every one of these used to point at "#", and there was an "API
-         Documentation" link for an API that does not exist, plus three social
-         icons with no accounts behind them. A footer of dead links is what an
-         AdSense reviewer calls a navigation problem; these go to real pages. */
-      '<nav class="footer-links">' +
+      '<div class="footer-brand"><a class="footer-wordmark" href="/">World Earthquake Labs</a>' +
+      '<p class="footer-desc">Earthquakes today and every recorded event since 1900, built on open data ' +
+      'from the USGS, the ISC and the JMA and refreshed every ten minutes.</p></div>' +
+      '<nav class="footer-links" aria-label="Site information">' +
       '<a href="/about">About</a><a href="/terms#data">Data Use Policy</a><a href="/privacy">Privacy Policy</a>' +
-      '<a href="/terms">Terms of Service</a><a href="/about#contact">Contact Us</a></nav>' +
+      '<a href="/terms">Terms of Service</a><a href="/about#contact">Contact Us</a><a href="/app">Console</a></nav>' +
       "</div>" +
-      '<div class="footer-bottom"><div class="container">\u00a9 ' + new Date().getFullYear() +
-      " World Earthquake Labs. All rights reserved.</div></div></footer>";
+      '<div class="footer-bottom"><div class="container">' +
+      '<span>\u00a9 ' + new Date().getFullYear() + ' World Earthquake Labs. All rights reserved.</span>' +
+      '<span class="footer-credit">Not an alert service. For warnings, follow your national agency.</span>' +
+      "</div></div></footer>";
   }
 
   /* ---------- sidebar scroll-nav ---------- */
@@ -211,12 +209,26 @@
      crawlers and new tabs get the page. This is only consulted on a plain
      click, to open the same thing in the console instead. Returns null for
      anything that is not one of those pages. */
-  var GUIDE_SUB = {
-    "earthquake-basics": "basics", "plate-tectonics": "plates",
-    "measuring-earthquakes": "measuring", "magnitude-and-intensity": "magnitude",
-    "earthquake-hazards": "hazards", "notable-earthquakes": "history",
-    "earthquake-glossary": "terms", "earthquake-faq": "faq", "earthquake-safety": "safety"
-  };
+  /* The guide, in reading order: [section key, URL slug, label]. The key is
+     what the console and the sidebar call the chapter and what each chapter
+     page carries in data-gd-section. */
+  var GUIDE_CHAPTERS = [
+    ["basics", "earthquake-basics", "Basics"],
+    ["plates", "plate-tectonics", "Plate Tectonics"],
+    ["measuring", "measuring-earthquakes", "Measuring Quakes"],
+    ["magnitude", "magnitude-and-intensity", "Magnitude &amp; Intensity"],
+    ["catalogue", "reading-the-catalogue", "Reading the Catalogue"],
+    ["hazards", "earthquake-hazards", "Hazards &amp; Effects"],
+    ["buildings", "buildings-and-codes", "Buildings &amp; Codes"],
+    ["warning", "earthquake-early-warning", "Early Warning"],
+    ["induced", "induced-earthquakes", "Induced Earthquakes"],
+    ["history", "notable-earthquakes", "Notable Earthquakes"],
+    ["terms", "earthquake-glossary", "Key Terms"],
+    ["faq", "earthquake-faq", "FAQ"],
+    ["safety", "earthquake-safety", "Safety Guide"]
+  ];
+  var GUIDE_SUB = {};
+  GUIDE_CHAPTERS.forEach(function (c) { GUIDE_SUB[c[1]] = c[0]; });
   var VIEW_OF = { dashboard: "overview", map: "map", insights: "insights", research: "research", learn: "learn", news: "news" };
   function consoleRoute(href) {
     if (!href || /^(#|https?:|mailto:)/i.test(href)) return null;
@@ -274,84 +286,194 @@
     }, true);
   }
 
-  /* ---------- Google AdSense ----------
+  /* ---------- the shell: console chrome on every page ----------
 
-     Two placements, and they never both apply at once. On a wide screen the
-     console shows a unit at the bottom of its sidebar. On a phone that
-     sidebar is a drawer, so the unit is only visible while the drawer is
-     open -- which is almost never -- and a dismissible anchor bar takes over
-     at the bottom of the viewport instead.
+     Every page is laid out the way the console lays it out -- the sidebar with
+     the six views and their sections, the top bar with the clock and the
+     settings, the page itself in the main area. What differs from the console
+     is that nothing is framed. Each page is its own document at its own URL,
+     the sidebar entries are ordinary links, and a crawler or a reviewer sees
+     exactly what a reader sees, with the policy links one click away.
 
-     Both need an ad-unit id from AdSense (광고 → 광고 단위 → 디스플레이 광고).
-     Paste them below. While an id is empty nothing is pushed for it: an <ins>
-     without a slot can never fill, and a permanent grey bar across the bottom
-     of a live site is worse than no bar. */
+     The reason it is built here rather than written into each page: the
+     sidebar changes whenever a section is added, and twenty pages carrying a
+     copy each is how the console and the guide once stopped agreeing.
 
-  var AD = {
-    client: "ca-pub-7720076982812531",
-    sidebar: "",   // 콘솔 사이드바 하단 (데스크톱)
-    anchor: ""     // 모바일 하단 앵커
+     Inside the console (?embed=1) the page skips this: the console is the
+     shell there. A page can also opt out with data-chrome="header" on <body>
+     and get the plain site header instead. */
+
+  var SHELL_VIEW = { platform: "overview", livemap: "map", guide: "learn", insights: "insights", research: "research", news: "news" };
+  var SHELL_TITLE = {
+    overview: "Dashboard Overview", map: "Live Earthquake Map", learn: "Earthquake Guide",
+    insights: "Seismic Insights", research: "Research Hub", news: "News &amp; Updates"
   };
+  var SHELL_DEFAULT_SUB = { map: "3d", learn: "overview", insights: "overview", research: "overview", news: "overview" };
 
-  /** Turn a container into a display unit and ask AdSense to fill it. */
-  function mountAd(host, slot, style) {
-    if (!host || !slot) return false;
-    var ins = document.createElement("ins");
-    ins.className = "adsbygoogle";
-    ins.style.cssText = style || "display:block;width:100%";
-    ins.dataset.adClient = AD.client;
-    ins.dataset.adSlot = slot;
-    if (!style) {
-      ins.dataset.adFormat = "auto";
-      ins.dataset.fullWidthResponsive = "true";
+  function shellGroupHTML(view, icn, label, href, subs) {
+    var has = !!(subs && subs.length);
+    var html = '<div class="app-nav-group' + (has ? " has-subnav" : "") + '" data-nav-group="' + view + '">' +
+      '<a href="' + href + '" data-view="' + view + '"' + (has ? ' aria-expanded="false"' : "") + ">" +
+      icon(icn, 19) + '<span class="app-nav-label">' + label + "</span>" +
+      (has ? '<span class="app-nav-caret" aria-hidden="true"></span>' : "") + "</a>";
+    if (has) {
+      html += '<div class="app-subnav">' + subs.map(function (s) {
+        return '<a href="' + s[1] + '" data-parent-view="' + view + '" data-subview="' + s[0] + '"><span>' + s[2] + "</span></a>";
+      }).join("") + "</div>";
     }
-    host.textContent = "";
-    host.appendChild(ins);
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (err) {
-      console.warn("adsbygoogle unavailable:", err);
-      return false;
-    }
-    return true;
+    return html + "</div>";
   }
 
-  /* The anchor belongs to the top-level document only. Inside the console the
-     child pages run in iframes; an anchor there would sit on top of the one
-     the shell already has. */
-  function mountAnchor() {
-    if (EMBED || window.parent !== window || !AD.anchor) return;
-    try {
-      if (sessionStorage.getItem("wel-ad-anchor-closed")) return;
-    } catch (e) { /* private mode: just show it */ }
+  function shellNavHTML() {
+    var guide = [["overview", "/learn", "Overview"]].concat(GUIDE_CHAPTERS.map(function (c) {
+      return [c[0], "/guide/" + c[1], c[2]];
+    }));
+    return shellGroupHTML("overview", "grid", "Overview", "/", null) +
+      shellGroupHTML("map", "target", "Live Map", "/map", [["3d", "/map#3d", "3D Map"], ["2d", "/map#2d", "2D Map"]]) +
+      shellGroupHTML("learn", "book", "Earthquake Guide", "/learn", guide) +
+      shellGroupHTML("insights", "chartline", "Seismic Insights", "/insights", [
+        ["overview", "/insights#overview", "Overview"], ["statistics", "/insights#statistics", "Statistics"],
+        ["magnitude", "/insights#magnitude", "Magnitude Analysis"], ["depth", "/insights#depth", "Depth Analysis"],
+        ["regional", "/insights#regional", "Regional Insights"], ["energy", "/insights#energy", "Energy Analysis"],
+        ["forecast", "/insights#forecast", "Activity Anomaly Monitor"], ["custom", "/insights#custom", "Custom Analysis"]
+      ]) +
+      shellGroupHTML("research", "folder", "Research Hub", "/research", [
+        ["overview", "/research#overview", "Overview"], ["publications", "/research#publications", "Publications"],
+        ["sources", "/research#sources", "Data Sources"]
+      ]) +
+      shellGroupHTML("news", "radio", "News &amp; Updates", "/news", [
+        ["overview", "/news#overview", "Overview"], ["news", "/news#news", "News"],
+        ["papers", "/news#papers", "Papers"], ["quakes", "/news#quakes", "Earthquakes"]
+      ]);
+  }
 
-    var bar = document.createElement("div");
-    bar.className = "ad-anchor";
-    bar.id = "adAnchor";
-    var close = document.createElement("button");
-    close.className = "ad-anchor-close";
-    close.type = "button";
-    close.setAttribute("aria-label", "Close ad");
-    close.innerHTML = icon("x", 15);
-    var inner = document.createElement("div");
-    inner.className = "ad-anchor-inner";
-    bar.appendChild(close);
-    bar.appendChild(inner);
-    document.body.appendChild(bar);
+  function buildShell() {
+    var mount = document.getElementById("site-header");
+    if (!mount || EMBED || document.body.dataset.chrome === "header") return false;
+    var body = document.body;
+    var view = SHELL_VIEW[body.dataset.nav || ""] || null;
+    var title = view ? SHELL_TITLE[view] : (document.title.split(" \u2014 ")[0] || "World Earthquake Labs");
 
-    close.addEventListener("click", function () {
-      bar.remove();
-      document.body.classList.remove("has-ad-anchor");
-      try { sessionStorage.setItem("wel-ad-anchor-closed", "1"); } catch (e) { /* ignore */ }
+    /* The page's own markup moves into the main area. Scripts stay where they
+       are: they have run, and the main area is content, not code. */
+    var main = document.createElement("div");
+    main.className = "app-main";
+    main.id = "appMain";
+    Array.prototype.slice.call(body.childNodes).forEach(function (node) {
+      if (node === mount) return;
+      if (node.nodeType === 1 && node.tagName === "SCRIPT") return;
+      main.appendChild(node);
+    });
+    mount.remove();
+
+    /* "embed" alongside "shell": the page is laid out inside console chrome
+       either way, so the stylesheet's embed rules -- full-width container,
+       the map filling its area, the guide's tab row sticking to the top --
+       apply here too. The few places where the two differ are marked .shell. */
+    body.classList.add("app-body", "shell", "embed");
+    body.insertAdjacentHTML("afterbegin",
+      '<div class="app-scrim" id="appScrim" hidden></div>' +
+      '<aside class="app-side" id="appSide">' +
+        '<div class="app-side-head"><a class="brand" href="/" title="World Earthquake Labs">' +
+        '<img src="/resource/img/logo_new.png" alt="World Earthquake Labs"></a></div>' +
+        '<nav class="app-nav" id="appNav">' + shellNavHTML() + "</nav>" +
+        '<div class="spacer"></div>' +
+        '<nav class="app-side-foot" aria-label="Site information">' +
+        '<a href="/about">About</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>' +
+        '<a href="/about#contact">Contact</a><a href="/app">Console</a></nav>' +
+      "</aside>" +
+      '<header class="app-top">' +
+        '<button class="app-burger" id="appBurger" aria-label="Menu" aria-expanded="false" aria-controls="appSide">' +
+        "<span></span><span></span><span></span></button>" +
+        '<p class="app-title" id="appTitle">' + title + "</p>" +
+        '<span class="app-clock" id="appClock">\u2014</span>' +
+        '<span class="app-tz" id="appTz"></span>' +
+        langControlHTML("app-lang") +
+      "</header>");
+    body.appendChild(main);
+
+    /* Which row is the page: the group from data-nav, the child from the
+       chapter attribute on guide pages and from the fragment elsewhere. */
+    function paintShellNav() {
+      var sub = view === "learn" ? (body.dataset.gdSection || "overview") : (location.hash || "").slice(1);
+      if (!sub) sub = SHELL_DEFAULT_SUB[view] || "";
+      document.querySelectorAll("#appNav .app-nav-group").forEach(function (group) {
+        var on = group.dataset.navGroup === view;
+        var has = group.classList.contains("has-subnav");
+        group.classList.toggle("open", on && has);
+        var link = group.querySelector("a[data-view]");
+        if (link) {
+          link.classList.toggle("active", on);
+          if (has) link.setAttribute("aria-expanded", on ? "true" : "false");
+        }
+        group.querySelectorAll("a[data-subview]").forEach(function (a) {
+          a.classList.toggle("active", on && a.dataset.subview === sub);
+        });
+      });
+    }
+    paintShellNav();
+    window.addEventListener("hashchange", paintShellNav);
+
+    /* A link into the page currently open switches its section rather than
+       reloading it: the page's own hashchange handler does the switching. */
+    document.getElementById("appNav").addEventListener("click", function (ev) {
+      var a = ev.target.closest("a[data-subview]");
+      if (!a) return;
+      var url;
+      try { url = new URL(a.href, location.href); } catch (e) { return; }
+      if (url.pathname === location.pathname && url.hash && plainClick(ev, a)) {
+        ev.preventDefault();
+        if (location.hash !== url.hash) location.hash = url.hash;
+        setDrawer(false);
+      }
     });
 
-    // 320x50 fixed: the bar then has a height the layout can reserve, instead
-    // of resizing under the reader once a creative arrives.
-    if (mountAd(inner, AD.anchor, "display:inline-block;width:320px;height:50px")) {
-      document.body.classList.add("has-ad-anchor");
-    } else {
-      bar.remove();
+    /* ---- phone drawer: the sidebar slides over the content ---- */
+    var side = document.getElementById("appSide");
+    var scrim = document.getElementById("appScrim");
+    var burger = document.getElementById("appBurger");
+    function drawerOpen() { return body.classList.contains("app-drawer-open"); }
+    function setDrawer(open) {
+      body.classList.toggle("app-drawer-open", open);
+      side.classList.toggle("open", open);
+      scrim.hidden = !open;
+      if (open) requestAnimationFrame(function () { scrim.classList.add("on"); });
+      else scrim.classList.remove("on");
+      burger.setAttribute("aria-expanded", open ? "true" : "false");
     }
+    burger.addEventListener("click", function () { setDrawer(!drawerOpen()); });
+    scrim.addEventListener("click", function () { setDrawer(false); });
+    document.addEventListener("keydown", function (ev) {
+      if (ev.key === "Escape" && drawerOpen()) setDrawer(false);
+    });
+    try {
+      window.matchMedia("(min-width: 861px)").addEventListener("change", function (ev) {
+        if (ev.matches && drawerOpen()) setDrawer(false);
+      });
+    } catch (e) { /* an old browser without matchMedia events keeps the drawer manual */ }
+
+    /* ---- clock, in whichever zone the header is set to ---- */
+    var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var locale = { en: "en-US", zh: "zh-CN", fil: "fil-PH" }[currentLang()] || currentLang();
+    var dfmt = null;
+    try { dfmt = new Intl.DateTimeFormat(locale, { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" }); } catch (e) { /* fallback below */ }
+    function p2(x) { return (x < 10 ? "0" : "") + x; }
+    function tick() {
+      var utc = !TZ.isLocal;
+      var d = new Date();
+      var Y = utc ? d.getUTCFullYear() : d.getFullYear();
+      var M = utc ? d.getUTCMonth() : d.getMonth();
+      var D = utc ? d.getUTCDate() : d.getDate();
+      var date = MON[M] + " " + D + ", " + Y;
+      if (dfmt) { try { date = dfmt.format(Date.UTC(Y, M, D)); } catch (e) { /* keep the literal */ } }
+      var hms = p2(utc ? d.getUTCHours() : d.getHours()) + ":" + p2(utc ? d.getUTCMinutes() : d.getMinutes()) + ":" +
+        p2(utc ? d.getUTCSeconds() : d.getSeconds());
+      document.getElementById("appClock").textContent = date + " " + hms + " " + TZ.label();
+    }
+    setInterval(tick, 1000);
+    window.addEventListener("wel:tz", tick);
+    tick();
+    return true;
   }
 
   /* ---------- time zone ---------- */
@@ -534,27 +656,6 @@
       .catch(function () {});
   }
 
-  /* A reader who arrives from somewhere else -- a search result, a link in an
-     article -- gets the console, which is the site as it is meant to be used;
-     the page they asked for opens as its tab. The decision rests on the
-     referrer alone: a crawler sends none, so it sees and indexes this page as
-     it is, at its own URL, and no redirect is ever shown to it. A reader who
-     typed the address gets the same page the crawler saw. Links from our own
-     pages are not "elsewhere" -- the home page routes those itself. */
-  function arrivedFromElsewhere() {
-    if (EMBED || window.top !== window.self || !document.referrer) return false;
-    try { return new URL(document.referrer).host !== location.host; } catch (e) { return false; }
-  }
-  (function openConsoleForVisitors() {
-    var route = consoleRoute(location.pathname);
-    if (!route || !arrivedFromElsewhere()) return;
-    // A fragment on the page is its sub-view (#3d on the map); the console
-    // takes the same names after a slash.
-    var frag = location.hash.match(/^#([a-z0-9-]+)$/);
-    var sub = route.sub || (frag ? frag[1] : "");
-    location.replace("/app" + location.search + "#" + route.view + (sub ? "/" + sub : ""));
-  })();
-
   /* ---------- what the ten-minute cycle last put on the page ----------
 
      The News & Updates Overview lists the newest of the three things the site
@@ -608,7 +709,7 @@
 
   window.WEL = {
     icon: icon, renderIcons: renderIcons, toast: toast, embed: EMBED,
-    AD: AD, mountAd: mountAd, tz: TZ, tzControlHTML: tzControlHTML, langControlHTML: langControlHTML,
+    tz: TZ, tzControlHTML: tzControlHTML, langControlHTML: langControlHTML,
     feedRows: feedRows, feedNewest: feedNewest, OVERVIEW_MIN_MAG: OVERVIEW_MIN_MAG
   };
 
@@ -616,21 +717,8 @@
     if (EMBED) {
       initEmbed();
     } else {
-      buildHeader();
+      if (!buildShell()) buildHeader();
       buildFooter();
-      // On the home page a plain click on a content link opens the console at
-      // that tab, as the old app.html#view links did. The href stays the real
-      // page, so crawlers, middle clicks and "open in new tab" get that instead.
-      if (/(^|\/)(index\.html)?$/.test(location.pathname)) {
-        document.addEventListener("click", function (ev) {
-          var a = ev.target.closest("a[href]");
-          if (!a) return;
-          var route = consoleRoute(a.getAttribute("href") || "");
-          if (!route || !plainClick(ev, a)) return;
-          ev.preventDefault();
-          location.href = "/app#" + route.view + (route.sub ? "/" + route.sub : "");
-        }, true);
-      }
     }
     // The console builds its own top bar in markup; give it the same control.
     var tzHost = document.getElementById("appTz");
@@ -639,6 +727,5 @@
     paintMetaFigures();
     renderIcons(document);
     initSideNav();
-    mountAnchor();
   });
 })();

@@ -347,7 +347,7 @@ WEL_I18N.load({
   "Prepare it together with your family — check what you already have.": "和家人一起准备 — 勾出你已经有的东西。",
   "ESSENTIAL": "必备",
   "RECOMMENDED": "推荐",
-  "Water — 3 L per person per day, 3+ days": "水 — 每人每天 3 L，备足 3 天以上",
+  "Water — at least 1 US gallon (about 3.8 L) per person per day, for 3+ days": "水 — 每人每天至少1美制加仑（约3.8升），储备至少3天用量",
   "Non-perishable food for 3+ days": "3 天以上的耐储存食品",
   "First-aid kit & personal medications": "急救包 & 个人常用药",
   "Flashlight & spare batteries": "手电筒 & 备用电池",

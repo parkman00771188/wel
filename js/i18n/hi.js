@@ -347,7 +347,7 @@ WEL_I18N.load({
   "Prepare it together with your family — check what you already have.": "इसे परिवार के साथ मिलकर तैयार करें — जो पहले से है, उस पर निशान लगाएँ।",
   "ESSENTIAL": "अनिवार्य",
   "RECOMMENDED": "अनुशंसित",
-  "Water — 3 L per person per day, 3+ days": "पानी — 3 L प्रति व्यक्ति प्रतिदिन, 3+ दिन",
+  "Water — at least 1 US gallon (about 3.8 L) per person per day, for 3+ days": "पानी — प्रति व्यक्ति प्रतिदिन कम से कम 1 अमेरिकी गैलन (लगभग 3.8 लीटर), 3 या अधिक दिनों के लिए",
   "Non-perishable food for 3+ days": "3+ दिन का न खराब होने वाला भोजन",
   "First-aid kit & personal medications": "फ़र्स्ट-एड किट & निजी दवाइयाँ",
   "Flashlight & spare batteries": "टॉर्च & अतिरिक्त बैटरी",

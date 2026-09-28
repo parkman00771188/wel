@@ -23,7 +23,6 @@
   --card-shadow: 0 1px 2px rgba(18, 42, 83, .05);
   --pop-shadow: 0 14px 40px rgba(10, 26, 60, .16);
   --radius: 16px;
-  --ad-anchor-h: 58px;
   --font-sans: "Inter", -apple-system, "Segoe UI", "Noto Sans KR", sans-serif;
   --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
 }
@@ -1221,6 +1220,21 @@ input[type="range"] { width: 100%; accent-color: var(--blue-600); }
   border-bottom: 1px solid var(--line-soft);
 }
 .embed .gd-navwrap { top: 0; }
+/* The front page carries the dashboard and, below it, the sections that
+   describe the site. Framed in the console those sections duplicate the
+   console's own navigation, so only the dashboard shows. */
+.embed .home-more { display: none; }
+
+/* ---- the shell: console chrome on standalone pages (js/common.js buildShell)
+   The page sits in the main area and scrolls there; the console's grid keeps
+   the sidebar and top bar in place. The home page keeps its descriptive
+   sections, which only the framed copy inside the console hides. ---- */
+.shell .app-main { overflow: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.shell .home-more { display: block; }
+.app-top .app-title { margin: 0; font-size: 17px; font-weight: 700; color: var(--navy-800); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app-side-foot { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 14px 10px 0; font-size: 12px; }
+.app-side-foot a { color: #65748b; }
+.app-side-foot a:hover { color: var(--navy-800); }
 
 /* Ten tabs need 1,614px and the container is 1,240 -- as a single scrolling
    row that put Key Terms, FAQ and the Safety Guide off the right edge, where
@@ -2863,95 +2877,64 @@ a.upd-row:hover .upd-title { color: var(--blue-600); }
 .feature-card .t { font-size: 15px; font-weight: 700; color: var(--navy-800); margin-bottom: 7px; }
 .feature-card .d { font-size: 13.5px; line-height: 1.6; color: var(--muted); }
 
-/* dark platform band */
+/* ---------------- Footer ----------------
+   This used to be a second navy band directly under the navy platform band,
+   with the platform tagline repeated in both. It is a quiet strip now, on the
+   page's own background: the wordmark and one line about the site, the policy
+   links, then the copyright and the data credit. */
 
-.platform-band {
-  position: relative;
-  background: #0b2f6b;
-  color: #fff;
-  padding: 58px 0;
-  overflow: hidden;
+.site-footer {
+  margin-top: 40px;
+  border-top: 1px solid var(--line);
+  background: #fff;
+  color: var(--muted);
 }
-
-.platform-band::after {
-  content: "";
-  position: absolute;
-  inset: -40px -80px -40px auto;
-  width: 55%;
-  background: url("../resource/img/banner img.png") right center / contain no-repeat;
-  opacity: .07;
-  pointer-events: none;
-}
-
-.band-grid {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 1.35fr repeat(4, 1fr);
-  gap: 30px;
-  align-items: start;
-}
-
-.band-intro .l1 { font-size: 15px; font-weight: 600; color: rgba(255, 255, 255, .92); }
-.band-intro .l2 {
-  font-family: var(--font-serif);
-  font-size: 24px;
-  font-weight: 700;
-  color: #fff;
-  margin-top: 6px;
-  letter-spacing: -.01em;
-}
-.band-intro .bar { width: 46px; height: 3px; background: #35c08e; border-radius: 2px; margin: 16px 0; }
-.band-intro p { font-size: 13.5px; line-height: 1.7; color: rgba(255, 255, 255, .72); max-width: 36ch; margin: 0; }
-
-.band-col svg { color: #9cc0ff; }
-.band-col .t { font-size: 14.5px; font-weight: 600; color: #fff; margin-top: 14px; }
-.band-col .d { font-size: 13px; color: rgba(255, 255, 255, .62); margin-top: 4px; line-height: 1.55; }
-
-/* ---------------- Footer ---------------- */
-
-.site-footer { background: #0a2a5f; color: #fff; }
 
 .footer-top {
   display: flex;
-  align-items: center;
-  gap: 34px;
-  padding: 32px 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px 40px;
+  padding: 28px 0 22px;
   flex-wrap: wrap;
 }
 
-.footer-tagline .l1 { font-size: 14.5px; font-weight: 600; }
-.footer-tagline .l2 { font-size: 13px; color: rgba(255, 255, 255, .68); margin-top: 3px; }
+.footer-brand { max-width: 54ch; }
+.footer-wordmark {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  color: var(--navy-800);
+}
+.footer-wordmark:hover { color: var(--blue-600); }
+.footer-desc { margin: 6px 0 0; font-size: 13px; line-height: 1.6; color: var(--muted); }
 
 .footer-links {
-  margin-inline-start: auto;
   display: flex;
-  gap: 30px;
   flex-wrap: wrap;
+  gap: 8px 22px;
+  padding-top: 4px;
 }
-
-.footer-links a { font-size: 13.5px; color: #d9e4fb; transition: color .15s; }
-.footer-links a:hover { color: #fff; }
-
-.footer-social { display: flex; gap: 12px; }
-
-.footer-social a {
-  width: 38px; height: 38px;
-  border: 1px solid rgba(255, 255, 255, .35);
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  color: #fff;
-  transition: background .15s;
-}
-.footer-social a:hover { background: rgba(255, 255, 255, .12); }
+.footer-links a { font-size: 13px; color: var(--body); transition: color .15s; }
+.footer-links a:hover { color: var(--blue-600); }
 
 .footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, .14);
-  padding: 16px 0;
-  text-align: center;
-  font-size: 12.5px;
-  color: rgba(255, 255, 255, .62);
+  border-top: 1px solid var(--line-soft);
+  padding: 12px 0 16px;
+  font-size: 12px;
+  color: var(--faint);
+}
+.footer-bottom .container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 20px;
+}
+
+@media (max-width: 680px) {
+  .footer-top { padding: 22px 0 16px; }
+  .footer-links { gap: 8px 16px; }
 }
 
 /* ---------------- Modal ---------------- */
@@ -3276,14 +3259,6 @@ a.upd-row:hover .upd-title { color: var(--blue-600); }
 .app-back:hover { background: var(--bg-soft); color: var(--navy-800); }
 
 /* Google AdSense slot (sidebar bottom) */
-.ad-slot {
-  margin-bottom: 12px;
-  border-radius: 12px;
-  overflow: hidden;
-  min-height: 180px;
-  display: flex;
-}
-.ad-slot .adsbygoogle { flex: 1; }
 
 .ad-placeholder {
   flex: 1;
@@ -3621,55 +3596,12 @@ a.upd-row:hover .upd-title { color: var(--blue-600); }
   .trust-row.sources .wordmark { flex-shrink: 1; min-width: 0; }
 }
 
-/* ---------------- Ad anchor (phones) ----------------
-   The console's sidebar unit is only visible while the drawer is open, which
-   on a phone is almost never. This bar is the placement that actually gets
-   seen there: fixed to the bottom, dismissible, and sitting under the drawer
-   and its scrim rather than over them. */
-
-.ad-anchor {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1050;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  min-height: var(--ad-anchor-h);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  background: rgba(255, 255, 255, .97);
-  backdrop-filter: blur(6px);
-  border-top: 1px solid var(--line);
-  box-shadow: 0 -6px 22px rgba(10, 26, 60, .1);
-}
-
-.ad-anchor-inner { display: flex; align-items: center; justify-content: center; }
-
-.ad-anchor-close {
-  position: absolute;
-  top: -13px;
-  right: 10px;
-  width: 26px;
-  height: 26px;
-  padding: 0;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: #fff;
-  color: var(--muted);
-  box-shadow: 0 2px 8px rgba(10, 26, 60, .12);
-}
-
 /* ---------------- Responsive ---------------- */
 
 @media (max-width: 1120px) {
   .pub-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .stat-grid { grid-template-columns: repeat(3, 1fr); }
   .resources-grid { grid-template-columns: repeat(3, 1fr); }
-  .band-grid { grid-template-columns: 1fr 1fr; }
-  .band-intro { grid-column: 1 / -1; }
   .pub-grid { grid-template-columns: repeat(2, 1fr); }
   .res-main { grid-template-columns: 1fr; }
   .res-stats { grid-template-columns: repeat(2, 1fr); }
@@ -3734,7 +3666,6 @@ a.upd-row:hover .upd-title { color: var(--blue-600); }
   .stat-grid, .feature-grid, .status-grid, .res-stats { grid-template-columns: 1fr; }
   .resources-grid { grid-template-columns: repeat(2, 1fr); }
   .resources-grid.landing, .stat-strip { grid-template-columns: 1fr; }
-  .band-grid { grid-template-columns: 1fr; }
   /* map furniture is positioned in the Mobile section below */
   .quake-pop .leaflet-popup-content {
     width: min(258px, calc(100vw - 80px)) !important;
@@ -3796,16 +3727,6 @@ a.upd-row:hover .upd-title { color: var(--blue-600); }
 /* ---------------- Phones ---------------- */
 
 @media (max-width: 760px) {
-
-  .ad-anchor { display: flex; }
-  /* Reserve the bar's height so the end of the page stays reachable. */
-  body.has-ad-anchor { padding-bottom: calc(var(--ad-anchor-h) + env(safe-area-inset-bottom, 0px)); }
-  /* The console is a full-height grid, not a scrolling document, so it has to
-     shrink instead -- padding would just leave the iframe under the bar. */
-  body.app-body.has-ad-anchor {
-    padding-bottom: 0;
-    height: calc(100vh - var(--ad-anchor-h) - env(safe-area-inset-bottom, 0px));
-  }
 
   /* --- site chrome ---
      Horizontal only: several sections are `class="container hero"` and the
@@ -4275,6 +4196,3 @@ a.upd-row:hover .upd-title { color: var(--blue-600); }
 .gd-srclist li { font-size: 14px; line-height: 1.7; color: var(--muted); margin: 5px 0; }
 .gd-srclist a { color: var(--blue-600); font-weight: 600; text-decoration: none; }
 .gd-srclist a:hover { text-decoration: underline; }
-
-/* An ad slot with no unit mounted takes no room. */
-.ad-slot:empty { display: none; }

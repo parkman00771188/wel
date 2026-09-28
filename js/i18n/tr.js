@@ -347,7 +347,7 @@ WEL_I18N.load({
   "Prepare it together with your family — check what you already have.": "Ailenizle birlikte hazırlayın — elinizde olanları işaretleyin.",
   "ESSENTIAL": "ZORUNLU",
   "RECOMMENDED": "ÖNERİLEN",
-  "Water — 3 L per person per day, 3+ days": "Su — kişi başı günde 3 L, 3+ gün",
+  "Water — at least 1 US gallon (about 3.8 L) per person per day, for 3+ days": "Su — kişi başına günde en az 1 ABD galonu (yaklaşık 3,8 L), 3 gün veya daha uzun süre için",
   "Non-perishable food for 3+ days": "3+ günlük bozulmayan gıda",
   "First-aid kit & personal medications": "İlk yardım çantası & kişisel ilaçlar",
   "Flashlight & spare batteries": "El feneri & yedek pil",

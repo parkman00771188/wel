@@ -347,7 +347,7 @@ WEL_I18N.load({
   "Prepare it together with your family — check what you already have.": "Ihanda ito kasama ang inyong pamilya — tsekan kung ano na ang mayroon kayo.",
   "ESSENTIAL": "KAILANGAN",
   "RECOMMENDED": "REKOMENDADO",
-  "Water — 3 L per person per day, 3+ days": "Tubig — 3 L kada tao kada araw, 3+ araw",
+  "Water — at least 1 US gallon (about 3.8 L) per person per day, for 3+ days": "Tubig — hindi bababa sa 1 US gallon (mga 3.8 L) bawat tao bawat araw, para sa 3 araw o higit pa",
   "Non-perishable food for 3+ days": "Hindi nabubulok na pagkain para sa 3+ araw",
   "First-aid kit & personal medications": "First-aid kit & personal na gamot",
   "Flashlight & spare batteries": "Flashlight & ekstrang baterya",

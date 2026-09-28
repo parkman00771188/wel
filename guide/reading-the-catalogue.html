@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-adsense-account" content="ca-pub-7720076982812531">
+<title>How to Read an Earthquake Catalogue: Completeness, Magnitude Types and Revisions — World Earthquake Labs</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="96x96" href="/resource/img/icon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/resource/img/icon-192.png">
+<link rel="apple-touch-icon" href="/resource/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&display=swap" rel="stylesheet">
+<!-- SEO -->
+<meta name="description" content="An earthquake catalogue records what the networks detected, not everything that happened. How to read counts, magnitude types, depths and revisions without being misled, and how to use this site's charts with that in mind.">
+<link rel="canonical" href="https://worldearthquakelabs.com/guide/reading-the-catalogue">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="World Earthquake Labs">
+<meta property="og:title" content="How to Read an Earthquake Catalogue: Completeness, Magnitude Types and Revisions — World Earthquake Labs">
+<meta property="og:description" content="An earthquake catalogue records what the networks detected, not everything that happened. How to read counts, magnitude types, depths and revisions without being misled, and how to use this site's charts with that in mind.">
+<meta property="og:url" content="https://worldearthquakelabs.com/guide/reading-the-catalogue">
+<meta property="og:image" content="https://worldearthquakelabs.com/resource/img/og-cover-white.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Read an Earthquake Catalogue: Completeness, Magnitude Types and Revisions — World Earthquake Labs">
+<meta name="twitter:description" content="An earthquake catalogue records what the networks detected, not everything that happened. How to read counts, magnitude types, depths and revisions without being misled, and how to use this site's charts with that in mind.">
+<meta name="twitter:image" content="https://worldearthquakelabs.com/resource/img/og-cover-white.jpg">
+<link rel="stylesheet" href="/css/style.css?v=20260928-footer">
+<!-- Site verification uses the google-adsense-account meta tag above. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://worldearthquakelabs.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Earthquake Guide",
+      "item": "https://worldearthquakelabs.com/learn"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "How to Read an Earthquake Catalogue",
+      "item": "https://worldearthquakelabs.com/guide/reading-the-catalogue"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Read an Earthquake Catalogue: Completeness, Magnitude Types and Revisions",
+  "description": "An earthquake catalogue records what the networks detected, not everything that happened. How to read counts, magnitude types, depths and revisions without being misled, and how to use this site's charts with that in mind.",
+  "mainEntityOfPage": "https://worldearthquakelabs.com/guide/reading-the-catalogue",
+  "image": "https://worldearthquakelabs.com/resource/img/og-cover-white.jpg",
+  "inLanguage": "en",
+  "datePublished": "2026-09-28",
+  "dateModified": "2026-09-28",
+  "author": {
+    "@type": "Organization",
+    "name": "World Earthquake Labs",
+    "url": "https://worldearthquakelabs.com/about"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "World Earthquake Labs",
+    "url": "https://worldearthquakelabs.com/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://worldearthquakelabs.com/resource/img/logo_new.png"
+    }
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "@id": "https://worldearthquakelabs.com/#website"
+  }
+}
+</script>
+</head>
+<body data-nav="guide" data-cta="dashboard" data-i18n-pack="guide" data-gd-section="catalogue">
+
+<div id="site-header"></div>
+
+<div class="gd-navwrap">
+  <nav class="container gd-nav" id="gdNav">
+    <a href="/learn"><i data-icon="grid" data-size="18"></i> Overview</a>
+    <a href="/guide/earthquake-basics"><i data-icon="book" data-size="18"></i> Basics</a>
+    <a href="/guide/plate-tectonics"><i data-icon="globe" data-size="18"></i> Plate Tectonics</a>
+    <a href="/guide/measuring-earthquakes"><i data-icon="antenna" data-size="18"></i> Measuring Quakes</a>
+    <a href="/guide/magnitude-and-intensity"><i data-icon="activity" data-size="18"></i> Magnitude &amp; Intensity</a>
+    <a href="/guide/reading-the-catalogue" class="active"><i data-icon="database" data-size="18"></i> Reading the Catalogue</a>
+    <a href="/guide/earthquake-hazards"><i data-icon="bell" data-size="18"></i> Hazards &amp; Effects</a>
+    <a href="/guide/buildings-and-codes"><i data-icon="layers" data-size="18"></i> Buildings &amp; Codes</a>
+    <a href="/guide/earthquake-early-warning"><i data-icon="radio" data-size="18"></i> Early Warning</a>
+    <a href="/guide/induced-earthquakes"><i data-icon="tool" data-size="18"></i> Induced Earthquakes</a>
+    <a href="/guide/notable-earthquakes"><i data-icon="bookmark" data-size="18"></i> Notable Earthquakes</a>
+    <a href="/guide/earthquake-glossary"><i data-icon="doc" data-size="18"></i> Key Terms</a>
+    <a href="/guide/earthquake-faq"><i data-icon="help" data-size="18"></i> FAQ</a>
+    <a href="/guide/earthquake-safety"><i data-icon="shield" data-size="18"></i> Safety Guide</a>
+  </nav>
+</div>
+
+<main class="container page-pad-bottom">
+  <section class="gd-sec active" id="gd-catalogue">
+    <header class="gd-lead">
+      <span class="gd-lead-kicker">Reading the Catalogue</span>
+      <h1>A record of what was detected, not of what happened</h1>
+      <p>Every chart on this site is computed from a catalogue. Reading one well means knowing what its counts, magnitudes and depths can say, and what they cannot.</p>
+      <p class="gd-byline">By the World Earthquake Labs team &middot; Checked against the USGS and ISC documentation listed at the end &middot; Published September 2026</p>
+    </header>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">Why the number of earthquakes keeps rising</h2>
+      <div class="rich-text">
+        <p>Plot the yearly count of earthquakes in almost any catalogue and it climbs steeply through the
+          twentieth century. The Earth did not become more active. The instruments did. The Worldwide
+          Standardized Seismograph Network of the 1960s gave the first consistent global coverage; digital
+          broadband stations spread in the 1990s; dense regional networks have been filling the gaps since.
+          Each step lowered the size of the smallest earthquake that could be reliably recorded, and the
+          count rose to match.</p>
+        <p>Seismologists call that threshold the <b>magnitude of completeness</b>, written M<sub>c</sub>:
+          the magnitude above which essentially every earthquake in a region is caught. Globally it has
+          fallen from roughly M 7 at the start of the record to about M 5 by the late 1960s and
+          somewhat below M 4.5 today. In densely instrumented regions such as California and Japan it is
+          near M 1 or 2. In the oceans and much of Africa and Antarctica it is still far higher.</p>
+        <p>The practical rule follows directly. Compare two periods only above the completeness of the
+          <em>earlier</em> one. A trend since 1900 is trustworthy at M 7 and above; a trend since the
+          1970s at about M 5; a trend in the count of M 3 events is usually a trend in the network. On the
+          <a class="link" href="/insights">Insights</a> page, the activity chart lets you set a minimum
+          magnitude for exactly this reason.</p>
+      </div>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">One earthquake, several magnitudes</h2>
+      <p class="gd-desc">Agencies publish different magnitude types, measured from different parts of the
+        seismogram, and the same earthquake will carry a different number in each. The differences are
+        not errors; they are different questions being asked of the same waves.</p>
+      <div class="gd-tablewrap">
+        <table class="eq-table gd-table tight">
+          <thead><tr><th>Type</th><th class="wide">What it measures</th><th>Typical use</th><th class="right">Limit</th></tr></thead>
+          <tbody>
+            <tr><td class="mag">M<sub>L</sub></td><td>Peak amplitude on nearby stations, the original Richter scale</td><td>Small, local events</td><td class="right">Saturates around M 6.5–7</td></tr>
+            <tr><td class="mag">M<sub>d</sub></td><td>How long the signal takes to fade</td><td>Very small local events</td><td class="right">Rough below M 3</td></tr>
+            <tr><td class="mag">m<sub>b</sub></td><td>Short-period body waves recorded far away</td><td>Rapid global estimates</td><td class="right">Saturates around M 6–6.5</td></tr>
+            <tr><td class="mag">M<sub>s</sub></td><td>20-second surface waves recorded far away</td><td>Historic large events</td><td class="right">Saturates around M 8</td></tr>
+            <tr><td class="mag">M<sub>w</sub></td><td>Seismic moment: fault area × slip × rock rigidity, from waveform modelling</td><td>The standard for anything above about M 5</td><td class="right">Does not saturate; slow for small events</td></tr>
+            <tr><td class="mag">M<sub>j</sub></td><td>JMA's displacement magnitude for Japan</td><td>Japanese catalogue</td><td class="right">Underestimates great events (Tōhoku: M<sub>j</sub> 8.4, M<sub>w</sub> 9.0)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="gd-figcap">"Saturates" means the scale stops growing even as the earthquake does: the
+        waves it measures cannot get any bigger, so an M 8.5 and an M 9.2 look alike. Moment magnitude
+        was introduced in the late 1970s to fix that, which is why the very largest events in old
+        catalogues were re-estimated decades after they happened. Differences of a few tenths between
+        agencies reporting the same type are normal; differences between types can exceed half a unit.
+        This site keeps the type each source published, so a card that reads m<sub>b</sub> 5.9 and one
+        that reads M<sub>w</sub> 6.2 may be the same earthquake seen twice.</p>
+    </div>
+
+    <div class="gd-grid two">
+      <div class="card gd-card">
+        <h2 class="gd-title">The first solution is not the last</h2>
+        <div class="rich-text">
+          <p>Within minutes of an earthquake a computer has located it from the first stations to report
+            and estimated a magnitude. That automatic solution is what news reports carry and what appears
+            on the <a class="link" href="/map">live map</a> first. Over the following hours an analyst
+            re-picks the arrivals with more stations, the depth is refined, and for anything large a moment
+            magnitude replaces the rapid estimate. Revisions of 0.2 or 0.3 units are routine. Weeks later a
+            regional network may publish its own, more precise, solution.</p>
+          <p>Some entries disappear. Two networks report the same event and one is removed; a quarry
+            blast, a sonic boom or a mine collapse is recognised and reclassified; a false detection
+            triggered by noise is deleted. That is why this site re-fetches the last fourteen days on every
+            ten-minute cycle rather than only adding new events: withdrawals and corrections follow
+            through. The <b>status</b> shown on an event card, Automatic or Reviewed, is the agency's own
+            flag; where the source does not publish one, the card says so rather than guessing.</p>
+        </div>
+      </div>
+      <div class="card gd-card">
+        <h2 class="gd-title">Depth is the weakest number</h2>
+        <div class="rich-text">
+          <p>Latitude and longitude come from differences in arrival time across a network that surrounds
+            the earthquake. Depth comes from much subtler differences, and if all the stations lie on one
+            side, as they do for anything offshore, it is poorly constrained. When the data cannot resolve
+            it, the analyst fixes depth at a default and publishes that. For decades the international
+            default for shallow events was 33 km; today it is usually 10 km, sometimes 5 km. A depth
+            histogram of any global catalogue therefore has sharp spikes at exactly those values, and they
+            are artefacts, not layers in the Earth.</p>
+          <p>Depth becomes reliable when a station sits nearly above the earthquake, or when the analyst
+            can identify <b>depth phases</b>: the P wave that first travelled up to the surface, reflected
+            off it, and then set out to the distant station a few seconds behind the direct arrival. That
+            delay measures depth almost directly, which is why deep earthquakes, 300 to 700 km down under
+            Tonga or Japan, are often located more precisely in depth than shallow ones.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">Where catalogues overlap, and how they are joined</h2>
+      <p class="gd-desc">This site reads three catalogues. Each is authoritative for something, and the same
+        earthquake appears in more than one of them with slightly different time, place and size.</p>
+      <dl class="gd-defs">
+        <div>
+          <dt>USGS ComCat</dt>
+          <dd>The Comprehensive Catalog gathers solutions from the US National Earthquake Information Center
+            and contributing regional networks worldwide. For each event one contributor is
+            <em>authoritative</em>, normally the network closest to it; the others are kept as alternatives.
+            It is the fastest of the three and the one the live overlay reads.</dd>
+        </div>
+        <div>
+          <dt>ISC Bulletin</dt>
+          <dd>The International Seismological Centre collects readings from more than 150 agencies, relocates
+            every event with all of them together, and publishes the result about two years after the
+            fact. It is the most complete global record, and the reviewed part of it is what the archive
+            here uses for the years it covers.</dd>
+        </div>
+        <div>
+          <dt>JMA</dt>
+          <dd>The Japan Meteorological Agency runs one of the densest networks anywhere and catalogues events
+            far smaller than the global agencies can see. For Japan it is the reference; elsewhere it does
+            not apply.</dd>
+        </div>
+        <div>
+          <dt>Joining them</dt>
+          <dd>When the archive is rebuilt, records that fall within a short window of time and distance of
+            each other are treated as one event and a single record is kept. The number removed that way
+            is reported on the <a class="link" href="/research#sources">data sources</a> page. The matching
+            can miss: a great earthquake whose origin time differs by several seconds between agencies, or
+            two genuine events close together, may be kept as two or merged into one.</dd>
+        </div>
+        <div>
+          <dt>Location error</dt>
+          <dd>On land inside a dense network a location is good to a kilometre or two. Offshore, or before
+            the 1960s, tens of kilometres is normal, and the error is larger in the direction where stations
+            are missing. Catalogues publish this as an error ellipse and an <em>azimuthal gap</em>, the
+            largest angle with no station in it; a gap above 180° is a warning sign.</dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="card gd-card">
+      <h2 class="gd-title">Reading this site's charts with all that in mind</h2>
+      <dl class="gd-defs">
+        <div>
+          <dt>Long-term trends</dt>
+          <dd>Use M 7 and above for the full span since 1900, or M 5 and above from the mid-1960s. A rising
+            count of small events is the network growing.</dd>
+        </div>
+        <div>
+          <dt>Regional counts</dt>
+          <dd>Before comparing two regions, or one region across decades, ask whether their networks are
+            comparable. Japan's count is high partly because Japan listens harder.</dd>
+        </div>
+        <div>
+          <dt>Magnitude–frequency curves</dt>
+          <dd>The Gutenberg–Richter line should be straight with a slope, the <em>b-value</em>, near 1. Where
+            it bends downward at the small end, that bend marks the completeness magnitude. Nothing below it
+            is a fair count.</dd>
+        </div>
+        <div>
+          <dt>Depth profiles</dt>
+          <dd>Ignore the spikes at 10 km and 33 km. The genuine structure is the band of shallow crustal
+            events and, under subduction zones, the inclined zone descending to 700 km.</dd>
+        </div>
+        <div>
+          <dt>Largest events</dt>
+          <dd>For anything before the 1970s the listed magnitude is a modern re-estimate of an old
+            measurement. Valdivia 1960 is M<sub>w</sub> 9.5 by moment; the surface-wave magnitude published at
+            the time was 8.5.</dd>
+        </div>
+        <div>
+          <dt>The last two weeks</dt>
+          <dd>Numbers move. A magnitude quoted today may be a few tenths different next week, and a small
+            event near a large one may vanish as a duplicate.</dd>
+        </div>
+      </dl>
+      <div class="gd-note">How the numbers are produced in the first place is the subject of
+        <a class="link" href="/guide/measuring-earthquakes">Measuring Quakes</a>; what the magnitude
+        scale means for the energy released is in
+        <a class="link" href="/guide/magnitude-and-intensity">Magnitude &amp; Intensity</a>.</div>
+    </div>
+
+    <div class="card gd-card gd-sources">
+      <h2 class="gd-title">Sources and further reading</h2>
+      <p class="gd-desc">The references this chapter was checked against. They are the primary sources; where a news report and one of these disagree, trust these.</p>
+      <ul class="gd-srclist">
+        <li><a href="https://earthquake.usgs.gov/data/comcat/" target="_blank" rel="noopener">ANSS Comprehensive Earthquake Catalog (ComCat) documentation</a> &mdash; USGS. How events, contributors, authoritative solutions and review status are defined.</li>
+        <li><a href="https://www.usgs.gov/programs/earthquake-hazards/magnitude-types" target="_blank" rel="noopener">Magnitude types</a> &mdash; USGS. Every magnitude type the agency publishes, the distance and size range each applies to, and when each is used.</li>
+        <li><a href="https://www.usgs.gov/faqs/why-do-so-many-earthquakes-occur-depth-10km" target="_blank" rel="noopener">Why do so many earthquakes occur at a depth of 10 km?</a> &mdash; USGS. The fixed-depth convention explained by the agency that uses it.</li>
+        <li><a href="https://www.isc.ac.uk/iscbulletin/" target="_blank" rel="noopener">The ISC Bulletin</a> &mdash; International Seismological Centre. What the reviewed bulletin contains, which agencies contribute, and why it is published two years in arrears.</li>
+      </ul>
+    </div>
+  </section>
+
+  <nav class="gd-seq" aria-label="Guide sections">
+    <a class="gd-seq-prev" href="/guide/magnitude-and-intensity"><span>Previous</span><b>Magnitude &amp; Intensity</b></a>
+    <a class="gd-seq-next" href="/guide/earthquake-hazards"><span>Next</span><b>Hazards &amp; Effects</b></a>
+  </nav>
+</main>
+
+<div id="site-footer">
+  <footer class="site-footer"><div class="container footer-top">
+    <nav class="footer-links" aria-label="Site information">
+      <a href="/">Home</a><a href="/learn">Earthquake Guide</a><a href="/about">About</a>
+      <a href="/terms#data">Data Use Policy</a><a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a><a href="/about#contact">Contact Us</a>
+    </nav>
+  </div></footer>
+</div>
+
+<script src="/js/common.js?v=20260928-footer"></script>
+<script src="/js/i18n.js?v=20260928-footer"></script>
+<script src="/js/learn.js"></script>
+</body>
+</html>

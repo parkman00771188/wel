@@ -102,9 +102,9 @@ def normalize(features: list[dict]) -> list[dict]:
             "latitude": round(float(coords[1]), 5),
             "depth_km": round(max(0.0, float(coords[2])), 3),
             "magnitude": round(magnitude, 2),
-            "mag_type": str(props.get("magType") or "mww"),
+            "mag_type": str(props.get("magType") or ""),
             "place": str(props.get("place") or ""),
-            "status": str(props.get("status") or "automatic"),
+            "status": str(props.get("status") or ""),
         })
     events.sort(key=lambda event: (event["time_ms"], event["id"]))
     return events

@@ -1,0 +1,7 @@
+# Cloudflare Pages redirect rules.
+#
+# The dashboard used to be its own page and is now the front page. Old links,
+# bookmarks and search results keep working; dashboard.html itself carries the
+# same redirect for hosts that do not read this file.
+/dashboard / 301
+/dashboard.html / 301

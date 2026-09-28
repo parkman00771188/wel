@@ -347,7 +347,7 @@ WEL_I18N.load({
   "Prepare it together with your family — check what you already have.": "家族と一緒に準備し、すでにある物をチェックしましょう。",
   "ESSENTIAL": "必須",
   "RECOMMENDED": "推奨",
-  "Water — 3 L per person per day, 3+ days": "水 — 1人1日3L、3日分以上",
+  "Water — at least 1 US gallon (about 3.8 L) per person per day, for 3+ days": "水 — 1人1日あたり最低1米ガロン（約3.8L）、3日分以上",
   "Non-perishable food for 3+ days": "3日分以上の非常食",
   "First-aid kit & personal medications": "救急セットと常備薬",
   "Flashlight & spare batteries": "懐中電灯と予備電池",

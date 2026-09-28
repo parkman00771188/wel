@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="google-adsense-account" content="ca-pub-7720076982812531">
-<title>World Earthquake Labs — 3D Earthquake Map, Earthquakes Today &amp; Since 1900</title>
+<title>World Earthquake Labs — Earthquakes Today, 3D Earthquake Map &amp; Record Since 1900</title>
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="96x96" href="/resource/img/icon-96.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/resource/img/icon-192.png">
@@ -12,20 +12,21 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <!-- SEO -->
-<meta name="description" content="Today's earthquakes and every recorded quake since 1900 on 2D and 3D maps: magnitude, depth and epicenter for nearly 3 million events, updated every 10 minutes.">
+<meta name="description" content="Today's earthquakes at a glance and a catalogue reaching back to 1900: the largest recent events, counts and depths worldwide refreshed every 10 minutes, with 2D and 3D maps, seismic analysis and an earthquake guide.">
 <link rel="canonical" href="https://worldearthquakelabs.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="World Earthquake Labs">
-<meta property="og:title" content="World Earthquake Labs — 3D Earthquake Map, Earthquakes Today &amp; Since 1900">
-<meta property="og:description" content="Today's earthquakes and every recorded quake since 1900 on 2D and 3D maps: magnitude, depth and epicenter for nearly 3 million events, updated every 10 minutes.">
+<meta property="og:title" content="World Earthquake Labs — Earthquakes Today, 3D Earthquake Map &amp; Record Since 1900">
+<meta property="og:description" content="Today's earthquakes at a glance and a catalogue reaching back to 1900: the largest recent events, counts and depths worldwide refreshed every 10 minutes, with 2D and 3D maps, seismic analysis and an earthquake guide.">
 <meta property="og:url" content="https://worldearthquakelabs.com/">
 <meta property="og:image" content="https://worldearthquakelabs.com/resource/img/og-cover-white.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="World Earthquake Labs — 3D Earthquake Map, Earthquakes Today &amp; Since 1900">
-<meta name="twitter:description" content="Today's earthquakes and every recorded quake since 1900 on 2D and 3D maps: magnitude, depth and epicenter for nearly 3 million events, updated every 10 minutes.">
+<meta name="twitter:title" content="World Earthquake Labs — Earthquakes Today, 3D Earthquake Map &amp; Record Since 1900">
+<meta name="twitter:description" content="Today's earthquakes at a glance and a catalogue reaching back to 1900: the largest recent events, counts and depths worldwide refreshed every 10 minutes, with 2D and 3D maps, seismic analysis and an earthquake guide.">
 <meta name="twitter:image" content="https://worldearthquakelabs.com/resource/img/og-cover-white.jpg">
 <script type="application/ld+json">
 {
@@ -43,51 +44,239 @@
       "@id": "https://worldearthquakelabs.com/#website",
       "url": "https://worldearthquakelabs.com/",
       "name": "World Earthquake Labs",
-      "description": "Today's earthquakes and every recorded quake since 1900 on 2D and 3D maps: magnitude, depth and epicenter for nearly 3 million events, updated every 10 minutes.",
+      "description": "Today's earthquakes at a glance and a catalogue reaching back to 1900: the largest recent events, counts and depths worldwide refreshed every 10 minutes, with 2D and 3D maps, seismic analysis and an earthquake guide.",
       "publisher": { "@id": "https://worldearthquakelabs.com/#organization" },
       "inLanguage": "en"
     }
   ]
 }
 </script>
-<link rel="stylesheet" href="css/style.css">
-<!-- Inside the console every child page runs in an iframe, and the shell has
-     already loaded AdSense. Pausing here keeps a second copy from stacking a
-     second anchor on the first; the loader tag itself stays static below so
-     the verification crawler still finds it in the source. -->
-<script>
-  if (window.parent !== window) {
-    (window.adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 1;
-  }
-</script>
-<!-- Google AdSense. Static in <head> on every page so the verification
-     crawler finds it in the source, not only after JavaScript runs. -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7720076982812531"
-        crossorigin="anonymous"></script>
+<link rel="stylesheet" href="css/style.css?v=20260928-footer">
+<!-- Site verification uses the google-adsense-account meta tag above. -->
 </head>
-<body data-nav="" data-cta="get-started">
+<body data-nav="platform" data-cta="map">
 
 <div id="site-header"></div>
 
 <main>
-  <!-- ============ Hero ============ -->
-  <section class="container hero">
-    <div>
-      <h1>Earthquakes today, and every one since 1900.<br>
-        <span class="grad">Explore the world's seismic record on live 2D maps and a 3D&nbsp;globe.</span>
-      </h1>
-      <p>Every event the USGS, the ISC and the JMA have published since 1900, merged into one
-        record and analysed in the browser — magnitude-frequency curves, depth profiles,
-        energy release, regional concentration.</p>
-      <div class="hero-cta">
-        <a class="btn btn-primary" href="/app" >Explore the Platform</a>
-        <a class="btn-text" href="#mission">Why the whole archive</a>
+  <!-- ============ Dashboard ============
+       The front page opens on the live overview. It used to open on a landing
+       page whose only call to action was the console; the dashboard was the
+       first thing the console showed, so it is the first thing the site shows.
+       The sections that explain the site follow below it. -->
+  <div class="container page-pad-bottom dashboard-main">
+    <div class="page-head">
+      <div>
+        <h1>Earthquakes today, and a record reaching back to 1900</h1>
+        <p class="sub">The largest recent earthquakes, counts and depths worldwide, refreshed every 10 minutes. Change the period and every figure is recomputed for that window.</p>
+        <p class="sub" id="dataMeta" style="font-size:12px;margin-top:5px;color:var(--faint)"></p>
+      </div>
+      <div class="page-actions">
+        <label class="select-chip"><select id="regionSelect">
+          <option selected>All Regions</option>
+          <option>Pacific Ring of Fire</option>
+          <option>Indonesia</option>
+          <option>South America</option>
+          <option>Japan Region</option>
+          <option>Alaska Region</option>
+        </select></label>
+        <label class="select-chip"><span class="lbl">Period</span>
+          <select id="periodSelect">
+            <option value="1">24h</option>
+            <option value="7">7d</option>
+            <option value="30">30d</option>
+            <option value="90">90d</option>
+            <option value="365">1y</option>
+            <option value="1095">3y</option>
+            <option value="1826">5y</option>
+            <option value="3652">10y</option>
+            <option value="7305" selected>20y</option>
+            <option value="10958">30y</option>
+            <option value="18263">50y</option>
+            <option value="all">All</option>
+          </select>
+        </label>
       </div>
     </div>
-    <div class="hero-img">
-      <img src="resource/img/banner%20img.png" alt="Seismic wave illustration with epicenter contours">
+
+    <!-- ============ Guide banner ============ -->
+    <a class="gd-hero dash-hero" href="/learn">
+      <div>
+        <div class="gd-eyebrow"><i data-icon="book" data-size="16"></i> Earthquake Guide</div>
+        <div class="dh-title">Understand earthquakes, and you're already safer.</div>
+        <p>Basics, magnitude and intensity, plate tectonics, and a practical safety guide — explained simply.</p>
+        <span class="btn btn-primary">Open the Earthquake Guide</span>
+      </div>
+      <div class="gd-hero-img"><img src="resource/img/banner%20img.png" alt="Seismic wave illustration"></div>
+    </a>
+
+    <!-- ============ Stats ============ -->
+    <div class="stat-grid" id="statGrid"></div>
+
+    <!-- ============ Row 1 ============ -->
+    <div class="dash-grid">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Earthquakes Over Time</div>
+            <p class="card-sub">Worldwide M 2.0+ events · USGS + ISC</p>
+          </div>
+          <span class="card-sub" id="histRangeLbl"></span>
+        </div>
+        <div class="chart-box"><canvas id="histChart"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Magnitude Distribution <span class="light" id="donutRangeLbl">(7d)</span></div>
+        </div>
+        <div class="donut-flex">
+          <div class="donut-hold"><canvas id="donutChart"></canvas></div>
+          <div class="donut-legend" id="donutLegend"></div>
+        </div>
+      </div>
     </div>
-  </section>
+
+    <!-- ============ Row 2 ============ -->
+    <div class="dash-grid">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Recent Significant Earthquakes</div>
+          <a class="link" href="/map">View all events</a>
+        </div>
+        <div class="sig-list" id="sigList"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Global Seismic Activity <span class="light" id="mapRangeLbl">(7d)</span></div>
+          <a class="link" href="/map">View full map</a>
+        </div>
+        <div class="mini-map" id="miniMap"></div>
+        <div class="map-key" id="mapKey"></div>
+      </div>
+    </div>
+
+    <!-- ============ Sources ============ -->
+    <div class="card" style="margin-top:20px">
+      <div class="card-head">
+        <div class="card-title">Where this data comes from</div>
+        <a class="link" href="/research#sources">All sources</a>
+      </div>
+      <div class="status-grid">
+        <div class="status-tile">
+          <div class="status-icon"><i data-icon="database" data-size="20"></i></div>
+          <div><div class="name">USGS ANSS ComCat</div><div class="state">Worldwide, M 2.0+</div></div>
+        </div>
+        <div class="status-tile">
+          <div class="status-icon"><i data-icon="doc" data-size="20"></i></div>
+          <div><div class="name">ISC Bulletin</div><div class="state">Reviewed, M 3.0+, from 1900</div></div>
+        </div>
+        <div class="status-tile">
+          <div class="status-icon"><i data-icon="target" data-size="20"></i></div>
+          <div><div class="name">JMA</div><div class="state">Japan, below M 2.0</div></div>
+        </div>
+        <div class="status-tile">
+          <div class="status-icon"><i data-icon="clock" data-size="20"></i></div>
+          <div><div class="name">Recent window</div><div class="state" id="refreshState">refreshed every 10 minutes</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ How to read these numbers ============
+         Each tile and chart above is computed from the catalogue at load time.
+         This section says what each one counts and what it does not, so that a
+         reader (or a crawler) arriving cold can make sense of the figures. -->
+    <section class="page-notes" id="reading-the-dashboard" aria-labelledby="dashNotesTitle">
+      <h2 class="section-title" id="dashNotesTitle">How to read these numbers</h2>
+      <p class="notes-intro">Everything above is calculated from the same catalogue the
+        <a class="link" href="/map">live map</a> draws: USGS ANSS ComCat and the ISC Bulletin merged into
+        one record since 1900, with the last 14 days refreshed every ten minutes. Change the period and
+        every figure is recomputed for that window.</p>
+
+      <div class="gd-grid two">
+        <div class="card gd-card">
+          <h3 class="gd-title">The five tiles</h3>
+          <dl class="gd-defs">
+            <div>
+              <dt>Earthquakes</dt>
+              <dd>How many catalogued events of magnitude 2.0 and above fall in the selected window,
+                worldwide. The trend compares it with the window of the same length immediately before,
+                so "vs previous period" on a 7-day view means the seven days before that.</dd>
+            </div>
+            <div>
+              <dt>Total Magnitude</dt>
+              <dd>The plain sum of all magnitudes in the window. It is a rough activity index that moves
+                with the number of events; it is not energy. Energy is dominated by the largest event,
+                since each magnitude unit is about 32 times more of it.</dd>
+            </div>
+            <div>
+              <dt>Largest Event</dt>
+              <dd>The strongest earthquake in the window and where it was. Over 20 years this is the 2011
+                Tōhoku earthquake off Honshu, M 9.1.</dd>
+            </div>
+            <div>
+              <dt>Damaging range (M 5+)</dt>
+              <dd>How many events reached magnitude 5, roughly the size from which shaking damages
+                ordinary buildings near the epicenter. Whether damage actually occurs depends on depth,
+                distance and construction.</dd>
+            </div>
+            <div>
+              <dt>Archive</dt>
+              <dd>The size of the whole catalogue behind the site, all periods together.</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="card gd-card">
+          <h3 class="gd-title">The charts</h3>
+          <div class="rich-text">
+            <p><b>Earthquakes Over Time</b> bins the window by hour for 24 hours, by day up to 120 days
+              and by month beyond that. The spikes on long views are aftershock sequences: the largest
+              column in the 20-year view is March 2011, when the Tōhoku earthquake was followed by
+              thousands of aftershocks within weeks.</p>
+            <p><b>Magnitude Distribution</b> shows how thoroughly small earthquakes outnumber large ones.
+              For every step down in magnitude there are roughly ten times more events, a regularity known
+              as the Gutenberg–Richter law. The M 2–3.9 bands dominate every window; M 7 and above is a
+              fraction of a percent.</p>
+            <p><b>Recent Significant Earthquakes</b> lists the newest events of magnitude 4 and above in
+              the window, with depth, in your chosen time zone.</p>
+            <p><b>Global Seismic Activity</b> draws each event as a dot for windows up to 120 days. Over
+              longer windows it shows the density of magnitude 4+ earthquakes, so that the plate boundaries
+              appear as bands rather than as a lattice of the largest events, and marks only the great
+              earthquakes individually.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card gd-card">
+        <h3 class="gd-title">Three things to keep in mind</h3>
+        <div class="rich-text">
+          <p><b>Counts depend on instruments.</b> The catalogue is complete worldwide only from about
+            magnitude 4 to 4.5. Regions with dense seismometer networks contribute many more small events,
+            and the number of small events grows over the decades as monitoring improves. A rising count
+            of M 2–3 earthquakes since 1980 is a record of better networks, not of a restless planet.
+            Compare periods at M 4.5 and above for a fair picture; the guide chapter on
+            <a class="link" href="/guide/reading-the-catalogue">reading the catalogue</a> goes into why.</p>
+          <p><b>The last few days are provisional.</b> Magnitudes and locations are revised for hours after
+            an event, and the ISC's reviewed solutions arrive about two years later. The dashboard always
+            shows the latest published values, which is why a figure can change slightly between visits.</p>
+          <p><b>Regions only apply to short windows.</b> The region menu works on the detailed recent
+            record (up to 120 days). Longer windows are computed over the whole catalogue and are always
+            global.</p>
+        </div>
+        <div class="gd-note">This dashboard is an overview, not an alert system. For warnings, follow your
+          national agency. For the statistics behind these charts, including the magnitude–frequency
+          curve and energy release over any window, see <a class="link" href="/insights">Seismic Insights</a>;
+          for what magnitude and depth mean, see the <a class="link" href="/learn">Earthquake Guide</a>.</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ About the site ============
+       What the landing page used to say, kept below the live overview. Inside
+       the console this block is hidden (see .embed .home-more in the stylesheet),
+       because the console has its own navigation for the same six views. -->
+  <div class="home-more">
 
   <!-- ============ Data sources ============ -->
   <section class="trust">
@@ -116,22 +305,22 @@
         <div class="eyebrow">The Archive</div>
         <h2>Patterns do not show up in single events.</h2>
       </div>
-      <p class="txt">A magnitude-frequency curve only straightens out after a century of catalogue.
-        A hotspot ranking needs every event, not the memorable ones. Depth only becomes a structure
-        — a slab descending into the mantle — when a million of them are plotted at once.
-        That is what the archive is for.</p>
+      <p class="txt">A catalogue helps reveal how event counts vary with magnitude, where activity
+        clusters, and how earthquake depths trace descending plates. Longer records add context,
+        but changes in monitoring also affect the patterns. The charts explain these limits so
+        readers can compare periods and regions with care.</p>
     </div>
 
     <div class="feature-grid">
       <div class="feature-card">
         <div class="ic"><i data-icon="target" data-size="22"></i></div>
-        <div class="t">Three catalogues, merged</div>
-        <div class="d">USGS ANSS ComCat, the ISC Bulletin and JMA, deduplicated into one archive back to 1900.</div>
+        <div class="t">Three catalogue sources</div>
+        <div class="d">A merged USGS and ISC global archive reaching back to 1900, plus a JMA regional archive for Japan.</div>
       </div>
       <div class="feature-card">
         <div class="ic"><i data-icon="branch" data-size="22"></i></div>
-        <div class="t">Current to ten minutes</div>
-        <div class="d">The recent window is re-fetched on a cycle, so revised magnitudes and withdrawn events follow through.</div>
+        <div class="t">Recent data checked regularly</div>
+        <div class="d">The updater checks the recent USGS window on a ten-minute cycle. Source or service interruptions can delay updates.</div>
       </div>
       <div class="feature-card">
         <div class="ic"><i data-icon="layers" data-size="22"></i></div>
@@ -141,7 +330,7 @@
       <div class="feature-card">
         <div class="ic"><i data-icon="globe" data-size="22"></i></div>
         <div class="t">Explained, not just plotted</div>
-        <div class="d">A ten-part guide, from faults and seismic waves through to tsunami safety.</div>
+        <div class="d">A thirteen-part guide, from faults and seismic waves through to tsunami safety.</div>
       </div>
     </div>
   </section>
@@ -154,19 +343,11 @@
         <h2>One workspace for the world's earthquake catalogues.</h2>
         <p class="lead">Six views over one merged catalogue. The archive back to 1900 is rebuilt offline
           and shipped as compressed binary, so a century of seismicity can be scrubbed at speed; the recent
-          window is re-fetched from the USGS every ten minutes. No account, no installation, no licence —
+          window is checked for USGS updates on a ten-minute cycle. No account or installation is needed —
           all of it runs in the browser.</p>
       </div>
 
       <div class="plat-grid">
-        <a class="plat-card" href="/dashboard">
-          <div class="ic"><i data-icon="grid" data-size="22"></i></div>
-          <h3>Overview</h3>
-          <p>A single screen that answers "what is happening right now?" — event counts and trends
-            for any period from 24 hours to 10 years, magnitude distribution, the largest events,
-            a live global map, and the sources behind all of it.</p>
-          <span class="link">Go to the dashboard &rarr;</span>
-        </a>
         <a class="plat-card" href="/map">
           <div class="ic"><i data-icon="target" data-size="22"></i></div>
           <h3>Live Map</h3>
@@ -178,10 +359,12 @@
         <a class="plat-card" href="/learn">
           <div class="ic"><i data-icon="book" data-size="22"></i></div>
           <h3>Earthquake Guide</h3>
-          <p>Ten sections, in the order they build on each other: faults and the four seismic waves,
-            plate tectonics, how a quake is measured and located, magnitude against intensity, the hazards
-            that actually cause the damage, the largest and deadliest events on record, a 36-term
-            glossary, an FAQ, and a safety guide with a checklist that remembers your progress.</p>
+          <p>Thirteen sections, in the order they build on each other: faults and the four seismic waves,
+            plate tectonics, how a quake is measured and located, magnitude against intensity, how to read
+            the catalogue behind every chart on this site, the hazards that actually cause the damage, why
+            buildings decide the toll, how early warning buys seconds, the earthquakes people cause, the
+            largest and deadliest events on record, a 36-term glossary, an FAQ, and a safety guide with a
+            checklist that remembers your progress.</p>
           <span class="link">Open the guide &rarr;</span>
         </a>
         <a class="plat-card" href="/insights">
@@ -207,6 +390,13 @@
             ten-minute cycle, newest first, each item opening in the outlet that published it.</p>
           <span class="link">Read the latest &rarr;</span>
         </a>
+        <a class="plat-card" href="/app">
+          <div class="ic"><i data-icon="grid" data-size="22"></i></div>
+          <h3>Platform Console</h3>
+          <p>Every view in one window: this dashboard, both maps, the guide, insights, research and
+            news as tabs, with the language and time-zone settings shared between them.</p>
+          <span class="link">Open the console &rarr;</span>
+        </a>
       </div>
 
       <div class="stat-strip">
@@ -214,11 +404,6 @@
         <div><div class="v" data-meta="duplicates_removed">695,368</div><div class="k">duplicate records removed where the catalogues overlap</div></div>
         <div><div class="v">10 min</div><div class="k">between refreshes of the recent window</div></div>
         <div><div class="v">M 2.0+</div><div class="k">worldwide; JMA takes Japan down to smaller events still</div></div>
-      </div>
-
-      <div class="sec-cta">
-        <a class="btn-text" href="/map" >Explore the Platform</a>
-        <a class="btn-text" href="/dashboard" >View the Dashboard</a>
       </div>
     </div>
   </section>
@@ -228,7 +413,7 @@
     <div class="container">
       <div class="sec-head">
         <div class="eyebrow">Live Map</div>
-        <h2>Every earthquake since 1900 — on a map you can play.</h2>
+        <h2>A catalogue reaching back to 1900 — on a map you can play.</h2>
         <p class="lead">The live map is two instruments in one. In 2D, a fast interactive world map for
           browsing recent seismicity; in 3D, the Earthquake&nbsp;4D engine — a globe that replays the
           entire catalog through time and shows every hypocenter at its true depth.</p>
@@ -389,43 +574,26 @@
     </div>
   </section>
 
-  <!-- ============ Platform band ============ -->
-  <section class="platform-band">
-    <div class="container band-grid">
-      <div class="band-intro">
-        <div class="l1">The World Earthquake Labs Platform</div>
-        <div class="l2">Integrated. Open. Built for Science and Society.</div>
-        <div class="bar"></div>
-        <p>Public catalogues, merged and kept current, with the analysis and the
-          background alongside them — openly, and in one browser tab.</p>
-      </div>
-      <a class="band-col" href="/map" >
-        <i data-icon="radio" data-size="26"></i>
-        <div class="t">Real-time Monitoring</div>
-        <div class="d">Global coverage</div>
-      </a>
-      <a class="band-col" href="/research" >
-        <i data-icon="doc" data-size="26"></i>
-        <div class="t">Sources &amp; Provenance</div>
-        <div class="d">Every feed named</div>
-      </a>
-      <a class="band-col" href="/insights" >
-        <i data-icon="chartline" data-size="26"></i>
-        <div class="t">Analytics &amp; Tools</div>
-        <div class="d">Modeling and visualization</div>
-      </a>
-      <a class="band-col" href="/research" >
-        <i data-icon="users" data-size="26"></i>
-        <div class="t">Publications</div>
-        <div class="d">Collected from OpenAlex</div>
-      </a>
-    </div>
-  </section>
+
+  </div>
 </main>
 
-<div id="site-footer"></div>
+<div id="site-footer">
+  <footer class="site-footer"><div class="container footer-top">
+    <nav class="footer-links" aria-label="Site information">
+      <a href="/">Home</a><a href="/learn">Earthquake Guide</a><a href="/about">About</a>
+      <a href="/terms#data">Data Use Policy</a><a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a><a href="/about#contact">Contact Us</a>
+    </nav>
+  </div></footer>
+</div>
 
-<script src="js/common.js"></script>
-<script src="js/i18n.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="js/common.js?v=20260928-footer"></script>
+<script src="js/i18n.js?v=20260928-footer"></script>
+<script>window.EQ_ALL_BANDS = true; // stats run on the full M2+ catalog</script>
+<script src="js/data.js?v=20260928-footer"></script>
+<script src="js/dashboard.js"></script>
 </body>
 </html>

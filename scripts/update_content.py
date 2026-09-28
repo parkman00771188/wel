@@ -108,6 +108,20 @@ NETWORK_HINT = re.compile(
     r"\b(seismic network|seismometer|station|sensor|monitoring network|early warning)\b", re.I)
 QUAKE_HINT = re.compile(
     r"\b(earthquake|quake|seismic|seismolog\w*|tsunami|aftershock|tremor|fault)\b", re.I)
+# Some outlets use "earthquake" for elections or diplomatic news. Reject only
+# clear metaphor patterns, and keep reporting that also names a physical
+# earthquake impact. Political actors can appear in real disaster coverage.
+METAPHOR_HINT = re.compile(
+    r"\b(?:political|electoral|economic|financial)\s+(?:earthquake|quake|tsunami)\b"
+    r"|\bearthquake\s+as\b.*\b(?:GOP|red state|associate member|election|Senate|parliament)\b"
+    r"|\b(?:Democrats?|Republicans?)\b.*\b(?:win|lose)\b.*\b(?:Senate|House)\s+seats\b.*\bearthquake\b",
+    re.I,
+)
+PHYSICAL_QUAKE_HINT = re.compile(
+    r"\b(?:magnitude|aftershocks?|tsunami warning|epicent(?:er|re)|seismolog\w*|fault lines?)\b"
+    r"|\bearthquake\s+(?:damage|victims?|survivors?|recovery|relief|rescue|zone)\b",
+    re.I,
+)
 
 RESEARCH_SOURCES = {
     "science daily", "sciencedaily", "phys.org", "nature", "science", "eurekalert!",
@@ -368,6 +382,13 @@ def classify(title: str, source: str) -> str:
     return "event"
 
 
+def is_earthquake_headline(title: str) -> bool:
+    """Conservative headline filter; passing is not editorial verification."""
+    return bool(QUAKE_HINT.search(title)) and not (
+        METAPHOR_HINT.search(title) and not PHYSICAL_QUAKE_HINT.search(title)
+    )
+
+
 def news_row(item: ET.Element, fallback_source: str) -> dict | None:
     title = clean(item.findtext("title") or "", 200)
     link = (item.findtext("link") or "").strip()
@@ -378,7 +399,7 @@ def news_row(item: ET.Element, fallback_source: str) -> dict | None:
     # in its own element, so the suffix is pure duplication.
     if source and title.endswith(f" - {source}"):
         title = title[: -len(source) - 3].rstrip()
-    if not QUAKE_HINT.search(title):
+    if not is_earthquake_headline(title):
         return None
 
     # Google News fills <description> with a link back to the same headline and
@@ -408,7 +429,9 @@ def google_news(query: str) -> list[ET.Element]:
 
 def refresh_news() -> bool:
     store = read_json(NEWS_PATH)
-    items: list[dict] = store.get("items") or []
+    stored: list[dict] = store.get("items") or []
+    items = [row for row in stored if is_earthquake_headline(row.get("title") or "")]
+    removed = len(stored) - len(items)
     seen = {row.get("id") for row in items}
     seeded = bool(items)
     cursor = int(store.get("next_query") or 0)
@@ -439,7 +462,7 @@ def refresh_news() -> bool:
         items.append(row)
         added += 1
 
-    if not added:
+    if not added and not removed:
         print(f"[content] 새 뉴스 없음 (보관 {len(items):,}건)")
         return False
 
@@ -453,7 +476,7 @@ def refresh_news() -> bool:
         "count": len(items),
         "items": items,
     })
-    print(f"[content] 뉴스 +{added}건 (보관 {len(items):,}건)")
+    print(f"[content] 뉴스 +{added}건, 관련 없는 제목 -{removed}건 (보관 {len(items):,}건)")
     return True
 
 

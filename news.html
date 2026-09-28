@@ -27,20 +27,8 @@
 <meta name="twitter:title" content="Earthquake News Today: Latest Reports and Research — World Earthquake Labs">
 <meta name="twitter:description" content="Today's earthquake news and seismology research coverage, collected from Google News and ScienceDaily and refreshed every 10 minutes.">
 <meta name="twitter:image" content="https://worldearthquakelabs.com/resource/img/og-cover-white.jpg">
-<link rel="stylesheet" href="css/style.css">
-<!-- Inside the console every child page runs in an iframe, and the shell has
-     already loaded AdSense. Pausing here keeps a second copy from stacking a
-     second anchor on the first; the loader tag itself stays static below so
-     the verification crawler still finds it in the source. -->
-<script>
-  if (window.parent !== window) {
-    (window.adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 1;
-  }
-</script>
-<!-- Google AdSense. Static in <head> on every page so the verification
-     crawler finds it in the source, not only after JavaScript runs. -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7720076982812531"
-        crossorigin="anonymous"></script>
+<link rel="stylesheet" href="css/style.css?v=20260928-footer">
+<!-- Site verification uses the google-adsense-account meta tag above. -->
 </head>
 <body data-nav="news" data-cta="dashboard">
 
@@ -138,8 +126,10 @@
               searches (<em>earthquake</em>, <em>major earthquake damage</em>, <em>tsunami earthquake
               warning</em>, <em>magnitude 7 earthquake</em>, <em>aftershock sequence</em>, <em>earthquake
               early warning system</em>, <em>earthquake research study</em>) together with ScienceDaily's
-              earthquake feed. A headline must actually be about an earthquake to be kept; duplicates of
-              the same story from different outlets are collapsed on the title; the newest 300 stay.</p>
+              earthquake feed. Automated title filters select earthquake-related terms and exclude
+              obvious political metaphors. These filters can make mistakes; follow the source to
+              check the reporting, and <a href="/about#contact">tell us about unrelated items</a>.
+              Duplicate records are removed and up to 300 recent items are retained.</p>
             <p>Each headline is sorted into one of three tabs by its wording. <b>Network</b> is anything
               about instruments and systems: seismometers, stations, early warning. <b>Research</b> is
               anything from a science outlet or that mentions a study, model or dataset. Everything else
@@ -196,14 +186,22 @@
   </section>
 </div>
 
-<div id="site-footer"></div>
+<div id="site-footer">
+  <footer class="site-footer"><div class="container footer-top">
+    <nav class="footer-links" aria-label="Site information">
+      <a href="/">Home</a><a href="/learn">Earthquake Guide</a><a href="/about">About</a>
+      <a href="/terms#data">Data Use Policy</a><a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a><a href="/about#contact">Contact Us</a>
+    </nav>
+  </div></footer>
+</div>
 
-<script src="js/common.js"></script>
-<script src="js/i18n.js"></script>
+<script src="js/common.js?v=20260928-footer"></script>
+<script src="js/i18n.js?v=20260928-footer"></script>
 <!-- The feed is its own JSON file, so this page never needs the 13 MB
      earthquake bands; loading them would just delay the headlines. -->
 <script>window.EQ_DEFER_LOAD = true;</script>
-<script src="js/data.js"></script>
+<script src="js/data.js?v=20260928-footer"></script>
 <script src="js/news.js"></script>
 </body>
 </html>

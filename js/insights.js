@@ -623,7 +623,7 @@
     document.getElementById("eventModalCoords").textContent = fmtCoord(e.lat, "N", "S") + "  " + fmtCoord(e.lng, "E", "W");
     document.getElementById("eventModalDepth").textContent = fmtDepth(e.depth);
     document.getElementById("eventModalRegion").textContent = e.region || e.group || "—";
-    document.getElementById("eventModalStatus").textContent = e.status ? e.status.charAt(0).toUpperCase() + e.status.slice(1) : "Reviewed";
+    document.getElementById("eventModalStatus").textContent = EQ.reviewStatus(e.status);
     modal.hidden = false;
     document.body.classList.add("insight-modal-open");
     showModalMap(e);

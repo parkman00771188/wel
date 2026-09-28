@@ -1117,7 +1117,7 @@
       lat: Math.round(hitLat * 1000) / 1000, lng: Math.round(hitLng * 1000) / 1000,
       depth: Math.max(0, Math.round(fastHit.depth[bestCell])), t: fastHit.time[bestCell],
       loc: who.loc, group: who.group, region: who.region || who.group,
-      rof: who.rof, status: "Reviewed"
+      rof: who.rof, status: "Not provided"
     }, false);
   });
 
@@ -1208,7 +1208,7 @@
       '<div class="qc-row"><span>' + coordStr(e) + "</span></div>" +
       '<div class="qc-row"><span class="k">Depth</span><span>' + e.depth + " km</span></div>" +
       '<div class="qc-div"></div>' +
-      '<div class="qc-row"><span class="k">Status</span><span>' + (e.status || "Automatic") + "</span></div>" +
+      '<div class="qc-row"><span class="k">Review status</span><span>' + EQ.reviewStatus(e.status) + "</span></div>" +
       '<button class="btn btn-primary btn-block" id="qcDetails" type="button">View Details</button>';
 
     activeEvent = e;
@@ -1347,11 +1347,11 @@
       '<div class="qc-row"><span class="k">Epicenter</span><span>' + coordStr(e) + "</span></div>" +
       '<div class="qc-row"><span class="k">Depth</span><span>' + e.depth + " km</span></div>" +
       '<div class="qc-row"><span class="k">Region</span><span>' + (e.region || e.group) + "</span></div>" +
-      '<div class="qc-row"><span class="k">Event ID</span><span>wel' + e.id.slice(2) + "</span></div>" +
+      '<div class="qc-row"><span class="k">Local display ID</span><span>' + String(e.id).replace(/[^a-zA-Z0-9_-]/g, "") + "</span></div>" +
       '<div class="qc-row"><span class="k">Type</span><span>Earthquake</span></div>' +
-      '<div class="qc-row"><span class="k">Review status</span><span>' + (e.status || "Automatic") + "</span></div>" +
+      '<div class="qc-row"><span class="k">Review status</span><span>' + EQ.reviewStatus(e.status) + "</span></div>" +
       '<div class="qc-div"></div>' +
-      '<p style="font-size:13px;color:var(--faint);margin:0">Solution by the World Earthquake Labs global network. Magnitudes are moment magnitude (Mw) unless otherwise noted.</p>';
+      '<p style="font-size:13px;color:var(--faint);margin:0">Compiled from external earthquake catalogues. Magnitude scales vary by source; the compact archive does not retain every event\'s magnitude type or review status. World Earthquake Labs visualizes these records and does not operate a seismic network. See <a href="/about#data">data sources and limitations</a>.</p>';
     back.classList.add("open");
     document.getElementById("dmClose").onclick = function () { back.classList.remove("open"); };
   }
@@ -1889,7 +1889,7 @@
         lat: Math.round(lat * 1000) / 1000, lng: Math.round(lng * 1000) / 1000,
         depth: Math.max(0, Math.round(+q.depth || 0)), t: isFinite(t) ? t : Date.now(),
         loc: who.loc, group: who.group, region: who.region || who.group,
-        rof: who.rof, status: "Reviewed"
+        rof: who.rof, status: EQ.reviewStatus(q.status)
       }, false);
     }, 2100);
   };

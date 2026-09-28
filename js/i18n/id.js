@@ -347,7 +347,7 @@ WEL_I18N.load({
   "Prepare it together with your family — check what you already have.": "Siapkan bersama keluarga — centang yang sudah Anda miliki.",
   "ESSENTIAL": "WAJIB",
   "RECOMMENDED": "DISARANKAN",
-  "Water — 3 L per person per day, 3+ days": "Air — 3 L per orang per hari, 3+ hari",
+  "Water — at least 1 US gallon (about 3.8 L) per person per day, for 3+ days": "Air — sedikitnya 1 galon AS (sekitar 3,8 L) per orang per hari, untuk 3 hari atau lebih",
   "Non-perishable food for 3+ days": "Makanan tahan lama untuk 3+ hari",
   "First-aid kit & personal medications": "Kotak P3K & obat pribadi",
   "Flashlight & spare batteries": "Senter & baterai cadangan",

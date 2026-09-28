@@ -20,12 +20,14 @@
   var LOCALE = { en: "en-US", zh: "zh-CN", fil: "fil-PH" }[LANG] || LANG;
 
   var VIEWS = {
-    overview: { title: "Dashboard Overview", src: "dashboard.html?embed=1" },
+    // The dashboard is the front page; index.html hides its landing sections
+    // when framed (see .embed .home-more).
+    overview: { title: "Dashboard Overview", src: "/?embed=1" },
     map: { title: "Live Earthquake Map", src: "map.html?embed=1" },
     learn: {
       title: "Earthquake Guide",
       src: "/learn?embed=1",
-      /* The guide is nine pages plus a hub, not one page with tabs, so a
+      /* The guide is thirteen pages plus a hub, not one page with tabs, so a
          subview here is a URL rather than a fragment. */
       subUrl: {
         overview: "/learn?embed=1",
@@ -33,7 +35,11 @@
         plates: "/guide/plate-tectonics?embed=1",
         measuring: "/guide/measuring-earthquakes?embed=1",
         magnitude: "/guide/magnitude-and-intensity?embed=1",
+        catalogue: "/guide/reading-the-catalogue?embed=1",
         hazards: "/guide/earthquake-hazards?embed=1",
+        buildings: "/guide/buildings-and-codes?embed=1",
+        warning: "/guide/earthquake-early-warning?embed=1",
+        induced: "/guide/induced-earthquakes?embed=1",
         history: "/guide/notable-earthquakes?embed=1",
         terms: "/guide/earthquake-glossary?embed=1",
         faq: "/guide/earthquake-faq?embed=1",
@@ -280,13 +286,6 @@
       activate(ev.data.view, true, ev.data.sub);
     }
   });
-
-  /* ---------- sidebar ad ----------
-     Wide screens only in practice: below 760px this slot lives inside the
-     drawer, and js/common.js puts an anchor bar at the bottom of the viewport
-     instead. Both ids live together in WEL.AD. */
-
-  WEL.mountAd(document.getElementById("adSlot"), WEL.AD.sidebar);
 
   /* ---------- catalog freshness chip ---------- */
 

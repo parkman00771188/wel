@@ -431,6 +431,13 @@
   var liveListeners = [];
   function onLive(cb) { liveListeners.push(cb); }
 
+  // Review status is an agency field, never something inferred from age.
+  // The compact historical catalogue does not retain this metadata.
+  function reviewStatus(value) {
+    value = String(value || "").toLowerCase();
+    return value === "reviewed" ? "Reviewed" : value === "automatic" ? "Automatic" : "Not provided";
+  }
+
   /* ---------- real data loading ---------- */
 
   var EQ = {
@@ -451,7 +458,7 @@
     rangeStats: rangeStats, buildWindow: buildWindow, buildRange: buildRange,
     latestInRange: latestInRange, forEachInRange: forEachInRange, rawRanges: rawRanges,
     adoptRaw: adoptRaw, regionFor: nameFor, ensureCountries: ensureCountries,
-    thinYearLabels: thinYearLabels
+    thinYearLabels: thinYearLabels, reviewStatus: reviewStatus
   };
   window.EQ = EQ;
 
@@ -533,7 +540,7 @@
     // reader below binary-searches `t`.
     rows = rows.slice().sort(function (a, b) { return a.time_ms - b.time_ms; });
 
-    var cap = rows.length, n = 0;
+    var cap = rows.length, n = 0, statuses = [];
     var lon = new Float32Array(cap), lat = new Float32Array(cap),
         depth = new Float32Array(cap), mag = new Float32Array(cap),
         t = new Uint32Array(cap);
@@ -542,11 +549,12 @@
       if (!(m >= MIN_MAG) || m > 9.55 || !(sec > 0)) continue;
       lon[n] = +r.longitude; lat[n] = +r.latitude;
       depth[n] = Math.max(0, +r.depth_km); mag[n] = m; t[n] = sec;
+      statuses[n] = reviewStatus(r.status);
       n++;
     }
     if (!n) return null;
     return { n: n, lon: lon.subarray(0, n), lat: lat.subarray(0, n),
-             depth: depth.subarray(0, n), mag: mag.subarray(0, n), t: t.subarray(0, n) };
+             depth: depth.subarray(0, n), mag: mag.subarray(0, n), t: t.subarray(0, n), status: statuses };
   }
 
   /* Archive bands shortened to the seam, plus the overlay as one more band.
@@ -664,7 +672,7 @@
       group: who.group,
       region: who.region || who.group,
       rof: who.rof,
-      status: (Date.now() - tMs) > 5 * D ? "Reviewed" : "Automatic"
+      status: reviewStatus(b.status && b.status[i])
     };
   }
 

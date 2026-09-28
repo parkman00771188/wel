@@ -7,10 +7,10 @@
 
 | 파일 | 내용 |
 |---|---|
-| `index.html` | 랜딩 |
-| `app.html` | 통합 콘솔 (아래 페이지들을 iframe 으로 띄운다) |
+| `index.html` | 첫 페이지 = 대시보드(24h 통계, 시간대별 차트, 규모 분포, 미니 지도) + 사이트 소개 섹션 |
+| `app.html` | 통합 콘솔 (아래 페이지들을 iframe 으로 띄운다). 각 페이지도 단독으로 열면 `js/common.js` 가 같은 사이드바·상단바를 입힌다 (`?embed=1` 로 콘솔 안에 뜰 때만 제외) |
 | `map.html` | 라이브 지도 (Leaflet 2D + Three.js 3D) |
-| `dashboard.html` | 24h 통계, 시간대별 차트, 규모 분포, 미니 지도 |
+| `dashboard.html` | 옛 주소. `/` 로 넘겨주는 껍데기 (`_redirects` 와 같은 역할) |
 | `insights.html` | 추이 · 규모-빈도 · 깊이 · 에너지 · 지역 핫스팟 |
 | `research.html` | 논문 목록 (자동 수집) |
 | `news.html` | 지진 뉴스 (자동 수집) |
@@ -173,20 +173,28 @@ canonical 이 특히 중요하다 — 콘솔이 하위 페이지를 iframe 으�
 
 ## 광고
 
-게재 위치는 두 곳이고 둘이 동시에 뜨지 않는다.
+현재는 **심사용 소유권 확인만 유지하고 광고 요청은 하지 않는다.**
+`ads.txt`와 각 공개 페이지의 `google-adsense-account` 메타태그는 같은 게시자
+`pub-7720076982812531`을 사용한다. 메타태그는 Google이 지원하는 공식 확인 방식이다.
+광고를 띄우지 않는다고 소유권 확인까지 제거해서는 안 된다.
 
-| 위치 | 보이는 조건 |
-|---|---|
-| 콘솔 사이드바 하단 300×250 | 넓은 화면 |
-| 화면 하단 앵커 320×50 (닫기 가능) | ≤760px |
+승인 후 광고를 활성화할 때는 AdSense 계정의 개인정보 보호 및 메시지에서 동의 설정을
+완료하고 실제 동의·거부·철회 동작을 확인한다. EEA·영국·스위스의 개인 맞춤 광고에는
+Google 인증 CMP가 필요하다. 그 후 직접 작성한 콘텐츠 페이지에 계정에서 제공하는
+광고 코드를 적용하고 `privacy.html`과 `about.html`의 광고 안내도 함께 갱신한다.
+자동 수집 목록, 오류 페이지, iframe 콘솔에는 일괄 삽입하지 않는다. 모바일 앵커가
+필요하면 Google이 제공하는 Auto ads 설정을 검토하며 자체 고정 광고 막대는 사용하지 않는다.
 
-폰에서는 사이드바가 드로어라 그 광고는 서랍을 열 때만 보인다. 그래서 그 폭에서는
-하단 앵커가 대신 뜬다. 앵커는 **최상위 문서에만** 붙는다 — 콘솔 안 iframe 에도
-붙으면 앵커가 두 겹이 된다. 같은 이유로 각 페이지 `<head>` 에 iframe 안일 때 광고
-요청을 멈추는 가드가 있다.
+점검 내역과 배포 후 확인 사항: [AdSense 검토 보고서](docs/ADSENSE_REVIEW_2026-09-22.md).
+광고 심사 결과는 Google이 판단하며, 아래 검사는 기술적 회귀를 확인한다.
 
-두 자리 모두 광고 단위 ID 가 있어야 채워진다. `js/common.js` 의 `AD` 객체 한 곳에
-넣으면 된다. 비어 있는 동안에는 채워질 수 없는 `<ins>` 를 밀어 넣지 않는다.
+```sh
+python scripts/build_seo.py
+python scripts/check_site.py
+python scripts/check_site.py --url https://worldearthquakelabs.com
+node --test tests/runtime-integrity.test.js
+python -m unittest discover -s tests -p "test_*.py"
+```
 
 ## 모바일
 
@@ -202,7 +210,7 @@ canonical 이 특히 중요하다 — 콘솔이 하위 페이지를 iframe 으�
 
 ```
 css/style.css     전체 스타일 (디자인 토큰, 컴포넌트, 반응형)
-js/common.js      공통 헤더/푸터, 아이콘, 광고 배치
+js/common.js      공통 헤더/푸터, 아이콘, 언어와 시간대 설정
 js/data.js        실 카탈로그 로더(밴드 파싱 + 라이브 오버레이 병합) + 집계 함수
 js/map.js         라이브 지도 로직
 js/dashboard.js   대시보드 차트/통계

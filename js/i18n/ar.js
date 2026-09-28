@@ -347,7 +347,7 @@ WEL_I18N.load({
   "Prepare it together with your family — check what you already have.": "جهّزها مع عائلتك — علّم ما لديك بالفعل.",
   "ESSENTIAL": "أساسي",
   "RECOMMENDED": "مستحسن",
-  "Water — 3 L per person per day, 3+ days": "ماء — 3 L للشخص يوميًا، 3 أيام أو أكثر",
+  "Water — at least 1 US gallon (about 3.8 L) per person per day, for 3+ days": "الماء — غالون أمريكي واحد على الأقل (نحو 3.8 لتر) لكل شخص يومياً، لمدة 3 أيام أو أكثر",
   "Non-perishable food for 3+ days": "طعام غير قابل للتلف لـ 3 أيام أو أكثر",
   "First-aid kit & personal medications": "حقيبة إسعافات أولية & أدوية شخصية",
   "Flashlight & spare batteries": "مصباح يدوي & بطاريات احتياطية",
