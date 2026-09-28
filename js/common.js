@@ -375,7 +375,8 @@
       '<div class="app-scrim" id="appScrim" hidden></div>' +
       '<aside class="app-side" id="appSide">' +
         '<div class="app-side-head"><a class="brand" href="/" title="World Earthquake Labs">' +
-        '<img src="/resource/img/logo_new.png" alt="World Earthquake Labs"></a></div>' +
+        '<img src="/resource/img/logo_new.png" alt="World Earthquake Labs"></a>' +
+        '<span class="app-updated app-side-updated" id="appSideUpdated" hidden></span></div>' +
         '<nav class="app-nav" id="appNav">' + shellNavHTML() + "</nav>" +
         '<div class="spacer"></div>' +
         '<nav class="app-side-foot" aria-label="Site information">' +
@@ -386,6 +387,7 @@
         '<button class="app-burger" id="appBurger" aria-label="Menu" aria-expanded="false" aria-controls="appSide">' +
         "<span></span><span></span><span></span></button>" +
         '<p class="app-title" id="appTitle">' + title + "</p>" +
+        '<span class="app-updated" id="appUpdated" hidden></span>' +
         '<span class="app-clock" id="appClock">\u2014</span>' +
         '<span class="app-tz" id="appTz"></span>' +
         langControlHTML("app-lang") +
@@ -413,6 +415,7 @@
     }
     paintShellNav();
     window.addEventListener("hashchange", paintShellNav);
+    startFreshnessChip();
 
     /* A link into the page currently open switches its section rather than
        reloading it: the page's own hashchange handler does the switching. */
@@ -707,10 +710,49 @@
     return rows.length ? rows[0].t : 0;
   }
 
+  /* The chip itself: "Updated N min ago" in the top bar, and in the drawer
+     on a phone. It reads the same three stores as the News & Updates
+     Overview through feedNewest, so the chip and the list never disagree.
+     Refetched every five minutes, re-worded every minute. The paths are
+     absolute because the guide pages live a level down. Shared by the
+     console (js/app.js) and the shell. */
+  function startFreshnessChip() {
+    var chips = document.querySelectorAll(".app-updated");
+    if (!chips.length || typeof fetch !== "function") return null;
+    var updatedAt = null;
+    function agoText(ms) {
+      var m = Math.max(1, Math.round((Date.now() - ms) / 60e3));
+      // Ordinary UI copy: the dictionary translates it into every language.
+      return "Updated " + (m < 60 ? m + " min ago" : Math.round(m / 60) + " h ago");
+    }
+    function render() {
+      chips.forEach(function (el) {
+        el.hidden = !updatedAt;
+        if (updatedAt) el.textContent = agoText(updatedAt);
+      });
+    }
+    function feed(url) {
+      return fetch(url, { cache: "no-cache" })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .catch(function () { return null; }); // offline: keep the last value
+    }
+    function refresh() {
+      return Promise.all([feed("/data/news.json"), feed("/data/papers.json"), feed("/3d/data/live/global.json")])
+        .then(function (r) {
+          var newest = feedNewest({ news: r[0], papers: r[1], live: r[2] });
+          if (newest) { updatedAt = newest; render(); }
+        });
+    }
+    setInterval(refresh, 5 * 60e3);
+    setInterval(render, 60e3);
+    return refresh();
+  }
+
   window.WEL = {
     icon: icon, renderIcons: renderIcons, toast: toast, embed: EMBED,
     tz: TZ, tzControlHTML: tzControlHTML, langControlHTML: langControlHTML,
-    feedRows: feedRows, feedNewest: feedNewest, OVERVIEW_MIN_MAG: OVERVIEW_MIN_MAG
+    feedRows: feedRows, feedNewest: feedNewest, OVERVIEW_MIN_MAG: OVERVIEW_MIN_MAG,
+    startFreshnessChip: startFreshnessChip
   };
 
   document.addEventListener("DOMContentLoaded", function () {

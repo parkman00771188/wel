@@ -287,56 +287,11 @@
     }
   });
 
-  /* ---------- catalog freshness chip ---------- */
-
-  var updatedAt = null;
-
-  function agoText(ms) {
-    var m = Math.max(1, Math.round((Date.now() - ms) / 60e3));
-    // Ordinary UI copy: the dictionary translates it into every language,
-    // where an inline branch only ever covered two.
-    return "Updated " + (m < 60 ? m + " min ago" : Math.round(m / 60) + " h ago");
-  }
-
-  function renderUpdated() {
-    document.querySelectorAll(".app-updated").forEach(function (el) {
-      el.hidden = !updatedAt;
-      if (updatedAt) el.textContent = agoText(updatedAt);
-    });
-  }
-
-  function fetchFeed(url) {
-    return fetch(url, { cache: "no-cache" })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .catch(function () { return null; }); // offline — keep the last value
-  }
-
-  /* The chip shows the top row of the News & Updates Overview, so the two
-     always agree -- WEL.feedNewest is the rule both read (js/common.js).
-
-     It used to be the newest generated_utc of four files, which is when the
-     collector last wrote one, not when anything new arrived. Those diverge
-     routinely: the collector rewrites a feed whenever it adds a row, and a row
-     whose own date falls outside the store's cap is dropped again in the same
-     run. That is how the chip came to read "5 min ago" over an Overview whose
-     newest row was 55 minutes old.
-
-     The archive metadata is deliberately not among these three: rebuilding the
-     catalogue offline is not an update the Overview lists, and its stamp would
-     win the comparison for the week after a rebuild. */
-  function fetchMeta() {
-    Promise.all([
-      fetchFeed("data/news.json"),
-      fetchFeed("data/papers.json"),
-      fetchFeed("3d/data/live/global.json")
-    ]).then(function (r) {
-      var newest = WEL.feedNewest({ news: r[0], papers: r[1], live: r[2] });
-      if (newest) { updatedAt = newest; renderUpdated(); }
-    });
-  }
-  fetchMeta();
-  setInterval(fetchMeta, 5 * 60e3);
-  setInterval(renderUpdated, 60e3);
+  /* ---------- catalog freshness chip ----------
+     The chip shows the top row of the News & Updates Overview, so the two
+     always agree; the rule and the chip both live in js/common.js now, shared
+     with the shell every standalone page wears. */
+  WEL.startFreshnessChip();
 
   /* ---------- UTC clock ---------- */
   var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

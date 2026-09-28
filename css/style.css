@@ -4059,7 +4059,7 @@ a.upd-row:hover .upd-title { color: var(--blue-600); }
 
   .app-burger { display: inline-grid; }
   .app-top { padding: 0 12px; gap: 10px; }
-  .app-top h1 {
+  .app-top h1, .app-top .app-title {
     flex: 1;
     font-size: 15px;
     white-space: nowrap;
